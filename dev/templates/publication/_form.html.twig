@@ -1,0 +1,12 @@
+
+{{ form_start(publicationForm) }}
+
+    {{ form_row(publicationForm.articleUrl) }}
+    {{ form_row(publicationForm.title) }}
+    {{ form_row(publicationForm.autor) }}
+    {{ form_row(publicationForm.year) }}
+    {{ form_row(publicationForm.description) }}
+
+    <button type="submit">{{ button_label | default('Ajouter') }} </button>
+
+{{ form_end(publicationForm) }}

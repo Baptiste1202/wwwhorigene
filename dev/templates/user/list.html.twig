@@ -1,0 +1,25 @@
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>isVerified</th>
+        <th></th>
+        <th></th>
+    </tr>
+            {% for user in users %}
+            <tr>
+                <div class="list-collec">
+                    <td>{{user.id}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.firstname}}</td>
+                    <td>{{user.lastname}}</td>
+                    <td>{{user.isVerified}}</td>
+                    <td><a href = "{{path("edit_user", {id: user.id})}}"> Modifie </a></td>
+                    <td><a href = "{{path("delete_user", {id: user.id})}}"> Delete </a></td>
+                </div>
+            </tr>
+            {% endfor %}
+       
+</table>

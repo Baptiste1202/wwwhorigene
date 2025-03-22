@@ -1,0 +1,7 @@
+{{ form_start(userForm) }}
+
+    {{ form_row(userForm.roles, {'label': 'Rôles'}) }}
+
+    <button type="submit">{{ button_label | default('Ajouter') }} </button>
+
+{{ form_end(userForm) }}

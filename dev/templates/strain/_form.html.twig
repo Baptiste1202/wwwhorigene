@@ -1,0 +1,257 @@
+
+{{ form_start(strainForm) }}
+
+    {{ form_row(strainForm.nameStrain) }}
+    {{ form_row(strainForm.parentStrain) }}
+    {{ form_row(strainForm.specie) }}
+    {{ form_row(strainForm.gender) }}
+    {{ form_row(strainForm.prelevement) }}  
+    {{ form_row(strainForm.genotype) }}
+
+    <div class="hidden-tags" class="project">
+        <ul class="project"
+            data-index="{{ strainForm.project|length > 0 ? strainForm.project|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_row(strainForm.project.vars.prototype)|e('html_attr') }}"
+        ></ul>
+    </div>
+
+    <div id="add-btn">
+        <label>Project</label>
+        <button type="button" class="add_item_link" data-collection-holder-class="project">+</button>
+    </div>
+
+    <div class="hidden-tags" class="collec">
+        <ul class="collec"
+            data-index="{{ strainForm.collec|length > 0 ? strainForm.collec|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_row(strainForm.collec.vars.prototype)|e('html_attr') }}"
+        ></ul>
+    </div>
+
+    <div id="add-btn">
+        <label>Collection</label>
+        <button type="button" class="add_item_link" data-collection-holder-class="collec">+</button>
+    </div>
+
+    <div class="hidden-tags" class="plasmyd">
+        <ul class="plasmyd"
+            data-index="{{ strainForm.plasmyd|length > 0 ? strainForm.plasmyd|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_row(strainForm.plasmyd.vars.prototype)|e('html_attr') }}"
+        ></ul>
+    </div>
+
+    <div id="add-btn">
+        <label>Plasmyd</label>
+        <button type="button" class="add_item_link" data-collection-holder-class="plasmyd">+</button>
+    </div>
+
+    <div class="hidden-tags" class="publication">
+        <ul class="publication"
+            data-index="{{ strainForm.publication|length > 0 ? strainForm.publication|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_row(strainForm.publication.vars.prototype)|e('html_attr') }}"
+        ></ul>
+    </div>   
+     <div id="add-btn">
+        <label>Publication</label>
+        <button type="button" class="add_item_link" data-collection-holder-class="publication">+</button>
+    </div>
+
+    <div class="hidden-tags" class="drugResistanceOnStrain">
+        <ul class="drugResistanceOnStrain"
+            data-index="{{ strainForm.drugResistanceOnStrain|length > 0 ? strainForm.drugResistanceOnStrain|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_row(strainForm.drugResistanceOnStrain.vars.prototype)|e('html_attr') }}"
+        ></ul>
+    </div>
+
+    <div id="add-btn">
+        <label>Drug Resistance</label>
+        <button type="button" class="add_item_link" data-collection-holder-class="drugResistanceOnStrain">+</button>
+    </div>
+
+    <div class="hidden-tags" class="transformability">
+        <ul class="transformability"
+            data-index="{{ strainForm.transformability|length > 0 ? strainForm.transformability|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_row(strainForm.transformability.vars.prototype)|e('html_attr') }}"
+        ></ul>
+    </div>
+
+    <div id="add-btn">
+        <label>Transformability</label>
+        <button type="button" class="add_item_link" data-collection-holder-class="transformability">+</button>
+    </div>
+
+    <div class="hidden-tags" class="sequencing">
+        <ul class="sequencing"
+            data-index="{{ strainForm.methodSequencing|length > 0 ? strainForm.methodSequencing|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_row(strainForm.methodSequencing.vars.prototype)|e('html_attr') }}"
+        ></ul>
+    </div>
+
+    <div id="add-btn">
+        <label> Sequencing</label>
+        <button type="button" class="add_item_link" data-collection-holder-class="sequencing">+</button>
+    </div>
+
+    <div id="add-btn">
+        <label for="storage">Storage</label>
+        <button class="toggle-btn" onclick="toggleStorage()">+</button>
+    </div>
+    <div id="storage" class="hidden" style="display: none">
+        {{ form_row(strainForm.room) }}
+        {{ form_row(strainForm.fridge) }}
+        {{ form_row(strainForm.shelf) }}
+        {{ form_row(strainForm.rack) }}
+        {{ form_row(strainForm.containerType) }}
+        {{ form_row(strainForm.containerPosition) }}
+    </div>
+    {{ form_row(strainForm.comment) }}
+    {{ form_row(strainForm.description) }}
+
+    <button class="btn-form-strain" type="submit">{{ button_label | default('Ajouter') }} </button>
+
+{{ form_end(strainForm) }}
+
+<script>
+
+function toggleStorage() {
+    event.preventDefault();
+    var storageDiv = document.getElementById("storage");
+    if (storageDiv.style.display === "none") {
+        storageDiv.style.display = "block";
+    } else {
+        storageDiv.style.display = "none";
+    }
+}
+
+function selectOptionByValue(selectElementId, value) {
+    const selectElement = document.getElementById(selectElementId);
+    const optionToSelect = selectElement.querySelector(`option[value="${value}"]`);
+    if (optionToSelect) {
+        selectElement.value = value;  // Sélectionne l'option
+    } else {
+        console.error(`Option with value "${value}" not found in ${selectElementId}`);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const searchButton = document.querySelector('.search-button');
+    const parentStrainIdField = document.getElementById('strain_form_parentStrain');
+    
+    searchButton.addEventListener('click', async () => {
+        const strainId = parentStrainIdField.value;
+
+        if (!strainId) {
+            alert('Veuillez entrer un ID de souche.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/strain/${strainId}`);
+            console.log(response.ok)
+            if (!response.ok) {
+                throw new Error('Strain non trouvée.');
+            }
+
+            const data = await response.json();
+
+            document.getElementById('strain_form_nameStrain').value = data.name;
+            document.getElementById('strain_form_specie').value = data.specie;
+            document.getElementById('strain_form_gender').value = data.gender;
+            document.getElementById('strain_form_comment').value = data.comment;
+            document.getElementById('strain_form_description').value = data.description;
+            document.getElementById('strain_form_genotype').value = data.description;
+            document.getElementById('strain_form_room').value = data.room;
+            document.getElementById('strain_form_fridge').value = data.fridge;
+            document.getElementById('strain_form_shelf').value = data.shelf;
+            document.getElementById('strain_form_rack').value = data.rack;
+            document.getElementById('strain_form_containerType').value = data.containerType;
+            document.getElementById('strain_form_containerPosition').value = data.containerPosition;
+            selectOptionByValue('strain_form_genotype', data.genotype);
+            selectOptionByValue('strain_form_transformability', data.transformability);
+            selectOptionByValue('strain_form_plasmyd', data.plasmyd);
+            selectOptionByValue('strain_form_methodSequencing', data.sequencing);
+            selectOptionByValue('strain_form_project', data.project);
+            selectOptionByValue('strain_form_collection', data.collection);
+            selectOptionByValue('strain_form_prelevement', data.sample);
+            
+            } catch (error) {
+                alert('Erreur lors de la recherche de la souche : ' + error.message);
+            }
+    });
+});
+
+document.querySelectorAll('.add_item_link').forEach(btn => {
+    btn.addEventListener("click", (e) => {
+        const collectionClass = e.currentTarget.dataset.collectionHolderClass;
+        const collectionDiv = document.querySelector('.' + collectionClass).closest('div');
+
+        // Afficher le <div> masqué
+        if (collectionDiv.classList.contains('hidden-tags')) {
+            collectionDiv.classList.remove('hidden-tags');
+        }
+
+        // Ajouter un nouvel élément à la collection
+        addFormToCollection(e);
+    });
+});
+  
+function addFormToCollection(e)
+  {
+    console.log(e.currentTarget.dataset.collectionHolderClass);
+    const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+
+    const item = document.createElement('li');
+    item.innerHTML = collectionHolder
+      .dataset
+      .prototype
+      .replace(
+        /__name__/g,
+        collectionHolder.dataset.index
+      );
+
+    collectionHolder.appendChild(item);
+     // Récupérer le texte du label associé au bouton qui a déclenché l'ajout
+    const labelType = e.currentTarget.previousElementSibling?.textContent.trim();
+
+    // Mettre à jour le label
+    const index = collectionHolder.dataset.index; // L'index actuel
+    const label = item.querySelector('label');
+    if (label && labelType) {
+        label.textContent = `${labelType} ${parseInt(index) + 1}`;
+    }
+
+    addTagFormDeleteLink(item);
+
+    collectionHolder.dataset.index++;
+
+  };
+
+  document
+    .querySelectorAll('ul.drugResistanceOnStrain li, ul.sequencing li ')
+    .forEach((tag) => {
+        addTagFormDeleteLink(tag)
+    })
+
+function addTagFormDeleteLink(tag) {
+    const removeFormButton = document.createElement('button');
+    removeFormButton.innerText = 'x';
+    removeFormButton.classList.add('remove-tag-btn'); // Ajoute une classe pour le bouton
+
+    // Ajoute le bouton après le premier element (ou autre contenu du tag)
+    const firstElement = tag.querySelector('select, input');
+    firstElement.after(removeFormButton);
+
+    removeFormButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        const ul = tag.parentElement; // La liste contenant le tag
+        const containerDiv = ul.closest('div'); // La <div> qui entoure la liste
+
+        // Supprime l'élément complet
+        tag.remove();
+
+        // Vérifie si la liste est vide
+        if (ul.children.length === 0) {
+            containerDiv.classList.add('hidden-tags'); // Ajoute la classe "hidden" pour masquer la div
+        }
+    });
+}
+</script>

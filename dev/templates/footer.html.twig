@@ -1,0 +1,35 @@
+<footer>
+        <div class="f-item-con">
+            <div class="app-info">
+                <span class='app-name'>
+                    <span class='app-initial'>GAUDIN</span>/BERTRAND
+                </span>
+                <p>Developped with <strong>Passion</strong> and <strong>Patience</strong> mainly for you. &#x1F30D</p>
+            </div>
+            <div class="useful-links">
+                <div class="footer-title">Usefull links</div>
+                <ul>
+                    <li>lien 1</li>
+                    <li>lien 1</li>
+                    <li>lien 1</li>
+                    <li>lien 1</li>
+                    <li>lien 1</li>
+                    <li>lien 1</li>
+                </ul>
+            </div>
+            <div class="g-i-t">
+                <div class="footer-title">Contact us &#x1F4EB</div>
+                <form action="index.php?page=footer" method="post" class="space-y-2">
+                    <input type="text" name="g-name" class="g-inp" id="g-name" placeholder='Name' />
+                    <input type="email" name="g-email" class="g-inp" id="g-email" placeholder='Email' />
+                    <textarea type="text" name="g-msg" class="g-inp h-40 resize-none" id="g-msg"
+                        placeholder='Message...'></textarea>
+
+                         <!-- Input caché pour la page actuelle -->
+                        <input type="hidden" name="page" value="<?php echo htmlspecialchars($_GET['page'] ?? ''); ?>" />
+
+                    <button type="submit" name="soumettreFormFooter" class='f-btn'>Envoyer</button>
+                </form>
+            </div>
+        </div>
+    </footer>

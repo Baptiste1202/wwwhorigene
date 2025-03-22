@@ -1,0 +1,10 @@
+{{ form_start(transformabilityForm) }}
+
+    {{ form_row(transformabilityForm.technique) }}
+    {{ form_row(transformabilityForm.mesure) }}
+    {{ form_row(transformabilityForm.description) }}
+    {{ form_row(transformabilityForm.comment) }}
+
+    <button type="submit">{{ button_label | default('Ajouter') }} </button>
+
+{{ form_end(transformabilityForm) }}

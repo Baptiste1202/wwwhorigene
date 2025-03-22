@@ -1,0 +1,16 @@
+{% extends 'layout.html.twig' %}
+{% block body %}
+        <div id="global">
+            {% if (app.user.roles.0 != "ROLE_INTERN") %}
+                <div id="form">
+                    {% include "publication/create.html.twig" %}
+                </div>
+            {% endif %}
+            <div id="list">
+                <div id="table">
+                    {% include "publication/list.html.twig" %}
+                </div>
+            </div>
+        <br></br>        
+        </div>  
+{% endblock %}

@@ -1,0 +1,19 @@
+{{ form_start(sampleForm) }}
+
+    {{ form_row(sampleForm.name) }}
+    {{ form_row(sampleForm.type) }}
+    {{ form_row(sampleForm.date) }}
+    {{ form_row(sampleForm.country) }}
+    {{ form_row(sampleForm.city) }}
+    {{ form_row(sampleForm.localisation) }}
+    {{ form_row(sampleForm.underLocalisation) }}
+    {{ form_row(sampleForm.gps) }}
+    {{ form_row(sampleForm.environment) }}
+    {{ form_row(sampleForm.other) }}
+    {{ form_row(sampleForm.description) }}
+    {{ form_row(sampleForm.comment) }}
+    {{ form_row(sampleForm.user) }}
+
+    <button type="submit">{{ button_label | default('Ajouter') }} </button>
+
+{{ form_end(sampleForm) }}

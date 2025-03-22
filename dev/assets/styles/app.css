@@ -1,0 +1,750 @@
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+.dropdown-child {
+    display: none;
+    position: absolute;
+    background-color: grey;
+    min-width: 12%;
+    visibility: hidden; /* Cache le menu pour empêcher les clics */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.dropdown:hover .dropdown-child {
+    display: block;
+    opacity: 1; /* Rend visible */
+    visibility: visible;
+}
+
+#context-menu {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+#context-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#context-menu ul li {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+#context-menu ul li:hover {
+    background-color: #f0f0f0;
+}
+
+.hidden {
+    display: none;
+}
+
+.vertical-menu {
+    width: 250px; /* Largeur définie */
+    background-color: #333; 
+    padding: 10px 0;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Ajout d'une ombre légère */
+    z-index: 20; 
+}
+
+.vertical-menu ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.vertical-menu li {
+    margin: 10px 0;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.vertical-menu li a {
+    display: block;
+    padding: 12px 20px;
+    text-decoration: none;
+    font-size: 17px;
+    font-family: sans-serif;
+    font-weight: bold;
+    color: #f5f3f3;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.vertical-menu li a:hover {
+    background-color: #34495e; /* Surlignage subtil */
+    transform: scale(1.05); /* Effet de zoom léger */
+}
+
+.vertical-menu li a:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1); /* Couleur d'arrière-plan légère */
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    z-index: -1;
+}
+
+.vertical-menu li a:hover:before {
+    transform: scaleX(1);
+}
+
+.dropdown-content {
+    display: none;
+    padding-left: 20px;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content li a {
+    font-size: 14px; /* Taille réduite pour les sous-éléments */
+    color: #f5f3f3;
+    padding: 8px 30px;
+}
+
+.user-info {
+    margin-top: 20px;
+    color: #bdc3c7;
+    font-size: 13px;
+}
+
+
+
+#global {
+    display : grid;
+    grid-template-columns: repeat(4,25%);
+    grid-template-rows: repeat(3,30%);
+    margin-left: 260px; /* Décalage égal à la largeur du menu plus une marge supplémentaire */
+    padding: 20px;
+
+}
+
+#global #form {
+    grid-column: 1;
+    grid-row: 1/3;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ajoute une légère ombre pour l'esthétique */
+    padding: 20px; /* Espace intérieur pour le contenu */
+    margin-right : 20px;
+    border : 1px solid;
+    border-radius: 5px; /* Coins arrondis */
+    background-color: #f9f9f9; /* Couleur de fond */
+    font-family: 'Roboto', sans-serif;
+    
+}
+
+#global #form h1 {
+    font-size: 1.5rem;
+}
+
+button.btn-form-strain {
+    padding: 0.5rem 1rem;
+    margin-top : 0.5rem;
+    border: none;
+    background-color: #4A90E2;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#strain_form_searchParent{
+    padding: 0.5rem 1rem;
+    margin-top : 0.5rem;
+    border: none;
+    background-color: #4A90E2;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button.btn-form-strain:hover {
+    background-color: #357ABD;
+}
+
+.col-12 form {
+    display: flex;
+    flex-direction: column; 
+}
+
+.col-12 form div{
+    display: flex;
+    flex-direction: row; 
+    padding-bottom: 0.3rem;
+    position: relative;
+}
+
+.col-12 form div#storage{
+    font-family: inherit;
+    display: flex;
+    flex-direction: column; 
+}
+
+.col-12 form label,
+.col-12 form #add-drug label{
+    flex: 0 0 150px; /* Fixe une largeur pour les labels */
+    margin-right: 0.5rem; /* Ajoute un espacement entre le label et l'input */
+    text-align: left; /* Aligne le texte à droite */
+}
+
+.col-12 form input,
+.col-12 form select,
+.col-12 form textarea,
+.col-12 form ul.tags li select {
+    flex: 1; /* Permet à ces éléments de prendre tout l'espace restant */
+    border: 1px solid #ccc; /* Bordure grise par défaut */
+    border-radius: 4px; /* Coins arrondis */
+    box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
+}
+
+.col-12 form div#add-btn button{
+    width: 30px; /* Taille du carré */
+    height: 20px; /* Taille du carré */
+    background-color: #f9f9f9; /* Couleur du bouton */
+    color: #000; /* Couleur du texte (icône ou texte) */
+    border: 1px solid #ccc;
+    border-radius: 4px; /* Coins légèrement arrondis */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.col-12 form div#add-btn button:hover{
+    background-color: #e6e6e6; /* Couleur de fond au survol */
+    border-color: #999; /* Couleur de bordure au survol */
+}
+.col-12 form div#add-btn button:focus{
+    outline: none;
+    box-shadow: none; /* Supprime les ombres bleues autour */
+    border-color: #ddd;
+}
+
+.col-12 form div#storage label{
+    flex: 0 0 140px; /* Un peu plus petit que le principal */
+    margin-left: 10px; /* Décalage pour montrer que c'est une sous-catégorie */
+    font-size: 0.9rem; /* Taille réduite */
+    font-weight: normal;
+    color: #666; /* Couleur plus douce */
+    font-style: italic;
+}
+
+.col-12 form ul {
+    width: 100%;
+}
+
+
+.col-12 form ul select {
+    width: 100%;
+}
+
+.drugResistanceOnStrain li div div,
+.sequencing li div div{
+    display:flex;
+    flex-direction: column;
+}
+
+.drugResistanceOnStrain li div div div,
+.sequencing li div div div{
+    display:flex;
+    flex-direction: row;
+}
+
+.drugResistanceOnStrain li div div div input,
+.sequencing li div div div input{
+    width: 100%;
+}
+
+.drugResistanceOnStrain li div div div:not(:first-of-type),
+.sequencing li div div div:not(:first-of-type){
+    font-size: 0.9rem; /* Taille réduite */
+    font-weight: normal;
+    color: #666; /* Couleur plus douce */
+    font-style: italic;
+}
+
+#global #list #filter #floatingForm{
+    position: relative; /* Nécessaire pour que le z-index fonctionne */
+    z-index: 10; 
+    width : 15%;
+    font-family: 'Roboto', sans-serif;
+}
+#global #list #filter #floatingForm #btn-search {
+    padding: 0.5rem 1rem;
+    margin-top : 0.5rem;
+    border: none;
+    background-color: #4A90E2;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative; /* Nécessaire pour que le z-index fonctionne */
+    z-index: 3; 
+}
+
+#global #list #filter  #floatingForm #btn-search:hover {
+    background-color: #357ABD;
+}
+
+#global #list #filter #menu-container {
+    display: inline-block;
+    position: relative;
+    width : 100%; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#global #list #filter #menu-button {
+    background: #f1f1f1;
+    width : 100%; 
+    padding: 10px 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    position: relative; /* Positionne le bouton à l'intérieur du conteneur */
+    z-index: 1; /* S'assure que le bouton est au-dessus du menu */
+}
+
+#global #list #filter #menu-button:hover {
+    background-color: #444; /* Couleur légèrement plus claire au survol */
+    color: #f5f3f3;
+}
+
+#global #list #filter  .filter-menu {
+    display: none; /* Menu caché par défaut */
+}
+
+#global #list #filter  .filter-menu.visible {
+    display: inline-block; /* Affiche le menu lorsque la classe "visible" est ajoutée */
+    top : 100%; 
+    background: #f1f1f1;
+    left: 0;
+    padding: 10px 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+#global #list #filter #floatingForm {
+    position: absolute;
+    flex-direction: row; 
+    background: #f1f1f1;
+    border: 1px solid #ccc;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#global #list #filter #floatingForm div{
+    display: flex;
+    flex-direction: row; 
+}
+
+#global #list #filter #floatingForm label{
+    flex: 0 0 100px; /* Fixe une largeur pour les labels */
+    margin-right: 0.5rem; /* Ajoute un espacement entre le label et l'input */
+    text-align: left; /* Aligne le texte à droite */
+}
+
+#global #list #filter #floatingForm input,
+#global #list #filter #floatingForm select{
+    flex: 1; /* Permet à ces éléments de prendre tout l'espace restant */
+    border: 1px solid #ccc; /* Bordure grise par défaut */
+    border-radius: 4px; /* Coins arrondis */
+    box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
+}
+
+#global #component {
+    grid-column: 1;
+    grid-row: 3/-1;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ajoute une légère ombre pour l'esthétique */
+    padding: 20px; /* Espace intérieur pour le contenu */
+    margin-right : 20px;
+    margin-top : 20px;
+    border : 1px solid;
+    border-radius: 5px; /* Coins arrondis */
+    background-color: #f9f9f9; /* Couleur de fond */
+    display: flex; /* Utiliser flex pour l'alignement interne si nécessaire */
+    flex-direction: column; /* Assure que le contenu est aligné en colonne */
+    height: auto; /* Hauteur s'adapte au contenu */
+    font-family: 'Roboto', sans-serif;
+}
+
+#global #list {
+    grid-column: 2/-1;
+    grid-row: 1/-1;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ajoute une légère ombre pour l'esthétique */
+    padding: 20px; /* Espace intérieur pour le contenu */
+    border : 1px solid;
+    border-radius: 5px; /* Coins arrondis */
+    background-color: #f9f9f9; /* Couleur de fond */
+    display: flex; /* Utiliser flex pour l'alignement interne si nécessaire */
+    flex-direction: column; /* Assure que le contenu est aligné en colonne */
+    height: auto; /* Hauteur s'adapte au contenu */
+}
+
+#global #list #filter {
+    padding : 10px; 
+    background-color: #f9f9f9; /* Couleur de fond */
+}
+
+#global #list #table {
+    margin-top : 10px; 
+    table-layout: fixed; /* Fixe la largeur des colonnes */
+    overflow-x: auto; 
+    border-collapse: collapse;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    color: #333;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#global #list #table td{
+    width: 150px;  /* Fixe la largeur des cellules */
+    overflow: hidden;    /* Cache le texte qui dépasse */
+    text-overflow: ellipsis; /* Ajoute "..." si le texte est trop long */
+    white-space: nowrap; /* Empêche le retour à la ligne */
+    box-sizing: border-box; /* Inclut la bordure et le padding dans la largeur */
+}
+
+#global #list #table th{
+    background-color: #e5e5e5;
+    color: #000;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+    width: 150px;  /* Fixe la largeur des cellules */
+}
+
+/* Couleur alternée pour les lignes */
+#global #list #table tr:nth-child(odd) {
+    background-color: #f3f3f3;
+}
+
+#global #list #table tr:nth-child(even) {
+    background-color: #ffffff; /* Couleur pour les lignes paires */
+}
+
+/* Hover sur les lignes */
+#global #list #table tr:hover {
+    background-color: #e0e0e0;
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* Style pour des colonnes spécifiques */
+#global #list #table td.id, 
+#global #list #table th.id {
+    text-align: center;
+    color: #666;
+}
+
+#global #list #table td.name, 
+#global #list #table th.name {
+    font-weight: bold;
+}
+
+#global #list #table td.comment, 
+#global #list #table th.comment, 
+#global #list #table td.description, 
+#global #list #table th.description {
+    font-style: italic;
+    color: #555;
+}
+
+#global #list #table td  a {
+    display: inline-block;
+    padding: 6px 12px; /* Espacement interne */
+    background-color: #f3f3f3; /* Couleur de fond par défaut des boutons natifs */
+    color: #000; /* Texte noir */
+    text-decoration: none; /* Supprime le soulignement */
+    font-size: 13px; /* Taille de police par défaut */
+    text-align: center; /* Centre le texte */
+    border: 1px solid #ccc; /* Bordure légère */
+    border-radius: 3px; /* Coins légèrement arrondis */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Légère ombre */
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#global #list #table td  a:hover {
+    background-color: #e6e6e6; /* Gris clair au survol */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Accentuation de l'ombre */
+    text-decoration: none; /* Évite le soulignement au survol */
+}
+
+#global #list #table td.supp  a:hover {
+    background-color: red; /* Gris clair au survol */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Accentuation de l'ombre */
+    text-decoration: none; /* Évite le soulignement au survol */
+}
+
+#global #list #table td  a:active {
+    background-color: #dcdcdc; /* Gris plus foncé au clic */
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2); /* Effet enfoncé */
+    border-color: #bbb; /* Bordure légèrement plus foncée */
+    transform: scale(0.98); /* Effet de clic */
+}
+
+
+
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0;
+    list-style: none;
+}
+
+.pagination li {
+    margin: 5px;
+}
+
+.pagination li a, .pagination li span {
+    display: inline-block;
+    padding: 8px 12px;
+    border: 1px solid #ccc; /* Contour fin */
+    border-radius: 8px; /* Bords arrondis */
+    text-decoration: none;
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 14px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.pagination li a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination .current, .pagination .current span {
+    background-color: #007bff;
+    color: white;
+    pointer-events: none;
+}
+
+.hidden-tags {
+    display: none;
+    padding: 0 !important;
+    height: 0;
+    width: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+
+#infoPopup {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    z-index: 1000;
+}
+
+#strain_form_transformability,
+#strain_form_plasmyd,
+#strain_form_drugResistance,
+#strain_form_publication, 
+#strain_form_methodSequencing{
+    display: none;
+}
+
+/* Style pour centrer le texte au milieu de l'image */
+.carousel-caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 100%;
+    color: white; /* Couleur du texte */
+    background: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+#carouselExample {
+    max-height: 50vh; /* Le carrousel prend 60% de la hauteur de l'écran */
+    overflow: hidden; /* Cache le débordement */
+}
+
+.carousel-inner{
+    height: 50vh; /* L'image prend 80% de la hauteur de l'écran */
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 50vh;
+    object-fit: cover; /* Ajuste l'image sans la déformer */
+}
+
+.container{
+    display:flex;
+    justify-content: center;  /* Centre horizontalement */
+    align-items: center;      /* Centre verticalement */
+}
+.row_login{
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 50vh;
+    padding:20px;
+}
+
+
+:root{
+    --theme-col: #2d4bf0;
+}
+.space-y-2 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.wrapper {
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+}
+
+footer{
+    margin: 0; 
+    padding: 0;
+    border: 0; 
+    outline: 0;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    list-style: none;
+    text-decoration: none;
+    background-color: #111010;
+    margin-top: 40px;
+    width: 100%; 
+    min-height: 300px; /* Définissez la hauteur souhaitée */
+    overflow: hidden; /* Cache le débordement */
+    position: relative;
+    z-index:10;
+    font-size: 14px;
+    
+}
+
+.f-item-con{
+    padding: 1.5rem 4rem;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-gap: 2rem;
+}
+footer .app-name{
+    color: white;
+    border-left: 4px solid var(--theme-col);
+    padding-left: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    grid-column-start: 2;
+}
+.app-name .app-initial{
+    color: var(--theme-col);
+}
+footer .app-info p{
+    color: white;
+    padding-left: 1.65rem;
+}
+
+.app-info{
+    grid-column: 2/4;
+}
+
+.useful-links{
+    grid-column: 4/6;
+}
+
+footer .footer-title{ 
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+    color: white;
+    border-left: 4px solid var(--theme-col);
+    padding-left: 1.5rem;
+    height: fit-content;
+    text-align: left;
+}
+footer ul{ 
+    padding-left: 1.75rem;
+    color: white;
+    font-size: 1rem/* 14px */;
+    line-height: 1.25rem;
+    margin-top: .5rem;
+    list-style: none;
+}
+footer ul li{ 
+    margin: .25rem 0;
+    cursor: pointer;
+    color: #d4d4d4;
+    width: fit-content;
+}
+footer ul li:hover{
+    color: white;
+}
+
+.g-i-t{
+    display: grid;
+    grid-column: 6/8;
+    grid-row-start: 1;
+    grid-row-end: 3;
+}
+.g-i-t form{
+    display: flex;
+    width: 80%;
+    flex-direction: column;
+    margin-top: 1rem;
+    --tw-space-y-reverse: 0;
+    margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+form .g-inp{
+    padding: .25rem .5rem;
+    font-size: 14px;
+}
+.g-inp textarea{
+    height: 150px;
+}
+.f-btn{
+    padding: .25rem 1rem;
+    background-color: var(--theme-col);
+    border-radius: .25rem;
+    font-size: 14px;
+    color: white;
+    font-weight: 500;
+}

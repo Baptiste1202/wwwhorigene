@@ -1,0 +1,11 @@
+<form method="POST" action="{{ path('add_genotype') }}">
+{{ form_start(genotypeForm) }}
+
+    {{ form_row(genotypeForm.type) }}
+    {{ form_row(genotypeForm.description) }}
+    {{ form_row(genotypeForm.comment) }}
+
+    <button type="submit">{{ button_label | default('Ajouter') }} </button>
+
+{{ form_end(genotypeForm) }}
+</form>

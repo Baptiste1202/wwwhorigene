@@ -1,0 +1,7 @@
+<h1>Activate your account</h1>
+<p> Hello,</p>
+<p>To activate your account, please click on the link bellow : <p>
+
+<p><a href = "{{ absolute_url(path('verify_user',{token: token})) }}">Link</a><p>
+{{ token }}
+<p>Thank you!</p>

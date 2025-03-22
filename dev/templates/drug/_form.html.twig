@@ -1,0 +1,13 @@
+
+{{ form_start(drugForm) }}
+
+    {{ form_row(drugForm.name) }}
+    {{ form_row(drugForm.type) }}
+    {{ form_row(drugForm.concentration) }}
+    {{ form_row(drugForm.description) }}
+    {{ form_row(drugForm.comment) }}
+
+    <button type="submit">{{ button_label | default('Ajouter') }} </button>
+
+{{ form_end(drugForm) }}
+</form>
