@@ -110,10 +110,12 @@
 
                 <td class="transformability" data-info='
                         id: {{ strain.transformability|first ? strain.transformability|first.id : '--'}}
-                        name: {{ strain.transformability|first ? strain.transformability|first.nom : "--" }}
-                        mesure: {{ strain.transformability|first ? strain.transformability|first.mesure : "--" }}'>
+                        technique: {{ strain.transformability|first ? strain.transformability|first.technique : "--" }}
+                        mesure: {{ strain.transformability|first ? strain.transformability|first.mesure : "--" }}
+                        file: {{ strain.transformability|first ? strain.transformability|first.nom : "--" }}'
+                        data-file='{{ strain.transformability|first ? strain.transformability|first.nom : '--'}}'>
                 {% if strain.transformability is not empty %}
-                    {{strain.transformability[0].technique}}
+                    {{strain.transformability[0].technique}} <br>
                 {% else %}
                     --
                 {% endif %}
@@ -155,7 +157,7 @@
                 <td class="sequencing" data-info='
                         name : {{ strain.methodSequencing|first ? strain.methodSequencing|first.name  : '--'}}
                         file : {{ strain.methodSequencing|first ? strain.methodSequencing|first.nameFile  : '--'}}'
-                    data-file='{{ strain.methodSequencing|first ? strain.methodSequencing|first.nameFile : '--'}}'>
+                        data-file='{{ strain.methodSequencing|first ? strain.methodSequencing|first.nameFile : '--'}}'>
                 {% if strain.methodSequencing is not empty %}
                     {{strain.methodSequencing[0].name}}
                 {% else %}
@@ -224,18 +226,24 @@
                         <td></td>
                         <td>{{ strain.collec[i] is defined ? strain.collec[i].name : '' }}</td>
                         <td></td>
-                        <td data-info='
-                            id: {{ strain.transformability[i] is defined and strain.transformability[i] ? strain.transformability[i].id : '--'}}
-                            name: {{ strain.transformability[i] is defined and strain.transformability[i] ? strain.transformability[i].nom : "--" }}
-                            mesure: {{ strain.transformability[i] is defined and strain.transformability[i] ? strain.transformability[i].mesure : "--" }}'>
-                            {{ strain.transformability[i] is defined ? strain.transformability[i].technique : '' }}
+                        <td class="transformability" 
+                            data-info=
+                                'id: {{ strain.transformability[i] is defined and strain.transformability[i] ? strain.transformability[i].id : '--'}}
+                                technique: {{ strain.transformability[i] is defined and strain.transformability[i] ? strain.transformability[i].technique : "--" }}
+                                mesure: {{ strain.transformability[i] is defined and strain.transformability[i] ? strain.transformability[i].mesure : "--" }}
+                                file: {{ strain.transformability[i] is defined and strain.transformability[i].nom ? strain.transformability[i].nom : "--" }}'
+                            data-file=
+                                '{{ strain.transformability|first ? strain.transformability[i].nom : '--'}}'>
+                            {{ strain.transformability[i] is defined ? strain.transformability[i].technique : '' }} <br>
+                            {{ strain.transformability[i] is defined ? strain.transformability[i].mesure : '' }}
                         </td>
                         <td>{{ strain.plasmyd[i] is defined ? strain.plasmyd[i].namePlasmyd : '' }}</td>
                         <td data-info='
                             name: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].drugResistance.name  : '--'}}
-                            comment: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.comment  : '--'}}
-                            description: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.description  : '--'}}'> 
-                            {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].drugResistance.name : '' }}
+                            comment: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].drugResistance.comment  : '--'}}
+                            description: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].drugResistance.description  : '--'}}'> 
+                            {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].drugResistance.name : '' }} <br>
+                            {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].drugResistance.concentration : '' }}
                         </td>
                         <td data-info='
                             id: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].id  : '--'}}
@@ -245,8 +253,10 @@
                             year: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].year  : "--" }}'> 
                             {{ strain.publication[i] is defined ? strain.publication[i].title : '' }}
                         </td>
-                        <td data-info='
-                            file : {{ strain.methodSequencing|first ? strain.methodSequencing|first.nameFile  : '--'}}'>
+                        <td class="sequencing" data-info='
+                            name : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing|first.name  : '--'}}
+                            file : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing|first.nameFile  : '--'}}'
+                            data-file='{{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing|first.nameFile : '--'}}'>
                             {{ strain.methodSequencing[i] is defined ? strain.methodSequencing[i].name : '' }}
                         </td>
                         <td></td>
@@ -287,8 +297,15 @@ document.querySelectorAll('td[data-info]').forEach(cell => {
         document.getElementById('popupTitle').innerText = 'Détails';
         document.getElementById('popupDetails').innerText = info;
 
+        // Vérifier le type de fichier
         if (cell.classList.contains('sequencing') && fileName && fileName !== '--') {
-            downloadLink.href = `/documents/download/${fileName}`;
+            fileType = 'sequencing';
+        } else if (cell.classList.contains('transformability') && fileName && fileName !== '--') {
+            fileType = 'transformability';
+        }
+
+        if (fileName) {
+            downloadLink.href = `/documents/download/${fileType}/${fileName}`;
             downloadLink.style.display = 'inline-block';
         } else {
             downloadLink.style.display = 'none';

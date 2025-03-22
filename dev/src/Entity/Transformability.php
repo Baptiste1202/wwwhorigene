@@ -38,11 +38,8 @@ class Transformability
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $comment = null;
 
-    /**
-     * @var Collection<int, Strain>
-     */
-    #[ORM\ManyToMany(targetEntity: Strain::class, mappedBy: 'transformability', orphanRemoval: true)]
-    private Collection $strain;
+    #[ORM\ManyToOne(targetEntity: Strain::class, inversedBy: 'transformability')]
+    private Strain $strain;
 
     public function getId(): ?int
     {
@@ -118,26 +115,14 @@ class Transformability
         return $this;
     }
 
-    /**
-     * @return Collection<int, Strain>
-     */
-    public function getStrain(): Collection
+    public function getStrain(): Strain
     {
         return $this->strain;
     }
 
-    public function removeStrain(Strain $strain): void
+    public function setStrain(?Strain $strain): self
     {
-        $this->strain->removeElement($strain);
-    }
-
-    public function addStrain(Strain $strain): static
-    {
-        if (!$this->strain->contains($strain)) {
-            $this->strain->add($strain);
-            $strain->addTransformability($this);
-        }
-
+        $this->strain = $strain;
         return $this;
     }
 

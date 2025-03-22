@@ -50,7 +50,7 @@ class Strain
     /**
      * @var Collection<int, transformability>
      */
-    #[ORM\ManyToMany(targetEntity: Transformability::class, inversedBy: 'strain')]
+    #[ORM\OneToMany(targetEntity: Transformability::class, mappedBy: 'strain', cascade:['persist'], orphanRemoval:true)]
     #[ORM\JoinColumn(nullable: true)]
     private ?Collection $transformability;
 
@@ -262,7 +262,7 @@ class Strain
     {
         if (!$this->transformability->contains($transformability)) {
             $this->transformability->add($transformability);
-            $transformability->addStrain($this);
+            $transformability->setStrain($this);
         }
 
         return $this;
@@ -271,10 +271,21 @@ class Strain
     public function removeTransformability(?Transformability $transformability): static
     {
         if ($this->transformability->removeElement($transformability)) {
-            $transformability->removeStrain($this);
+            if ($transformability->getStrain() === $this) {
+                $transformability->setStrain(null);
+            }
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateTransformability(): void
+    {
+        foreach ($this->transformability as $transfo) {
+            $transfo->setStrain($this);
+        }
     }
 
     public function getPlasmyd(): ?Collection

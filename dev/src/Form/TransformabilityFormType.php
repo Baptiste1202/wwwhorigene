@@ -2,9 +2,11 @@
 
 namespace App\Form;
 
+use App\Entity\Transformability;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichFileType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TransformabilityFormType extends AbstractType
 {
@@ -12,22 +14,30 @@ class TransformabilityFormType extends AbstractType
     {
         $builder
             ->add('technique', options:[
-                'label' => 'Technique'
-            ])
-            ->add('file', VichFileType::class, options:[
-                'required' => false,
-                'label' => 'Mesure'
+                'label' => 'Technique',
+                'attr' => [
+                    'placeholder' => 'Technique'
+                ]
             ])
             ->add('mesure', options:[
                 'label' => 'Mesure'
+            ])
+            ->add('file', VichFileType::class, options:[
+                'required' => false,
+                'label' => 'Upload File'
             ])
             ->add('description', options:[
                 'label' => 'Description'
             ])
             ->add('comment', options:[
                 'label' => 'Comments'
-            ]);
+            ]);  
+    }
 
-            
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Transformability::class,
+        ]);
     }
 }

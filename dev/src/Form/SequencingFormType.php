@@ -27,7 +27,7 @@ class SequencingFormType extends AbstractType
             ])            
             ->add('file', VichFileType::class, options:[
                 'required' => false,
-                'label' => 'Fichier'
+                'label' => 'Upload File'
             ]);
 
             

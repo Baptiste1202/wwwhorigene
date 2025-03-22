@@ -256,24 +256,28 @@ button.btn-form-strain:hover {
 }
 
 .drugResistanceOnStrain li div div,
-.sequencing li div div{
+.sequencing li div div,
+.transformability li div div{
     display:flex;
     flex-direction: column;
 }
 
 .drugResistanceOnStrain li div div div,
-.sequencing li div div div{
+.sequencing li div div div,
+.transformability li div div div{
     display:flex;
     flex-direction: row;
 }
 
 .drugResistanceOnStrain li div div div input,
-.sequencing li div div div input{
+.sequencing li div div div input,
+.transformability li div div div input{
     width: 100%;
 }
 
 .drugResistanceOnStrain li div div div:not(:first-of-type),
-.sequencing li div div div:not(:first-of-type){
+.sequencing li div div div:not(:first-of-type),
+.transformability li div div div:not(:first-of-type){
     font-size: 0.9rem; /* Taille réduite */
     font-weight: normal;
     color: #666; /* Couleur plus douce */

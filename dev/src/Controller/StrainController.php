@@ -2,34 +2,25 @@
 
 namespace App\Controller;
 
-use App\Entity\DrugResistanceOnStrain;
 use App\Entity\Strain;
 use App\Form\ParentFormType;
 use App\Form\SearchFormType;
-use App\Repository\StrainRepository;
 use App\Repository\StrainRepositoryInterface;
 use App\Form\StrainFormType;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Elastica\Query\BoolQuery;
-use Elastica\Query\MatchPhrase;
 use Elastica\Query\MatchQuery;
-use Elastica\Query\QueryString;
-use Elastica\Query\Term;
 use Elastica\Query;
 use Elastica\Query\MatchAll;
-use Elastica\Query\Range;
 use Elastica\Query\Wildcard;
 use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
-use Twig\Environment;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;

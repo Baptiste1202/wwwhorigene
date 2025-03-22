@@ -92,18 +92,13 @@ class StrainFormType extends AbstractType
                 'empty_data' => null,
             ])
             ->add('transformability', type:CollectionType::class, options:[
-                'entry_type' => EntityType::class,
-                'entry_options' => [
-                    'class' => Transformability::class,  // Classe correspondant à l'entité
-                    'choice_label' => function (Transformability $transformability) {
-                        return $transformability->getNom(); // Méthode pour obtenir le label des choix
-                    },
-                    'placeholder' => '',  
-                    'required' => false,
-                ],
-                'allow_add' => true,   // Permet d'ajouter des entrées dynamiquement
-                'allow_delete' => true, // Permet de supprimer des entrées
-                'by_reference' => false, // Nécessaire pour éviter les problèmes avec les relations bidirectionnelles
+                'entry_type' => TransformabilityFormType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,  // Permet d'ajouter dynamiquement des entrées
+                'allow_delete' => true, // Permet de supprimer dynamiquement
+                'by_reference' => false, // Important pour la persistance
+                'prototype' => true, // Utile pour le JS
+                'prototype_name' => '__name__',
                 'label' => false,
             ])
             ->add('plasmyd', type:CollectionType::class, options:[
