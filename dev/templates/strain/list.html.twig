@@ -79,14 +79,17 @@
                 </td>
 
                 <td class="storage" data-info='
-                        room: {{ strain.room ? strain.room: '--'}}
-                        fridge: {{ strain.fridge ? strain.fridge : "--" }}
-                        shelf: {{ strain.shelf ? strain.shelf : "--" }}
-                        rack: {{ strain.rack ? strain.rack : "--" }}
-                        container type : {{ strain.containerType ? strain.containerType : "--" }}
-                        container position : {{ strain.containerPosition ? strain.containerPosition : "--" }}'>
-                {% if strain.room is not null %}
-                    {{strain.room}} {{strain.fridge}} {{strain.shelf}} {{strain.rack}} 
+                        room: {{ strain.storage|first ? strain.storage|first.room: '--'}}
+                        fridge: {{ strain.storage|first ? strain.storage|first.fridge : "--" }}
+                        shelf: {{ strain.storage|first ? strain.storage|first.shelf : "--" }}
+                        rack: {{ strain.storage|first ? strain.storage|first.rack : "--" }}
+                        container type : {{ strain.storage|first ? strain.storage|first.containerType : "--" }}
+                        container position : {{ strain.storage|first ? strain.storage|first.containerPosition : "--" }}'>
+                {% if strain.storage is not empty %}
+                    {{strain.storage[0].room}} 
+                    {{strain.storage[0].fridge}} 
+                    {{strain.storage[0].shelf}} 
+                    {{strain.storage[0].rack}} 
                 {% else %}
                     --
                 {% endif %}
@@ -200,7 +203,8 @@
                 strain.transformability is not empty or
                 strain.methodSequencing is not empty or
                 strain.project is not empty or
-                strain.collec is not empty
+                strain.collec is not empty or 
+                strain.storage is not empty
             )%}
 
                 {% set maxLength = max(
@@ -209,7 +213,8 @@
                 strain.transformability|length, 
                 strain.methodSequencing|length,
                 strain.project|length,
-                strain.collec|length
+                strain.collec|length,
+                strain.storage|length
                 ) %}
 
                 {% if maxLength > 1 %} 
@@ -223,12 +228,23 @@
                         <td>{{ strain.project[i] is defined ? strain.project[i].name : '' }}</td>
                         <td></td>
                         <td></td>
-                        <td></td>
+                        <td class="storage" 
+                            data-info='
+                                room: {{ strain.storage[i] is defined and strain.storage[i] ? strain.storage[i].room: '--'}}
+                                fridge: {{ strain.storage[i] is defined and strain.storage[i] ? strain.storage[i].fridge : "--" }}
+                                shelf: {{ strain.storage[i] is defined and strain.storage[i] ? strain.storage[i].shelf : "--" }}
+                                rack: {{ strain.storage[i] is defined and strain.storage[i] ? strain.storage[i].rack : "--" }}
+                                container type : {{ strain.storage[i] is defined and strain.storage[i] ? strain.storage[i].containerType : "--" }}
+                                container position : {{ strain.storage[i] is defined and strain.storage[i] ? strain.storage[i].containerPosition : "--" }}'
+                            >
+                            {{ strain.storage[i] is defined ? strain.storage[i].room : '' }} <br>
+                            {{ strain.storage[i] is defined ? strain.storage[i].fridge: '' }}
+                        </td>
                         <td>{{ strain.collec[i] is defined ? strain.collec[i].name : '' }}</td>
                         <td></td>
                         <td class="transformability" 
-                            data-info=
-                                'id: {{ strain.transformability[i] is defined and strain.transformability[i] ? strain.transformability[i].id : '--'}}
+                            data-info='
+                                id: {{ strain.transformability[i] is defined and strain.transformability[i] ? strain.transformability[i].id : '--'}}
                                 technique: {{ strain.transformability[i] is defined and strain.transformability[i] ? strain.transformability[i].technique : "--" }}
                                 mesure: {{ strain.transformability[i] is defined and strain.transformability[i] ? strain.transformability[i].mesure : "--" }}
                                 file: {{ strain.transformability[i] is defined and strain.transformability[i].nom ? strain.transformability[i].nom : "--" }}'

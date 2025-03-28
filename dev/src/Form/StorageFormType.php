@@ -2,8 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Storage;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StorageFormType extends AbstractType
 {
@@ -11,21 +13,24 @@ class StorageFormType extends AbstractType
     {
         $builder
             ->add('room', options:[
-                'label' => 'Room'
+                'label' => 'Room',
+                'attr' => [
+                    'placeholder' => 'Room'
+                ]
             ])
-            ->add('congelateur', options:[
+            ->add('fridge', options:[
                 'label' => 'Congelateur'
             ])
-            ->add('etagere', options:[
+            ->add('shelf', options:[
                 'label' => 'Etagere'
             ])
             ->add('rack', options:[
                 'label' => 'Rack'
             ])
-            ->add('typeConteneur', options:[
+            ->add('containerType', options:[
                 'label' => 'Conteneur Type'
             ])
-            ->add('positionConteneur', options:[
+            ->add('containerPosition', options:[
                 'label' => 'Conteneur Position'
             ])
             ->add('description', options:[
@@ -35,5 +40,12 @@ class StorageFormType extends AbstractType
                 'label' => 'Comments'
             ]);
             
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Storage::class,
+        ]);
     }
 }

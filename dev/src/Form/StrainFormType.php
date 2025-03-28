@@ -151,6 +151,16 @@ class StrainFormType extends AbstractType
                 'prototype_name' => '__name__',
                 'label' => false,
             ])
+            ->add('storage', type:CollectionType::class, options:[
+                'entry_type' => StorageFormType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,  // Permet d'ajouter dynamiquement des entrées
+                'allow_delete' => true, // Permet de supprimer dynamiquement
+                'by_reference' => false, // Important pour la persistance
+                'prototype' => true, // Utile pour le JS
+                'prototype_name' => '__name__',
+                'label' => false,
+            ])
             ->add('project', type:CollectionType::class, options:[
                 'entry_type' => EntityType::class,
                 'entry_options' => [
@@ -190,36 +200,6 @@ class StrainFormType extends AbstractType
                 'required' => false,   
                 'placeholder' => '', 
                 'empty_data' => null,
-            ])
-            ->add('room', options:[
-                'label' => 'Room',
-                'required' => false, 
-                'empty_data' => null
-            ])
-            ->add('shelf', options:[
-                'label' => 'Shelf',
-                'required' => false, 
-                'empty_data' => null
-            ])
-            ->add('rack', options:[
-                'label' => 'Rack',
-                'required' => false, 
-                'empty_data' => null
-            ])
-            ->add('fridge', options:[
-                'label' => 'Fridge',
-                'required' => false, 
-                'empty_data' => null
-            ])
-            ->add('containerType', options:[
-                'label' => 'Container Type',
-                'required' => false, 
-                'empty_data' => null
-            ])
-            ->add('containerPosition', options:[
-                'label' => 'Container Position',
-                'required' => false, 
-                'empty_data' => null
             ]);
             
     }

@@ -104,8 +104,12 @@ class Strain
     #[ORM\JoinColumn(nullable: true)]
     private ?Sample $prelevement = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $storage = null;
+    /**
+     * @var Collection<int, storage>
+     */
+    #[ORM\OneToMany(targetEntity: Storage::class, mappedBy: 'strain', cascade:['persist'], orphanRemoval:true)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Collection $storage = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'strain')]
     #[ORM\JoinColumn(nullable: false)]
@@ -116,24 +120,6 @@ class Strain
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date = null;
-    
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $room = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $fridge = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $shelf = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $rack = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $containerType = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $containerPosition = null;
 
     public function __construct()
     {
@@ -144,6 +130,7 @@ class Strain
         $this->methodSequencing = new ArrayCollection();
         $this->project = new ArrayCollection();
         $this->collec = new ArrayCollection();
+        $this->storage = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -520,16 +507,46 @@ class Strain
         return $this;
     }
 
-    public function getStorage(): ?string
+    public function getStorage(): ?Collection
     {
         return $this->storage;
     }
 
-    public function setStorage(?string $storage): static
+    public function setStorage(?Storage $storage): static
     {
         $this->storage = $storage;
 
         return $this;
+    }
+
+    public function addStorage(?Storage $storage): static
+    {
+        if (!$this->storage->contains($storage)) {
+            $this->storage->add($storage);
+            $storage->setStrain($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStorage(?Storage $storage): static
+    {
+        if ($this->storage->removeElement($storage)) {
+            $storage->setStrain($this);
+        }
+
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateStorage(): void
+    {
+        foreach ($this->storage as $storage) {
+            if ($storage->getStrain() !== $this) {
+                $storage->setStrain($this); 
+            }
+        }
     }
 
     public function getCreatedBy(): User
@@ -567,72 +584,6 @@ class Strain
     {
         $this->date = $date;
 
-        return $this;
-    }
-
-    public function getRoom(): ?string
-    {
-        return $this->room;
-    }
-
-    public function setRoom(?string $room): self
-    {
-        $this->room = $room;
-        return $this;
-    }
-
-    public function getFridge(): ?string
-    {
-        return $this->fridge;
-    }
-
-    public function setFridge(?string $fridge): self
-    {
-        $this->fridge = $fridge;
-        return $this;
-    }
-
-    public function getShelf(): ?string
-    {
-        return $this->shelf;
-    }
-
-    public function setShelf(?string $shelf): self
-    {
-        $this->shelf = $shelf;
-        return $this;
-    }
-
-    public function getRack(): ?string
-    {
-        return $this->rack;
-    }
-
-    public function setRack(?string $rack): self
-    {
-        $this->rack = $rack;
-        return $this;
-    }
-
-    public function getContainerType(): ?string
-    {
-        return $this->containerType;
-    }
-
-    public function setContainerType(?string $containerType): self
-    {
-        $this->containerType = $containerType;
-        return $this;
-    }
-
-    public function getContainerPosition(): ?string
-    {
-        return $this->containerPosition;
-    }
-
-    public function setContainerPosition(?string $containerPosition): self
-    {
-        $this->containerPosition = $containerPosition;
         return $this;
     }
 

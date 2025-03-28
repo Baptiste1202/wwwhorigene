@@ -17,25 +17,28 @@ class Storage
     private ?string $room = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $congelateur = null;
+    private ?string $fridge = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $etagere = null;
+    private ?string $shelf = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $rack = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $typeConteneur = null;
+    private ?string $containerType = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $positionConteneur = null;
+    private ?string $containerPosition = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $comment = null;
+
+    #[ORM\ManyToOne(targetEntity: Strain::class, inversedBy: 'MethodSequencing')]
+    private Strain $strain;
 
     public function getId(): ?int
     {
@@ -54,26 +57,26 @@ class Storage
         return $this;
     }
 
-    public function getCongelateur(): ?string
+    public function getFridge(): ?string
     {
-        return $this->congelateur;
+        return $this->fridge;
     }
 
-    public function setCongelateur(?string $congelateur): static
+    public function setFridge(?string $congelateur): static
     {
-        $this->congelateur = $congelateur;
+        $this->fridge = $congelateur;
 
         return $this;
     }
 
-    public function getEtagere(): ?string
+    public function getShelf(): ?string
     {
-        return $this->etagere;
+        return $this->shelf;
     }
 
-    public function setEtagere(?string $etagere): static
+    public function setShelf(?string $etagere): static
     {
-        $this->etagere = $etagere;
+        $this->shelf = $etagere;
 
         return $this;
     }
@@ -90,26 +93,26 @@ class Storage
         return $this;
     }
 
-    public function getTypeConteneur(): ?string
+    public function getContainerType(): ?string
     {
-        return $this->typeConteneur;
+        return $this->containerType;
     }
 
-    public function setTypeConteneur(?string $typeConteneur): static
+    public function setContainerType(?string $typeConteneur): static
     {
-        $this->typeConteneur = $typeConteneur;
+        $this->containerType = $typeConteneur;
 
         return $this;
     }
 
-    public function getPositionConteneur(): ?string
+    public function getContainerPosition(): ?string
     {
-        return $this->positionConteneur;
+        return $this->containerPosition;
     }
 
     public function setPositionConteneur(?string $positionConteneur): static
     {
-        $this->positionConteneur = $positionConteneur;
+        $this->containerPosition = $positionConteneur;
 
         return $this;
     }
@@ -135,6 +138,17 @@ class Storage
     {
         $this->comment = $comment;
 
+        return $this;
+    }
+
+    public function getStrain(): Strain
+    {
+        return $this->strain;
+    }
+
+    public function setStrain(?Strain $strain): self
+    {
+        $this->strain = $strain;
         return $this;
     }
 }

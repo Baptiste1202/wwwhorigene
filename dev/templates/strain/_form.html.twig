@@ -87,21 +87,19 @@
     </div>
 
     <div id="add-btn">
-        <label> Sequencing</label>
+        <label>Sequencing</label>
         <button type="button" class="add_item_link" data-collection-holder-class="sequencing">+</button>
     </div>
 
-    <div id="add-btn">
-        <label for="storage">Storage</label>
-        <button class="toggle-btn" onclick="toggleStorage()">+</button>
+    <div class="hidden-tags" class="storage">
+        <ul class="storage"
+            data-index="{{ strainForm.storage|length > 0 ? strainForm.storage|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_row(strainForm.storage.vars.prototype)|e('html_attr') }}"
+        ></ul>
     </div>
-    <div id="storage" class="hidden" style="display: none">
-        {{ form_row(strainForm.room) }}
-        {{ form_row(strainForm.fridge) }}
-        {{ form_row(strainForm.shelf) }}
-        {{ form_row(strainForm.rack) }}
-        {{ form_row(strainForm.containerType) }}
-        {{ form_row(strainForm.containerPosition) }}
+    <div id="add-btn">
+        <label>Storage</label>
+        <button type="button" class="add_item_link" data-collection-holder-class="storage">+</button>
     </div>
     {{ form_row(strainForm.comment) }}
     {{ form_row(strainForm.description) }}
@@ -226,7 +224,7 @@ function addFormToCollection(e)
   };
 
   document
-    .querySelectorAll('ul.drugResistanceOnStrain li, ul.sequencing li ')
+    .querySelectorAll('ul.drugResistanceOnStrain li, ul.sequencing li, ul.transformability li, ul.storage li')
     .forEach((tag) => {
         addTagFormDeleteLink(tag)
     })
