@@ -47,6 +47,9 @@ class Strain
     #[ORM\JoinColumn(nullable: true)]
     private ?Genotype $genotype = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $descriptionGenotype = null;
+
     /**
      * @var Collection<int, transformability>
      */
@@ -229,6 +232,18 @@ class Strain
     public function setGenotype(?Genotype $genotype): static
     {
         $this->genotype = $genotype;
+
+        return $this;
+    }
+
+    public function getDescriptionGenotype(): ?string
+    {
+        return $this->descriptionGenotype;
+    }
+
+    public function setDescriptionGenotype(?string $comment): static
+    {
+        $this->descriptionGenotype = $comment;
 
         return $this;
     }

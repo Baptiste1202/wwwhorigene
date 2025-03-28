@@ -103,7 +103,9 @@
                 {% endif %}
                 </td>
 
-                <td class="genotype">
+                <td class="genotype" data-info='
+                        genotype: {{ strain.genotype ? strain.genotype.type : '--'}}
+                        description: {{ strain.descriptionGenotype ? strain.descriptionGenotype : "--" }}'>
                 {% if strain.genotype is not null %}
                     {{strain.genotype.type}}
                 {% else %}

@@ -91,6 +91,16 @@ class StrainFormType extends AbstractType
                 'placeholder' => '',  
                 'empty_data' => null,
             ])
+            ->add('descriptionGenotype', TextareaType::class, options:[
+                'label' => ' ',
+                'required' => false, 
+                'empty_data' => null,
+                'attr' => [
+                    'rows' => 2, 
+                    'maxlength' => 250, 
+                    'placeholder' => 'Description Genotype...'
+                ]
+            ])
             ->add('transformability', type:CollectionType::class, options:[
                 'entry_type' => TransformabilityFormType::class,
                 'entry_options' => ['label' => false],
