@@ -29,13 +29,14 @@ class StrainController extends AbstractController
 {
     public function __construct(
         private StrainRepositoryInterface $strainRepository,
-        private readonly PaginatorInterface $paginator,
+        private PaginatorInterface $paginator,
         private readonly PaginatedFinderInterface $finder
     ) {
+        $this->paginator = $paginator; 
     }
 
     #[Route(path: 'strains/page', name: 'page_strains')]
-    public function showPage(Request $request, EntityManagerInterface $em, Security $security, PaginatorInterface $paginator, PaginatedFinderInterface $finder): Response
+    public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
     {
 
         if ($security->isGranted('ROLE_SEARCH') || $security->isGranted('ROLE_ADMIN')){
@@ -58,7 +59,7 @@ class StrainController extends AbstractController
             $paginatorAdapter = $this->finder->createPaginatorAdapter($query);
 
             // Paginer pour récupérer 30 résultats max
-            $strains = $paginator->paginate($paginatorAdapter, $request->query->getInt('page', 1), 15);
+            $strains = $this->paginator->paginate($paginatorAdapter, $request->query->getInt('page', 1), 5);
         }
 
         return $this->render('strain/main.html.twig', [
@@ -157,7 +158,7 @@ class StrainController extends AbstractController
         foreach($strain->getPlasmyd() as $plasmyd){
             $em->remove($plasmyd);
         }
-        foreach($strain->getDrugResistance() as $drug){
+        foreach($strain->getDrugResistanceOnStrain() as $drug){
             $em->remove($drug);
         }
 
@@ -304,15 +305,8 @@ class StrainController extends AbstractController
             'comment' => $strain->getComment() ?: null,
             'description' => $strain->getDescription() ?: null,
             'genotype' => $strain->getGenotype() ? $strain->getGenotype()->getId() : null,
-            'project' => $strain->getProject() ? $strain->getProject()->getId() : null,
-            'collection' => $strain->getCollection() ? $strain->getCollection()->getId() : null,
             'sample' => $strain->getPrelevement() ? $strain->getPrelevement()->getId() : null,
-            'room' => $strain->getRoom() ? $strain->getRoom() : null,
-            'fridge' => $strain->getFridge() ? $strain->getFridge() : null,
-            'shelf' => $strain->getShelf() ? $strain->getShelf() : null,
-            'rack' => $strain->getRack() ? $strain->getRack() : null,
-            'containerType' => $strain->getContainerType() ? $strain->getContainerType() : null,
-            'containerPosition' => $strain->getContainerPosition() ? $strain->getContainerPosition() : null
+            'project' => $strain->getProject() ? $strain->getProject(): null
         ]);
     }
 

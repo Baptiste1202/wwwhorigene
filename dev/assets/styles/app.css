@@ -189,7 +189,6 @@ button.btn-form-strain:hover {
     display: flex;
     flex-direction: row; 
     padding-bottom: 0.3rem;
-    position: relative;
 }
 
 .col-12 form div#storage{
@@ -214,6 +213,46 @@ button.btn-form-strain:hover {
     border-radius: 4px; /* Coins arrondis */
     box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
 }
+
+.ts-control{
+    height: 23px;
+    min-height: 0 !important;
+    padding: 0 !important;
+    padding-right: 0 !important;
+    font-size: small;
+}
+
+.ts-wrapper.single.plugin-clear_button.plugin-virtual_scroll {
+    font-size: small;
+}
+.ts-wrapper.single.plugin-clear_button.plugin-virtual_scroll.preloaded,
+.ts-control{
+    flex: 1; /* Permet à ces éléments de prendre tout l'espace restant */
+    border-radius: 4px; /* Coins arrondis */
+    box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
+    display: flex;
+    flex-direction: column;
+}
+.ts-dropdown{
+    top: 80% !important;
+    position: relative;
+}
+
+.ts-wrapper.single.plugin-clear_button.plugin-virtual_scroll.has-options{
+    flex: 1;
+    
+}
+
+.clear-button{
+    height: 23px;
+}
+
+
+#strain_form_prelevement-ts-dropdown{
+    display: flex;
+    flex-direction: column !important;
+}
+
 
 .col-12 form div#add-btn button{
     width: 30px; /* Taille du carré */

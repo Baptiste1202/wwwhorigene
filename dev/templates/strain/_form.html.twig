@@ -152,25 +152,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
 
+            console.log(data);
+
+            TabProjet = []
+            data.project.forEach(element => {
+                TabProject.append(element)
+            });
+
+            console.log(TabProject)
+
             document.getElementById('strain_form_nameStrain').value = data.name;
             document.getElementById('strain_form_specie').value = data.specie;
             document.getElementById('strain_form_gender').value = data.gender;
             document.getElementById('strain_form_comment').value = data.comment;
             document.getElementById('strain_form_description').value = data.description;
-            document.getElementById('strain_form_genotype').value = data.description;
-            document.getElementById('strain_form_room').value = data.room;
-            document.getElementById('strain_form_fridge').value = data.fridge;
-            document.getElementById('strain_form_shelf').value = data.shelf;
-            document.getElementById('strain_form_rack').value = data.rack;
-            document.getElementById('strain_form_containerType').value = data.containerType;
-            document.getElementById('strain_form_containerPosition').value = data.containerPosition;
             selectOptionByValue('strain_form_genotype', data.genotype);
-            selectOptionByValue('strain_form_transformability', data.transformability);
-            selectOptionByValue('strain_form_plasmyd', data.plasmyd);
-            selectOptionByValue('strain_form_methodSequencing', data.sequencing);
-            selectOptionByValue('strain_form_project', data.project);
-            selectOptionByValue('strain_form_collection', data.collection);
-            selectOptionByValue('strain_form_prelevement', data.sample);
+            selectOptionByValue('strain_form_genotype', data.sample);
             
             } catch (error) {
                 alert('Erreur lors de la recherche de la souche : ' + error.message);

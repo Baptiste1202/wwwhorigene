@@ -7,6 +7,14 @@ use App\Form\ProjectFormType;
 use App\Repository\ProjectRepository;
 use App\Repository\ProjectRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Elastica\Query\BoolQuery;
+use Elastica\Query\MatchQuery;
+use Elastica\Query;
+use Elastica\Query\MatchAll;
+use Elastica\Query\Match;
+use Elastica\Query\Wildcard;
+use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -22,19 +30,29 @@ class ProjectController extends AbstractController
     public function __construct(
         #[Autowire(service: ProjectRepository::class)]
         private ProjectRepositoryInterface $projectRepository,
+        private PaginatorInterface $paginator,
+        private readonly PaginatedFinderInterface $finder
     ) {
     }
 
     #[Route(path: 'strains/page_projects', name: 'page_projects')]
     public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
     {
-        $projectAdd = $this->createForm(ProjectFormType::class); 
-
         if ($security->isGranted('ROLE_SEARCH') || $security->isGranted('ROLE_ADMIN')){
             $projectAdd = $this->addForm($request, $em);  
         } 
 
-        $projects = $this->projectRepository->findAll();
+        $allProjects = $this->projectRepository->findAll();
+
+        // $query->setQuery($matchAll);
+        // $query->setSort(['date' => ['order' => 'desc']]);
+        // $query->setSize(30);
+
+        // // Créer l'adaptateur de pagination
+        // $paginatorAdapter = $this->finder->createPaginatorAdapter($query, ['project']);
+
+        // // Paginer pour récupérer 30 résultats max
+        $projects = $this->paginator->paginate($allProjects, $request->query->getInt('page', 1), 15);
 
         return $this->render('project/main.html.twig', [
             'projectForm' => $projectAdd, 

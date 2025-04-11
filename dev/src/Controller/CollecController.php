@@ -7,6 +7,8 @@ use App\Form\CollecFormType;
 use App\Repository\CollecRepository;
 use App\Repository\CollecRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -22,6 +24,8 @@ class CollecController extends AbstractController
     public function __construct(
         #[Autowire(service: CollecRepository::class)]
         private CollecRepositoryInterface $collecRepository,
+        private PaginatorInterface $paginator,
+        private readonly PaginatedFinderInterface $finder
     ) {
     }
 
@@ -34,7 +38,9 @@ class CollecController extends AbstractController
             $collecAdd = $this->addForm($request, $em);  
         }
 
-        $collecs = $this->collecRepository->findAll();
+        $allCollec = $this->collecRepository->findAll();
+
+        $collecs = $this->paginator->paginate($allCollec, $request->query->getInt('page', 1), 15);
 
         return $this->render('collec/main.html.twig', [
             'collecForm' => $collecAdd, 

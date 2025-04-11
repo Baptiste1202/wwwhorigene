@@ -23,9 +23,6 @@ class DrugResistance
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
-    #[ORM\Column]
-    private ?int $concentration = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
@@ -65,18 +62,6 @@ class DrugResistance
     public function setType(string $type): static
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    public function getConcentration(): ?int
-    {
-        return $this->concentration;
-    }
-
-    public function setConcentration(int $concentration): static
-    {
-        $this->concentration = $concentration;
 
         return $this;
     }

@@ -13,22 +13,16 @@ class SequencingFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', options:[
-                'label' => 'Name',
-                'attr' => [
-                    'placeholder' => 'Name File'
-                ]
+            ->add('file', VichFileType::class, options:[
+                'required' => false,
+                'label' => 'Upload File'
             ])
             ->add('comment', options:[
                 'label' => 'Comments'
             ])
             ->add('description', options:[
                 'label' => 'Description'
-            ])            
-            ->add('file', VichFileType::class, options:[
-                'required' => false,
-                'label' => 'Upload File'
-            ]);
+            ]);           
 
             
     }

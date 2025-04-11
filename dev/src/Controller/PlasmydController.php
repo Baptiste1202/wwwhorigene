@@ -7,6 +7,8 @@ use App\Form\PlasmydFormType;
 use App\Repository\PlasmydRepository;
 use App\Repository\PlasmydRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\Form;
@@ -23,6 +25,8 @@ class PlasmydController extends AbstractController
     public function __construct(
         #[Autowire(service: PlasmydRepository::class)]
         private PlasmydRepositoryInterface $plasmydRepository,
+        private PaginatorInterface $paginator,
+        private readonly PaginatedFinderInterface $finder
     ) {
     }
 
@@ -37,6 +41,8 @@ class PlasmydController extends AbstractController
         } 
 
         $plasmyds = $this->plasmydRepository->findAll();
+
+        $plasmyds = $this->paginator->paginate($plasmyds, $request->query->getInt('page', 1), 15);
 
         return $this->render('plasmyd/main.html.twig', [
             'plasmydForm' => $plasmydAdd, 

@@ -12,6 +12,12 @@ use App\Entity\Publication;
 use App\Entity\Sample;
 use App\Entity\Strain;
 use App\Entity\Transformability;
+use App\Form\Autocomplete\CollecAutocompleteField;
+use App\Form\Autocomplete\PlasmydAutocompleteField;
+use App\Form\Autocomplete\ProjectAutocompleteField;
+use App\Form\Autocomplete\PublicationAutocompleteField;
+use App\Form\Autocomplete\SampleAutocompleteField;
+use App\Form\Autocomplete\StrainAutocompleteField;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -34,10 +40,8 @@ class StrainFormType extends AbstractType
                 'label' => 'Parent Strain',
             ])
         */
-            ->add('parentStrain', type:IntegerType::class, options:[
-                'mapped' => false,
-                'required' => false,
-                'label' => 'Parent Strain ID',
+            ->add('parentStrain', type:StrainAutocompleteField::class, options:[
+
             ])
             ->add('searchParent', ButtonType::class, [
                 'label' => 'Rechercher',
@@ -112,15 +116,7 @@ class StrainFormType extends AbstractType
                 'label' => false,
             ])
             ->add('plasmyd', type:CollectionType::class, options:[
-                'entry_type' => EntityType::class,
-                'entry_options' => [
-                    'class' => Plasmyd::class,  // Classe correspondant à l'entité
-                    'choice_label' => function (Plasmyd $plasmyd) {
-                        return $plasmyd->getSlug(); // Méthode pour obtenir le label des choix
-                    },
-                    'placeholder' => '',  
-                    'required' => false,
-                ],
+                'entry_type' => PlasmydAutocompleteField::class,
                 'allow_add' => true,   // Permet d'ajouter des entrées dynamiquement
                 'allow_delete' => true, // Permet de supprimer des entrées
                 'by_reference' => false, // Nécessaire pour éviter les problèmes avec les relations bidirectionnelles
@@ -137,15 +133,7 @@ class StrainFormType extends AbstractType
                 'label' => false,
             ])
             ->add('publication', type:CollectionType::class, options:[
-                'entry_type' => EntityType::class,
-                'entry_options' => [
-                    'class' => Publication::class,  // Classe correspondant à l'entité
-                    'choice_label' => function (Publication $publication) {
-                        return $publication->getSlug(); 
-                    },
-                    'placeholder' => '',  
-                    'required' => false,
-                ],
+                'entry_type' => PublicationAutocompleteField::class,
                 'allow_add' => true,   // Permet d'ajouter des entrées dynamiquement
                 'allow_delete' => true, // Permet de supprimer des entrées
                 'by_reference' => false, // Nécessaire pour éviter les problèmes avec les relations bidirectionnelles
@@ -172,45 +160,20 @@ class StrainFormType extends AbstractType
                 'label' => false,
             ])
             ->add('project', type:CollectionType::class, options:[
-                'entry_type' => EntityType::class,
-                'entry_options' => [
-                    'class' => Project::class,  // Classe correspondant à l'entité
-                    'choice_label' => function (Project $project) {
-                        return $project->getName(); 
-                    },
-                    'placeholder' => '',  
-                    'required' => false,
-                ],
+                'entry_type' => ProjectAutocompleteField::class,
                 'allow_add' => true,   // Permet d'ajouter des entrées dynamiquement
                 'allow_delete' => true, // Permet de supprimer des entrées
                 'by_reference' => false, // Nécessaire pour éviter les problèmes avec les relations bidirectionnelles
                 'label' => false,
             ])
             ->add('collec', type:CollectionType::class, options:[
-                'entry_type' => EntityType::class,
-                'entry_options' => [
-                    'class' => Collec::class,  // Classe correspondant à l'entité
-                    'choice_label' => function (Collec $collec) {
-                        return $collec->getName(); 
-                    },
-                    'placeholder' => '',  
-                    'required' => false,
-                ],
+                'entry_type' => CollecAutocompleteField::class,
                 'allow_add' => true,   // Permet d'ajouter des entrées dynamiquement
                 'allow_delete' => true, // Permet de supprimer des entrées
                 'by_reference' => false, // Nécessaire pour éviter les problèmes avec les relations bidirectionnelles
                 'label' => false,
             ])
-            ->add('prelevement',type:EntityType::class, options:[
-                'label' => 'Sample',
-                'class' => Sample::class,
-                'choice_label' => function (Sample $sample) {
-                    return $sample->getName(); 
-                },
-                'required' => false,   
-                'placeholder' => '', 
-                'empty_data' => null,
-            ]);
+            ->add('prelevement', SampleAutocompleteField::class);
             
     }
 }

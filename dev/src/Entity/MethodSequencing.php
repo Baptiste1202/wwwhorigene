@@ -20,7 +20,7 @@ class MethodSequencing
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
 
     #[Vich\UploadableField(mapping: 'sequencing_docs', fileNameProperty: 'nameFile')]
@@ -28,6 +28,9 @@ class MethodSequencing
 
     #[ORM\Column(nullable: true)]
     private ?string $nameFile = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $typeFile = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
@@ -73,6 +76,17 @@ class MethodSequencing
     public function setNameFile(?string $nom): void
     {
         $this->nameFile = $nom;
+
+    }
+
+    public function getTypeFile(): ?string
+    {
+        return $this->typeFile;
+    }
+
+    public function setTypeFile(?string $type): void
+    {
+        $this->typeFile = $type;
 
     }
 

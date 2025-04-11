@@ -20,9 +20,6 @@ class DrugFormType extends AbstractType
                     'Qualitative' => 'qualitative'
                 ]
             ])
-            ->add('concentration', options:[
-                'label' => 'Concentration'
-            ])
             ->add('description', options:[
                 'label' => 'Description'
             ])

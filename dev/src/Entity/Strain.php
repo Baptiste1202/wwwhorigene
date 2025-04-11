@@ -53,7 +53,7 @@ class Strain
     /**
      * @var Collection<int, transformability>
      */
-    #[ORM\OneToMany(targetEntity: Transformability::class, mappedBy: 'strain', cascade:['persist'], orphanRemoval:true)]
+    #[ORM\OneToMany(targetEntity: Transformability::class, mappedBy: 'strain', cascade:['persist', 'remove'], orphanRemoval:true)]
     #[ORM\JoinColumn(nullable: true)]
     private ?Collection $transformability;
 
@@ -67,7 +67,7 @@ class Strain
     /**
      * @var Collection<int, drugResistanceOnStrain>
      */
-    #[ORM\OneToMany(targetEntity: DrugResistanceOnStrain::class, mappedBy: 'strain', cascade:['persist'], orphanRemoval:true)]
+    #[ORM\OneToMany(targetEntity: DrugResistanceOnStrain::class, mappedBy: 'strain', cascade:['persist', 'remove'], orphanRemoval:true)]
     #[ORM\JoinColumn(nullable: true)]
     private ?Collection $drugResistanceOnStrain;
 
@@ -81,7 +81,7 @@ class Strain
     /**
      * @var Collection<int, methodSequencing>
      */
-    #[ORM\OneToMany(targetEntity: MethodSequencing::class, mappedBy: 'strain', cascade:['persist'], orphanRemoval:true)]
+    #[ORM\OneToMany(targetEntity: MethodSequencing::class, mappedBy: 'strain', cascade:['persist', 'remove'], orphanRemoval:true)]
     #[ORM\JoinColumn(nullable: true)]
     private ?Collection $methodSequencing;
 
@@ -110,7 +110,7 @@ class Strain
     /**
      * @var Collection<int, storage>
      */
-    #[ORM\OneToMany(targetEntity: Storage::class, mappedBy: 'strain', cascade:['persist'], orphanRemoval:true)]
+    #[ORM\OneToMany(targetEntity: Storage::class, mappedBy: 'strain', cascade:['persist', 'remove'], orphanRemoval:true)]
     #[ORM\JoinColumn(nullable: true)]
     private ?Collection $storage = null;
 

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\DrugResistance;
 use App\Entity\DrugResistanceOnStrain;
+use App\Form\Autocomplete\DrugAutocompleteField;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -14,11 +15,7 @@ class DrugOnFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('drugResistance', type:EntityType ::class, options:[
-                'class' => DrugResistance::class,  
-                'choice_label' => function (DrugResistance $drugResistance) {
-                    return $drugResistance->getName();  
-                },
+            ->add('drugResistance', type:DrugAutocompleteField::class, options:[ 
                 'placeholder' => 'Sélectionner une résistance',  
                 'required' => true,
             ])

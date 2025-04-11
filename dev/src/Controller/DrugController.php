@@ -7,6 +7,8 @@ use App\Form\DrugFormType;
 use App\Repository\DrugRepository;
 use App\Repository\DrugRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\Form;
@@ -22,14 +24,14 @@ class DrugController extends AbstractController
     public function __construct(
         #[Autowire(service: DrugRepository::class)]
         private DrugRepositoryInterface $drugRepository,
+        private PaginatorInterface $paginator,
+        private readonly PaginatedFinderInterface $finder
     ) {
     }
 
     #[Route(path: 'page_drugs', name: 'page_drugs')]
     public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
     {
-        $role = $security->getUser()->getRoles(); 
-
         $drugAdd = $this->createForm(DrugFormType::class); 
 
         if ($security->isGranted('ROLE_SEARCH') || $security->isGranted('ROLE_ADMIN')){
@@ -37,6 +39,7 @@ class DrugController extends AbstractController
         } 
 
         $drugs = $this->drugRepository->findAll();
+        $drugs = $this->paginator->paginate($drugs, $request->query->getInt('page', 1), 15);
 
         return $this->render('drug/main.html.twig', [
             'drugForm' => $drugAdd, 
