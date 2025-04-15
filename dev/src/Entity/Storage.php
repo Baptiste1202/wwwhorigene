@@ -110,7 +110,7 @@ class Storage
         return $this->containerPosition;
     }
 
-    public function setPositionConteneur(?string $positionConteneur): static
+    public function setContainerPosition(?string $positionConteneur): static
     {
         $this->containerPosition = $positionConteneur;
 

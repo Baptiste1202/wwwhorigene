@@ -31,7 +31,8 @@ class StorageFormType extends AbstractType
                 'label' => 'Conteneur Type'
             ])
             ->add('containerPosition', options:[
-                'label' => 'Conteneur Position'
+                'label' => 'Conteneur Position',
+                'required' => false
             ])
             ->add('description', options:[
                 'label' => 'Description'

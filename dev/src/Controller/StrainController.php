@@ -266,23 +266,23 @@ class StrainController extends AbstractController
                 $boolQuery->addFilter(new MatchQuery('methodSequencing.typeFile', $data->sequencing));
             }
 
-            if ($data->drug || $data->resistant !== null ){
-                $nestedBool = new BoolQuery();
+            // if ($data->drug || $data->resistant !== null ){
+            //     $nestedBool = new BoolQuery();
                 
-                if ($data->drug) {
-                    $nestedBool->addFilter(new MatchQuery('drugResistanceOnStrain.drugResistance.id', $data->drug->getId()));
-                }
+            //     if ($data->drug) {
+            //         $nestedBool->addFilter(new MatchQuery('drugResistanceOnStrain.drugResistance.id', $data->drug->getId()));
+            //     }
             
-                if ($data->resistant !== null) {
-                    $nestedBool->addFilter(new MatchQuery('drugResistanceOnStrain.resistant', $data->resistant));
-                }
+            //     if ($data->resistant !== null) {
+            //         $nestedBool->addFilter(new MatchQuery('drugResistanceOnStrain.resistant', $data->resistant));
+            //     }
 
-                $nested = new Nested();
-                $nested->setPath('drugResistanceOnStrain');
-                $nested->setQuery($nestedBool);
+            //     $nested = new Nested();
+            //     $nested->setPath('drugResistanceOnStrain');
+            //     $nested->setQuery($nestedBool);
 
-                $boolQuery->addFilter($nested);
-            }
+            //     $boolQuery->addFilter($nested);
+            // }
 
             if ($data->genotype){
                 $boolQuery->addFilter(new MatchQuery('genotype.id', $data->genotype->getId()));
@@ -308,16 +308,9 @@ class StrainController extends AbstractController
                 $boolQuery->addFilter(new Wildcard('gender', '*'.$data->gender.'*'));
             }
 
-            // Crée la query principale
-            $query = new Query($boolQuery);
-
-            // Applique le tri
-            $query->setSort(['date' => ['order' => 'desc']]);
-
             // Crée le paginator à partir de la query complète
-            $results = $this->finder->createPaginatorAdapter($query);
+            $results = $this->finder->createPaginatorAdapter($boolQuery);
             $pagination = $this->paginator->paginate($results, $page, 15);
-
         } 
 
         return [
