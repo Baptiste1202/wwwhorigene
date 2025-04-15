@@ -7,8 +7,10 @@ use App\Entity\DrugResistanceOnStrain;
 use App\Form\Autocomplete\DrugAutocompleteField;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class DrugOnFormType extends AbstractType
 {
@@ -21,6 +23,13 @@ class DrugOnFormType extends AbstractType
             ])
             ->add('concentration', options:[
                 'label' => 'Concentration'
+            ])
+            ->add('resistant', CheckboxType::class, options:[
+                'label' => 'Resistant'
+            ])
+            ->add('file', VichFileType::class, options:[
+                'required' => false,
+                'label' => 'Upload File'
             ])
             ->add('description', options:[
                 'label' => 'Description'

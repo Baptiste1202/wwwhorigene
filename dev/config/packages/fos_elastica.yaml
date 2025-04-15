@@ -20,10 +20,20 @@ fos_elastica:
           type: object
           properties:
             id: ~
-        drugResistance:
+        methodSequencing:
           type: object
           properties:
-            id: ~
+            typeFile:  
+              type: text
+        drugResistanceOnStrain:
+          type: nested
+          properties:
+              resistant:
+                  type: boolean
+              drugResistance:
+                  type: object
+                  properties:
+                      id: ~
         genotype:
           type: object
           properties:

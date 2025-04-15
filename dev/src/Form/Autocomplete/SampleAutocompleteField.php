@@ -24,7 +24,7 @@ class SampleAutocompleteField extends AbstractType
                 'country'
             ],
             'choice_label' => function (Sample $sample) {
-                return $sample->getName(); 
+                return $sample->getName().' - '.$sample->getCountry().' - '.$sample->getCity() ; 
             }
 
             // if the autocomplete endpoint needs to be secured

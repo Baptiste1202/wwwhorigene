@@ -4,8 +4,11 @@ namespace App\Entity;
 
 use App\Repository\DrugOnStrainRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: DrugOnStrainRepository::class)]
+#[Vich\Uploadable]
 class DrugResistanceOnStrain
 {
     #[ORM\Id]
@@ -27,6 +30,15 @@ class DrugResistanceOnStrain
 
     #[ORM\ManyToOne(targetEntity: Strain::class, inversedBy: 'drugResistanceOnStrain')]
     private Strain $strain;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $resistant = null;
+
+    #[Vich\UploadableField(mapping: 'drug_docs', fileNameProperty: 'nameFile')]
+    private ?File $file = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $nameFile = null;
 
     public function getId(): ?int
     {
@@ -90,6 +102,38 @@ class DrugResistanceOnStrain
     {
         $this->strain = $strain;
         return $this;
+    }
+
+    public function isResistant(): bool
+    {
+        return $this->resistant;
+    }
+
+    public function setResistant(?bool $resistant): static
+    {
+        $this->resistant = $resistant;
+        return $this;
+    }
+
+    public function setFile(?File $file = null): void
+    {
+        $this->file = $file;
+    }
+
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    public function getNameFile(): ?string
+    {
+        return $this->nameFile;
+    }
+
+    public function setNameFile(?string $nom): void
+    {
+        $this->nameFile = $nom;
+
     }
 
 

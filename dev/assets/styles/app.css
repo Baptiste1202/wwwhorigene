@@ -231,7 +231,7 @@ button.btn-form-strain:hover {
     border-radius: 4px; /* Coins arrondis */
     box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
     display: flex;
-    flex-direction: column;
+    flex-direction: column !important;
 }
 .ts-dropdown{
     top: 80% !important;
@@ -247,8 +247,7 @@ button.btn-form-strain:hover {
     height: 23px;
 }
 
-
-#strain_form_prelevement-ts-dropdown{
+.ts-dropdown-content{
     display: flex;
     flex-direction: column !important;
 }

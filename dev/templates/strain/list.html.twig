@@ -121,6 +121,7 @@
                         data-file='{{ strain.transformability|first ? strain.transformability|first.nom : '--'}}'>
                 {% if strain.transformability is not empty %}
                     {{strain.transformability[0].technique}} <br>
+                    {{strain.transformability[0].mesure}}
                 {% else %}
                     --
                 {% endif %}
@@ -164,7 +165,8 @@
                         file : {{ strain.methodSequencing|first ? strain.methodSequencing|first.nameFile  : '--'}}'
                         data-file='{{ strain.methodSequencing|first ? strain.methodSequencing|first.nameFile : '--'}}'>
                 {% if strain.methodSequencing is not empty %}
-                    {{strain.methodSequencing[0].name}}
+                    {{ strain.methodSequencing[0].name ?: strain.methodSequencing[0].nameFile }} <br>
+                    {{ strain.methodSequencing[0].typeFile }} <br>
                 {% else %}
                     --
                 {% endif %}
@@ -206,7 +208,8 @@
                 strain.methodSequencing is not empty or
                 strain.project is not empty or
                 strain.collec is not empty or 
-                strain.storage is not empty
+                strain.storage is not empty or
+                strain.plasmyd is not empty
             )%}
 
                 {% set maxLength = max(
@@ -216,7 +219,8 @@
                 strain.methodSequencing|length,
                 strain.project|length,
                 strain.collec|length,
-                strain.storage|length
+                strain.storage|length,
+                strain.plasmyd|length
                 ) %}
 
                 {% if maxLength > 1 %} 
@@ -275,7 +279,7 @@
                             name : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing|first.name  : '--'}}
                             file : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing|first.nameFile  : '--'}}'
                             data-file='{{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing|first.nameFile : '--'}}'>
-                            {{ strain.methodSequencing[i] is defined ? strain.methodSequencing[i].name : '' }}
+                            {{ strain.methodSequencing[i] is defined ? strain.methodSequencing[i].nameFile : '' }} <br>
                         </td>
                         <td></td>
                         <td></td>

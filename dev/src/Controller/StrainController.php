@@ -13,6 +13,7 @@ use Elastica\Query\BoolQuery;
 use Elastica\Query\MatchQuery;
 use Elastica\Query;
 use Elastica\Query\MatchAll;
+use Elastica\Query\Nested;
 use Elastica\Query\Wildcard;
 use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -53,13 +54,12 @@ class StrainController extends AbstractController
 
             $query->setQuery($matchAll);
             $query->setSort(['date' => ['order' => 'desc']]);
-            $query->setSize(30);
 
             // Créer l'adaptateur de pagination
             $paginatorAdapter = $this->finder->createPaginatorAdapter($query);
 
             // Paginer pour récupérer 30 résultats max
-            $strains = $this->paginator->paginate($paginatorAdapter, $request->query->getInt('page', 1), 5);
+            $strains = $this->paginator->paginate($paginatorAdapter, $request->query->getInt('page', 1), 15);
         }
 
         return $this->render('strain/main.html.twig', [
@@ -94,6 +94,12 @@ class StrainController extends AbstractController
             $strain->setCreatedBy($user);
 
             $strain->setDate(new \DateTime());
+
+            foreach($strain->getMethodSequencing() as $sequencing){
+                $filename = $sequencing->getFile()->getClientOriginalName();
+                $extension = pathinfo($filename, PATHINFO_EXTENSION);
+                $sequencing->setTypeFile($extension);
+            }
 
             //stock data
             $em->persist($strain);
@@ -256,8 +262,26 @@ class StrainController extends AbstractController
                 $boolQuery->addFilter(new MatchQuery('plasmyd.id', $data->plasmyd->getId()));
             }
 
-            if ($data->drug){
-                $boolQuery->addFilter(new MatchQuery('drugResistance.id', $data->drug->getId()));
+            if ($data->sequencing) {
+                $boolQuery->addFilter(new MatchQuery('methodSequencing.typeFile', $data->sequencing));
+            }
+
+            if ($data->drug || $data->resistant !== null ){
+                $nestedBool = new BoolQuery();
+                
+                if ($data->drug) {
+                    $nestedBool->addFilter(new MatchQuery('drugResistanceOnStrain.drugResistance.id', $data->drug->getId()));
+                }
+            
+                if ($data->resistant !== null) {
+                    $nestedBool->addFilter(new MatchQuery('drugResistanceOnStrain.resistant', $data->resistant));
+                }
+
+                $nested = new Nested();
+                $nested->setPath('drugResistanceOnStrain');
+                $nested->setQuery($nestedBool);
+
+                $boolQuery->addFilter($nested);
             }
 
             if ($data->genotype){
@@ -284,10 +308,17 @@ class StrainController extends AbstractController
                 $boolQuery->addFilter(new Wildcard('gender', '*'.$data->gender.'*'));
             }
 
-            $results = $this->finder->createPaginatorAdapter($boolQuery);
-            $pagination = $this->paginator->paginate($results, $page, 15); 
+            // Crée la query principale
+            $query = new Query($boolQuery);
 
-        }
+            // Applique le tri
+            $query->setSort(['date' => ['order' => 'desc']]);
+
+            // Crée le paginator à partir de la query complète
+            $results = $this->finder->createPaginatorAdapter($query);
+            $pagination = $this->paginator->paginate($results, $page, 15);
+
+        } 
 
         return [
             'form' => $form,
