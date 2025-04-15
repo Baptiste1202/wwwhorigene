@@ -308,8 +308,11 @@ class StrainController extends AbstractController
                 $boolQuery->addFilter(new Wildcard('gender', '*'.$data->gender.'*'));
             }
 
+            $query = new Query ($boolQuery);
+            $query->setSort(['date' => ['order' => 'desc']]);
+
             // Crée le paginator à partir de la query complète
-            $results = $this->finder->createPaginatorAdapter($boolQuery);
+            $results = $this->finder->createPaginatorAdapter($query);
             $pagination = $this->paginator->paginate($results, $page, 15);
         } 
 
