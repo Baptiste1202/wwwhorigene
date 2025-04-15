@@ -332,8 +332,7 @@ class StrainController extends AbstractController
             'comment' => $strain->getComment() ?: null,
             'description' => $strain->getDescription() ?: null,
             'genotype' => $strain->getGenotype() ? $strain->getGenotype()->getId() : null,
-            'sample' => $strain->getPrelevement() ? $strain->getPrelevement()->getId() : null,
-            'project' => $strain->getProject() ? $strain->getProject(): null
+            // 'sample' => $strain->getPrelevement() ? $strain->getPrelevement()->getId() : null,
         ]);
     }
 

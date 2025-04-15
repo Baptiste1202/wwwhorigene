@@ -154,20 +154,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             console.log(data);
 
-            TabProjet = []
-            data.project.forEach(element => {
-                TabProject.append(element)
-            });
-
-            console.log(TabProjet)
-
             document.getElementById('strain_form_nameStrain').value = data.name;
             document.getElementById('strain_form_specie').value = data.specie;
             document.getElementById('strain_form_gender').value = data.gender;
             document.getElementById('strain_form_comment').value = data.comment;
             document.getElementById('strain_form_description').value = data.description;
             selectOptionByValue('strain_form_genotype', data.genotype);
-            selectOptionByValue('strain_form_genotype', data.sample);
             
             } catch (error) {
                 alert('Erreur lors de la recherche de la souche : ' + error.message);
