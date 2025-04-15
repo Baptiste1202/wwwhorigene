@@ -141,7 +141,12 @@
                         description: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.description  : '--'}}'>
                 {% if strain.drugResistanceOnStrain is not empty %}
                     {{strain.drugResistanceOnStrain[0].drugResistance.name}} <br>
-                    {{strain.drugResistanceOnStrain[0].concentration}}
+                    {{strain.drugResistanceOnStrain[0].concentration}}  
+                    {% if strain.drugResistanceOnStrain[0].resistant == 1 %}
+                        <a class="resistant-display-green">resistant : &#x2713;</a>
+                    {% else %}
+                        <a class="resistant-display-red">resistant : x</a>
+                    {% endif %}
                 {% else %}
                     --
                 {% endif %}
@@ -196,9 +201,9 @@
                 {% endif %}
                 </td>
 
-                <td><a href = "{{path("duplicate_strain", {id: strain.id})}}"> Duplicate </a><td>
-                <td><a href = "{{path("edit_strain", {id: strain.id})}}"> Modifie </a><td>
-                <td><a href = "{{path("delete_strain", {id: strain.id})}}"> x </a><td>
+                <td><a href = "{{path("duplicate_strain", {id: strain.id})}}" class="button-crud"> Duplicate </a><td>
+                <td><a href = "{{path("edit_strain", {id: strain.id})}}" class="button-crud"> Modifie </a><td>
+                <td><a href = "{{path("delete_strain", {id: strain.id})}}" class="button-crud"> x </a><td>
             </tr>
 
             {% if (
@@ -265,7 +270,14 @@
                             comment: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].drugResistance.comment  : '--'}}
                             description: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].drugResistance.description  : '--'}}'> 
                             {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].drugResistance.name : '' }} <br>
-                            {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].drugResistance.concentration : '' }}
+                            {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].concentration : '' }}
+                            {% if strain.drugResistanceOnStrain[i] is defined %}
+                                {% if strain.drugResistanceOnStrain[i].resistant == 1 %}
+                                    <a class="resistant-display-green"> resistant : &#x2713; </a>
+                                {% else %}
+                                    <a class="resistant-display-red"> resistant : x </a>
+                                {% endif %}
+                            {% endif %}
                         </td>
                         <td data-info='
                             id: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].id  : '--'}}

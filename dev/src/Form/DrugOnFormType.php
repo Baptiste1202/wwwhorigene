@@ -25,7 +25,8 @@ class DrugOnFormType extends AbstractType
                 'label' => 'Concentration'
             ])
             ->add('resistant', CheckboxType::class, options:[
-                'label' => 'Resistant'
+                'label' => 'Resistant',
+                'required' => false
             ])
             ->add('file', VichFileType::class, options:[
                 'required' => false,

@@ -518,7 +518,7 @@ button.btn-form-strain:hover {
     color: #555;
 }
 
-#global #list #table td  a {
+.button-crud {
     display: inline-block;
     padding: 6px 12px; /* Espacement interne */
     background-color: #f3f3f3; /* Couleur de fond par défaut des boutons natifs */
@@ -533,10 +533,18 @@ button.btn-form-strain:hover {
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-#global #list #table td  a:hover {
+.button-crud:hover {
     background-color: #e6e6e6; /* Gris clair au survol */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Accentuation de l'ombre */
     text-decoration: none; /* Évite le soulignement au survol */
+}
+
+.resistant-display-green{
+    color: green;
+}
+
+.resistant-display-red{
+    color: red;
 }
 
 #global #list #table td.supp  a:hover {
