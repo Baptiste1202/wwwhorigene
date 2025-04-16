@@ -53,7 +53,7 @@ class StrainController extends AbstractController
             $matchAll = new MatchAll();
 
             $query->setQuery($matchAll);
-            $query->setSort(['date' => ['order' => 'desc']]);
+            $query->setSort(['id' => ['order' => 'desc']]);
 
             // Créer l'adaptateur de pagination
             $paginatorAdapter = $this->finder->createPaginatorAdapter($query);
@@ -309,7 +309,7 @@ class StrainController extends AbstractController
             }
 
             $query = new Query ($boolQuery);
-            $query->setSort(['date' => ['order' => 'desc']]);
+            $query->setSort(['id' => ['order' => 'desc']]);
 
             // Crée le paginator à partir de la query complète
             $results = $this->finder->createPaginatorAdapter($query);

@@ -11,6 +11,8 @@ fos_elastica:
         provider: ~
         finder: ~
       properties:
+        id:
+          type: integer
         nameStrain: 
           type: text
           fields:
