@@ -24,6 +24,9 @@ class PublicationFormType extends AbstractType
             ])
             ->add('description', options:[
                 'label' => 'Description'
+            ])
+            ->add('DOI', options:[
+                'label' => 'DOI'
             ]);
 
             

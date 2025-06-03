@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\Storage;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StorageFormType extends AbstractType
@@ -30,6 +32,11 @@ class StorageFormType extends AbstractType
             ->add('containerType', options:[
                 'label' => 'Conteneur Type'
             ])
+            ->add('volume', options:[
+                'label' => 'Volume',
+                'required' => false, 
+                'empty_data' => 'culot'
+            ])
             ->add('containerPosition', options:[
                 'label' => 'Conteneur Position',
                 'required' => false
@@ -40,6 +47,14 @@ class StorageFormType extends AbstractType
             ->add('comment', options:[
                 'label' => 'Comments'
             ]);
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $data = $event->getData();
+            if (empty($data['volume'])) {
+                $data['volume'] = 'culot';
+                $event->setData($data);
+            }
+        });
             
     }
 

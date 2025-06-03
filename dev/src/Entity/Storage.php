@@ -37,6 +37,9 @@ class Storage
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $comment = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $volume = null;
+
     #[ORM\ManyToOne(targetEntity: Strain::class, inversedBy: 'MethodSequencing')]
     private Strain $strain;
 
@@ -151,4 +154,16 @@ class Storage
         $this->strain = $strain;
         return $this;
     }
+
+    public function getVolume(): ?string
+    {
+        return $this->volume;
+    }
+
+    public function setVolume(?string $volume): static
+    {
+        $this->volume = $volume;
+
+        return $this;
+    }   
 }

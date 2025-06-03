@@ -35,6 +35,9 @@ class Publication
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $DOI = null;
+
     /**
      * @var Collection<int, Strain>
      */
@@ -137,6 +140,18 @@ class Publication
             $this->strain->add($strain);
             $strain->addPublication($this);
         }
+
+        return $this;
+    }
+
+    public function getDOI(): ?string
+    {
+        return $this->DOI;
+    }
+
+    public function setDOI(?string $DOI): static
+    {
+        $this->DOI = $DOI;
 
         return $this;
     }

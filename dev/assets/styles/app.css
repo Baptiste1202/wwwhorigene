@@ -48,7 +48,7 @@
 }
 
 .vertical-menu {
-    width: 250px; /* Largeur définie */
+    width: 250px; /* Largeur du menu latéral */
     background-color: #333; 
     padding: 10px 0;
     height: 100vh;
@@ -134,9 +134,8 @@
     display : grid;
     grid-template-columns: repeat(4,25%);
     grid-template-rows: repeat(3,30%);
-    margin-left: 260px; /* Décalage égal à la largeur du menu plus une marge supplémentaire */
+    margin-left: 250px; /* Décalage égal à la largeur du menu plus une marge supplémentaire */
     padding: 20px;
-
 }
 
 #global #form {
@@ -148,8 +147,9 @@
     border : 1px solid;
     border-radius: 5px; /* Coins arrondis */
     background-color: #f9f9f9; /* Couleur de fond */
-    font-family: 'Roboto', sans-serif;
-    
+    font-family: 'Roboto', sans-serif;  
+    width: auto;
+    height: auto; /* Hauteur s'adapte au contenu */
 }
 
 #global #form h1 {
@@ -418,22 +418,6 @@ button.btn-form-strain:hover {
     box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
 }
 
-#global #component {
-    grid-column: 1;
-    grid-row: 3/-1;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ajoute une légère ombre pour l'esthétique */
-    padding: 20px; /* Espace intérieur pour le contenu */
-    margin-right : 20px;
-    margin-top : 20px;
-    border : 1px solid;
-    border-radius: 5px; /* Coins arrondis */
-    background-color: #f9f9f9; /* Couleur de fond */
-    display: flex; /* Utiliser flex pour l'alignement interne si nécessaire */
-    flex-direction: column; /* Assure que le contenu est aligné en colonne */
-    height: auto; /* Hauteur s'adapte au contenu */
-    font-family: 'Roboto', sans-serif;
-}
-
 #global #list {
     grid-column: 2/-1;
     grid-row: 1/-1;
@@ -444,7 +428,8 @@ button.btn-form-strain:hover {
     background-color: #f9f9f9; /* Couleur de fond */
     display: flex; /* Utiliser flex pour l'alignement interne si nécessaire */
     flex-direction: column; /* Assure que le contenu est aligné en colonne */
-    height: auto; /* Hauteur s'adapte au contenu */
+    height: 85vh; /* Hauteur s'adapte au contenu */
+    width: auto; /* Prend toute la largeur disponible */
 }
 
 #global #list #filter {
@@ -456,6 +441,7 @@ button.btn-form-strain:hover {
     margin-top : 10px; 
     table-layout: fixed; /* Fixe la largeur des colonnes */
     overflow-x: auto; 
+    overflow-y: scroll;
     border-collapse: collapse;
     font-family: 'Arial', sans-serif;
     font-size: 14px;
@@ -463,6 +449,7 @@ button.btn-form-strain:hover {
     background-color: #f9f9f9;
     margin-bottom: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: 100%;
 }
 
 #global #list #table td{
@@ -479,7 +466,7 @@ button.btn-form-strain:hover {
     padding: 8px 10px;
     text-align: left;
     font-weight: bold;
-    border-bottom: 1px solid #ddd;
+    border: 1px solid #ddd;
     width: 150px;  /* Fixe la largeur des cellules */
 }
 
@@ -503,6 +490,7 @@ button.btn-form-strain:hover {
 #global #list #table th.id {
     text-align: center;
     color: #666;
+    min-width: 25px; 
 }
 
 #global #list #table td.name, 
@@ -546,6 +534,42 @@ button.btn-form-strain:hover {
 .resistant-display-red{
     color: red;
 }
+
+.sticky_wrapper{
+    overflow: scroll;
+    position: relative;
+    width: auto;
+    height: 100%;
+}
+
+
+thead,
+tr>th {
+  position: sticky;
+  background: #fff;
+}
+
+th.name{
+    position: sticky;
+    left: 45px;
+}
+
+thead {
+  top: 0;
+  z-index: 2;
+}
+tr>th {
+  left: 0;
+  z-index: 1;
+}
+thead tr>th:first-child{
+  z-index: 5;
+}
+thead tr>th:nth-child(2){
+  z-index: 5;
+  left: 45px; /* Ajustez cette valeur en fonction de la largeur de votre première colonne */
+}
+
 
 #global #list #table td.supp  a:hover {
     background-color: red; /* Gris clair au survol */
