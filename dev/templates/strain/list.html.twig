@@ -155,8 +155,6 @@
                                 resistant: {{ strain.drugResistanceOnStrain|first ? (strain.drugResistanceOnStrain|first.resistant ? 'yes' : 'no') : '--' }}
                                 comment: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.comment  : '--'}}
                                 description: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.description  : '--'}}'
-                            data-file=
-                                '{{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.nameFile : '--'}}'
                         >
                         {% if strain.drugResistanceOnStrain is not empty %}
                             {{strain.drugResistanceOnStrain[0].drugResistance.name}} <br>
