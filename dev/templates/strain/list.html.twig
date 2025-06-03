@@ -142,7 +142,7 @@
             
                         <td class="plasmyd" 
                             data-info='
-                                namePlasmyd: {{ strain.plasmyd|first ? strain.plasmyd|first.namePlasmyd : '--'}}
+                                name: {{ strain.plasmyd|first ? strain.plasmyd|first.namePlasmyd : '--'}}
                                 type: {{ strain.plasmyd|first ? strain.plasmyd|first.type : "--" }}
                                 description: {{ strain.plasmyd|first ? strain.plasmyd|first.description : "--" }}
                                 comment: {{ strain.plasmyd|first ? strain.plasmyd|first.comment : "--" }}'
@@ -318,10 +318,10 @@
                                 </td>
                                 <td class="plasmyd" 
                                     data-info='
-                                        name: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.transformability[i].namePlasmyd : '--'}}
-                                        type: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.transformability[i].type : "--" }}
-                                        description: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.transformability[i].description : "--" }}
-                                        comment: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.transformability[i].comment : "--" }}'
+                                        name: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.plasmyd[i].namePlasmyd : '--'}}
+                                        type: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.plasmyd[i].type : "--" }}
+                                        description: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.plasmyd[i].description : "--" }}
+                                        comment: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.plasmyd[i].comment : "--" }}'
                                 >
                                 {{ strain.plasmyd[i] is defined ? strain.plasmyd[i].namePlasmyd : '' }}</td>
                                 <td data-info='
