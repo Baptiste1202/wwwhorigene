@@ -17,6 +17,9 @@ class SequencingFormType extends AbstractType
                 'required' => false,
                 'label' => 'Upload File'
             ])
+            ->add('name', options:[
+                'label' => 'Method'
+            ])
             ->add('comment', options:[
                 'label' => 'Comments'
             ])
