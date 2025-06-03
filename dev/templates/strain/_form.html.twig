@@ -182,36 +182,57 @@ document.querySelectorAll('.add_item_link').forEach(btn => {
     });
 });
   
-function addFormToCollection(e)
-  {
-    console.log(e.currentTarget.dataset.collectionHolderClass);
-    const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+function addFormToCollection(e) {
+    const collectionClass = e.currentTarget.dataset.collectionHolderClass;
+    const collectionHolder = document.querySelector('.' + collectionClass);
 
+    if (!collectionHolder.dataset.index) {
+        collectionHolder.dataset.index = collectionHolder.children.length;
+    }
+
+    const index = collectionHolder.dataset.index;
+
+    // Créer le nouvel élément à partir du prototype
     const item = document.createElement('li');
-    item.innerHTML = collectionHolder
-      .dataset
-      .prototype
-      .replace(
-        /__name__/g,
-        collectionHolder.dataset.index
-      );
+    item.innerHTML = collectionHolder.dataset.prototype.replace(/__name__/g, index);
 
+    // Ajouter au DOM
     collectionHolder.appendChild(item);
-     // Récupérer le texte du label associé au bouton qui a déclenché l'ajout
-    const labelType = e.currentTarget.previousElementSibling?.textContent.trim();
+
+    // Copier les valeurs depuis le dernier élément si existant
+    const existingItems = collectionHolder.querySelectorAll('li');
+    if (existingItems.length > 1) {
+        const lastItem = existingItems[existingItems.length - 2]; // Avant-dernier (le dernier est celui qu'on vient d'ajouter)
+
+        const lastInputs = lastItem.querySelectorAll('input, select, textarea');
+        const newInputs = item.querySelectorAll('input, select, textarea');
+
+        lastInputs.forEach((input, i) => {
+            if (newInputs[i]) {
+                if (input.tagName === 'SELECT') {
+                    newInputs[i].value = input.value;
+                } else if (input.type === 'checkbox' || input.type === 'radio') {
+                    newInputs[i].checked = input.checked;
+                } else {
+                    newInputs[i].value = input.value;
+                }
+            }
+        });
+    }
 
     // Mettre à jour le label
-    const index = collectionHolder.dataset.index; // L'index actuel
+    const labelType = e.currentTarget.closest('div')?.querySelector('label')?.textContent.trim();
     const label = item.querySelector('label');
     if (label && labelType) {
         label.textContent = `${labelType} ${parseInt(index) + 1}`;
     }
 
+    // Ajouter le bouton de suppression
     addTagFormDeleteLink(item);
 
+    // Incrémenter l'index
     collectionHolder.dataset.index++;
-
-  };
+}
 
   document
     .querySelectorAll('ul.drugResistanceOnStrain li, ul.sequencing li, ul.transformability li, ul.storage li')

@@ -5,6 +5,7 @@
         <th>Title</th>
         <th>Autor</th>
         <th>Year</th>
+        <th>DOI</th>
         <th>Description</th>
     </tr>
 
@@ -16,6 +17,7 @@
                 <td>{{publication.title}}</td>
                 <td>{{publication.autor}}</td>
                 <td>{{publication.year}}</td>
+                <td>{{publication.doi}}</td>
                 <td>{{publication.description}}</td>
                 <td><a href = "{{path("edit_publication", {id: publication.id})}}"> Modifie </a></td>
                 <td><a href = "{{path("delete_publication", {id: publication.id})}}" class="delete-link"> Delete </a></td>
