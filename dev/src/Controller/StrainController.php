@@ -96,9 +96,12 @@ class StrainController extends AbstractController
             $strain->setDate(new \DateTime());
 
             foreach($strain->getMethodSequencing() as $sequencing){
-                $filename = $sequencing->getFile()->getClientOriginalName();
-                $extension = pathinfo($filename, PATHINFO_EXTENSION);
-                $sequencing->setTypeFile($extension);
+                $file = $sequencing->getFile();
+                if ($file !== null) {
+                    $filename = $file->getClientOriginalName();
+                    $extension = pathinfo($filename, PATHINFO_EXTENSION);
+                    $sequencing->setTypeFile($extension);
+                }
             }
 
             //stock data
