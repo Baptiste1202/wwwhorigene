@@ -469,34 +469,6 @@ button.btn-form-strain:hover {
     width: 150px;  /* Fixe la largeur des cellules */
 }
 
-/* Couleur alternée pour les lignes */
-#global #list #table tr:nth-child(odd) {
-    background-color: #f3f3f3;
-}
-
-#global #list #table tr:nth-child(even) {
-    background-color: #ffffff; /* Couleur pour les lignes paires */
-}
-
-/* Hover sur les lignes */
-#global #list #table tr:hover {
-    background-color: #e0e0e0;
-    transition: background-color 0.2s ease-in-out;
-}
-
-/* Style pour des colonnes spécifiques */
-#global #list #table td.id {
-    text-align: center;
-    color: white;
-    min-width: 25px; 
-    font-weight: bold;
-}
-
-
-#global #list #table td.name {
-    font-weight: bold;
-}
-
 #global #list #table td.comment, 
 #global #list #table th.comment, 
 #global #list #table td.description, 
@@ -559,34 +531,45 @@ thead th {
   z-index: 2;
 }
 
+/* Style pour des colonnes spécifiques */
+#global #list #table td.id {
+    text-align: center;
+    color:white;
+    min-width: 25px; 
+    font-weight: bold;
+}
+
 /* Colonne ID figée horizontalement (première colonne) */
 thead th.id {
   position: sticky;
   left: 0;
-  background-color: grey;
-  color: white;
+  background-color: #bdbdbd;
   z-index: 6;
 }
+
 td.id {
   position: sticky;
   left: 0;
-  background-color: grey;
-  color: white;
+  background-color: #bdbdbd;
   z-index: 1;
+}
+
+#global #list #table td.name {
+    font-weight: bold;
 }
 
 /* Colonne Name figée horizontalement (deuxième colonne) */
 thead td.name {
   position: sticky;
   left: 50px; /* Ajuste cette valeur à la largeur exacte de la colonne ID */
-  background-color: grey;
+  background-color: #bdbdbd;
   color: white;
   z-index: 6;
 }
 td.name {
   position: sticky;
   left: 45px; /* Doit correspondre à left du th.name */
-  background-color: grey;
+  background-color: #bdbdbd;
   color: white;
   z-index: 1;
 }
