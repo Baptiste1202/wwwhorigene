@@ -1,0 +1,11 @@
+
+    {{ form_start(plasmydForm) }}
+
+        {{ form_row(plasmydForm.namePlasmyd) }}
+        {{ form_row(plasmydForm.type) }}
+        {{ form_row(plasmydForm.description) }}
+        {{ form_row(plasmydForm.comment) }}
+
+        <button type="submit">{{ button_label | default('Ajouter') }} </button>
+
+    {{ form_end(plasmydForm) }}

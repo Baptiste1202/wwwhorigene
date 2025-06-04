@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        {% block stylesheets %}
+        {% endblock %}
+
+    </head>
+
+<body>
+    <div class="vertical-menu">
+        <ul>
+            <li><a href="{{ absolute_url(path('page_users')) }}">User</a></li>
+            <li><a href="{{ absolute_url(path('page_samples')) }}">Prelevement</a></li>
+            <li><a href="{{ absolute_url(path('page_strains')) }}">Strain</a></li>
+            <li><a href="{{ absolute_url(path('strain_search')) }}">Check Parents</a></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle">Component</a>
+                <ul class="dropdown-content">
+                    <li><a href="{{ path('page_projects') }}">Project</a></li>
+                    <li><a href="{{ path('page_collecs') }}">Collection</a></li>
+                    <li><a href="{{ path('page_plasmyds') }}">Plasmyd</a></li>
+                    <li><a href="{{ path('page_drugs') }}">Drug Resistance</a></li>
+                    <li><a href="{{ path('page_publications') }}">Publication</a></li>
+                </ul>
+            </li>
+            <li><a href="{{ path('app_logout') }}">Log Out</a></li>
+            <li class="user-info">
+                user: {{ app.user.firstname }} <br>
+                role: {{ app.user.roles.0 }}
+            </li>
+        </ul>
+    </div>
+</body>
+
+
+</html>

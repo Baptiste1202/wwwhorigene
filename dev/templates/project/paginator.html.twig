@@ -1,0 +1,6 @@
+    {% if projects is defined and projects|length > 0 %}
+        {{ knp_pagination_render(projects, null, {}, {
+            'align': 'right',
+            'style': 'bottom'
+        })}}
+    {% endif %}

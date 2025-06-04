@@ -1,0 +1,26 @@
+{% extends 'layout.html.twig' %}
+{% block body %}
+        <div id="global">
+            {% if (app.user.roles.0 != "ROLE_INTERN") %}
+                <div id="form">
+                    {% include "strain/create.html.twig" %}
+                </div>
+            {% endif %}
+            <div id="list">
+                <div id="filter">
+                    {% include 'strain/elastic_main.html.twig' %}
+                </div>
+                <div id="filter">
+                    {% include 'strain/_filter_form.html.twig' %}
+                </div>
+                <div id="table">
+                    {% include "strain/list.html.twig" %}
+                </div>
+                <div id="paginator">
+                    {% include "strain/paginator.html.twig" %}
+                </div>
+            </div>
+            {% include 'strain/_js.html.twig' %}
+        <br></br>        
+        </div>  
+{% endblock %}

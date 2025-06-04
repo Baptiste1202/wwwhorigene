@@ -1,0 +1,6 @@
+    {% if collecs is defined and collecs|length > 0 %}
+        {{ knp_pagination_render(collecs, null, {}, {
+            'align': 'right',
+            'style': 'bottom'
+        })}}
+    {% endif %}

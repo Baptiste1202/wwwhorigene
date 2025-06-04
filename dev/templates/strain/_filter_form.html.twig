@@ -1,0 +1,99 @@
+<div id="menu-container">
+    <button id="menu-button"> ☰ filters </button>
+
+    <div id="filter-menu" class="filter-menu">
+        <label>Afficher : </label>
+
+        <input type="checkbox" data-column-filter="name" checked>
+        <label for="name">Name</label>
+
+        <input type="checkbox" data-column-filter="sample" checked>
+        <label for="sample">Sample</label>
+
+        <input type="checkbox" data-column-filter="parent" checked>
+        <label for="parent">Parent</label>
+
+        <input type="checkbox" data-column-filter="date" checked>
+        <label for="date">Date</label>
+
+        <input type="checkbox" data-column-filter="specie" checked>
+        <label for="specie">Specie</label>
+
+        <input type="checkbox" data-column-filter="gender" checked>
+        <label for="gender">Gender</label>
+
+        <input type="checkbox" data-column-filter="storage" checked>
+        <label for="storage">Storage</label>
+
+        <input type="checkbox" data-column-filter="collec" checked>
+        <label for="collec">Collection</label>
+        
+        <input type="checkbox" data-column-filter="genotype" checked>
+        <label for="genotype">Genotype</label>
+
+        <input type="checkbox" data-column-filter="transformability" checked>
+        <label for="transformability">transformability</label>
+
+        <input type="checkbox" data-column-filter="plasmyd" checked>
+        <label for="plasmyd">Plasmyd</label>
+
+        <input type="checkbox" data-column-filter="drug" checked>
+        <label for="drug">Drug</label>
+
+        <input type="checkbox" data-column-filter="publication" checked>
+        <label for="publication">Publication</label>
+
+        <input type="checkbox" data-column-filter="sequencing" checked>
+        <label for="sequencing">Sequencing</label>
+
+        <input type="checkbox" data-column-filter="creator" checked>
+        <label for="creator">Creator</label>
+
+        <input type="checkbox" data-column-filter="description" checked>
+        <label for="description">Description</label>
+
+        <input type="checkbox" data-column-filter="comment" checked>
+        <label for="comment">Comment</label>
+    </div> 
+</div>
+
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+    const menuButton = document.getElementById('menu-button'); // Bouton pour afficher/masquer le menu
+    const sideMenu = document.getElementById('filter-menu');     // Menu latéral
+    const checkboxes = document.querySelectorAll('#filter-menu input[type="checkbox"]');
+    const table = document.getElementById('data-table');
+
+    // Ajout d'un événement de clic sur le bouton
+    menuButton.addEventListener('click', function () {
+        // Bascule la classe "visible" pour afficher ou masquer le menu
+        sideMenu.classList.toggle('visible');
+    });
+
+        // Fonction pour afficher/masquer les colonnes
+    function toggleColumns() {
+        checkboxes.forEach(checkbox => {
+            const column = checkbox.getAttribute('data-column-filter');
+            const isVisible = checkbox.checked;
+
+            // Récupère toutes les cellules (th + td) correspondant à cette colonne
+            const cells = document.querySelectorAll(`[data-column="${column}"]`);
+
+            cells.forEach(cell => {
+                cell.style.display = isVisible ? '' : 'none';
+            });
+        });
+    }
+
+    // Ajout d'un écouteur d'événement sur chaque checkbox
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', toggleColumns);
+    });
+
+    // Appliquer l'affichage initial
+    toggleColumns();
+});
+</script>

@@ -1,0 +1,33 @@
+<script>
+
+    let radioOrder = document.querySelectorAll('#orderBy input')
+
+    for (let i = 0; i < radioOrder.length; i++){
+        radioOrder[i]
+        .addEventListener("change", async () => {
+            if ( radioOrder[i].checked === true ){
+                console.log(radioOrder[i])
+            }
+        })
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const checkboxes = document.querySelectorAll('#column-filters input[type="checkbox"]');
+        
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                const columnClass = this.dataset.column;
+                const columnCells = document.querySelectorAll(`.${columnClass}`);
+                
+                if (this.checked) {
+                    // Afficher les colonnes
+                    columnCells.forEach(cell => cell.style.display = '');
+                } else {
+                    // Masquer les colonnes
+                    columnCells.forEach(cell => cell.style.display = 'none');
+                }
+            });
+        });
+    });
+
+</script>

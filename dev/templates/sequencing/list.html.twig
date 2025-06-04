@@ -1,0 +1,45 @@
+<table class="data-table">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>File</th>
+        <th>Description</th>
+        <th>Comment</th>
+    </tr>
+
+    {% for sequencing in sequencings %}
+        <div class="list-collec">
+            <tr>
+                <td>{{sequencing.id}}</td>
+                <td>{{sequencing.name}}</td>
+                <td>{{sequencing.file}}</td>
+                <td>{{sequencing.comment}}</td>
+                <td>{{sequencing.description}}</td>
+                <td><a href = "{{path("edit_sequencing", {id: sequencing.id})}}"> Modifie </a></td>
+                <td><a href = "{{path("delete_sequencing", {id: sequencing.id})}}" class="delete-link"> Delete </a></td>
+            </tr>
+        </div>
+    {% endfor %}
+
+</table>
+
+
+{% if app.session.flashbag.has('warning') %}
+    <script>
+        // Sélectionner tous les liens de suppression
+        document.querySelectorAll('.delete-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Empêcher la redirection initiale
+
+                // Afficher la confirmation si le flash warning existe
+                var confirmDelete = confirm("{{ app.session.flashbag.get('warning')[0] }}");
+
+                // Si l'utilisateur confirme, ajouter ?confirm=yes à l'URL et rediriger
+                if (confirmDelete) {
+                    // Redirection vers la suppression avec confirmation
+                    window.location.href = this.href + '?confirm=yes';
+                }
+            });
+        });
+    </script>
+{% endif %}

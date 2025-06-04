@@ -1,0 +1,36 @@
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Country</th>
+        <th>City</th>
+        <th>Localisation</th>
+        <th>Under Localisation</th>
+        <th>GPS</th>
+        <th>Environnement</th>
+        <th>Other</th>
+        <th>Description</th>
+        <th>Comment</th>
+    </tr>
+    {% for sample in samples %}
+            <tr>
+                <td>{{sample.id}}</td>
+                <td>{{sample.date|date("d/m/Y")}}</td>
+                <td>{{sample.type}}</td>
+                <td>{{sample.country}}</td>
+                <td>{{sample.city}}</td>
+                <td>{{sample.localisation}}</td>
+                <td>{{sample.underLocalisation}}</td>
+                <td>{{sample.gps}}</td>
+                <td>{{sample.environment}}</td>
+                <td>{{sample.other}}</td>
+                <td>{{sample.description}}</td>
+                <td>{{sample.comment}}</td>
+                <td><a href = "{{path("duplicate_sample", {id: sample.id})}}"> Duplicate </a><td>
+                <td><a href = "{{path("edit_sample", {id: sample.id})}}"> Modifie </a><td>
+                <td class="supp"><a href = "{{path("delete_sample", {id: sample.id})}}"> x </a><td>
+            </tr>
+    {% endfor %}
+
+</table>

@@ -1,0 +1,58 @@
+fos_elastica:
+  clients:
+    default:
+      host: elasticsearch
+      port: 9200
+  indexes:
+    strain:
+      persistence:
+        driver: orm
+        model: App\Entity\Strain
+        provider: ~
+        finder: ~
+      properties:
+        id:
+          type: integer
+        nameStrain: 
+          type: text
+          fields:
+            keyword:
+              type: keyword
+        plasmyd:
+          type: object
+          properties:
+            id: ~
+        methodSequencing:
+          type: object
+          properties:
+            typeFile:  
+              type: text
+        drugResistanceOnStrain:
+          type: nested
+          properties:
+              resistant:
+                  type: boolean
+              drugResistance:
+                  type: object
+                  properties:
+                      id: ~
+        genotype:
+          type: object
+          properties:
+            id: ~
+        project:
+          type: object
+          properties:
+            id: ~
+        sample:
+          type: object
+          properties:
+            id: ~
+        createdBy:
+          type: object
+          properties:
+            id: ~
+        specie: ~
+        gender:
+        date:
+          type: date

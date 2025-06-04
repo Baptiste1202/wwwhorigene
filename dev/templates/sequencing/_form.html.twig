@@ -1,0 +1,11 @@
+
+{{ form_start(sequencingForm) }}
+
+    {{ form_row(sequencingForm.name) }}
+    {{ form_row(sequencingForm.file) }}
+    {{ form_row(sequencingForm.description) }}
+    {{ form_row(sequencingForm.comment) }}
+
+    <button type="submit">{{ button_label | default('Ajouter') }} </button>
+
+{{ form_end(sequencingForm) }}

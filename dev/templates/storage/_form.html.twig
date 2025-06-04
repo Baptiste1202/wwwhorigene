@@ -1,0 +1,17 @@
+<form method="POST" action="{{ path('add_storage') }}">
+{{ form_start(storageForm) }}
+
+    {{ form_row(storageForm.room) }}
+    {{ form_row(storageForm.congelateur) }}
+    {{ form_row(storageForm.etagere) }}
+    {{ form_row(storageForm.rack) }}
+    {{ form_row(storageForm.containerType) }}
+    {{ form_row(storageForm.containerPosition) }}
+    {{ form_row(storageForm.containerVolume) }}
+    {{ form_row(storageForm.description) }}
+    {{ form_row(storageForm.comment) }}
+
+    <button type="submit">{{ button_label | default('Ajouter') }} </button>
+
+{{ form_end(storageForm) }}
+</form>

@@ -1,0 +1,85 @@
+
+(base) ng@ng-virtual-machine:~$ docker --version
+Docker version 26.1.3, build 26.1.3-0ubuntu1~22.04.1
+
+sudo docker ps -a
+sudo docker-compose down
+sudo docker stop $(sudo docker ps -q)
+sudo docker rm $(sudo docker ps -aq)
+sudo lsof -i :8899 -i :8025 -i :3307 -i :8092
+
+sudo docker stop claranet2-app-1
+sudo docker start claranet2-app-1
+
+sudo apt install docker-compose -y
+sudo docker-compose down --rmi all
+sudo docker-compose up --build -d
+sudo docker-compose up -d --build
+
+docker exec -it claranet2-app-1 bash
+
+sudo docker-compose up -d
+
+sudo docker start claranet2-app-1
+sudo docker stop claranet2-app-1
+
+ls -l
+
+chown -R www-data:www-data /var/www/html
+chmod -R 755 /var/www/html
+
+cd /etc/apache2
+nano /etc/apache2/apache2.conf
+nano /etc/apache2/sites-available/000-default.conf
+nano /etc/apache2/ports.conf
+
+sudo a2enmod rewrite
+
+##Protocole pour configuerer apache avec les permission 
+
+docker exec -it claranet2-app-1 bash
+apt-get update
+apt install nano
+nano /etc/apache2/sites-available/000-default.conf
+
+# Ajoute la configuration pour autoriser l'acc  s au r  pertoire
+        <Directory /var/www/html>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+        </Directory>
+Ctrl D
+docker restart claranet2-app-1
+
+
+http://localhost:8092/public/login
+
+git sparse-checkout init --cone
+
+################ dans le conteneur
+
+composer show symfony/ux-autocomplete
+apt-get update && apt-get install -y git unzip zip
+composer require symfony/ux-autocomplete
+chown -R www-data:www-data /var/www/html/var
+chmod -R 775 /var/www/html/var
+php bin/console cache:clear
+
+
+###############
+docker compose down
+docker compose build
+docker compose up
+docker exec -it claranet2-app-1 bash
+root@c04d7c899a0a:/var/www/html# bin/console fos:elastica:populate
+
+
+
+
+
+
+
+
+
+
+

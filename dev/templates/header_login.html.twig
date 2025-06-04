@@ -1,0 +1,36 @@
+<div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="https://www.ucly.fr/wp-content/uploads/2019/11/qualite-en-laboratoire-1150x576.jpg" class="d-block w-100" alt="Image 1" style="width: 100%; height: 400px">
+                <div class="carousel-caption">
+                    <h2>Institut National de la Santé et de la Recherche Médicale</h2>
+                    <h1>HORIGENE DATA BASE</h1>
+                    <h4></h4>
+                </div>
+        </div>
+        <div class="carousel-item">
+            <img src="https://cdn.futura-sciences.com/buildsv6/images/mediumoriginal/b/6/b/b6b61f54dc_50150182_2-chercheur-en-biologie2.jpg" class="d-block w-100" alt="Image 2" style="width: 100%; height: 400px">
+                <div class="carousel-caption">
+                    <h2>Institut National de la Santé et de la Recherche Médicale</h2>
+                    <h1>HORIGENE DATA BASE</h1>
+                    <h4></h4>
+                </div>
+        </div>
+    </div>                
+</div>
+
+<script>
+    // Défilement automatique toutes les 5 secondes
+    document.addEventListener("DOMContentLoaded", function() {
+        let myCarousel = new bootstrap.Carousel(document.querySelector("#carouselExample"), {
+            interval: 3000, // Changement toutes les 5 secondes
+            ride: "carousel"
+            wrap: true
+        });
+        let carouselElement = document.querySelector("#carouselExample");
+        carouselElement.addEventListener("slid.bs.carousel", function () {
+            myCarousel.cycle(); // Reprend le cycle après chaque slide
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

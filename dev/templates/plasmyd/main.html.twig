@@ -1,0 +1,19 @@
+{% extends 'layout.html.twig' %}
+{% block body %}
+        <div id="global">
+            {% if (app.user.roles.0 != "ROLE_INTERN") %}
+                <div id="form">
+                    {% include "plasmyd/create.html.twig" %}
+                </div>
+            {% endif %}
+            <div id="list">
+                <div id="table">
+                    {% include "plasmyd/list.html.twig" %}
+                </div>
+                <div id="paginator">
+                    {% include "plasmyd/paginator.html.twig" %}
+                </div>
+            </div>
+        <br></br>        
+        </div>  
+{% endblock %}

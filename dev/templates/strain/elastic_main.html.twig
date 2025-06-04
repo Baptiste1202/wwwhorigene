@@ -1,0 +1,48 @@
+<button id="openFormBtn">&#x1F50D;</button>
+
+<div id="floatingForm" class="hidden">
+    {{form_start(form)}}
+            {{form_row(form.query)}}
+            {{form_row(form.plasmyd)}}
+            {{form_row(form.drug)}}
+            {{form_row(form.genotype)}}
+            {{form_row(form.project)}}
+            {{form_row(form.sample)}}
+            {{form_row(form.user)}}
+            {{form_row(form.specie)}}
+            {{form_row(form.gender)}}
+            {{form_row(form.sequencing)}}
+            {{form_row(form.resistant)}}
+            <button id="btn-search">Rechercher</button>
+    {{form_end(form)}}
+</div>
+
+{% if strains is not empty %}
+    {% if strains|length >= 30 %}
+        <h2>Search Results (more than 30)</h2>
+    {% else %}
+        <h2>Search Results ({{ strains.totalItemCount }})</h2>
+    {% endif %}
+{% endif %}
+
+<script>
+
+    document.getElementById('openFormBtn').addEventListener('click', function(event) {
+        const floatingForm = document.getElementById('floatingForm');
+        floatingForm.style.display = 'block';
+        
+        // Position the form relative to the mouse position
+        floatingForm.style.left = `${event.pageX + 10}px`;
+        floatingForm.style.top = `${event.pageY + 10}px`;
+    });
+
+    document.addEventListener('click', function(event) {
+        const floatingForm = document.getElementById('floatingForm');
+        
+        // Close the form if the click is outside the form
+        if (!floatingForm.contains(event.target) && event.target.id !== 'openFormBtn') {
+            floatingForm.style.display = 'none';
+        }
+    });
+
+</script>

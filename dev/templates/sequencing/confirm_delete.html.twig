@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirm Deletion{% endblock %}
+
+{% block body %}
+<h1>Are you sure you want to delete the sequencing "{{ sequencing.name }}"?</h1>
+
+<form action="{{ path('delete_sequencing', {id: sequencing.id}) }}?confirm=yes" method="get">
+    <button type="submit" class="btn btn-danger">Yes, delete it</button>
+</form>
+
+<a href="{{ path('page_sequencings') }}" class="btn btn-secondary">Cancel</a>
+{% endblock %}

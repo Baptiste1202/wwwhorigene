@@ -1,0 +1,16 @@
+{% extends 'layout.html.twig' %}
+{% block body %}
+        <div id="global">
+
+            <li>_________________________________</li>
+            <li><br></br></li>
+            {% for genotype in genotypes %}
+                <div class="list-collec">
+                    {{genotype.type}}
+                    {{genotype.description}}
+                    {{genotype.comment}}
+                </div>
+            {% endfor %}
+        <br></br>        
+        </div>  
+{% endblock %}

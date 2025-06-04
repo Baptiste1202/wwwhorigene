@@ -1,0 +1,71 @@
+-- Adminer 5.0.6 PostgreSQL 16.8 dump
+
+INSERT INTO "vivacar_change" ("id", "notification_id", "field", "created_at", "updated_at", "old_value_id", "new_value_id", "field_translable_identifier", "type") VALUES
+(1,	1,	'translations.fr_FR.label',	'2025-05-28 10:29:41',	'2025-05-28 10:29:41',	NULL,	1,	'dealership.name',	'text'),
+(2,	1,	'bannerType',	'2025-05-28 10:29:41',	'2025-05-28 10:29:41',	NULL,	2,	'dealership.banner.type',	'enum'),
+(3,	2,	'translations.fr_FR.label',	'2025-05-28 10:32:20',	'2025-05-28 10:32:20',	3,	4,	'dealership.name',	'text'),
+(4,	3,	'translations.fr_FR.label',	'2025-05-28 10:41:21',	'2025-05-28 10:41:21',	5,	6,	'dealership.name',	'text'),
+(5,	4,	'translations.fr_FR.label',	'2025-05-28 10:43:40',	'2025-05-28 10:43:40',	7,	8,	'dealership.name',	'text');
+
+INSERT INTO "vivacar_change_value" ("id", "text", "image_path", "boolean", "integer", "float", "datetime", "json") VALUES
+(1,	'JOLI NOM',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	'dealership.banner.imageType',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	'JOLI NOM',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	'SUPER NOM',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	'JOLI NOM',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	'PAS TOP NOM',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	'JOLI NOM',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	'SYMPA NOM',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+INSERT INTO "vivacar_dealership" ("id", "longitude", "latitude", "number_of_vehicles_for_sale", "number_of_vehicles_for_sale_disabled", "address_country_code", "address_country_label", "address_subdivision_country", "address_city", "address_zip_code", "address_lines", "siret", "siret_label", "siren", "phone", "email", "prescription_id", "group_pro", "enabled", "code", "banner_type", "remote_video", "link_viva_bi", "schedule_monday", "schedule_tuesday", "schedule_wednesday", "schedule_thursday", "schedule_friday", "schedule_saturday", "schedule_sunday", "is_email_overriden", "is_phone_overriden") VALUES
+(1,	1,	1,	10,	10,	'FR',	'France',	'Haut de France',	'Lille',	'59000',	'grand place',	'SIRET',	'SIRET LABEL',	'SIREN',	'+33333333',	'test@test.fr',	'',	'1',	'1',	'',	'dealership.banner.imageType',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'0',	'0');
+
+
+INSERT INTO "vivacar_dealership_translation" ("id", "translatable_id", "label", "locale", "presentation", "services") VALUES
+(1,	1,	'JOLI NOM',	'fr_FR',	NULL,	NULL);
+
+INSERT INTO "vivacar_introducer" ("id", "code", "status", "country_code", "country_label", "city", "postal_code", "subdivision_country", "lines", "siret", "siren", "group_code", "phone", "email") VALUES
+(1,	'1',	'1',	'FR',	'France',	'Lille',	'59000',	'',	'',	'SIRET',	'SIREN',	'1',	'',	'');
+
+
+INSERT INTO "vivacar_introducers_dealerships" ("introducer_id", "dealership_id") VALUES
+(1,	1);
+
+INSERT INTO "vivacar_notification" ("id", "admin_id", "partner_id", "subject_id", "status", "read_by_owner", "read_by_reviewer", "commentary", "subject_type", "created_at", "updated_at") VALUES
+(1,	1,	1,	1,	'notification.validated',	'1',	'0',	'on valide joli nom',	'dealership',	'2025-05-28 10:29:41',	'2025-05-28 10:31:08'),
+(2,	1,	1,	1,	'notification.validated',	'0',	'0',	'c''est ok pour super nom',	'dealership',	'2025-05-28 10:32:20',	'2025-05-28 10:32:57'),
+(3,	1,	1,	1,	'notification.refused',	'0',	'1',	'c''est naze pas top nom',	'dealership',	'2025-05-28 10:41:21',	'2025-05-28 10:41:39'),
+(4,	NULL,	1,	1,	'notification.pending',	'0',	'0',	NULL,	'dealership',	'2025-05-28 10:43:40',	'2025-05-28 10:43:40');
+
+INSERT INTO "vivacar_partner" ("id", "introducer_id", "firstname", "lastname") VALUES
+(1,	NULL,	'John',	'Doe');
+
+INSERT INTO "vivacar_partner_dealerships" ("partner_id", "dealership_id") VALUES
+(1,	1);
+
+INSERT INTO "vivacar_partner_rbac_permission" ("id", "parent_id", "code", "description", "tree_left", "tree_right") VALUES
+(1,	NULL,	'root',	'partner_shop_user_permission.admin',	1,	24),
+(2,	1,	'vehicule',	'partner_shop_user_permission.vehicule.common',	2,	7),
+(12,	2,	'read',	'partner_shop_user_permission.vehicule.read',	3,	4),
+(13,	2,	'edit',	'partner_shop_user_permission.vehicule.edit',	5,	6),
+(3,	1,	'sticker',	'partner_shop_user_permission.sticker.common',	8,	13),
+(4,	3,	'read',	'partner_shop_user_permission.sticker.read',	9,	10),
+(5,	3,	'assign',	'partner_shop_user_permission.sticker.assign',	11,	12),
+(6,	1,	'dealership',	'partner_shop_user_permission.dealership.common',	14,	23),
+(7,	6,	'read',	'partner_shop_user_permission.dealership.read',	15,	16),
+(8,	6,	'edit',	'partner_shop_user_permission.dealership.edit.common',	17,	22),
+(9,	8,	'banner',	'partner_shop_user_permission.dealership.edit.banner',	18,	19),
+(10,	8,	'highlight',	'partner_shop_user_permission.dealership.edit.highlight',	20,	21),
+(11,	8,	'presentation',	'partner_shop_user_permission.dealership.edit.presentation',	22,	23);
+
+INSERT INTO "vivacar_partner_rbac_role" ("id", "parent_id", "code", "description", "tree_left", "tree_right") VALUES
+(1,	1,	'root',	'Admin',	0,	1);
+
+INSERT INTO "vivacar_partner_shop_user" ("id", "partner_id", "username", "username_canonical", "enabled", "password", "last_login", "password_reset_token", "password_requested_at", "email_verification_token", "verified_at", "roles", "email", "email_canonical", "created_at", "updated_at", "auth_code") VALUES
+(1,	1,	'partner@test.fr',	'partner@test.fr',	'0',	'$argon2i$v=19$m=65536,t=4,p=1$VVNtb2c1bzlqbGdjYzZUeg$dk6R1/UHJskDyiPYI41NPcbwfE9Q0hEoPfQE6JNUQZ4',	NULL,	NULL,	NULL,	NULL,	NULL,	'["ROLE_USER"]',	'partner@test.fr',	'partner@test.fr',	'2025-05-28 09:20:17',	'2025-05-28 10:16:13',	'8856');
+
+
+
+
+
+-- 2025-05-28 09:56:10 UTC

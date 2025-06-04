@@ -1,0 +1,52 @@
+{% block body %}
+    <main class="container">
+        <section class="row">
+            <div class="tab-registers">
+                <button type="button" id="btn" value="projects" class="active-tab">Project</button>
+                <button type="button" id="btn" value="collections">Collection</button>
+                <button type="button" id="btn" value="plasmyds">Plasmyd</button>
+                <button type="button" id="btn" value="drugs">Drug Resistance</button>
+                <button type="button" id="btn" value="publications">Publication</button>
+                <button type="button" id="btn" value="transformabilitys">Transformability</button>
+                <button type="button" id="btn" value="sequencings">Sequencing</button>
+            </div>
+            <div class="col-12">
+                <div id="formContainer"></div> 
+            </div>
+        </section>
+    </main>
+{% endblock %}
+
+<script>
+    let listeInput = document.querySelectorAll('.tab-registers #btn')
+
+    for(let i = 0; i < listeInput.length; i++){
+        listeInput[i]
+        .addEventListener("click", async () => {
+            let order = listeInput[i].value
+            let activeInput = document.querySelector('.tab-registers .active-tab')
+            activeInput.removeAttribute("class")
+            listeInput[i].setAttribute("class","active-tab")
+            activeInput = document.querySelector('.tab-registers .active-tab')
+            console.log(activeInput.value)
+            afficherForm(activeInput.value)
+        })
+    }
+
+    function afficherForm(nomForm){
+        // Mettre à jour dynamiquement le contenu de l'inclure
+        let formContainer = document.getElementById('formContainer');
+        let formUrl = `${nomForm}/ajout/response`;  // Créer l'URL du formulaire
+
+        // Utiliser fetch pour charger dynamiquement le formulaire
+        fetch(formUrl)
+            .then(response => response.text())
+            .then(html => {
+                formContainer.innerHTML = html;  // Mettre à jour le conteneur avec le formulaire
+            })
+            .catch(error => {
+                console.error("Erreur lors du chargement du formulaire :", error);
+            });
+    }
+    
+</script>

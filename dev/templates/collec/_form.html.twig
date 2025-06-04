@@ -1,0 +1,10 @@
+
+{{ form_start(collecForm) }}
+
+    {{ form_row(collecForm.name) }}
+    {{ form_row(collecForm.description) }}
+    {{ form_row(collecForm.comment) }}
+
+    <button type="submit">{{ button_label | default('Ajouter') }} </button>
+
+{{ form_end(collecForm) }}
