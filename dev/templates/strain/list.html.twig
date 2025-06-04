@@ -1,6 +1,5 @@
-
 <div class="sticky_wrapper">
-    <table id="data-table">
+    <table id="data-table" class="display" style="visibility: hidden;"> {# Ajout de la classe 'display' pour DataTables #}
         <thead>
             <tr>
                 <th class="id">ID</th>
@@ -19,7 +18,7 @@
                 <th data-column="drug">Drug Resistance</th>
                 <th data-column="publication">Publication</th>
                 <th data-column="sequencing">File Sequencing</th>
-                <th data-column="creator">Creator</th>
+                <th class="creator">Creator</th>
                 <th data-column="description">Description</th>
                 <th data-column="comment">Comment</th>
                 <th data-column="null"> </th>
@@ -36,9 +35,10 @@
             {% endif %}
             {% for strain in strains %}
                     <tr class="list-strain"> 
-                        <th class="id">{{strain.id}}</th>
+                        {# MODIFICATION ICI : Changement de <th> à <td> pour ID et Name #}
+                        <td class="id">{{strain.id}}</td>
 
-                        <th class="name">{{ strain.nameStrain is not null ? strain.nameStrain : '--' }}</th>
+                        <td class="name">{{ strain.nameStrain is not null ? strain.nameStrain : '--' }}</td>
 
                         <td class="sample" data-info='
                                 id: {{ strain.prelevement ? strain.prelevement.id : "--" }}
@@ -52,7 +52,7 @@
                                 under-localisation : {{ strain.prelevement ? strain.prelevement.underLocalisation : "--" }}
                                 environment : {{ strain.prelevement ? strain.prelevement.environment : "--" }}
                             '>
-                        {{ strain.prelevement is not null ? strain.prelevement.id : '--' }}
+                        {{ strain.prelevement ? strain.prelevement.name : '--' }}
                         </td>
 
                         <td class="parent">{{ strain.parentStrain is not null ? strain.parentStrain.nameStrain : '--' }}</td>
@@ -282,8 +282,9 @@
                         {% if maxLength > 1 %} 
                             {% for i in 1..(maxLength - 1) %}
                             <tr>
-                                <th class="id"></th>
-                                <th class="name"></th>
+                                {# MODIFICATION ICI : Changement de <th> à <td> pour ID et Name dans les lignes de continuation #}
+                                <td class="id"></td>
+                                <td class="name"></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -384,46 +385,107 @@
     </a>
 </div>
 
+{# DataTables CSS #}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+{# DataTables RowGroup CSS #}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowgroup/1.5.0/css/rowGroup.dataTables.min.css">
+
+{# jQuery (requis par DataTables) #}
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+{# DataTables JS #}
+<script type="text/javascript" src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+{# DataTables RowGroup JS #}
+<script type="text/javascript" src="https://cdn.datatables.net/rowgroup/1.5.0/js/dataTables.rowGroup.min.js"></script>
+
 <script>
-document.querySelectorAll('td[data-info]').forEach(cell => {
-    cell.addEventListener('click', function(event) {
-        const info = cell.getAttribute('data-info');
-        const fileName = cell.getAttribute('data-file'); // Récupération du nom du fichier
-        const popup = document.getElementById('infoPopup');
-        const downloadLink = document.getElementById('popupDownload');
-        
-        // Mise à jour du contenu du popup
-        document.getElementById('popupTitle').innerText = 'Détails';
-        document.getElementById('popupDetails').innerText = info;
+document.addEventListener('DOMContentLoaded', function() {
+    // Pré-traitement des lignes du tableau
+    const rows = document.querySelectorAll('#data-table tbody tr');
+    let currentStrainId = '', currentStrainName = '';
 
-        // Vérifier le type de fichier
-        if (cell.classList.contains('sequencing') && fileName && fileName !== '--') {
-            fileType = 'sequencing';
-        } else if (cell.classList.contains('transformability') && fileName && fileName !== '--') {
-            fileType = 'transformability';
-        } else if (cell.classList.contains('drugResistance') && fileName && fileName !== '--') {
-            fileType = 'drugs';
-        }
+    rows.forEach(row => {
+        const idCell = row.querySelector('td.id');
+        const nameCell = row.querySelector('td.name');
 
-        if (fileName) {
-            downloadLink.href = `/documents/download/${fileType}/${fileName}`;
-            downloadLink.style.display = 'inline-block';
+        if (idCell?.textContent.trim()) {
+            currentStrainId = idCell.textContent.trim();
+            currentStrainName = nameCell.textContent.trim();
         } else {
-            downloadLink.style.display = 'none';
+            idCell.textContent = currentStrainId;
+            nameCell.textContent = currentStrainName;
         }
 
-        // Positionner le popup
-        popup.style.display = 'block';
-        popup.style.left = `${event.pageX + 10}px`;
-        popup.style.top = `${event.pageY + 10}px`;
+        row.querySelectorAll('td').forEach(cell => {
+            if (!cell.classList.contains('id') && !cell.textContent.trim()) {
+                cell.textContent = '--';
+            }
+        });
     });
-});
 
-// Fermer le popup lorsqu'on clique ailleurs
-document.addEventListener('click', function(event) {
-    const popup = document.getElementById('infoPopup');
-    if (!popup.contains(event.target) && !event.target.hasAttribute('data-info')) {
-        popup.style.display = 'none';
-    }
+    // Initialisation DataTables (sans tri par défaut)
+    const dataTable = $('#data-table').DataTable({
+        paging: false,
+        searching: true,
+        ordering: true,
+        info: true,
+        order: [], // Pas de tri initial
+        rowGroup: {
+            dataSrc: 0,
+            startRender: function (rows, group) {
+                const name = rows.data()[0][1];
+                return 'ID: ' + group + ' (Souche : ' + name + ')';
+            }
+        },
+        initComplete: function() {
+            // Table prête, on la rend visible
+            $('#data-table').css('visibility', 'visible');
+        }
+    });
+
+    // Logique du popup
+    const typeMap = {
+        'sequencing': 'sequencing',
+        'transformability': 'transformability',
+        'drugResistanceOnStrain': 'drugs'
+    };
+
+    document.querySelectorAll('td[data-info]').forEach(cell => {
+        cell.addEventListener('click', function(event) {
+            const info = cell.getAttribute('data-info');
+            const fileName = cell.getAttribute('data-file');
+            const popup = document.getElementById('infoPopup');
+            const downloadLink = document.getElementById('popupDownload');
+            let fileType = null;
+
+            for (const cls in typeMap) {
+                if (cell.classList.contains(cls)) {
+                    fileType = typeMap[cls];
+                    break;
+                }
+            }
+
+            document.getElementById('popupTitle').innerText = 'Détails';
+            document.getElementById('popupDetails').innerText = info;
+
+            if (fileName && fileName !== '--' && fileType) {
+                downloadLink.href = `/documents/download/${fileType}/${fileName}`;
+                downloadLink.style.display = 'inline-block';
+            } else {
+                downloadLink.style.display = 'none';
+            }
+
+            popup.style.display = 'block';
+            popup.style.left = `${event.pageX + 10}px`;
+            popup.style.top = `${event.pageY + 10}px`;
+        });
+    });
+
+    // Fermer le popup si clic en dehors
+    document.addEventListener('click', function(event) {
+        const popup = document.getElementById('infoPopup');
+        if (!popup.contains(event.target) && !event.target.closest('[data-info]')) {
+            popup.style.display = 'none';
+        }
+    });
 });
 </script>

@@ -16,22 +16,21 @@ class SampleAutocompleteField extends AbstractType
         $resolver->setDefaults([
             'class' => Sample::class,
 
-            // choose which fields to use in the search
-            // if not passed, *all* fields are used
+            // choisir les champs utilisés dans la recherche
+            // si non défini, tous les champs sont utilisés
             'searchable_fields' => [
-                'name',
-                'type',
-                'country'
+                'name'
             ],
+
             'choice_label' => function (Sample $sample) {
-                return $sample->getName().' - '.$sample->getCountry().' - '.$sample->getCity() ; 
-            }
+                return $sample->getName();
+            }, // <- virgule ajoutée ici
 
-            // if the autocomplete endpoint needs to be secured
-            //'security' => 'ROLE_FOOD_ADMIN',
+            // si tu veux sécuriser l'accès à l'autocomplete
+            // 'security' => 'ROLE_FOOD_ADMIN',
 
-            // ... any other normal EntityType options
-            // e.g. query_builder, choice_label
+            // ... autres options classiques d'EntityType
+            // ex: query_builder, choice_label, etc.
         ]);
     }
 
