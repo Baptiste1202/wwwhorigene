@@ -21,16 +21,16 @@
                 <th class="creator">Creator</th>
                 <th data-column="description">Description</th>
                 <th data-column="comment">Comment</th>
-                <th data-column="null"> </th>
-                <th data-column="null"> </th>
-                <th data-column="null"> </th>
+                <th data-column="null"> </th> {# Duplicate #}
+                <th data-column="null"> </th> {# Modifie #}
+                <th data-column="null"> </th> {# x #}
             </tr>
         </thead>
 
         <tbody>
             {% if strains is empty %}
                 <tr>
-                    <td colspan="20" class="no-data">No strains found.</td>
+                    <td colspan="22" class="no-data">No strains found.</td> {# Correction du colspan #}
                 </tr>
             {% endif %}
             {% for strain in strains %}
@@ -385,17 +385,22 @@
     </a>
 </div>
 
-{# DataTables CSS #}
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
-{# DataTables RowGroup CSS #}
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowgroup/1.5.0/css/rowGroup.dataTables.min.css">
 
-{# jQuery (requis par DataTables) #}
+{########## DataTables ############}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowgroup/1.5.0/css/rowGroup.dataTables.min.css">
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-{# DataTables JS #}
 <script type="text/javascript" src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
-{# DataTables RowGroup JS #}
 <script type="text/javascript" src="https://cdn.datatables.net/rowgroup/1.5.0/js/dataTables.rowGroup.min.js"></script>
+
+{# Ajout d'une règle CSS pour forcer la visibilité des colonnes gérée par DataTables #}
+<style>
+    #data-table th.dt-column-hidden,
+    #data-table td.dt-column-hidden {
+        display: none !important;
+    }
+</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -434,11 +439,28 @@ document.addEventListener('DOMContentLoaded', function() {
             startRender: function (rows, group) {
                 const name = rows.data()[0][1];
                 return 'ID: ' + group + ' (Souche : ' + name + ')';
-            }
+            },
+            endRender: null // Désactiver le rendu de fin de groupe si non nécessaire
         },
-        initComplete: function() {
+        initComplete: function(settings, json) { // Ajout de settings et json comme arguments
+            // 'this' dans initComplete fait référence à l'instance DataTables
+            const api = this.api(); // Obtenez l'instance de l'API DataTables
+
             // Table prête, on la rend visible
             $('#data-table').css('visibility', 'visible');
+
+            // Initialiser les toggles de colonnes après que DataTables soit prêt
+            document.querySelectorAll('input.toggle-column').forEach(checkbox => {
+                const columnIdx = parseInt(checkbox.getAttribute('data-column'), 10);
+                console.log(`Initialisation: Colonne ${columnIdx}, Vérifiée: ${checkbox.checked}`); // Log initial
+                api.column(columnIdx).visible(checkbox.checked); // Utilisez 'api' ici
+
+                checkbox.addEventListener('change', function() {
+                    const isChecked = this.checked;
+                    console.log(`Changement: Colonne ${columnIdx}, Nouvelle valeur: ${isChecked}`); // Log au changement
+                    api.column(columnIdx).visible(isChecked); // Utilisez 'api' ici
+                });
+            });
         }
     });
 
