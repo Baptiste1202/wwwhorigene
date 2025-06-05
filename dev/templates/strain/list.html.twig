@@ -434,6 +434,9 @@ document.addEventListener('DOMContentLoaded', function() {
         ordering: true,
         info: true,
         order: [], // Pas de tri initial
+        columnDefs: [
+            { orderable: false, targets: [19, 20, 21] }  // Désactive le tri sur les 3 dernières colonnes
+        ],
         rowGroup: {
             dataSrc: 0,
             startRender: function (rows, group) {
