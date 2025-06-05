@@ -1,0 +1,7 @@
+
+Moyenne: -5.87
+Energie du meilleur ligand: -8.96
+Energie du moins bon ligand: 1.24
+Médiane: -6.07
+Écart-type: 1.26
+Nombre de molécules avec une énergie plus haute que -7.000: 7389

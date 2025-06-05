@@ -498,6 +498,33 @@ button.btn-form-strain:hover {
     text-decoration: none; /* Évite le soulignement au survol */
 }
 
+/* Blocage sticky des 3 dernières colonnes à droite */
+
+thead th:nth-last-child(1),
+tbody td:nth-last-child(1) {
+  position: sticky;
+  right: 0;
+  background-color: #bdbdbd; /* même couleur que la première colonne, ou celle que tu veux */
+  z-index: 5;
+}
+
+thead th:nth-last-child(2),
+tbody td:nth-last-child(2) {
+  position: sticky;
+  right: 40px; 
+  background-color: #bdbdbd;
+  z-index: 5;
+}
+
+thead th:nth-last-child(3),
+tbody td:nth-last-child(3) {
+  position: sticky;
+  right: 80px; /* 2 x largeur colonne */
+  background-color: #bdbdbd;
+  z-index: 5;
+}
+
+
 .resistant-display-green{
     color: green;
 }
