@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<div class="sticky_wrapper">
+<div id="data-table-wrapper sticky-wrapper">
     <table id="data-table" class="display" style="visibility: hidden;"> {# Ajout de la classe 'display' pour DataTables #}
         <thead>
             <tr>
@@ -31,7 +31,7 @@
         <tbody>
             {% if strains is empty %}
                 <tr>
-                    <td colspan="22" class="no-data">No strains found.</td> {# Correction du colspan #}
+                    <td class="no-data">No strains found.</td> {# Correction du colspan #}
                 </tr>
             {% endif %}
             {% for strain in strains %}

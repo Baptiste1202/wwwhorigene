@@ -540,67 +540,49 @@ tbody td:nth-last-child(3) {
     height: 100%;
 }
 
-thead,
-tr>th {
-  position: sticky;
-  background: #fff;
+#data-table-wrapper {
+  overflow-x: auto;
+  position: relative;
 }
 
 /* En-tête figé en haut */
 thead {
-  top: 0;
-  z-index: 2;
-}
-
-thead th {
   position: sticky;
-  background: #fff;
-  z-index: 2;
+  top: 0;
+  z-index: 15;
 }
 
 /* Style pour des colonnes spécifiques */
-#global #list #table td.id {
+#global #list #table td.id, 
+#global #list #table td.name{
     text-align: center;
     color:white;
     min-width: 25px; 
     font-weight: bold;
+    background-color: #bdbdbd;
+
 }
 
-/* Colonne ID figée horizontalement (première colonne) */
-thead th.id {
+thead th:nth-child(1),
+tbody td:nth-child(1) {
   position: sticky;
   left: 0;
-  background-color: #bdbdbd;
-  z-index: 6;
+  background-color: #bdbdbd; 
+  z-index: 5;
 }
 
-td.id {
+thead th:nth-child(2){
+    position: sticky;
+    left: 0px; /* Largeur de la première colonne */
+    background-color: #bdbdbd; 
+    z-index: 5;
+}
+tbody td:nth-child(2) {
   position: sticky;
-  left: 0;
+  left: 40px; 
   background-color: #bdbdbd;
-  z-index: 1;
+  z-index: 5;
 }
-
-#global #list #table td.name {
-    font-weight: bold;
-}
-
-/* Colonne Name figée horizontalement (deuxième colonne) */
-thead td.name {
-  position: sticky;
-  left: 50px; /* Ajuste cette valeur à la largeur exacte de la colonne ID */
-  background-color: #bdbdbd;
-  color: white;
-  z-index: 6;
-}
-td.name {
-  position: sticky;
-  left: 45px; /* Doit correspondre à left du th.name */
-  background-color: #bdbdbd;
-  color: white;
-  z-index: 1;
-}
-
 
 #global #list #table td.supp  a:hover {
     background-color: red; /* Gris clair au survol */
