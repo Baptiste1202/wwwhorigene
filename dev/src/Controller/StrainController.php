@@ -7,6 +7,7 @@ use App\Form\ParentFormType;
 use App\Form\SearchFormType;
 use App\Repository\StrainRepositoryInterface;
 use App\Form\StrainFormType;
+use App\Service\StrainIndexer;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Elastica\Query\BoolQuery;
@@ -16,6 +17,7 @@ use Elastica\Query\MatchAll;
 use Elastica\Query\Nested;
 use Elastica\Query\Wildcard;
 use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
+use FOS\ElasticaBundle\Persister\ObjectPersisterInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
@@ -31,7 +33,7 @@ class StrainController extends AbstractController
     public function __construct(
         private StrainRepositoryInterface $strainRepository,
         private PaginatorInterface $paginator,
-        private readonly PaginatedFinderInterface $finder
+        private readonly PaginatedFinderInterface $finder,
     ) {
         $this->paginator = $paginator; 
     }
@@ -41,7 +43,7 @@ class StrainController extends AbstractController
     {
 
         if ($security->isGranted('ROLE_SEARCH') || $security->isGranted('ROLE_ADMIN')){
-            $responseAdd = $this->add($request, $em, $security);  
+            $form = $this->createForm(StrainFormType::class);
         }
 
         $elasticResponse = $this->elasticForm($request);
@@ -63,7 +65,7 @@ class StrainController extends AbstractController
         }
 
         return $this->render('strain/main.html.twig', [
-            'strainForm' => $responseAdd, 
+            'strainForm' => $form->createView(), 
             'form' => $formElastic->createView(),
             'strains' => $strains
         ]);
@@ -72,7 +74,7 @@ class StrainController extends AbstractController
 
     #[Route(path: 'strains/add', name: 'add_strain')]
     #[IsGranted('ROLE_SEARCH')]
-    public function add(Request $request, EntityManagerInterface $em, Security $security): Form
+    public function add(Request $request, EntityManagerInterface $em, Security $security, StrainIndexer $indexer): Response
     {
         // $this->denyAccessUnlessGranted('ROLE_RENTER');
 
@@ -108,11 +110,15 @@ class StrainController extends AbstractController
             $em->persist($strain);
             $em->flush();
 
+            $indexer->index($strain);
+
             // redirect
-            return $strainForm;
+            return $this->redirectToRoute('page_strains');
         }
 
-        return $strainForm;
+        return $this->render('strain/main.html.twig', [
+            'strainForm' => $strainForm,
+        ]);
     }
 
     #[Route('vehicules/edit/{id}', name: 'edit_strain')]

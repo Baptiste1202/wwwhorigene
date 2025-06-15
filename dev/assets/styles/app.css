@@ -328,7 +328,7 @@ button.btn-form-strain:hover {
 
 #global #list #filter #floatingForm{
     position: relative; /* Nécessaire pour que le z-index fonctionne */
-    z-index: 10; 
+    z-index: 1000; 
     width : 15%;
     font-family: 'Roboto', sans-serif;
 }

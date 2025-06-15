@@ -1,5 +1,5 @@
 
-{{ form_start(strainForm) }}
+{{ form_start(strainForm, {'action': path('add_strain'), 'method': 'POST'}) }}
 
     {{ form_row(strainForm.nameStrain) }}
     {{ form_row(strainForm.parentStrain) }}
