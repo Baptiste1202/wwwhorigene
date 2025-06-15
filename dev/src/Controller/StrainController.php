@@ -17,10 +17,8 @@ use Elastica\Query\MatchAll;
 use Elastica\Query\Nested;
 use Elastica\Query\Wildcard;
 use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
-use FOS\ElasticaBundle\Persister\ObjectPersisterInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,6 +39,8 @@ class StrainController extends AbstractController
     #[Route(path: 'strains/page', name: 'page_strains')]
     public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
     {
+        $cmd = 'docker exec -it claranet2-app-1 bash bin/console fos:elastica:populate';
+        exec($cmd, $output, $returnCode);
 
         if ($security->isGranted('ROLE_SEARCH') || $security->isGranted('ROLE_ADMIN')){
             $form = $this->createForm(StrainFormType::class);
@@ -76,49 +76,66 @@ class StrainController extends AbstractController
     #[IsGranted('ROLE_SEARCH')]
     public function add(Request $request, EntityManagerInterface $em, Security $security, StrainIndexer $indexer): Response
     {
-        // $this->denyAccessUnlessGranted('ROLE_RENTER');
+        try {
 
-        //Create a new vehicule
-        $strain = new Strain();
+            
+            // $this->denyAccessUnlessGranted('ROLE_RENTER');
 
-        $strain->setDate(new \DateTime());
-        
-        //Create the form
-        $strainForm = $this->createForm(StrainFormType::class, $strain);
-
-        //
-        $strainForm->handleRequest($request);
-
-        if ($strainForm->isSubmitted() && $strainForm->isValid()) {
-
-            //get the user
-            $user = $security->getUser(); 
-            $strain->setCreatedBy($user);
+            //Create a new vehicule
+            $strain = new Strain();
 
             $strain->setDate(new \DateTime());
+            
+            //Create the form
+            $strainForm = $this->createForm(StrainFormType::class, $strain);
 
-            foreach($strain->getMethodSequencing() as $sequencing){
-                $file = $sequencing->getFile();
-                if ($file !== null) {
-                    $filename = $file->getClientOriginalName();
-                    $extension = pathinfo($filename, PATHINFO_EXTENSION);
-                    $sequencing->setTypeFile($extension);
+            //
+            $strainForm->handleRequest($request);
+
+            if ($strainForm->isSubmitted() && $strainForm->isValid()) {
+
+                //get the user
+                $user = $security->getUser(); 
+                $strain->setCreatedBy($user);
+
+                $strain->setDate(new \DateTime());
+
+                foreach($strain->getMethodSequencing() as $sequencing){
+                    $file = $sequencing->getFile();
+                    if ($file !== null) {
+                        $filename = $file->getClientOriginalName();
+                        $extension = pathinfo($filename, PATHINFO_EXTENSION);
+                        $sequencing->setTypeFile($extension);
+                    }
                 }
+
+                //stock data
+                $em->persist($strain);
+                $em->flush();
+
+                $indexer->index($strain);
+                sleep(1);
+
+                $this->addFlash('success', 
+                    'Strain ' . 
+                    $strain->getNameStrain().
+                    ' (ID: '. $strain->getId() . ') '.
+                    ' created with succes !'
+                );
+
+                // redirect
+                return $this->redirectToRoute('page_strains');
             }
 
-            //stock data
-            $em->persist($strain);
-            $em->flush();
+            return $this->render('strain/main.html.twig', [
+                'strainForm' => $strainForm,
+            ]);
+        }
+        catch (\Throwable $e) {
+            $this->addFlash('error', 'Une erreur est survenue lors de la création de la souche. Veuillez réessayer.');
 
-            $indexer->index($strain);
-
-            // redirect
             return $this->redirectToRoute('page_strains');
         }
-
-        return $this->render('strain/main.html.twig', [
-            'strainForm' => $strainForm,
-        ]);
     }
 
     #[Route('vehicules/edit/{id}', name: 'edit_strain')]
@@ -129,87 +146,174 @@ class StrainController extends AbstractController
         EntityManagerInterface $em,
     ): Response {
 
-        if ($strain) {
-            $this->denyAccessUnlessGranted('strain.is_creator', $strain);
-        }
+        try{
+            if ($strain) {
+                $this->denyAccessUnlessGranted('strain.is_creator', $strain);
+            }
 
-        //Create the form
-        $strainForm = $this->createForm(StrainFormType::class, $strain);
+            //Create the form
+            $strainForm = $this->createForm(StrainFormType::class, $strain);
 
-        //treat the request
-        $strainForm->handleRequest($request);
+            //treat the request
+            $strainForm->handleRequest($request);
 
-        if ($strainForm->isSubmitted() && $strainForm->isValid()) {
-            //generate the slug
+            if ($strainForm->isSubmitted() && $strainForm->isValid()) {
+                //generate the slug
 
-            //stock data
-            $em->persist($strain);
-            $em->flush();
+                //stock data
+                $em->persist($strain);
+                $em->flush();
 
-            $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' modified with succes !');
+                $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' modified with succes !');
+
+                return $this->redirectToRoute('page_strains');
+            }
+            return $this->render('strain/edit.html.twig', compact('strainForm'));
+        } catch (\Throwable $e) {
+            $this->addFlash('error', 'Une erreur est survenue lors de la modification de la souche. Veuillez réessayer.');
 
             return $this->redirectToRoute('page_strains');
         }
-        return $this->render('strain/edit.html.twig', compact('strainForm'));
     }
 
     #[Route('strains/delete/{id}', name: 'delete_strain')]
     #[IsGranted('ROLE_SEARCH')]
-    public function delete(Strain $strain, EntityManagerInterface $em): Response
+    public function delete(?Strain $strain, EntityManagerInterface $em, StrainIndexer $indexer): Response
     {
-        if ($strain) {
-            $this->denyAccessUnlessGranted('strain.is_creator', $strain);
-        }
+        try {
+            if (!$strain) {
+            $this->addFlash('error', 'Souche introuvable.');
+            return $this->redirectToRoute('page_strains');
+            }
 
-        foreach ($strain->getMethodSequencing() as $sequencing){
-            $em->remove($sequencing);
-        }
-        foreach ($strain->getTransformability() as $transfo){
-            $em->remove($transfo);
-        }
-        foreach ($strain->getPublication() as $publi){
-            $em->remove($publi);
-        }
-        foreach($strain->getPlasmyd() as $plasmyd){
-            $em->remove($plasmyd);
-        }
-        foreach($strain->getDrugResistanceOnStrain() as $drug){
-            $em->remove($drug);
-        }
+            if ($strain) {
+                $this->denyAccessUnlessGranted('strain.is_creator', $strain);
+            }
 
-        $em->remove($strain);
-        $em->flush();
+            foreach ($strain->getMethodSequencing() as $sequencing){
+                $em->remove($sequencing);
+            }
+            foreach ($strain->getTransformability() as $transfo){
+                $em->remove($transfo);
+            }
+            foreach ($strain->getPublication() as $publi){
+                $em->remove($publi);
+            }
+            foreach($strain->getPlasmyd() as $plasmyd){
+                $em->remove($plasmyd);
+            }
+            foreach($strain->getDrugResistanceOnStrain() as $drug){
+                $em->remove($drug);
+            }
 
-        $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' delete with success !');
+            $em->remove($strain);
+            $em->flush();
 
-        return $this->redirectToRoute('page_strains');
+            $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' delete with success !');
+            sleep(1);
+
+            return $this->redirectToRoute('page_strains');
+
+        } catch (\Throwable $e) {
+            $this->addFlash('error', 'Une erreur est survenue lors de la suppresion de la souche. Veuillez réessayer.');
+
+            return $this->redirectToRoute('page_strains');
+        }
     }
 
     #[Route('strains/duplicate/{id}', name: 'duplicate_strain')]
     #[IsGranted('ROLE_SEARCH')]
     public function duplicate(
         Strain $strain,
-        Request $request,
         EntityManagerInterface $em,
-        Security $security
+        Security $security,
+        StrainIndexer $indexer
     ): Response {
 
-        $user = $security->getUser(); 
+        try {
+            $user = $security->getUser(); 
 
-        $strainCloned = clone $strain; 
+            $clone = new Strain();
 
-        $strainCloned->setId(null);
-        $strainCloned->setCreatedBy($user);
-        $strainCloned->setDate(new \DateTime());
-      
-        $em->persist($strainCloned);
-        $em->flush();
+            // Champs simples
+            $clone->setNameStrain($strain->getNameStrain());
+            $clone->setSpecie($strain->getSpecie());
+            $clone->setGender($strain->getGender());
+            $clone->setComment($strain->getComment());
+            $clone->setDescription($strain->getDescription());
+            $clone->setGenotype($strain->getGenotype());
+            $clone->setDescriptionGenotype($strain->getDescriptionGenotype());
+            //$clone->setDepot($$strain->getDepot());
+            $clone->setPrelevement($strain->getPrelevement());
+            $clone->setCreatedBy($user);
+            $clone->setDate($strain->getDate());
+            
+            // Relation vers le parent (on ne copie pas l'arbre entier)
+            $clone->setParentStrain($strain->getParentStrain());
 
+            // Transformability (OneToMany)
+            foreach ($strain->getTransformability() as $transfo) {
+                $newTransfo = clone $transfo;
+                $newTransfo->setStrain($clone);
+                $clone->addTransformability($newTransfo);
+            }
 
-        $this->addFlash('success', 'Strain ' . $strainCloned->getNameStrain() . ' duplicate with succes !');
+            // DrugResistanceOnStrain (OneToMany)
+            foreach ($strain->getDrugResistanceOnStrain() as $drug) {
+                $newDrug = clone $drug;
+                $newDrug->setStrain($clone);
+                $clone->addDrugResistanceOnStrain($newDrug);
+            }
 
-        return $this->redirectToRoute('page_strains');
+            // MethodSequencing (OneToMany)
+            foreach ($strain->getMethodSequencing() as $method) {
+                $newMethod = clone $method;
+                $newMethod->setStrain($clone);
+                $clone->addMethodSequencing($newMethod);
+            }
 
+            // Storage (OneToMany)
+            foreach ($strain->getStorage() as $storage) {
+                $newStorage = clone $storage;
+                $newStorage->setStrain($clone);
+                $clone->getStorage()->add($newStorage);
+            }
+
+            // Plasmyd (ManyToMany) – liaison seulement, pas de clonage
+            foreach ($strain->getPlasmyd() as $plasmyd) {
+                $clone->addPlasmyd($plasmyd);
+            }
+
+            // Publication (ManyToMany)
+            foreach ($strain->getPublication() as $pub) {
+                $clone->addPublication($pub);
+            }
+
+            // Project (ManyToMany)
+            foreach ($strain->getProject() as $proj) {
+                $clone->addProject($proj);
+            }
+
+            // Collec (ManyToMany)
+            foreach ($strain->getCollec() as $collec) {
+                $clone->addCollec($collec);
+            }
+            
+            $em->persist($clone);
+            $em->flush();
+
+            $indexer->index($strain);
+
+            $this->addFlash('success', 'Strain ' . $clone->getNameStrain() . ' duplicate with succes !');
+
+            sleep(1);
+
+            return $this->redirectToRoute('page_strains');
+        } catch (\Throwable $e) {
+            $this->addFlash('error', 'Une erreur est survenue lors de la duplication de la souche. Veuillez réessayer.');
+
+            return $this->redirectToRoute('edit_strain');
+        }
     }
 
     #[Route('/strains/search', name: 'strain_search')]
@@ -275,23 +379,23 @@ class StrainController extends AbstractController
                 $boolQuery->addFilter(new MatchQuery('methodSequencing.typeFile', $data->sequencing));
             }
 
-            // if ($data->drug || $data->resistant !== null ){
-            //     $nestedBool = new BoolQuery();
+            if ($data->drug ){
+                $nestedBool = new BoolQuery();
                 
-            //     if ($data->drug) {
-            //         $nestedBool->addFilter(new MatchQuery('drugResistanceOnStrain.drugResistance.id', $data->drug->getId()));
-            //     }
+                if ($data->drug) {
+                    $nestedBool->addFilter(new MatchQuery('drugResistanceOnStrain.drugResistance.id', $data->drug->getId()));
+                }
             
-            //     if ($data->resistant !== null) {
-            //         $nestedBool->addFilter(new MatchQuery('drugResistanceOnStrain.resistant', $data->resistant));
-            //     }
+                if ($data->resistant !== null) {
+                    $nestedBool->addFilter(new MatchQuery('drugResistanceOnStrain.resistant', $data->resistant));
+                }
 
-            //     $nested = new Nested();
-            //     $nested->setPath('drugResistanceOnStrain');
-            //     $nested->setQuery($nestedBool);
+                $nested = new Nested();
+                $nested->setPath('drugResistanceOnStrain');
+                $nested->setQuery($nestedBool);
 
-            //     $boolQuery->addFilter($nested);
-            // }
+                $boolQuery->addFilter($nested);
+            }
 
             if ($data->genotype){
                 $boolQuery->addFilter(new MatchQuery('genotype.id', $data->genotype->getId()));

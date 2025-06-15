@@ -30,4 +30,19 @@
         });
     });
 
+    window.addEventListener('DOMContentLoaded', () => {
+        const messages = document.querySelectorAll('.flash-message');
+        messages.forEach((msg) => {
+            msg.style.display = 'block';
+
+            setTimeout(() => {
+                msg.style.opacity = '0';
+            }, 4000); // commence à disparaître au bout de 4 secondes
+
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 5000); // totalement caché après 5 secondes
+        });
+    });
+
 </script>

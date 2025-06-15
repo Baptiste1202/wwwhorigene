@@ -326,6 +326,39 @@ button.btn-form-strain:hover {
     font-style: italic;
 }
 
+#message-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+.flash-message {
+    display: none; /* caché par défaut */
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: white;
+    animation: fadeOut 5s forwards;
+}
+
+.flash-message.success {
+    background-color: #ddf8d7; /* rouge */
+    color: #1f721c; 
+}
+
+.flash-message.error {
+    background-color: #f8d7da; /* rouge */
+    color: #721c24; 
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; display: none; }
+}
+
 #global #list #filter #floatingForm{
     position: relative; /* Nécessaire pour que le z-index fonctionne */
     z-index: 1000; 
@@ -416,6 +449,7 @@ button.btn-form-strain:hover {
     border: 1px solid #ccc; /* Bordure grise par défaut */
     border-radius: 4px; /* Coins arrondis */
     box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
+    width: 100%; /* Prend toute la largeur disponible */
 }
 
 #global #list {
@@ -428,7 +462,7 @@ button.btn-form-strain:hover {
     background-color: #f9f9f9; /* Couleur de fond */
     display: flex; /* Utiliser flex pour l'alignement interne si nécessaire */
     flex-direction: column; /* Assure que le contenu est aligné en colonne */
-    height: 100vh; /* Hauteur s'adapte au contenu */
+    height: 90vh; /* Hauteur s'adapte au contenu */
     width: auto; /* Prend toute la largeur disponible */
 }
 
@@ -743,7 +777,7 @@ footer{
     list-style: none;
     text-decoration: none;
     background-color: #111010;
-    margin-top: 40px;
+    margin-top: 20px;
     width: 100%; 
     min-height: 300px; /* Définissez la hauteur souhaitée */
     overflow: hidden; /* Cache le débordement */

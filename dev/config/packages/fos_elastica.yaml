@@ -10,7 +10,7 @@ fos_elastica:
         model: App\Entity\Strain
         provider: ~
         finder: ~
-        listener: true
+        listener: ~
       properties:
         id:
           type: integer

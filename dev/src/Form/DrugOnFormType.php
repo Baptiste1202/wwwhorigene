@@ -18,7 +18,7 @@ class DrugOnFormType extends AbstractType
     {
         $builder
             ->add('drugResistance', type:DrugAutocompleteField::class, options:[ 
-                'placeholder' => 'Sélectionner une résistance',  
+                'placeholder' => 'Select a drug',  
                 'required' => true,
             ])
             ->add('concentration', options:[

@@ -515,7 +515,7 @@ class Strain
         return $this->prelevement;
     }
 
-    public function setPrelevement(Sample $prelevement): static
+    public function setPrelevement(?Sample $prelevement): static
     {
         $this->prelevement = $prelevement;
 

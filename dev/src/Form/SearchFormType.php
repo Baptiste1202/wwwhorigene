@@ -9,6 +9,10 @@ use App\Entity\Plasmyd;
 use App\Entity\Project;
 use App\Entity\Sample;
 use App\Entity\User;
+use App\Form\Autocomplete\PlasmydAutocompleteField;
+use App\Form\Autocomplete\DrugAutocompleteField;
+use App\Form\Autocomplete\ProjectAutocompleteField;
+use App\Form\Autocomplete\SampleAutocompleteField;
 use App\Form\Model\SearchModel;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -17,6 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class SearchFormType extends AbstractType
 {
@@ -27,19 +32,18 @@ class SearchFormType extends AbstractType
             'required' => false,
             'label' => 'Name'
         ])
-        ->add('plasmyd', EntityType::class, [
-            'class' => Plasmyd::class,
+        ->add('plasmyd', PlasmydAutocompleteField::class, [
             'required' => false,
-            'choice_label' => function (Plasmyd $plasmyd) {
-                return $plasmyd->getNamePlasmyd(); 
-            }
         ])
-        ->add('drug', EntityType::class, [
-            'class' => DrugResistance::class,
+        // ->add('plasmyd', type:CollectionType::class, options:[
+        //         'entry_type' => PlasmydAutocompleteField::class,
+        //         'allow_add' => true,   // Permet d'ajouter des entrées dynamiquement
+        //         'allow_delete' => true, // Permet de supprimer des entrées
+        //         'by_reference' => false, // Nécessaire pour éviter les problèmes avec les relations bidirectionnelles
+        //         'label' => false,
+        // ])
+        ->add('drug', DrugAutocompleteField::class, [
             'required' => false,
-            'choice_label' => function (DrugResistance $genotype) {
-                return $genotype->getName(); 
-            }
         ])
         ->add('genotype', EntityType::class, [
             'class' => Genotype::class,
@@ -48,19 +52,11 @@ class SearchFormType extends AbstractType
                 return $genotype->getType(); 
             }
         ])
-        ->add('project', EntityType::class, [
-            'class' => Project::class,
+        ->add('project', ProjectAutocompleteField::class, [
             'required' => false,
-            'choice_label' => function (Project $project) {
-                return $project->getName(); 
-            }
         ])
-        ->add('sample', EntityType::class, [
-            'class' => Sample::class,
+        ->add('sample', SampleAutocompleteField::class, [
             'required' => false,
-            'choice_label' => function (Sample $sample) {
-                return $sample->getName(); 
-            }
         ])
         ->add('user', EntityType::class, [
             'class' => User::class,

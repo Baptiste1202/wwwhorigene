@@ -11,6 +11,6 @@ class StrainIndexer
 
     public function index(Strain $strain): void
     {
-        $this->persister->replaceOne($strain);
+        $this->persister->replaceMany([$strain]);
     }
 }

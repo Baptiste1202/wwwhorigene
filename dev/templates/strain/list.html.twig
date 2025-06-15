@@ -82,7 +82,8 @@
                                 genotype: {{ strain.genotype ? strain.genotype.type : '--'}}
                                 description: {{ strain.descriptionGenotype ? strain.descriptionGenotype : "--" }}'>
                     {% if strain.genotype is not null %}
-                        {{strain.genotype.type}}
+                        {{strain.genotype.type}} <br>
+                        {{strain.descriptionGenotype}}
                     {% else %}
                         --
                     {% endif %}
@@ -318,8 +319,11 @@
                                             container type : {{ strain.storage[i] is defined and strain.storage[i] ? strain.storage[i].containerType : "--" }}
                                             container position : {{ strain.storage[i] is defined and strain.storage[i] ? strain.storage[i].containerPosition : "--" }}'
                                 >
-                                {{ strain.storage[i] is defined ? strain.storage[i].room : '' }} <br>
-                                {{ strain.storage[i] is defined ? strain.storage[i].fridge: '' }}
+                                room : {{ strain.storage[i] is defined ? strain.storage[i].room : '' }}<br>
+                                fridge:  {{ strain.storage[i] is defined ? strain.storage[i].fridge: '' }} <br>
+                                shelf:  {{ strain.storage[i] is defined ? strain.storage[i].shelf: '' }} <br>
+                                rack: {{ strain.storage[i] is defined ? strain.storage[i].rack: '' }} <br>
+                                volume: {{ strain.storage[i] is defined ? strain.storage[i].volume: '' }} <br>
                                 </td>
                                 <td></td> {# Parent #}
                                 <td>{{ strain.project[i] is defined ? strain.project[i].name : '' }}</td>
@@ -354,11 +358,24 @@
                                 {{ strain.transformability[i] is defined ? strain.transformability[i].mesure : '' }}
                                 </td>
                                 <td class="sequencing" data-info='
-                                        method : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing|first.name  : '--'}}
-                                        file : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing|first.nameFile  : '--'}}'
+                                        method : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing[i].name  : '--'}}
+                                        file : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing[i].nameFile  : '--'}}'
                                         data-file='{{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing|first.nameFile : '--'}}'>
                                 {{ strain.methodSequencing[i] is defined ? strain.methodSequencing[i].name : '' }} <br>
-                                {{ strain.methodSequencing[i] is defined ? strain.methodSequencing[i].nameFile : '' }} 
+                                {% if strain.methodSequencing[i] is defined  %}
+                                    {% set name = strain.methodSequencing[i].nameFile ?: strain.methodSequencing[i].nameFile %}
+                                    {% set maxLength = 10 %}
+
+                                    {% if name|length > maxLength %}
+                                        {% set prefix = name|slice(0, 12) %}
+                                        {% set suffix = nameFile|slice(-10) %}
+                                        {{ prefix ~ '...' ~ suffix }}
+                                    {% else %}
+                                        {{ name }}
+                                    {% endif %} <br>
+                                {% else %}
+                                    --
+                                {% endif %}
                                 </td>
                                 <td data-info='
                                         id: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].id  : '--'}}
