@@ -586,6 +586,28 @@ thead {
   z-index: 15;
 }
 
+.searchDatatable {
+    margin: 10px 0 20px 0;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.searchDatatable input#customSearch {
+    width: 300px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.searchDatatable input#customSearch:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+
 /* Style pour des colonnes spécifiques */
 #global #list #table td.id, 
 #global #list #table td.name{

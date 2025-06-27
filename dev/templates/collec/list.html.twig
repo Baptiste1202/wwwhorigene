@@ -1,42 +1,181 @@
-<table id="data-table">
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Decription</th>
-        <th>Comments</th>
-    </tr>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    {% for collec in collecs %}
-        <div class="list-collec">
+<style>
+/* CSS adapté pour data-table-collect */
+#data-table-wrapper table#data-table-collect {
+    width: 100%;
+    table-layout: auto;
+    border-collapse: collapse;
+}
+#data-table-wrapper table#data-table-collect th,
+#data-table-wrapper table#data-table-collect td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    white-space: nowrap;
+    text-align: left;
+}
+#data-table-wrapper table#data-table-collect th:first-child,
+#data-table-wrapper table#data-table-collect td:first-child {
+    width: 40px;
+    text-align: center;
+}
+#data-table-wrapper table#data-table-collect th:nth-last-child(-n+3),
+#data-table-wrapper table#data-table-collect td:nth-last-child(-n+3) {
+    width: 50px;
+    text-align: center;
+}
+
+/* Améliorations des règles CSS pour les flèches de tri de DataTables */
+/* Elles devraient forcer l'affichage si le CSS par défaut de DataTables est manquant ou écrasé. */
+#data-table-collect thead th.sorting:after,
+#data-table-collect thead th.sorting_asc:after,
+#data-table-collect thead th.sorting_desc:after {
+    font-family: 'Arial Unicode MS', 'Liberation Sans', sans-serif; /* Police qui supporte les symboles Unicode */
+    margin-left: 0.5em; /* Un peu d'espace entre le texte et la flèche */
+    vertical-align: middle; /* Alignement vertical */
+}
+
+#data-table-collect thead th.sorting:after {
+    content: " \2195" !important; /* Double flèche haut/bas */
+    opacity: 0.5 !important; /* Augmente l'opacité pour le rendre plus visible */
+    font-size: 0.8em;
+}
+#data-table-collect thead th.sorting_asc:after {
+    content: " \2191" !important; /* Flèche haut (ascendant) */
+    opacity: 1 !important;
+    font-size: 0.8em;
+}
+#data-table-collect thead th.sorting_desc:after {
+    content: " \2193" !important; /* Flèche bas (descendant) */
+    opacity: 1 !important;
+    font-size: 0.8em;
+}
+
+</style>
+
+
+<div id="data-table-wrapper" class="sticky-wrapper">
+    <table id="data-table-collect" class="display">
+        <thead>
             <tr>
-                <td>{{collec.id}}</td>
-                <td>{{collec.name}}</td>
-                <td>{{collec.description}}</td>
-                <td>{{collec.comment}}</td>
-                <td><a href = "{{path("edit_collec", {id: collec.id})}}"> Modifie </a></td>
-                <td><a href = "{{path("delete_collec", {id: collec.id})}}" class="delete-link"> Delete </a></td>
+                <th><input type="checkbox" id="select-all" /></th> {# Checkbox pour tout sélectionner (optionnel) #}
+                <th data-column="id">ID</th>
+                <th data-column="name">Name</th>
+                <th data-column="description">Description</th>
+                <th data-column="comment">Comments</th>
+                <th data-column="duplicate" class="no-sort"></th> {# Ajout de classe pour désactiver le tri #}
+                <th data-column="edit" class="no-sort"></th> {# Ajout de classe pour désactiver le tri #}
+                <th data-column="delete" class="no-sort"></th> {# Ajout de classe pour désactiver le tri #}
             </tr>
-        </div>
-    {% endfor %}
-       
-</table>
+        </thead>
+        <tbody>
+            {% if collecs is empty %}
+                <tr>
+                    <td colspan="8" class="no-data">No collections found.</td>
+                </tr>
+            {% else %}
+                {% for collec in collecs %}
+                    <tr class="list-collec">
+                        <td>
+                            <input type="checkbox" name="selected_collecs[]" value="{{ collec.id }}" class="select-checkbox" />
+                        </td>
+                        <td class="id">{{ collec.id }}</td>
+                        <td class="name">{{ collec.name is not null ? collec.name : '--' }}</td>
+                        <td class="description">{{ collec.description is not null ? collec.description : '--' }}</td>
+                        <td class="comment">{{ collec.comment is not null ? collec.comment : '--' }}</td>
+                        <td>
+                            <a href="{{ path('duplicate_collec', { id: collec.id }) }}" class="button-crud" title="Dupliquer">
+                                <i class="fa-solid fa-copy"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ path('edit_collec', { id: collec.id }) }}" class="button-crud" title="Modifier">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                        </td>
+                        <td>
+                            {# ATTENTION: 'confirm' n'est pas recommandé côté client pour les actions sensibles.
+                                La logique du contrôleur CollecController gère déjà la confirmation via flash message.
+                                Le 'onclick' ci-dessous peut être retiré si vous utilisez la confirmation côté serveur.
+                                Si vous le gardez, assurez-vous de bien gérer la double-confirmation. #}
+                            <a href="{{ path('delete_collec', { id: collec.id }) }}" class="button-crud delete-link" title="Supprimer" onclick="return confirm('Voulez-vous vraiment supprimer cette collection ?');">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+</div>
 
-{% if app.session.flashbag.has('warning') %}
-    <script>
-        // Sélectionner tous les liens de suppression
-        document.querySelectorAll('.delete-link').forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault(); // Empêcher la redirection initiale
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 
-                // Afficher la confirmation si le flash warning existe
-                var confirmDelete = confirm("{{ app.session.flashbag.get('warning')[0] }}");
+<script>
+function initDataTableWithFilters(tableId) {
+    const table = $('#' + tableId);
+    const totalColumns = table.find('thead th').length;
 
-                // Si l'utilisateur confirme, ajouter ?confirm=yes à l'URL et rediriger
-                if (confirmDelete) {
-                    // Redirection vers la suppression avec confirmation
-                    window.location.href = this.href + '?confirm=yes';
-                }
-            });
+    // Ajout d'une ligne de filtres sous le header (si pas déjà fait)
+    if (table.find('thead tr.filters').length === 0) {
+        const filterRow = $('<tr class="filters"></tr>').appendTo(table.find('thead'));
+        table.find('thead th').each(function(index) {
+            // Ne pas ajouter d'input pour la 1ère colonne (checkbox) ou les 3 dernières colonnes
+            if ($(this).find('input[type=checkbox]').length > 0 || index >= totalColumns - 3) {
+                filterRow.append('<th></th>');
+            } else {
+                filterRow.append('<th><input type="text" placeholder="Filtrer" style="width: 100%; box-sizing: border-box;" /></th>');
+            }
         });
-    </script>
-{% endif %}
+    }
+
+    const dataTable = table.DataTable({
+        orderCellsTop: true,
+        fixedHeader: true,
+        paging: true,
+        searching: true,
+        info: true,
+        lengthChange: true,
+        language: {
+            url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json"
+        },
+        columnDefs: [
+            // Désactive le tri pour la première colonne et les 3 dernières
+            { orderable: false, targets: [0, -1, -2, -3] }
+        ]
+    });
+
+    // Applique le filtre sur chaque colonne (si input présent)
+    table.find('thead tr.filters input').on('keyup change clear', function() {
+        const colIndex = $(this).parent().index();
+        dataTable.column(colIndex).search(this.value).draw();
+    });
+
+    // Gestion de la checkbox "Tout sélectionner"
+    $('#select-all').on('click', function() {
+        const isChecked = $(this).prop('checked');
+        table.find('tbody input.select-checkbox').prop('checked', isChecked);
+    });
+
+    // Synchronisation des checkboxes individuelles avec "Tout sélectionner"
+    table.find('tbody').on('change', 'input.select-checkbox', function() {
+        const allChecked = table.find('tbody input.select-checkbox').length === table.find('tbody input.select-checkbox:checked').length;
+        $('#select-all').prop('checked', allChecked);
+    });
+
+    // Gestion du menu de colonnes masquées/visibles (si checkboxes présentes)
+    document.querySelectorAll('.toggle-column').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            const colIndex = parseInt(this.getAttribute('data-column'), 10);
+            const col = dataTable.column(colIndex);
+            col.visible(this.checked);
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    initDataTableWithFilters('data-table-collect');
+});
+</script>

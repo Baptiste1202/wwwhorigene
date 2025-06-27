@@ -156,21 +156,62 @@ class CollecController extends AbstractController
         return $this->render('collec/edit.html.twig', compact('collecForm'));
     }
 
-    #[Route('strains/collec/delete/{id}', name: 'delete_collec')]
+    #[Route('/collecs/delete/{id}', name: 'delete_collec')]
     #[IsGranted('ROLE_SEARCH')]
-    public function delete(Request $request, Collec $collec, EntityManagerInterface $em): Response
+    public function deleteCollec(?Collec $collec, EntityManagerInterface $em): Response
     {
-        if ($request->query->get('confirm') === 'yes') {
+        try {
+            if (!$collec) {
+                $this->addFlash('error', 'Collection introuvable.');
+                return $this->redirectToRoute('page_collecs');
+            }
+
+            // ⚠️ Forcer chargement des relations
+            foreach (iterator_to_array($collec->getStrain()) as $strain) {
+                $collec->removeStrain($strain);
+            }
+
             $em->remove($collec);
             $em->flush();
 
-            $this->addFlash('success', 'Collection ' . $collec->getName() . ' deleted successfully!');
+            $this->addFlash('success', 'Collection "' . $collec->getName() . '" supprimée avec succès.');
+            return $this->redirectToRoute('page_collecs');
+
+        } catch (\Throwable $e) {
+            $this->addFlash('error', 'Erreur lors de la suppression de la collection.');
             return $this->redirectToRoute('page_collecs');
         }
+    }
 
-        $this->addFlash('warning', 'Are you sure you want to delete this Collection ' . $collec->getName(). ' ? (Be aware. This action cannot be undone !)');
+    #[Route('strains/collec/duplicate/{id}', name: 'duplicate_collec')]
+    #[IsGranted('ROLE_SEARCH')]
+    public function duplicateCollec(Collec $collec, EntityManagerInterface $em, Security $security): Response
+    {
+        try {
+            // Récupérer l'utilisateur connecté
+            $user = $security->getUser();
 
-        return $this->redirectToRoute('page_collecs');
+            // Créer une nouvelle instance de Collec (la copie)
+            $clone = new Collec();
+
+            // Copier les champs simples de l'entité originale
+            $clone->setName($collec->getName());
+            $clone->setDescription($collec->getDescription());
+            $clone->setComment($collec->getComment()); // <-- ICI on copie aussi le commentaire
+
+            // Enregistrement en base de la copie
+            $em->persist($clone);
+            $em->flush();
+
+            // Message flash
+            $this->addFlash('success', 'Collection "' . $clone->getName() . '" dupliquée avec succès !');
+
+            return $this->redirectToRoute('page_collecs');
+
+        } catch (\Throwable $e) {
+            $this->addFlash('error', 'Erreur lors de la duplication de la collection.');
+            return $this->redirectToRoute('page_collecs');
+        }
     }
 
 }

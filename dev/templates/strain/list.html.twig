@@ -1,11 +1,5 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <div id="data-table-wrapper sticky-wrapper">
-    
-    {# Ajout d'une fonction de recherche en lien avec la datatable#}
-    <div class="searchDatatable">
-        <input type="text" id="customSearch" placeholder="Rechercher...">
-    </div>
-
     <table id="data-table" class="display" style="visibility: hidden;"> {# Ajout de la classe 'display' pour DataTables #}
         <thead>
             <tr>
@@ -261,13 +255,13 @@
                         <a href="{{ path('duplicate_strain', {id: strain.id}) }}" class="button-crud" title="Dupliquer">
                             <i class="fa-solid fa-copy"></i>
                         </a>
-                        </td>
-                        <td>
+                    </td>
+                    <td>
                         <a href="{{ path('edit_strain', {id: strain.id}) }}" class="button-crud" title="Modifier">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </a>
-                        </td>
-                        <td>
+                    </td>
+                    <td>
                         <a href="{{ path('delete_strain', {id: strain.id}) }}" class="button-crud" title="Supprimer" onclick="return confirm('Voulez-vous vraiment supprimer ?');">
                             <i class="fa-solid fa-trash"></i>
                         </a>
@@ -476,7 +470,7 @@
         table.style.visibility = 'hidden';
 
         const dataTable = $('#data-table').DataTable({
-            paging: false,
+            paging: true,
             searching: false, //on utilisera notre recherche personalise par groupe
             ordering: true,
             info: true,
@@ -529,12 +523,31 @@
             }
         });
 
-        // 3. Recherche personnalisée par groupe
+        // 3. Recherche personnalisée par groupe (version sans pagination)
         const searchInput = document.getElementById('customSearch');
         if (searchInput) {
             searchInput.addEventListener('input', function () {
                 const term = this.value.trim().toLowerCase();
-                const allRows = dataTable.rows({ search: 'applied' }).nodes().toArray();
+
+                // Si le champ est vide, réactiver la pagination à 25
+                if (term === '') {
+                    dataTable.page.len(25).draw();
+
+                    // Réafficher toutes les lignes
+                    dataTable.rows().nodes().toArray().forEach(row => {
+                        row.style.display = '';
+                        const groupHeader = row.previousElementSibling;
+                        if (groupHeader?.classList.contains('dtrg-group')) {
+                            groupHeader.style.display = '';
+                        }
+                    });
+                    return;
+                }
+
+                // Sinon, désactiver la pagination pour afficher toutes les lignes
+                dataTable.page.len(-1).draw();
+
+                const allRows = dataTable.rows().nodes().toArray();
                 const groups = {};
 
                 for (const row of allRows) {
@@ -555,7 +568,9 @@
                         });
                     });
 
-                    for (const row of groupRows) row.style.display = match ? '' : 'none';
+                    for (const row of groupRows) {
+                        row.style.display = match ? '' : 'none';
+                    }
 
                     const firstRow = groupRows[0];
                     if (firstRow) {
@@ -567,6 +582,8 @@
                 }
             });
         }
+
+
 
         // 4. Popups (info/fichier) pour le téléchargement et les bonnes directions
         const typeMap = {
