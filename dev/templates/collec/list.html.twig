@@ -83,25 +83,9 @@
                         <td class="name">{{ collec.name is not null ? collec.name : '--' }}</td>
                         <td class="description">{{ collec.description is not null ? collec.description : '--' }}</td>
                         <td class="comment">{{ collec.comment is not null ? collec.comment : '--' }}</td>
-                        <td>
-                            <a href="{{ path('duplicate_collec', { id: collec.id }) }}" class="button-crud" title="Dupliquer">
-                                <i class="fa-solid fa-copy"></i>
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{{ path('edit_collec', { id: collec.id }) }}" class="button-crud" title="Modifier">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
-                        </td>
-                        <td>
-                            {# ATTENTION: 'confirm' n'est pas recommandé côté client pour les actions sensibles.
-                                La logique du contrôleur CollecController gère déjà la confirmation via flash message.
-                                Le 'onclick' ci-dessous peut être retiré si vous utilisez la confirmation côté serveur.
-                                Si vous le gardez, assurez-vous de bien gérer la double-confirmation. #}
-                            <a href="{{ path('delete_collec', { id: collec.id }) }}" class="button-crud delete-link" title="Supprimer" onclick="return confirm('Voulez-vous vraiment supprimer cette collection ?');">
-                                <i class="fa-solid fa-trash"></i>
-                            </a>
-                        </td>
+                        <td><a href = "{{path("duplicate_collec", {id: collec.id})}}"> Duplicate </a></td>
+                        <td><a href = "{{path("edit_collec", {id: collec.id})}}"> Modifie </a></td>
+                        <td><a href = "{{path("delete_collec", {id: collec.id})}}" class="delete-link"> Delete </a></td>
                     </tr>
                 {% endfor %}
             {% endif %}

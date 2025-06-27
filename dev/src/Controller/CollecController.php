@@ -62,29 +62,18 @@ class CollecController extends AbstractController
     #[IsGranted('ROLE_SEARCH')]
     public function addForm(Request $request, EntityManagerInterface $em): Form
     {
-
-        //Create a new vehicule
         $collec = new Collec();
 
-        //Create the form
         $collecForm = $this->createForm(CollecFormType::class, $collec);
 
-        //
         $collecForm->handleRequest($request);
 
         if ($collecForm->isSubmitted() && $collecForm->isValid()) {
-            //generate the slug -- not done yet
-
-            //get the user -- not done yet
-
-            //stock data
             $em->persist($collec);
             $em->flush();
 
-            // $this->addFlash('success', 'Vehicule ' . $vehicule->getSlug() . 'ajouté avec succés !');
+            $this->addFlash('success', 'Collection ' . $collec->getName() . 'added with success !');
 
-
-            // redirect
             return $collecForm;
         }
         return $collecForm;
@@ -94,29 +83,18 @@ class CollecController extends AbstractController
     #[IsGranted('ROLE_SEARCH')]
     public function addResponse(Request $request, EntityManagerInterface $em): Response
     {
-
-        //Create a new vehicule
         $collec = new Collec();
 
-        //Create the form
         $collecForm = $this->createForm(CollecFormType::class, $collec);
 
-        //
         $collecForm->handleRequest($request);
 
         if ($collecForm->isSubmitted() && $collecForm->isValid()) {
-            //generate the slug -- not done yet
-
-            //get the user -- not done yet
-
-            //stock data
             $em->persist($collec);
             $em->flush();
 
-            // $this->addFlash('success', 'Vehicule ' . $vehicule->getSlug() . 'ajouté avec succés !');
+            $this->addFlash('success', 'Collection ' . $collec->getName() . 'added with success !');
 
-
-            // redirect
             return $this->redirectToRoute('page_strains');
         }
         return $this->render('collec/create.html.twig', compact('collecForm'));
@@ -143,13 +121,11 @@ class CollecController extends AbstractController
         $collecForm->handleRequest($request);
 
         if ($collecForm->isSubmitted() && $collecForm->isValid()) {
-            //generate the slug
-
-            //stock data
+ 
             $em->persist($collec);
             $em->flush();
 
-            $this->addFlash('success', 'collec ' . $collec->getName() . ' modified with succes !');
+            $this->addFlash('success', 'Collection ' . $collec->getName() . ' modified with succes !');
 
             return $this->redirectToRoute('page_collecs');
         }
@@ -166,7 +142,6 @@ class CollecController extends AbstractController
                 return $this->redirectToRoute('page_collecs');
             }
 
-            // ⚠️ Forcer chargement des relations
             foreach (iterator_to_array($collec->getStrain()) as $strain) {
                 $collec->removeStrain($strain);
             }
