@@ -20,10 +20,12 @@ chmod -R 775 public/docs/
 chmod +x bin/console
 chmod -R 777 var/cache var/log
 
-php bin/console fos:elastica:populate
-bin/console doctrine:migration:migrate
+
 php bin/console cache:clear --env=dev
 php bin/console cache:clear --env=prod
+php bin/console fos:elastica:populate
+bin/console doctrine:migration:migrate
+
 
 
 http://localhost:8092/public/login

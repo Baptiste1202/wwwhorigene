@@ -1,5 +1,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <div id="data-table-wrapper sticky-wrapper">
+    
+    {# Ajout d'une fonction de recherche en lien avec la datatable#}
+    <div class="searchDatatable">
+        <input type="text" id="customSearch" placeholder="Rechercher...">
+    </div>
+
     <table id="data-table" class="display" style="visibility: hidden;"> {# Ajout de la classe 'display' pour DataTables #}
         <thead>
             <tr>
@@ -415,11 +421,18 @@
 
 {########## DataTables ############}
 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowgroup/1.5.0/css/rowGroup.dataTables.min.css">
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/rowgroup/1.5.0/js/dataTables.rowGroup.min.js"></script>
+<!-- CSS DataTables (version stable actuelle) -->
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/rowgroup/1.5.0/css/rowGroup.dataTables.min.css" />
+
+<!-- jQuery (doit être chargé AVANT DataTables JS) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- JS DataTables (doit être après jQuery) -->
+<script src="https://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/rowgroup/1.5.0/js/dataTables.rowGroup.min.js"></script>
+
+
 
 {# Ajout d'une règle CSS pour forcer la visibilité des colonnes gérée par DataTables #}
 <style>
@@ -430,120 +443,174 @@
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Pré-traitement des lignes du tableau
-    const rows = document.querySelectorAll('#data-table tbody tr');
-    let currentStrainId = '', currentStrainName = '';
+    document.addEventListener('DOMContentLoaded', function () {
+        const table = document.getElementById('data-table');
+        const rows = table.querySelectorAll('tbody tr');
 
-    rows.forEach(row => {
-        const idCell = row.querySelector('td.id');
-        const nameCell = row.querySelector('td.name');
+        let currentStrainId = '', currentStrainName = '';
 
-        if (idCell?.textContent.trim()) {
-            currentStrainId = idCell.textContent.trim();
-            currentStrainName = nameCell.textContent.trim();
-        } else {
-            idCell.textContent = currentStrainId;
-            nameCell.textContent = currentStrainName;
-        }
+        // 1. Prétraitement : remplir cellules vides et propager ID/Souche
+        for (const row of rows) {
+            const idCell = row.querySelector('td.id');
+            const nameCell = row.querySelector('td.name');
 
-        const cells = row.querySelectorAll('td');
-        cells.forEach((cell, index) => {
-            // Ignorer les 3 dernières colonnes
-            if (
-                !cell.classList.contains('id') &&
-                index < cells.length - 3 &&
-                !cell.textContent.trim()
-            ) {
-                cell.textContent = '--';
+            if (idCell?.textContent.trim()) {
+                currentStrainId = idCell.textContent.trim();
+                currentStrainName = nameCell.textContent.trim();
+            } else {
+                idCell.textContent = currentStrainId;
+                nameCell.textContent = currentStrainName;
             }
-        });
-    });
 
-    // Initialisation DataTables (sans tri par défaut)
-    const dataTable = $('#data-table').DataTable({
-        paging: false,
-        searching: true,
-        ordering: true,
-        info: true,
-        order: [], // Pas de tri initial
-        columnDefs: [
-            { orderable: false, targets: [19, 20, 21] }  // Désactive le tri sur les 3 dernières colonnes
-        ],
-        rowGroup: {
-            dataSrc: 0,
-            startRender: function (rows, group) {
-                const name = rows.data()[0][1];
-                return 'ID: ' + group + ' (Souche : ' + name + ')';
-            },
-            endRender: null // Désactiver le rendu de fin de groupe si non nécessaire
-        },
-        initComplete: function(settings, json) { // Ajout de settings et json comme arguments
-            // 'this' dans initComplete fait référence à l'instance DataTables
-            const api = this.api(); // Obtenez l'instance de l'API DataTables
+            const cells = row.querySelectorAll('td');
+            const lastEditable = cells.length - 3;
 
-            // Table prête, on la rend visible
-            $('#data-table').css('visibility', 'visible');
-
-            // Initialiser les toggles de colonnes après que DataTables soit prêt
-            document.querySelectorAll('input.toggle-column').forEach(checkbox => {
-                const columnIdx = parseInt(checkbox.getAttribute('data-column'), 10);
-                console.log(`Initialisation: Colonne ${columnIdx}, Vérifiée: ${checkbox.checked}`); // Log initial
-                api.column(columnIdx).visible(checkbox.checked); // Utilisez 'api' ici
-
-                checkbox.addEventListener('change', function() {
-                    const isChecked = this.checked;
-                    console.log(`Changement: Colonne ${columnIdx}, Nouvelle valeur: ${isChecked}`); // Log au changement
-                    api.column(columnIdx).visible(isChecked); // Utilisez 'api' ici
-                });
-            });
-        }
-    });
-
-    // Logique du popup
-    const typeMap = {
-        'sequencing': 'sequencing',
-        'transformability': 'transformability',
-        'drugResistanceOnStrain': 'drugs'
-    };
-
-    document.querySelectorAll('td[data-info]').forEach(cell => {
-        cell.addEventListener('click', function(event) {
-            const info = cell.getAttribute('data-info');
-            const fileName = cell.getAttribute('data-file');
-            const popup = document.getElementById('infoPopup');
-            const downloadLink = document.getElementById('popupDownload');
-            let fileType = null;
-
-            for (const cls in typeMap) {
-                if (cell.classList.contains(cls)) {
-                    fileType = typeMap[cls];
-                    break;
+            for (let i = 0; i < lastEditable; i++) {
+                if (!cells[i].classList.contains('id') && !cells[i].textContent.trim()) {
+                    cells[i].textContent = '--';
                 }
             }
+        }
 
-            document.getElementById('popupTitle').innerText = 'Détails';
-            document.getElementById('popupDetails').innerText = info;
+        // 2. Initialisation DataTables (invisible au départ pour éviter reflows)
+        table.style.visibility = 'hidden';
 
-            if (fileName && fileName !== '--' && fileType) {
-                downloadLink.href = `/documents/download/${fileType}/${fileName}`;
-                downloadLink.style.display = 'inline-block';
-            } else {
-                downloadLink.style.display = 'none';
+        const dataTable = $('#data-table').DataTable({
+            paging: false,
+            searching: false, //on utilisera notre recherche personalise par groupe
+            ordering: true,
+            info: true,
+            order: [],
+            columnDefs: [
+                { orderable: false, targets: [19, 20, 21] }
+            ],
+            rowGroup: {
+                dataSrc: 0,
+                startRender: function (rows, group) {
+                    const name = rows.data()[0][1];
+                    return 'ID: ' + group + ' (Souche : ' + name + ')';
+                }
+            },
+            initComplete: function () {
+                const api = this.api();
+
+                // 2a. Affichage table une fois prête
+                table.style.visibility = 'visible';
+
+                // 2b. Checkboxes pour colonne : application + événements
+                document.querySelectorAll('input.toggle-column').forEach(checkbox => {
+                    const colIdx = +checkbox.getAttribute('data-column');
+                    api.column(colIdx).visible(checkbox.checked);
+
+                    checkbox.addEventListener('change', function () {
+                        api.column(colIdx).visible(this.checked);
+                    });
+                });
+
+                // 2c. Gestion tri à 3 états : ascendant descendant et retour initial
+                $('#data-table thead th').off('click.DT').on('click', function () {
+                    const colIdx = $(this).index();
+                    const currentOrder = api.order();
+                    const currentColOrder = currentOrder.find(o => o[0] === colIdx);
+
+                    $('#data-table thead th').removeClass('sorting_asc sorting_desc').addClass('sorting');
+
+                    if (!currentColOrder) {
+                        api.order([[colIdx, 'asc']]).draw();
+                        $(this).removeClass('sorting').addClass('sorting_asc');
+                    } else if (currentColOrder[1] === 'asc') {
+                        api.order([[colIdx, 'desc']]).draw();
+                        $(this).removeClass('sorting').addClass('sorting_desc');
+                    } else {
+                        api.order([]).draw();
+                        $(this).removeClass('sorting_asc sorting_desc').addClass('sorting');
+                    }
+                });
             }
+        });
 
-            popup.style.display = 'block';
-            popup.style.left = `${event.pageX + 10}px`;
-            popup.style.top = `${event.pageY + 10}px`;
+        // 3. Recherche personnalisée par groupe
+        const searchInput = document.getElementById('customSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', function () {
+                const term = this.value.trim().toLowerCase();
+                const allRows = dataTable.rows({ search: 'applied' }).nodes().toArray();
+                const groups = {};
+
+                for (const row of allRows) {
+                    const idCell = row.querySelector('td.id');
+                    if (!idCell) continue;
+
+                    const groupId = idCell.textContent.trim();
+                    groups[groupId] ??= [];
+                    groups[groupId].push(row);
+                }
+
+                for (const groupId in groups) {
+                    const groupRows = groups[groupId];
+                    const match = groupRows.some(row => {
+                        return Array.from(row.querySelectorAll('td')).some((cell, idx) => {
+                            if (idx >= cell.parentNode.cells.length - 3) return false;
+                            return cell.textContent.toLowerCase().includes(term);
+                        });
+                    });
+
+                    for (const row of groupRows) row.style.display = match ? '' : 'none';
+
+                    const firstRow = groupRows[0];
+                    if (firstRow) {
+                        const groupHeader = firstRow.previousElementSibling;
+                        if (groupHeader?.classList.contains('dtrg-group') && groupHeader.textContent.includes(groupId)) {
+                            groupHeader.style.display = match ? '' : 'none';
+                        }
+                    }
+                }
+            });
+        }
+
+        // 4. Popups (info/fichier) pour le telechargement et les bonne directions
+        const typeMap = {
+            sequencing: 'sequencing',
+            transformability: 'transformability',
+            drugResistanceOnStrain: 'drugs'
+        };
+
+        document.querySelectorAll('td[data-info]').forEach(cell => {
+            cell.addEventListener('click', event => {
+                const info = cell.dataset.info;
+                const fileName = cell.dataset.file;
+                const popup = document.getElementById('infoPopup');
+                const downloadLink = document.getElementById('popupDownload');
+
+                let fileType = null;
+                for (const cls in typeMap) {
+                    if (cell.classList.contains(cls)) {
+                        fileType = typeMap[cls];
+                        break;
+                    }
+                }
+
+                document.getElementById('popupTitle').innerText = 'Détails';
+                document.getElementById('popupDetails').innerText = info;
+
+                if (fileName && fileName !== '--' && fileType) {
+                    downloadLink.href = `/documents/download/${fileType}/${fileName}`;
+                    downloadLink.style.display = 'inline-block';
+                } else {
+                    downloadLink.style.display = 'none';
+                }
+
+                popup.style.display = 'block';
+                popup.style.left = `${event.pageX + 10}px`;
+                popup.style.top = `${event.pageY + 10}px`;
+            });
+        });
+
+        document.addEventListener('click', event => {
+            const popup = document.getElementById('infoPopup');
+            if (!popup.contains(event.target) && !event.target.closest('[data-info]')) {
+                popup.style.display = 'none';
+            }
         });
     });
-
-    // Fermer le popup si clic en dehors
-    document.addEventListener('click', function(event) {
-        const popup = document.getElementById('infoPopup');
-        if (!popup.contains(event.target) && !event.target.closest('[data-info]')) {
-            popup.style.display = 'none';
-        }
-    });
-});
 </script>
