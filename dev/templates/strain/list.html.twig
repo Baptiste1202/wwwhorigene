@@ -319,11 +319,11 @@
                                             container type : {{ strain.storage[i] is defined and strain.storage[i] ? strain.storage[i].containerType : "--" }}
                                             container position : {{ strain.storage[i] is defined and strain.storage[i] ? strain.storage[i].containerPosition : "--" }}'
                                 >
-                                {{ strain.storage[i] is defined ? 'room : {{strain.storage[i].room}} ': '' }}<br>
-                                {{ strain.storage[i] is defined ? 'fridge: {{strain.storage[i].fridge}} ' : '' }} <br>
-                                {{ strain.storage[i] is defined ? 'shelf: {{strain.storage[i].shelf}} ': '' }} <br>
-                                {{ strain.storage[i] is defined ? 'rack: {{strain.storage[i].rack}}' : '' }} <br>
-                                {{ strain.storage[i] is defined ? 'volume: {{strain.storage[i].volume}}' : '' }} <br>
+                                {{ strain.storage[i] is defined ? 'room : strain.storage[i].room' : '' }}<br>
+                                {{ strain.storage[i] is defined ? 'fridge: strain.storage[i].fridge' : '' }} <br>
+                                {{ strain.storage[i] is defined ? 'shelf: strain.storage[i].shelf' : '' }} <br>
+                                {{ strain.storage[i] is defined ? 'rack: strain.storage[i].rack' : '' }} <br>
+                                {{ strain.storage[i] is defined ? 'volume: strain.storage[i].volume' : '' }} <br>
                                 </td>
                                 <td></td> {# Parent #}
                                 <td>{{ strain.project[i] is defined ? strain.project[i].name : '' }}</td>

@@ -253,7 +253,7 @@ button.btn-form-strain:hover {
 }
 
 
-.col-12 form div#add-btn button{
+.col-12 form div.add-btn button{
     width: 30px; /* Taille du carré */
     height: 20px; /* Taille du carré */
     background-color: #f9f9f9; /* Couleur du bouton */
@@ -265,11 +265,11 @@ button.btn-form-strain:hover {
     align-items: center;
     justify-content: center;
 }
-.col-12 form div#add-btn button:hover{
+.col-12 form div.add-btn button:hover{
     background-color: #e6e6e6; /* Couleur de fond au survol */
     border-color: #999; /* Couleur de bordure au survol */
 }
-.col-12 form div#add-btn button:focus{
+.col-12 form div.add-btn button:focus{
     outline: none;
     box-shadow: none; /* Supprime les ombres bleues autour */
     border-color: #ddd;
@@ -770,6 +770,79 @@ tbody td:nth-child(2) {
     --tw-space-y-reverse: 0;
     margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
     margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+
+.update-form{
+    display: grid !important;
+    margin-left: 30%; /* Décalage égal à la largeur du menu plus une marge supplémentaire */
+    grid-template-columns: repeat(10, 10%);
+}
+
+.update-form .prime{
+    display: flex;
+    flex-direction: column;
+    grid-column: 2;
+}
+
+.update-form #project-add{
+    display: flex;
+    flex-direction: column;
+    grid-column: 3;
+}
+
+.update-form div[id*="strain_form_project_"] {
+    display: flex;
+    flex-direction: column;
+    grid-column: 3;
+}
+
+.update-form #collec-add{
+    display: flex;
+    flex-direction: column;
+    grid-column: 4;
+}
+
+.update-form #plasmyd-add{
+    display: flex;
+    flex-direction: column;
+    grid-column: 5;
+}
+
+.update-form #publication-add{
+    display: flex;
+    flex-direction: column;
+    grid-column: 6;
+}
+
+.update-form #drug-add,
+.update-form #strain_form_drugResistanceOnStrain{
+    display: flex;
+    flex-direction: column;
+    grid-column: 7;
+}
+
+.update-form div[id*="strain_form_drugResistanceOnStrain_"] {
+    display: flex;
+    flex-direction: column;
+    grid-column: 7;
+}
+
+.update-form #transformability-add{
+    display: flex;
+    flex-direction: column;
+    grid-column: 8;
+}
+
+.update-form #sequencing-add{
+    display: flex;
+    flex-direction: column;
+    grid-column: 9;
+}
+
+.update-form #storage-add{
+    display: flex;
+    flex-direction: column;
+    grid-column: 10;
 }
 
 html, body {

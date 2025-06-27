@@ -1,11 +1,18 @@
+{% extends 'layout.html.twig' %}
 
 {% block body %}
-<main class="container">
-    <section class="row">
-        <div class="col-12">
-            <h1>Modifie a Strain</h1>
-            {% include "strain/_form.html.twig" with {'button_label': 'Modifie'} %}
-        </div>
-    </section>
-</main>
+        <main class="container">
+            <section class="row">
+                <div class="col-12">
+                    <div class="col-update">
+                        <h1>Modifie a Strain</h1>
+                        {% include "strain/_form.html.twig" with {
+                            'button_label': 'Modifie',
+                            'is_update': true} 
+                        %}
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
 {% endblock %}
