@@ -8,7 +8,7 @@
 }) }}
 
     {% if is_update %}
-        <div class="prime">
+        <div class="prime group">
     {% endif %}
             {{ form_row(strainForm.nameStrain) }}
             {{ form_row(strainForm.parentStrain) }}
@@ -22,7 +22,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="project-add">
+        <div id="project-add" class="group">
     {% endif %}
         <div id="project-add-info" class="hidden-tags">
             <ul class="project"
@@ -40,7 +40,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="collec-add">
+        <div id="collec-add" class="group">
     {% endif %}
         <div id="collec-add-info" class="hidden-tags">
             <ul class="collec"
@@ -58,7 +58,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="plasmyd-add">
+        <div id="plasmyd-add" class="group">
     {% endif %}
         <div id="plasmyd-add-info" class="hidden-tags">
             <ul class="plasmyd"
@@ -76,7 +76,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="publication-add">
+        <div id="publication-add" class="group">
     {% endif %}
         <div class="publication-add-info" class="hidden-tags">
             <ul class="publication"
@@ -93,7 +93,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="drug-add">
+        <div id="drug-add" class="group">
     {% endif %}
         <div class="drug-add-info" class="hidden-tags">
             <ul class="drugResistanceOnStrain"
@@ -111,7 +111,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="transformability-add">
+        <div id="transformability-add" class="group">
     {% endif %}
         <div class="transformability-add-info" class="hidden-tags">
             <ul class="transformability"
@@ -129,7 +129,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="sequencing-add">
+        <div id="sequencing-add" class="group">
     {% endif %}
         <div class="sequencing-add-info" class="hidden-tags">
             <ul class="sequencing"
@@ -147,7 +147,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="storage-add">
+        <div id="storage-add" class="group">
     {% endif %}
         <div class="storage-add-info" class="hidden-tags">
             <ul class="storage"
@@ -164,7 +164,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div class="prime">
+        <div class="prime group">
     {% endif %}
         {{ form_row(strainForm.comment) }}
         {{ form_row(strainForm.description) }}
