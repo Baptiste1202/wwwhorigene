@@ -568,7 +568,7 @@
             });
         }
 
-        // 4. Popups (info/fichier) pour le telechargement et les bonne directions
+        // 4. Popups (info/fichier) pour le téléchargement et les bonnes directions
         const typeMap = {
             sequencing: 'sequencing',
             transformability: 'transformability',
@@ -594,10 +594,15 @@
                 document.getElementById('popupDetails').innerText = info;
 
                 if (fileName && fileName !== '--' && fileType) {
-                    downloadLink.href = `/documents/download/${fileType}/${fileName}`;
+                    downloadLink.href = `/public/docs/${fileType}/${fileName}`;
                     downloadLink.style.display = 'inline-block';
+
+                    // Ajout de l'attribut download pour forcer le téléchargement
+                    downloadLink.setAttribute('download', fileName);
                 } else {
                     downloadLink.style.display = 'none';
+                    downloadLink.removeAttribute('download');
+                    downloadLink.removeAttribute('href');
                 }
 
                 popup.style.display = 'block';
