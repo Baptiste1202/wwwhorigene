@@ -348,17 +348,22 @@
                                     {% endif %}
                                 {% endif %}
                                 </td>
-                                <td class="transformability" 
+                                <td class="transformability"
                                     data-info='
-                                            id: {{ strain.transformability[i] is defined and strain.transformability[i] ? strain.transformability[i].id : '--'}}
-                                            technique: {{ strain.transformability[i] is defined and strain.transformability[i] ? strain.transformability[i].technique : "--" }}
-                                            mesure: {{ strain.transformability[i] is defined and strain.transformability[i] ? strain.transformability[i].mesure : "--" }}
-                                            file: {{ strain.transformability[i] is defined and strain.transformability[i].nom ? strain.transformability[i].nom : "--" }}'
-                                        data-file=
-                                            '{{ strain.transformability|first ? strain.transformability[i].nom : '--'}}'>
-                                {{ strain.transformability[i] is defined ? strain.transformability[i].technique : '' }} <br>
-                                {{ strain.transformability[i] is defined ? strain.transformability[i].mesure : '' }}
+                                        id: {{ (strain.transformability|length > i) ? strain.transformability[i].id : "--" }}
+                                        technique: {{ (strain.transformability|length > i) ? strain.transformability[i].technique : "--" }}
+                                        mesure: {{ (strain.transformability|length > i) ? strain.transformability[i].mesure : "--" }}
+                                        file: {{ (strain.transformability|length > i and strain.transformability[i].nom) ? strain.transformability[i].nom : "--" }}'
+                                    data-file='{{ (strain.transformability|length > i and strain.transformability[i].nom) ? strain.transformability[i].nom : "--" }}'>
+
+                                    {% if strain.transformability|length > i %}
+                                        {{ strain.transformability[i].technique }} <br>
+                                        {{ strain.transformability[i].mesure }}
+                                    {% else %}
+                                        --
+                                    {% endif %}
                                 </td>
+
                                 <td class="sequencing" data-info='
                                         method : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing[i].name  : '--'}}
                                         file : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing[i].nameFile  : '--'}}'
@@ -472,7 +477,7 @@
         table.style.visibility = 'hidden';
 
         const dataTable = $('#data-table').DataTable({
-            paging: false,
+            paging: true,
             searching: false, //on utilisera notre recherche personalise par groupe
             ordering: true,
             info: true,
@@ -533,7 +538,7 @@
 
                 // Si le champ est vide, réactiver la pagination à 25
                 if (term === '') {
-                    dataTable.page.len(25).draw();
+                    dataTable.page.len(10).draw();
 
                     // Réafficher toutes les lignes
                     dataTable.rows().nodes().toArray().forEach(row => {

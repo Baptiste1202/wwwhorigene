@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 28, 2025 at 04:54 AM
+-- Generation Time: Jun 28, 2025 at 06:25 PM
 -- Server version: 8.0.42
 -- PHP Version: 8.2.27
 
@@ -156,6 +156,17 @@ CREATE TABLE `drug_resistance_on_strain` (
   `name_file` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `drug_resistance_on_strain`
+--
+
+INSERT INTO `drug_resistance_on_strain` (`id`, `concentration`, `description`, `comment`, `drug_resistance_id`, `strain_id`, `resistant`, `name_file`) VALUES
+(12, 30, NULL, NULL, 27, 188, 1, 'screenshot-from-2025-06-28-04-40-52-68602bc71af16146324939.png'),
+(13, 10, NULL, NULL, 28, 189, 1, 'screenshot-from-2025-06-28-04-40-56-68602cfa5dda5771807734.png'),
+(14, 100, NULL, NULL, 27, 190, 1, NULL),
+(15, 100, NULL, NULL, 26, 190, 0, 'screenshot-from-2025-06-28-04-41-07-68602ec383f1a522413453.png'),
+(16, 50, NULL, NULL, 30, 191, 0, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -207,6 +218,17 @@ CREATE TABLE `method_sequencing` (
   `type_file` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `method_sequencing`
+--
+
+INSERT INTO `method_sequencing` (`id`, `name`, `description`, `comment`, `name_file`, `strain_id`, `type_file`) VALUES
+(91, 'illumina', NULL, 'RAS', 'screenshot-from-2025-06-28-04-40-46-68602accb675d016392663.png', 187, 'png'),
+(92, 'illumina', NULL, NULL, 'screenshot-from-2025-06-28-04-41-02-68602bc71ba62928583165.png', 188, 'png'),
+(93, 'illumina', NULL, NULL, 'screenshot-from-2025-06-28-04-41-02-68602cfa5e535798994682.png', 189, 'png'),
+(94, 'illumina2', NULL, NULL, 'screenshot-from-2025-06-28-04-40-46-68602cfa5e918261988326.png', 189, 'png'),
+(95, 'illumina', NULL, NULL, 'screenshot-from-2025-06-28-04-40-52-68602ec384324466872199.png', 190, 'png');
+
 -- --------------------------------------------------------
 
 --
@@ -228,10 +250,10 @@ CREATE TABLE `plasmyd` (
 
 INSERT INTO `plasmyd` (`id`, `name_plasmyd`, `type`, `description`, `comment`, `slug`) VALUES
 (25, 'pUC19', 'wt', 'Origine ColE1, ampicilline, MCS', NULL, 'pUC19 - wt'),
-(26, 'pBluescript SK(−)', 'wt', 'Ampicilline, MCS, séquences T7/T3', NULL, 'pBluescript SK(−) - wt'),
 (27, 'pGEX-4T-1', 'wt', 'Ampicilline, GST tag', NULL, 'pGEX-4T-1 - wt'),
 (28, 'p2AB5075', 'synthetic', 'tetA + the other natural plasmids', NULL, 'p2AB5075 - synthetic'),
-(29, 'pJET2.1', 'synthetic', '+ prp::sacB,aac clone #1', NULL, 'pJET2.1 - synthetic');
+(30, 'pBluescript SK(−)', 'wt', NULL, NULL, 'pBluescript SK(−) - wt'),
+(31, 'pJET2.1', 'wt', 'Origine ColE1, ampicilline, MCS', NULL, 'pJET2.1 - wt');
 
 -- --------------------------------------------------------
 
@@ -279,6 +301,7 @@ CREATE TABLE `publication` (
 --
 
 INSERT INTO `publication` (`id`, `article_url`, `title`, `autor`, `year`, `description`, `slug`, `doi`) VALUES
+(2, 'http://test.com', 'titre A', 'auteur A', '2025', 'description publication A', 'titre A - auteur A - 2025', NULL),
 (3, 'http://test.com', 'titre B', 'auteur B', '2025', 'description publication B', 'titre B - auteur B - 2025', NULL),
 (4, 'http://test.com', 'titre C', 'auteur C', '2025', 'description publication C', 'titre C - auteur C - 2025', NULL);
 
@@ -334,6 +357,14 @@ CREATE TABLE `storage` (
   `volume` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `storage`
+--
+
+INSERT INTO `storage` (`id`, `room`, `rack`, `description`, `comment`, `strain_id`, `fridge`, `shelf`, `container_type`, `container_position`, `volume`) VALUES
+(99, 'room 1', 'rack 1', NULL, NULL, 191, 'cong 1', 'etag 1', 'boite 1', '1-2-3-4', '100yl'),
+(100, 'room 2', 'rack 2', NULL, NULL, 191, 'cong 2', 'etag 2', 'boite 2', '1-2-3-4', '100yl');
+
 -- --------------------------------------------------------
 
 --
@@ -357,6 +388,33 @@ CREATE TABLE `strain` (
   `description_genotype` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `strain`
+--
+
+INSERT INTO `strain` (`id`, `name_strain`, `specie`, `gender`, `comment`, `description`, `created_by_name`, `date`, `parent_strain_id`, `genotype_id`, `depot_id`, `prelevement_id`, `created_by_id`, `description_genotype`) VALUES
+(163, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(170, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(171, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(172, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(173, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(174, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(175, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(176, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(178, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(179, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(180, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(181, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(182, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(183, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(185, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(186, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 2, NULL, NULL, 1, NULL),
+(187, 'AB5075', 'baumannii', 'Acinetobacter', 'Obtained from the collin\'s lab.', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, 1, 1, NULL),
+(188, 'AB5075', 'baumannii', 'Acinetobacter', NULL, NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 2, NULL, 2, 1, 'comM(FL) pho::ApraR #2'),
+(189, 'AB5075', 'baumannii', 'Acinetobacter', 'Insertion of the tetA gene on p2AB5075', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, 3, 1, NULL),
+(190, 'DH5α', 'Escherichia coli', 'Escherichia', NULL, NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 2, NULL, 3, 1, 'Δ(araD-araB)567, ΔlacZ4787'),
+(191, 'M2', 'nosocomialis', 'Acinetobacter', 'Made by co-culturing of M2 rpoB (Box6C4) with 40288 ∆comEC::aac, annotated as AB25', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 2, NULL, 3, 1, 'rpoB* vgrG::Tn2006 #7');
+
 -- --------------------------------------------------------
 
 --
@@ -367,6 +425,17 @@ CREATE TABLE `strain_collec` (
   `strain_id` int NOT NULL,
   `collec_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `strain_collec`
+--
+
+INSERT INTO `strain_collec` (`strain_id`, `collec_id`) VALUES
+(187, 1),
+(188, 3),
+(188, 4),
+(189, 5),
+(191, 4);
 
 -- --------------------------------------------------------
 
@@ -379,6 +448,14 @@ CREATE TABLE `strain_plasmyd` (
   `plasmyd_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `strain_plasmyd`
+--
+
+INSERT INTO `strain_plasmyd` (`strain_id`, `plasmyd_id`) VALUES
+(189, 28),
+(190, 31);
+
 -- --------------------------------------------------------
 
 --
@@ -390,6 +467,17 @@ CREATE TABLE `strain_project` (
   `project_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `strain_project`
+--
+
+INSERT INTO `strain_project` (`strain_id`, `project_id`) VALUES
+(187, 1),
+(187, 2),
+(188, 2),
+(189, 5),
+(191, 4);
+
 -- --------------------------------------------------------
 
 --
@@ -400,6 +488,15 @@ CREATE TABLE `strain_publication` (
   `strain_id` int NOT NULL,
   `publication_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `strain_publication`
+--
+
+INSERT INTO `strain_publication` (`strain_id`, `publication_id`) VALUES
+(189, 2),
+(190, 3),
+(191, 3);
 
 -- --------------------------------------------------------
 
@@ -416,6 +513,15 @@ CREATE TABLE `transformability` (
   `nom` varchar(255) DEFAULT NULL,
   `strain_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `transformability`
+--
+
+INSERT INTO `transformability` (`id`, `technique`, `mesure`, `description`, `comment`, `nom`, `strain_id`) VALUES
+(18, 'technique transfo1', 'experience 1', NULL, NULL, 'screenshot-from-2025-06-28-04-41-07-68602ec356858138111207.png', 190),
+(19, 'technique transfo2', 'experience 2', NULL, NULL, '25124816-docking-68602ec38222a178757968.txt', 190),
+(20, 'technique transfo3', 'experience3', NULL, NULL, 'screenshot-from-2025-06-28-04-40-46-6860305e59b7e641196712.png', 191);
 
 -- --------------------------------------------------------
 
@@ -593,7 +699,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `collec`
 --
 ALTER TABLE `collec`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `depot`
@@ -611,7 +717,7 @@ ALTER TABLE `drug_resistance`
 -- AUTO_INCREMENT for table `drug_resistance_on_strain`
 --
 ALTER TABLE `drug_resistance_on_strain`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `file_sequencing`
@@ -629,13 +735,13 @@ ALTER TABLE `genotype`
 -- AUTO_INCREMENT for table `method_sequencing`
 --
 ALTER TABLE `method_sequencing`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
 -- AUTO_INCREMENT for table `plasmyd`
 --
 ALTER TABLE `plasmyd`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `project`
@@ -647,7 +753,7 @@ ALTER TABLE `project`
 -- AUTO_INCREMENT for table `publication`
 --
 ALTER TABLE `publication`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `sample`
@@ -659,19 +765,19 @@ ALTER TABLE `sample`
 -- AUTO_INCREMENT for table `storage`
 --
 ALTER TABLE `storage`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
 
 --
 -- AUTO_INCREMENT for table `strain`
 --
 ALTER TABLE `strain`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=193;
 
 --
 -- AUTO_INCREMENT for table `transformability`
 --
 ALTER TABLE `transformability`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `user`

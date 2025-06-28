@@ -34,23 +34,6 @@
     margin-left: 0.5em; /* Un peu d'espace entre le texte et la flèche */
     vertical-align: middle; /* Alignement vertical */
 }
-
-#data-table-collect thead th.sorting:after {
-    content: " \2195" !important; /* Double flèche haut/bas */
-    opacity: 0.5 !important; /* Augmente l'opacité pour le rendre plus visible */
-    font-size: 0.8em;
-}
-#data-table-collect thead th.sorting_asc:after {
-    content: " \2191" !important; /* Flèche haut (ascendant) */
-    opacity: 1 !important;
-    font-size: 0.8em;
-}
-#data-table-collect thead th.sorting_desc:after {
-    content: " \2193" !important; /* Flèche bas (descendant) */
-    opacity: 1 !important;
-    font-size: 0.8em;
-}
-
 </style>
 
 
@@ -118,7 +101,7 @@ function initDataTableWithFilters(tableId) {
     const dataTable = table.DataTable({
         orderCellsTop: true,
         fixedHeader: true,
-        paging: false,
+        paging: true,
         searching: true,
         info: true,
         lengthChange: true,
@@ -134,7 +117,15 @@ function initDataTableWithFilters(tableId) {
     // Applique le filtre sur chaque colonne (si input présent)
     table.find('thead tr.filters input').on('keyup change clear', function() {
         const colIndex = $(this).parent().index();
+
+        // Debug console : vérifie index et valeur entrée
+        console.log("🔍 Filtrage sur colonne index =", colIndex, "avec valeur =", this.value);
+
+        // Applique la recherche avec DataTables
         dataTable.column(colIndex).search(this.value).draw();
+
+        // Debug console : nombre de lignes après filtrage
+        console.log("📊 Nombre de lignes affichées après filtre :", dataTable.rows({ filter: 'applied' }).count());
     });
 
     // Gestion de la checkbox "Tout sélectionner"
