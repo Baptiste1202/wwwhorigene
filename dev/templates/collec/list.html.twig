@@ -1,7 +1,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 <style>
-/* CSS adapté pour data-table-collect */
 #data-table-wrapper table#data-table-collect {
     width: 100%;
     table-layout: auto;
@@ -24,57 +23,57 @@
     width: 50px;
     text-align: center;
 }
-
-/* Améliorations des règles CSS pour les flèches de tri de DataTables */
-/* Elles devraient forcer l'affichage si le CSS par défaut de DataTables est manquant ou écrasé. */
-#data-table-collect thead th.sorting:after,
-#data-table-collect thead th.sorting_asc:after,
-#data-table-collect thead th.sorting_desc:after {
-    font-family: 'Arial Unicode MS', 'Liberation Sans', sans-serif; /* Police qui supporte les symboles Unicode */
-    margin-left: 0.5em; /* Un peu d'espace entre le texte et la flèche */
-    vertical-align: middle; /* Alignement vertical */
-}
 </style>
 
-
-<div id="data-table-wrapper" class="sticky-wrapper">
-    <table id="data-table-collect" class="display">
-        <thead>
-            <tr>
-                <th><input type="checkbox" id="select-all" /></th> {# Checkbox pour tout sélectionner (optionnel) #}
-                <th data-column="id">ID</th>
-                <th data-column="name">Name</th>
-                <th data-column="description">Description</th>
-                <th data-column="comment">Comments</th>
-                <th data-column="duplicate" class="no-sort"></th> {# Ajout de classe pour désactiver le tri #}
-                <th data-column="edit" class="no-sort"></th> {# Ajout de classe pour désactiver le tri #}
-                <th data-column="delete" class="no-sort"></th> {# Ajout de classe pour désactiver le tri #}
-            </tr>
-        </thead>
-        <tbody>
-            {% if collecs is empty %}
+<form id="multi-action-form" method="post">
+    
+    <div id="data-table-wrapper" class="sticky-wrapper">
+        <table id="data-table-collect" class="display">
+            <thead>
                 <tr>
-                    <td colspan="8" class="no-data">No collections found.</td>
+                    <th><input type="checkbox" id="select-all" /></th>
+                    <th data-column="id">ID</th>
+                    <th data-column="name">Name</th>
+                    <th data-column="description">Description</th>
+                    <th data-column="comment">Comments</th>
+                    <th data-column="duplicate" class="no-sort"></th>
+                    <th data-column="edit" class="no-sort"></th>
+                    <th data-column="delete" class="no-sort"></th>
                 </tr>
-            {% else %}
-                {% for collec in collecs %}
-                    <tr class="list-collec">
-                        <td>
-                            <input type="checkbox" name="selected_collecs[]" value="{{ collec.id }}" class="select-checkbox" />
-                        </td>
-                        <td class="id">{{ collec.id }}</td>
-                        <td class="name">{{ collec.name is not null ? collec.name : '--' }}</td>
-                        <td class="description">{{ collec.description is not null ? collec.description : '--' }}</td>
-                        <td class="comment">{{ collec.comment is not null ? collec.comment : '--' }}</td>
-                        <td><a href = "{{path("duplicate_collec", {id: collec.id})}}"> Duplicate </a></td>
-                        <td><a href = "{{path("edit_collec", {id: collec.id})}}"> Modifie </a></td>
-                        <td><a href = "{{path("delete_collec", {id: collec.id})}}" class="delete-link"> Delete </a></td>
+            </thead>
+            <tbody>
+                {% if collecs is empty %}
+                    <tr>
+                        <td colspan="8" class="no-data">No collections found.</td>
                     </tr>
-                {% endfor %}
-            {% endif %}
-        </tbody>
-    </table>
-</div>
+                {% else %}
+                    {% for collec in collecs %}
+                        <tr class="list-collec">
+                            <td>
+                                <input type="checkbox" name="selected_collecs[]" value="{{ collec.id }}" class="select-checkbox" />
+                            </td>
+                            <td class="id">{{ collec.id }}</td>
+                            <td class="name">{{ collec.name is not null ? collec.name : '--' }}</td>
+                            <td class="description">{{ collec.description is not null ? collec.description : '--' }}</td>
+                            <td class="comment">{{ collec.comment is not null ? collec.comment : '--' }}</td>
+                            <td><a href="{{ path('duplicate_collec', {id: collec.id}) }}">Duplicate</a></td>
+                            <td><a href="{{ path('edit_collec', {id: collec.id}) }}">Modifie</a></td>
+                            <td><a href="{{ path('delete_collec', {id: collec.id}) }}" class="delete-link">Delete</a></td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <input type="hidden" name="action" value="" />
+
+    <button type="submit" formaction="{{ path('delete_multiple_collecs') }}" onclick="this.form.action.value='delete'" class="btn btn-danger" style="margin-top: 10px;">
+        Supprimer la sélection
+    </button>
+
+</form>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>

@@ -142,10 +142,16 @@ class CollecController extends AbstractController
                 return $this->redirectToRoute('page_collecs');
             }
 
-            foreach (iterator_to_array($collec->getStrain()) as $strain) {
-                $collec->removeStrain($strain);
+            // Vérifier si des strains sont encore associés
+            if (count($collec->getStrain()) > 0) {
+                $this->addFlash('error', sprintf(
+                    'Impossible de supprimer la collection "%s" car elle possède encore des strains associés.',
+                    $collec->getName()
+                ));
+                return $this->redirectToRoute('page_collecs');
             }
 
+            // Pas de strains : on peut supprimer
             $em->remove($collec);
             $em->flush();
 
@@ -157,6 +163,7 @@ class CollecController extends AbstractController
             return $this->redirectToRoute('page_collecs');
         }
     }
+
 
     #[Route('strains/collec/duplicate/{id}', name: 'duplicate_collec')]
     #[IsGranted('ROLE_SEARCH')]
@@ -172,7 +179,7 @@ class CollecController extends AbstractController
             // Copier les champs simples de l'entité originale
             $clone->setName($collec->getName());
             $clone->setDescription($collec->getDescription());
-            $clone->setComment($collec->getComment()); // <-- ICI on copie aussi le commentaire
+            $clone->setComment($collec->getComment()); 
 
             // Enregistrement en base de la copie
             $em->persist($clone);
@@ -188,5 +195,64 @@ class CollecController extends AbstractController
             return $this->redirectToRoute('page_collecs');
         }
     }
+
+    #[Route('/collecs/delete-multiple', name: 'delete_multiple_collecs', methods: ['POST'])]
+    #[IsGranted('ROLE_SEARCH')]
+    public function deleteMultiple(Request $request, EntityManagerInterface $em): Response
+    {
+        // Récupérer les ids sélectionnés via la requête POST
+        $ids = $request->request->all('selected_collecs');
+
+        // Vérifier que ce soit un tableau non vide
+        if (!is_array($ids) || empty($ids)) {
+            $this->addFlash('error', 'Aucune collection sélectionnée.');
+            return $this->redirectToRoute('page_collecs');
+        }
+
+        // Chercher toutes les collections correspondantes
+        $collecs = $em->getRepository(Collec::class)->findBy(['id' => $ids]);
+
+        if (!$collecs) {
+            $this->addFlash('error', 'Aucune collection trouvée pour suppression.');
+            return $this->redirectToRoute('page_collecs');
+        }
+
+        $detailsDeleted = [];
+        $detailsBlocked = [];
+
+        foreach ($collecs as $collec) {
+            // Si la collection a des souches associées, on bloque la suppression
+            if (count($collec->getStrain()) > 0) {
+                $detailsBlocked[] = sprintf('[ID: %d - Nom: %s]', $collec->getId(), $collec->getName());
+                continue;
+            }
+            // Sinon on prépare la suppression et on stocke les détails pour message
+            $detailsDeleted[] = sprintf('[ID: %d - Nom: %s]', $collec->getId(), $collec->getName());
+            $em->remove($collec);
+        }
+
+        // Valider la suppression en base (pour les collections sans souches)
+        if (!empty($detailsDeleted)) {
+            $em->flush();
+        }
+
+        // Message succès pour les collections supprimées
+        if (!empty($detailsDeleted)) {
+            $this->addFlash('success', sprintf(
+                '%d collection(s) supprimée(s) avec succès : %s',
+                count($detailsDeleted),
+                implode(', ', $detailsDeleted)
+            ));
+        }
+
+        // Message d’erreur pour les collections bloquées
+        if (!empty($detailsBlocked)) {
+            $this->addFlash('error', 'Impossible de supprimer certaines collections car elles sont associées à des souches : ' . implode(', ', $detailsBlocked));
+        }
+
+        // Rediriger vers la page des collections
+        return $this->redirectToRoute('page_collecs');
+    }
+
 
 }

@@ -1,22 +1,38 @@
 {% extends 'layout.html.twig' %}
+
 {% block body %}
-        <div id="global">
-            {% if (app.user.roles.0 != "ROLE_INTERN") %}
-                <div id="form">
-                    {% include "collec/create.html.twig" %}
-                </div>
-            {% endif %}
-            <div id="list">
-                <div id="filter">
-                    {% include 'collec/_filter_form_datatable_collect.html.twig' %}
-                </div>
-                <div id="message">
-                    {% include './message.html.twig' %}
-                </div>
-                <div id="table">
-                    {% include "collec/list.html.twig" %}
-                </div>
+    <div id="global">
+        {% if app.user.roles[0] != "ROLE_INTERN" %}
+            <div id="form">
+                {% include "collec/create.html.twig" %}
             </div>
-        <br></br>        
-        </div>  
+        {% endif %}
+        <div id="list">
+            <div id="filter">
+                {% include 'collec/_filter_form_datatable_collect.html.twig' %}
+            </div>
+            <div id="message">
+                {% include './message.html.twig' %}
+            </div>
+            <div id="table">
+                {% include "collec/list.html.twig" %}
+            </div>
+        </div>
+        <br></br>
+    </div> 
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const messages = document.querySelectorAll('.flash-message');
+            messages.forEach(msg => {
+                msg.style.display = 'block';  // Assure la visibilité
+                setTimeout(() => {
+                    msg.style.opacity = '0';  // Lancement du fondu
+                    setTimeout(() => {
+                        msg.style.display = 'none';  // Caché après fondu
+                    }, 1000); // correspond à la durée de transition CSS
+                }, 5000); // 5 secondes avant de démarrer le fondu
+            });
+        });
+    </script>
 {% endblock %}
