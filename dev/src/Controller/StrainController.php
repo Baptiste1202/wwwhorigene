@@ -189,7 +189,6 @@ class StrainController extends AbstractController
             if ($strain) {
                 $this->denyAccessUnlessGranted('strain.is_creator', $strain);
             }
-
             foreach ($strain->getMethodSequencing() as $sequencing){
                 $em->remove($sequencing);
             }
@@ -215,6 +214,7 @@ class StrainController extends AbstractController
             return $this->redirectToRoute('page_strains');
 
         } catch (\Throwable $e) {
+            dump($e); // n'affiche que si mode debug activé
             $this->addFlash('error', 'Une erreur est survenue lors de la suppresion de la souche. Veuillez réessayer.');
 
             return $this->redirectToRoute('page_strains');

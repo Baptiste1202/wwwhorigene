@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 04, 2025 at 12:59 AM
+-- Generation Time: Jun 28, 2025 at 04:54 AM
 -- Server version: 8.0.42
 -- PHP Version: 8.2.27
 
@@ -43,21 +43,7 @@ INSERT INTO `collec` (`id`, `name`, `description`, `comment`) VALUES
 (2, 'collection 2', 'description collection 2', 'commentaire collection 2'),
 (3, 'collection 3', 'description collection 3', 'commentaire collection 3'),
 (4, 'collection 4', 'description collection 4', 'commentaire collection 4'),
-(5, 'collection 5', 'description collection 5', 'commentaire collection 5'),
-(6, 'collection 6', NULL, NULL),
-(7, 'collection 6', NULL, NULL),
-(8, 'collection 6', NULL, NULL),
-(9, 'collection 6', NULL, NULL),
-(10, 'collection 6', NULL, NULL),
-(11, 'collection 6', NULL, NULL),
-(12, 'collection 6', NULL, NULL),
-(13, 'collection 6', NULL, NULL),
-(14, 'collection 6', NULL, NULL),
-(15, 'collection 6', NULL, NULL),
-(16, 'collection 6', NULL, NULL),
-(17, 'collection 6', NULL, NULL),
-(18, 'collection 6', NULL, NULL),
-(19, 'collection 6', NULL, NULL);
+(5, 'collection 5', 'description collection 5', 'commentaire collection 5');
 
 -- --------------------------------------------------------
 
@@ -144,25 +130,14 @@ CREATE TABLE `drug_resistance` (
 --
 
 INSERT INTO `drug_resistance` (`id`, `name`, `type`, `description`, `comment`) VALUES
-(4, 'Peniciline', 'quantitative', NULL, NULL),
-(5, 'Antibio', 'quantitative', NULL, NULL),
-(6, 'Antibio', 'quantitative', NULL, NULL),
-(7, 'Antibio', 'quantitative', NULL, NULL),
-(8, 'Antibio', 'quantitative', NULL, NULL),
-(9, 'Antibio', 'quantitative', NULL, NULL),
-(10, 'Antibio', 'quantitative', NULL, NULL),
-(11, 'Antibio', 'quantitative', NULL, NULL),
-(12, 'Antibio', 'quantitative', NULL, NULL),
-(13, 'Antibio', 'quantitative', NULL, NULL),
-(14, 'Antibio', 'quantitative', NULL, NULL),
-(15, 'Antibio', 'quantitative', NULL, NULL),
-(16, 'Antibio', 'quantitative', NULL, NULL),
-(17, 'Antibio', 'quantitative', NULL, NULL),
-(18, 'Antibio', 'quantitative', NULL, NULL),
-(19, 'Antibio', 'quantitative', NULL, NULL),
-(20, 'Antibio', 'quantitative', NULL, NULL),
-(21, 'Antibio', 'quantitative', NULL, NULL),
-(22, 'Antibio', 'quantitative', NULL, NULL);
+(23, 'Pénicillines', 'quantitative', NULL, NULL),
+(24, 'Céphalosporines', 'quantitative', 'ex. céfazoline', NULL),
+(25, 'Macrolides', 'quantitative', 'ex. érythromycine', NULL),
+(26, 'Fluoroquinolones', 'quantitative', 'ex. ciprofloxacine', NULL),
+(27, 'Apramycine', 'quantitative', NULL, NULL),
+(28, 'Tétracycline', 'quantitative', NULL, NULL),
+(29, 'Imipénème', 'quantitative', NULL, NULL),
+(30, 'Rifampicine', 'quantitative', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -180,13 +155,6 @@ CREATE TABLE `drug_resistance_on_strain` (
   `resistant` tinyint(1) DEFAULT NULL,
   `name_file` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `drug_resistance_on_strain`
---
-
-INSERT INTO `drug_resistance_on_strain` (`id`, `concentration`, `description`, `comment`, `drug_resistance_id`, `strain_id`, `resistant`, `name_file`) VALUES
-(9, 10, NULL, NULL, 4, 143, 1, 'capture-d-ecran-de-2024-10-16-10-14-56-67fd6dfb98046585669349.png');
 
 -- --------------------------------------------------------
 
@@ -239,49 +207,6 @@ CREATE TABLE `method_sequencing` (
   `type_file` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `method_sequencing`
---
-
-INSERT INTO `method_sequencing` (`id`, `name`, `description`, `comment`, `name_file`, `strain_id`, `type_file`) VALUES
-(20, 'aa', NULL, NULL, NULL, 67, NULL),
-(21, 'aa', NULL, NULL, NULL, 68, NULL),
-(22, 'aa', NULL, NULL, NULL, 69, NULL),
-(23, 'blue frame', NULL, NULL, '04-mvp-concept-on-the-roadmap-67f92db8aeeb0067637372.png', 105, NULL),
-(24, 'a', NULL, NULL, '04-mvp-concept-on-the-roadmap-67f92e034bf24870860507.png', 106, NULL),
-(25, 'a', NULL, NULL, '04-mvp-concept-on-the-roadmap-67f92e0a1e2d1739049259.png', 107, NULL),
-(26, NULL, NULL, NULL, '50-ans-renault-5-retromobile-02-crop-67f92ed700455120203282.jpg', 109, NULL),
-(27, NULL, NULL, NULL, NULL, 109, NULL),
-(28, NULL, NULL, NULL, '50-ans-renault-5-retromobile-02-crop-67f92edd83e34851522627.jpg', 110, NULL),
-(29, NULL, NULL, NULL, NULL, 110, NULL),
-(30, NULL, NULL, NULL, '50-ans-renault-5-retromobile-02-crop-67f92f038c488720586567.jpg', 111, NULL),
-(31, NULL, NULL, NULL, NULL, 111, NULL),
-(32, NULL, NULL, NULL, NULL, 112, NULL),
-(33, NULL, NULL, NULL, NULL, 112, NULL),
-(34, NULL, NULL, NULL, NULL, 113, NULL),
-(35, NULL, NULL, NULL, NULL, 113, NULL),
-(36, NULL, NULL, NULL, NULL, 114, NULL),
-(37, NULL, NULL, NULL, NULL, 114, NULL),
-(38, NULL, NULL, NULL, NULL, 115, NULL),
-(39, NULL, NULL, NULL, NULL, 115, NULL),
-(40, NULL, NULL, NULL, NULL, 116, NULL),
-(41, NULL, NULL, NULL, NULL, 116, NULL),
-(42, NULL, NULL, NULL, NULL, 117, NULL),
-(43, NULL, NULL, NULL, NULL, 117, NULL),
-(44, NULL, NULL, NULL, NULL, 118, NULL),
-(45, NULL, NULL, NULL, NULL, 118, NULL),
-(46, NULL, NULL, NULL, NULL, 119, NULL),
-(47, NULL, NULL, NULL, NULL, 119, NULL),
-(48, NULL, NULL, NULL, NULL, 120, NULL),
-(49, NULL, NULL, NULL, NULL, 120, NULL),
-(76, NULL, 'zz', 'test', 'capture-d-ecran-de-2024-10-16-10-14-56-67f949c8329f0585052187.png', 139, NULL),
-(77, NULL, NULL, NULL, 'capture-d-ecran-du-2025-02-26-17-09-25-67f94b1028fbb163080007.png', 140, NULL),
-(78, NULL, NULL, NULL, 'capture-d-ecran-du-2025-01-22-22-50-44-67f94b10293a9879659598.png', 140, NULL),
-(79, NULL, NULL, NULL, 'capture-d-ecran-de-2024-09-26-09-46-56-67f94b3246a4a598836373.png', 141, NULL),
-(80, NULL, NULL, NULL, NULL, 141, NULL),
-(81, NULL, NULL, NULL, NULL, 141, NULL),
-(82, NULL, NULL, NULL, 'capture-d-ecran-de-2024-09-26-09-46-56-67f94b4cd392f194763307.png', 142, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -302,25 +227,11 @@ CREATE TABLE `plasmyd` (
 --
 
 INSERT INTO `plasmyd` (`id`, `name_plasmyd`, `type`, `description`, `comment`, `slug`) VALUES
-(6, 'plasmyd A', 'wt', 'description plasmyd 6', 'commentaire plasmyd 6', 'plasmyd 6 - wt'),
-(7, 'plasmyd B', 'wt', 'description 2', 'commentaire 2', 'plasmyd B - wt'),
-(8, 'plasmyd C', 'wt', 'description 3', 'commentaire 3', 'plasmyd C - wt'),
-(9, 'plasmyd D', 'wt', 'description 4', 'commentaire 4', 'plasmyd D - wt'),
-(10, 'plasmyd E', 'wt', 'description 5', 'commentaire 5', 'plasmyd E - wt'),
-(11, 'P2704', 'wt', NULL, NULL, 'P2704 - wt'),
-(12, 'P2014', 'wt', NULL, NULL, 'P2014 - wt'),
-(13, 'P2014', 'wt', NULL, NULL, 'P2014 - wt'),
-(14, 'P2014', 'wt', NULL, NULL, 'P2014 - wt'),
-(15, 'P2014', 'synthetic', NULL, NULL, 'P2014 - synthetic'),
-(16, 'P2014', 'synthetic', NULL, NULL, 'P2014 - synthetic'),
-(17, 'P2014', 'synthetic', NULL, NULL, 'P2014 - synthetic'),
-(18, 'P2014', 'synthetic', NULL, NULL, 'P2014 - synthetic'),
-(19, 'P2014', 'synthetic', NULL, NULL, 'P2014 - synthetic'),
-(20, 'P2014', 'synthetic', NULL, NULL, 'P2014 - synthetic'),
-(21, 'P2014', 'synthetic', NULL, NULL, 'P2014 - synthetic'),
-(22, 'P2014', 'synthetic', NULL, NULL, 'P2014 - synthetic'),
-(23, 'P2014', 'synthetic', NULL, NULL, 'P2014 - synthetic'),
-(24, 'P2014', 'synthetic', NULL, NULL, 'P2014 - synthetic');
+(25, 'pUC19', 'wt', 'Origine ColE1, ampicilline, MCS', NULL, 'pUC19 - wt'),
+(26, 'pBluescript SK(−)', 'wt', 'Ampicilline, MCS, séquences T7/T3', NULL, 'pBluescript SK(−) - wt'),
+(27, 'pGEX-4T-1', 'wt', 'Ampicilline, GST tag', NULL, 'pGEX-4T-1 - wt'),
+(28, 'p2AB5075', 'synthetic', 'tetA + the other natural plasmids', NULL, 'p2AB5075 - synthetic'),
+(29, 'pJET2.1', 'synthetic', '+ prp::sacB,aac clone #1', NULL, 'pJET2.1 - synthetic');
 
 -- --------------------------------------------------------
 
@@ -340,24 +251,11 @@ CREATE TABLE `project` (
 --
 
 INSERT INTO `project` (`id`, `name`, `description`, `comment`) VALUES
+(1, 'project 1', 'description projet 1', 'commentaire projet 1'),
 (2, 'project 2', 'description projet 2', 'commentaire projet 2'),
-(5, 'project 5', 'description projet 5', 'commentaire projet 5'),
-(6, 'proejt 6', NULL, NULL),
-(7, 'proejt 6', NULL, NULL),
-(8, 'proejt 6', NULL, NULL),
-(9, 'proejt 6', NULL, NULL),
-(10, 'proejt 6', NULL, NULL),
-(11, 'proejt 6', NULL, NULL),
-(12, 'proejt 6', NULL, NULL),
-(13, 'proejt 6', NULL, NULL),
-(14, 'proejt 6', NULL, NULL),
-(15, 'proejt 6', NULL, NULL),
-(16, 'proejt 6', NULL, NULL),
-(17, 'proejt 6', NULL, NULL),
-(18, 'proejt 6', NULL, NULL),
-(19, 'proejt 6', NULL, NULL),
-(20, 'proejt 6', NULL, NULL),
-(21, 'proejt 6', NULL, NULL);
+(3, 'project 3', 'description projet 3', 'commentaire projet 3'),
+(4, 'project 4', 'description projet 4', 'commentaire projet 4'),
+(5, 'project 5', 'description projet 5', 'commentaire projet 5');
 
 -- --------------------------------------------------------
 
@@ -381,7 +279,6 @@ CREATE TABLE `publication` (
 --
 
 INSERT INTO `publication` (`id`, `article_url`, `title`, `autor`, `year`, `description`, `slug`, `doi`) VALUES
-(2, 'http://test.com', 'titre A', 'auteur A', '2025', 'description publication A', 'titre A - auteur A - 2025', NULL),
 (3, 'http://test.com', 'titre B', 'auteur B', '2025', 'description publication B', 'titre B - auteur B - 2025', NULL),
 (4, 'http://test.com', 'titre C', 'auteur C', '2025', 'description publication C', 'titre C - auteur C - 2025', NULL);
 
@@ -437,109 +334,6 @@ CREATE TABLE `storage` (
   `volume` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `storage`
---
-
-INSERT INTO `storage` (`id`, `room`, `rack`, `description`, `comment`, `strain_id`, `fridge`, `shelf`, `container_type`, `container_position`, `volume`) VALUES
-(1, 'aa', NULL, NULL, NULL, 64, NULL, NULL, NULL, NULL, NULL),
-(2, 'a', 'a', NULL, NULL, 64, NULL, NULL, NULL, NULL, NULL),
-(3, 'aa', NULL, NULL, NULL, 65, NULL, NULL, NULL, NULL, NULL),
-(4, 'a', 'a', NULL, NULL, 65, NULL, NULL, NULL, NULL, NULL),
-(5, 'aa', NULL, NULL, NULL, 66, NULL, NULL, NULL, NULL, NULL),
-(6, 'a', 'a', NULL, NULL, 66, NULL, NULL, NULL, NULL, NULL),
-(7, 'aa', NULL, NULL, NULL, 67, NULL, NULL, NULL, NULL, NULL),
-(8, 'a', 'a', NULL, NULL, 67, NULL, NULL, NULL, NULL, NULL),
-(9, 'aa', NULL, NULL, NULL, 68, NULL, NULL, NULL, NULL, NULL),
-(10, 'a', 'a', NULL, NULL, 68, NULL, NULL, NULL, NULL, NULL),
-(11, 'aa', NULL, NULL, NULL, 69, NULL, NULL, NULL, NULL, NULL),
-(12, 'a', 'a', NULL, NULL, 69, NULL, NULL, NULL, NULL, NULL),
-(13, 'aaa', NULL, NULL, NULL, 70, NULL, NULL, NULL, NULL, NULL),
-(14, 'aaa', NULL, NULL, NULL, 71, NULL, NULL, NULL, NULL, NULL),
-(15, 'bbbb', NULL, NULL, NULL, 72, NULL, NULL, NULL, NULL, NULL),
-(16, 'aaa', NULL, NULL, NULL, 72, NULL, NULL, NULL, NULL, NULL),
-(17, 'bbbb', NULL, NULL, NULL, 73, NULL, NULL, NULL, NULL, NULL),
-(18, 'aaa', NULL, NULL, NULL, 73, NULL, NULL, NULL, NULL, NULL),
-(19, 'bbbb', NULL, NULL, NULL, 74, NULL, NULL, NULL, NULL, NULL),
-(20, 'aaa', NULL, NULL, NULL, 74, NULL, NULL, NULL, NULL, NULL),
-(21, 'bbbb', NULL, NULL, NULL, 75, NULL, NULL, NULL, NULL, NULL),
-(22, 'aaa', NULL, NULL, NULL, 75, NULL, NULL, NULL, NULL, NULL),
-(23, 'bbbb', NULL, NULL, NULL, 76, NULL, NULL, NULL, NULL, NULL),
-(24, 'aaa', NULL, NULL, NULL, 76, NULL, NULL, NULL, NULL, NULL),
-(25, 'bbbb', NULL, NULL, NULL, 77, NULL, NULL, NULL, NULL, NULL),
-(26, 'aaa', NULL, NULL, NULL, 77, NULL, NULL, NULL, NULL, NULL),
-(27, 'zzzz', NULL, NULL, NULL, 78, NULL, NULL, NULL, NULL, NULL),
-(28, 'zzzz', NULL, NULL, NULL, 79, NULL, NULL, NULL, NULL, NULL),
-(29, 'zzzz', NULL, NULL, NULL, 80, NULL, NULL, NULL, NULL, NULL),
-(30, 'aaaa', NULL, NULL, NULL, 81, NULL, NULL, NULL, NULL, NULL),
-(31, 'zzzz', NULL, NULL, NULL, 81, NULL, NULL, NULL, NULL, NULL),
-(32, 'aaaaaa', NULL, NULL, NULL, 82, 'bb', NULL, NULL, NULL, NULL),
-(33, 'aaa', NULL, NULL, NULL, 82, 'b', NULL, NULL, NULL, NULL),
-(34, 'aaaaaa', NULL, NULL, NULL, 83, 'bb', NULL, NULL, NULL, NULL),
-(35, 'aaa', NULL, NULL, NULL, 83, 'b', NULL, NULL, NULL, NULL),
-(36, 'cccccc', NULL, NULL, NULL, 84, 'd', NULL, NULL, NULL, NULL),
-(37, 'aaaaaa', NULL, NULL, NULL, 84, 'bb', NULL, NULL, NULL, NULL),
-(38, 'aaa', NULL, NULL, NULL, 84, 'b', NULL, NULL, NULL, NULL),
-(39, 'cccccc', NULL, NULL, NULL, 85, 'd', NULL, NULL, NULL, NULL),
-(40, 'aaaaaa', NULL, NULL, NULL, 85, 'bb', NULL, NULL, NULL, NULL),
-(41, 'aaa', NULL, NULL, NULL, 85, 'b', NULL, NULL, NULL, NULL),
-(42, 'cccccc', NULL, NULL, NULL, 86, 'd', NULL, NULL, NULL, NULL),
-(43, 'aaaaaa', NULL, NULL, NULL, 86, 'bb', NULL, NULL, NULL, NULL),
-(44, 'aaa', NULL, NULL, NULL, 86, 'b', NULL, NULL, NULL, NULL),
-(45, 'cccccc', NULL, NULL, NULL, 87, 'd', NULL, NULL, NULL, NULL),
-(46, 'aaaaaa', NULL, NULL, NULL, 87, 'bb', NULL, NULL, NULL, NULL),
-(47, 'aaa', NULL, NULL, NULL, 87, 'b', NULL, NULL, NULL, NULL),
-(48, 'cccccc', NULL, NULL, NULL, 88, 'd', NULL, NULL, NULL, NULL),
-(49, 'aaaaaa', NULL, NULL, NULL, 88, 'bb', NULL, NULL, NULL, NULL),
-(50, 'aaa', NULL, NULL, NULL, 88, 'b', NULL, NULL, NULL, NULL),
-(51, 'cccccc', NULL, NULL, NULL, 89, 'd', NULL, NULL, NULL, NULL),
-(52, 'aaaaaa', NULL, NULL, NULL, 89, 'bb', NULL, NULL, NULL, NULL),
-(53, 'aaa', NULL, NULL, NULL, 89, 'b', NULL, NULL, NULL, NULL),
-(54, 'cccccc', NULL, NULL, NULL, 90, 'd', NULL, NULL, NULL, NULL),
-(55, 'aaaaaa', NULL, NULL, NULL, 90, 'bb', NULL, NULL, NULL, NULL),
-(56, 'aaa', NULL, NULL, NULL, 90, 'b', NULL, NULL, NULL, NULL),
-(57, 'cccccc', NULL, NULL, NULL, 91, 'd', NULL, NULL, NULL, NULL),
-(58, 'aaaaaa', NULL, NULL, NULL, 91, 'bb', NULL, NULL, NULL, NULL),
-(59, 'aaa', NULL, NULL, NULL, 91, 'b', NULL, NULL, NULL, NULL),
-(60, 'cccccc', NULL, NULL, NULL, 92, 'd', NULL, NULL, NULL, NULL),
-(61, 'aaaaaa', NULL, NULL, NULL, 92, 'bb', NULL, NULL, NULL, NULL),
-(62, 'aaa', NULL, NULL, NULL, 92, 'b', NULL, NULL, NULL, NULL),
-(63, 'cccccc', NULL, NULL, NULL, 93, 'd', NULL, NULL, NULL, NULL),
-(64, 'aaaaaa', NULL, NULL, NULL, 93, 'bb', NULL, NULL, NULL, NULL),
-(65, 'aaa', NULL, NULL, NULL, 93, 'b', NULL, NULL, NULL, NULL),
-(66, 'cccccc', NULL, NULL, NULL, 94, 'd', NULL, NULL, NULL, NULL),
-(67, 'aaaaaa', NULL, NULL, NULL, 94, 'bb', NULL, NULL, NULL, NULL),
-(68, 'aaa', NULL, NULL, NULL, 94, 'b', NULL, NULL, NULL, NULL),
-(69, 'cccccc', NULL, NULL, NULL, 95, 'd', NULL, NULL, NULL, NULL),
-(70, 'aaaaaa', NULL, NULL, NULL, 95, 'bb', NULL, NULL, NULL, NULL),
-(71, 'aaa', NULL, NULL, NULL, 95, 'b', NULL, NULL, NULL, NULL),
-(72, 'cccccc', NULL, NULL, NULL, 96, 'd', NULL, NULL, NULL, NULL),
-(73, 'aaaaaa', NULL, NULL, NULL, 96, 'bb', NULL, NULL, NULL, NULL),
-(74, 'aaa', NULL, NULL, NULL, 96, 'b', NULL, NULL, NULL, NULL),
-(75, 'cccccc', NULL, NULL, NULL, 97, 'd', NULL, NULL, NULL, NULL),
-(76, 'aaaaaa', NULL, NULL, NULL, 97, 'bb', NULL, NULL, NULL, NULL),
-(77, 'aaa', NULL, NULL, NULL, 97, 'b', NULL, NULL, NULL, NULL),
-(78, 'cccccc', NULL, NULL, NULL, 98, 'd', NULL, NULL, NULL, NULL),
-(79, 'aaaaaa', NULL, NULL, NULL, 98, 'bb', NULL, NULL, NULL, NULL),
-(80, 'aaa', NULL, NULL, NULL, 98, 'b', NULL, NULL, NULL, NULL),
-(81, 'cccccc', NULL, NULL, NULL, 99, 'd', NULL, NULL, NULL, NULL),
-(82, 'aaaaaa', NULL, NULL, NULL, 99, 'bb', NULL, NULL, NULL, NULL),
-(83, 'aaa', NULL, NULL, NULL, 99, 'b', NULL, NULL, NULL, NULL),
-(84, 'cccccc', NULL, NULL, NULL, 100, 'd', NULL, NULL, NULL, NULL),
-(85, 'aaaaaa', NULL, NULL, NULL, 100, 'bb', NULL, NULL, NULL, NULL),
-(86, 'aaa', NULL, NULL, NULL, 100, 'b', NULL, NULL, NULL, NULL),
-(87, 'cccccc', NULL, NULL, NULL, 101, 'd', NULL, NULL, NULL, NULL),
-(88, 'aaaaaa', NULL, NULL, NULL, 101, 'bb', NULL, NULL, NULL, NULL),
-(89, 'aaa', NULL, NULL, NULL, 101, 'b', NULL, NULL, NULL, NULL),
-(90, 'cccccc', NULL, NULL, NULL, 102, 'd', NULL, NULL, NULL, NULL),
-(91, 'aaaaaa', NULL, NULL, NULL, 102, 'bb', NULL, NULL, NULL, NULL),
-(92, 'aaa', NULL, NULL, NULL, 102, 'b', NULL, NULL, NULL, NULL),
-(93, NULL, 'n', NULL, NULL, 150, 'n', 'n', 'n', NULL, 'n'),
-(94, NULL, 'n', NULL, NULL, 150, 'n', 'n', 'n', NULL, 'n'),
-(95, NULL, 'n', NULL, NULL, 152, 'n', 'n', 'n', NULL, 'n'),
-(96, NULL, 'n', NULL, NULL, 152, 'n', 'n', 'n', NULL, 'n'),
-(97, NULL, NULL, NULL, NULL, 152, NULL, NULL, NULL, NULL, 'culot');
-
 -- --------------------------------------------------------
 
 --
@@ -563,91 +357,6 @@ CREATE TABLE `strain` (
   `description_genotype` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `strain`
---
-
-INSERT INTO `strain` (`id`, `name_strain`, `specie`, `gender`, `comment`, `description`, `created_by_name`, `date`, `parent_strain_id`, `genotype_id`, `depot_id`, `prelevement_id`, `created_by_id`, `description_genotype`) VALUES
-(61, 'aaa', 'aaaaaa', 'aaaa', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(62, 'aalea', 'aaaaaa', 'aaaa', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(63, 'aaa', 'aaaaaa', 'aaaa', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(64, 'aaa', 'aaaaaa', 'aaaa', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(65, 'aaa', 'aaaaaa', 'aaaa', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(66, 'aaa', 'aaaaaa', 'aaaa', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(67, 'aaa', 'aaaaaa', 'aaaa', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(68, 'aaa', 'aaaaaa', 'aaaa', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(69, 'aaa', 'aaaaaa', 'aaaa', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(70, 'aaaaa', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(71, 'aaaaa', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(72, 'aaaaa', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(73, 'aaaaa', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(74, 'aaaaa', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(75, 'aaaaa', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(76, 'aaaaa', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(77, 'aaaaa', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(78, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(79, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(80, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(81, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(82, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(83, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(84, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(85, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(86, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(87, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(88, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(89, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(90, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(91, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(92, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(93, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(94, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(95, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(96, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(97, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, NULL, NULL, NULL, 1, NULL),
-(98, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, 1, NULL, NULL, 1, 'il est beau'),
-(99, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, 1, NULL, NULL, 1, 'il est beau'),
-(100, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, 1, NULL, NULL, 1, 'il est beau'),
-(101, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, 1, NULL, NULL, 1, 'il est beau'),
-(102, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-03-28', NULL, 1, NULL, NULL, 1, 'il est beau'),
-(103, 'AA', 'A', 'A', NULL, NULL, 'BERTRAND Baptiste', '2025-04-03', NULL, NULL, NULL, 1, 1, NULL),
-(105, 'aa', 'aa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(106, 'aaaa', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(107, 'aaaa', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(109, 'aaaa5', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(110, 'aaaa5', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(111, 'aaaa5', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(112, 'aaaa6', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(113, 'aaaa7', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(114, 'aaaa87', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(115, 'aaaa87', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(116, 'aaaa88', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(117, 'aaaa88', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(118, 'aaaa89', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(119, 'aaaa89', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(120, 'aaaa89', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(130, 'aaaa89', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, 1, NULL, NULL, 1, NULL),
-(131, 'aaaa89', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, 1, NULL, NULL, 1, NULL),
-(132, 'aaaa89', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, 1, NULL, NULL, 1, NULL),
-(133, 'aaaa89', 'aaa', 'aa', 'aha', 'ihi', 'BERTRAND Baptiste', '2025-04-11', NULL, 1, NULL, 2, 1, NULL),
-(134, 'aaaa89', 'aaa', 'aa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, 1, NULL, 2, 1, NULL),
-(135, 'aaaa89', 'aaa', 'aa', 'aha', 'ihi', 'BERTRAND Baptiste', '2025-04-11', NULL, 2, NULL, NULL, 1, NULL),
-(136, 'aaaa89', 'aaa', 'aa', 'aha', 'ihi', 'BERTRAND Baptiste', '2025-04-11', 133, 2, NULL, NULL, 1, NULL),
-(137, 'aaa', 'aaaaaa', 'aaaa', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', 61, 2, NULL, NULL, 1, NULL),
-(138, 'bbbb', 'bbbbb', 'bb', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(139, 'bbbb', 'bbbbb', 'bb', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(140, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(141, 'a', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(142, 'aa', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-04-11', NULL, NULL, NULL, NULL, 1, NULL),
-(143, 'ccc', 'c', 'c', NULL, NULL, 'BERTRAND Baptiste', '2025-04-14', NULL, NULL, NULL, NULL, 1, NULL),
-(145, 'test plasmd', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-04-15', NULL, NULL, NULL, NULL, 1, NULL),
-(146, 'tast', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-04-15', NULL, NULL, NULL, NULL, 1, NULL),
-(147, 'tast', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-04-15', NULL, NULL, NULL, NULL, 1, NULL),
-(148, 'teast plasmyd', 'a', 'a', NULL, NULL, 'BERTRAND Baptiste', '2025-04-15', NULL, NULL, NULL, NULL, 1, NULL),
-(150, 'nico', 'nico', 'nico', NULL, NULL, 'BERTRAND Baptiste', '2025-06-03', NULL, 2, NULL, 1, 1, 'nico'),
-(151, 'nico', 'nico', 'nico', 'hhhhhhhh', 'gggggg', 'BERTRAND Baptiste', '2025-06-03', NULL, 2, NULL, 1, 1, 'nico'),
-(152, 'nico', 'nico', 'nico', 'hhhhhhhh', 'gggggg', 'BERTRAND Baptiste', '2025-06-03', NULL, 2, NULL, 1, 1, 'nico');
-
 -- --------------------------------------------------------
 
 --
@@ -670,16 +379,6 @@ CREATE TABLE `strain_plasmyd` (
   `plasmyd_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `strain_plasmyd`
---
-
-INSERT INTO `strain_plasmyd` (`strain_id`, `plasmyd_id`) VALUES
-(145, 6),
-(146, 6),
-(148, 7),
-(148, 8);
-
 -- --------------------------------------------------------
 
 --
@@ -690,13 +389,6 @@ CREATE TABLE `strain_project` (
   `strain_id` int NOT NULL,
   `project_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `strain_project`
---
-
-INSERT INTO `strain_project` (`strain_id`, `project_id`) VALUES
-(138, 5);
 
 -- --------------------------------------------------------
 
@@ -901,7 +593,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `collec`
 --
 ALTER TABLE `collec`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `depot`
@@ -913,13 +605,13 @@ ALTER TABLE `depot`
 -- AUTO_INCREMENT for table `drug_resistance`
 --
 ALTER TABLE `drug_resistance`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `drug_resistance_on_strain`
 --
 ALTER TABLE `drug_resistance_on_strain`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `file_sequencing`
@@ -937,13 +629,13 @@ ALTER TABLE `genotype`
 -- AUTO_INCREMENT for table `method_sequencing`
 --
 ALTER TABLE `method_sequencing`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- AUTO_INCREMENT for table `plasmyd`
 --
 ALTER TABLE `plasmyd`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `project`
@@ -967,19 +659,19 @@ ALTER TABLE `sample`
 -- AUTO_INCREMENT for table `storage`
 --
 ALTER TABLE `storage`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
 
 --
 -- AUTO_INCREMENT for table `strain`
 --
 ALTER TABLE `strain`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
 
 --
 -- AUTO_INCREMENT for table `transformability`
 --
 ALTER TABLE `transformability`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `user`

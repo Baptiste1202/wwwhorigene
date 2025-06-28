@@ -472,7 +472,7 @@
         table.style.visibility = 'hidden';
 
         const dataTable = $('#data-table').DataTable({
-            paging: true,
+            paging: false,
             searching: false, //on utilisera notre recherche personalise par groupe
             ordering: true,
             info: true,
@@ -584,8 +584,6 @@
                 }
             });
         }
-
-
 
         // 4. Popups (info/fichier) pour le téléchargement et les bonnes directions
         const typeMap = {
