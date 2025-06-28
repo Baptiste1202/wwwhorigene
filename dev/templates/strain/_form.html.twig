@@ -78,7 +78,7 @@
     {% if is_update %}
         <div id="publication-add" class="group">
     {% endif %}
-        <div class="publication-add-info" class="hidden-tags">
+        <div id="publication-add-info" class="hidden-tags">
             <ul class="publication"
                 data-index="{{ strainForm.publication|length > 0 ? strainForm.publication|last.vars.name + 1 : 0 }}"
                 data-prototype="{{ form_row(strainForm.publication.vars.prototype)|e('html_attr') }}"
@@ -95,7 +95,7 @@
     {% if is_update %}
         <div id="drug-add" class="group">
     {% endif %}
-        <div class="drug-add-info" class="hidden-tags">
+        <div id="drug-add-info" class="hidden-tags">
             <ul class="drugResistanceOnStrain"
                 data-index="{{ strainForm.drugResistanceOnStrain|length > 0 ? strainForm.drugResistanceOnStrain|last.vars.name + 1 : 0 }}"
                 data-prototype="{{ form_row(strainForm.drugResistanceOnStrain.vars.prototype)|e('html_attr') }}"
@@ -113,7 +113,7 @@
     {% if is_update %}
         <div id="transformability-add" class="group">
     {% endif %}
-        <div class="transformability-add-info" class="hidden-tags">
+        <div id="transformability-add-info" class="hidden-tags">
             <ul class="transformability"
                 data-index="{{ strainForm.transformability|length > 0 ? strainForm.transformability|last.vars.name + 1 : 0 }}"
                 data-prototype="{{ form_row(strainForm.transformability.vars.prototype)|e('html_attr') }}"
@@ -131,7 +131,7 @@
     {% if is_update %}
         <div id="sequencing-add" class="group">
     {% endif %}
-        <div class="sequencing-add-info" class="hidden-tags">
+        <div id="sequencing-add-info" class="hidden-tags">
             <ul class="sequencing"
                 data-index="{{ strainForm.methodSequencing|length > 0 ? strainForm.methodSequencing|last.vars.name + 1 : 0 }}"
                 data-prototype="{{ form_row(strainForm.methodSequencing.vars.prototype)|e('html_attr') }}"
@@ -149,7 +149,7 @@
     {% if is_update %}
         <div id="storage-add" class="group">
     {% endif %}
-        <div class="storage-add-info" class="hidden-tags">
+        <div id="storage-add-info" class="hidden-tags">
             <ul class="storage"
                 data-index="{{ strainForm.storage|length > 0 ? strainForm.storage|last.vars.name + 1 : 0 }}"
                 data-prototype="{{ form_row(strainForm.storage.vars.prototype)|e('html_attr') }}"
