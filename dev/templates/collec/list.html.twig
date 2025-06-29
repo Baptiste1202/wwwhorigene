@@ -23,6 +23,13 @@
     width: 50px;
     text-align: center;
 }
+
+#data-table-wrapper #data-table-collect thead th:nth-child(1),
+#data-table-wrapper #data-table-collect tbody td:nth-child(1) {
+  left: 0;
+  background-color: #d0f0c0; /* Vert très clair */
+}
+
 </style>
 
 <form id="multi-action-form" method="post">
@@ -69,7 +76,7 @@
     <input type="hidden" name="action" value="" />
 
     <button type="submit" formaction="{{ path('delete_multiple_collecs') }}" onclick="this.form.action.value='delete'" class="btn btn-danger" style="margin-top: 10px;">
-        Supprimer la sélection
+        Suppression multiple
     </button>
 
 </form>
