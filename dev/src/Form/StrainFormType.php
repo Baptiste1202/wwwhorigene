@@ -43,13 +43,13 @@ class StrainFormType extends AbstractType
             ->add('parentStrain', type:StrainAutocompleteField::class, options:[
 
             ])
-            // ->add('searchParent', ButtonType::class, [
-            //     'label' => 'Rechercher',
-            //     'attr' => [
-            //         'class' => 'btn btn-primary search-button',
-            //         'type' => 'button',
-            //     ],
-            // ])
+            ->add('searchParent', ButtonType::class, [
+                'label' => 'Rechercher',
+                'attr' => [
+                    'class' => 'btn btn-primary search-button',
+                    'type' => 'button',
+                ],
+            ])
             ->add('nameStrain', options:[
                 'label' => 'Name Strain',
                 'required' => false, 

@@ -87,7 +87,17 @@
                                 description: {{ strain.descriptionGenotype ? strain.descriptionGenotype : "--" }}'>
                     {% if strain.genotype is not null %}
                         {{strain.genotype.type}} <br>
-                        {{strain.descriptionGenotype}}
+                        {% if strain.descriptionGenotype is not empty %}
+                            {% set desc = strain.descriptionGenotype ?: strain.descriptionGenotype %}
+                            {% set maxLength = 15 %}
+
+                            {% if desc|length > maxLength %}
+                                {% set prefix = desc|slice(0, 12) %}
+                                {{ prefix ~ '...'}}
+                            {% else %}
+                                {{ desc }}
+                            {% endif %} 
+                        {% endif %}
                     {% else %}
                         --
                     {% endif %}
