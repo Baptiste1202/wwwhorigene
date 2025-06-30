@@ -533,8 +533,8 @@ button.btn-form-strain:hover {
     text-decoration: none; /* Évite le soulignement au survol */
 }
 
-/* Blocage sticky des  2 premier colonne et des 3 dernières colonnes à droite */
-
+/*CSS pour la DATATABLE de strain*/
+/*Regle de fixation*/
 /* Colonne 1 */
 thead th:nth-child(1),
 tbody td:nth-child(1) {
@@ -566,7 +566,7 @@ thead th:nth-last-child(1),
 tbody td:nth-last-child(1) {
   position: sticky;
   right: 0;
-  background-color: #bdbdbd; /* même couleur que la première colonne, ou celle que tu veux */
+  background-color: #bdbdbd; 
   z-index: 5;
 }
 
@@ -586,14 +586,6 @@ tbody td:nth-last-child(3) {
   z-index: 5;
 }
 
-.resistant-display-green{
-    color: green;
-}
-
-.resistant-display-red{
-    color: red;
-}
-
 .sticky_wrapper{
     overflow: scroll;
     position: relative;
@@ -611,6 +603,92 @@ thead {
   position: sticky;
   top: 0;
   z-index: 15;
+}
+
+/*Autre regles*/
+.resistant-display-green{
+    color: green;
+}
+
+.resistant-display-red{
+    color: red;
+}
+
+/*CSS pour les DATATABLE des composants*/
+/* Largeur fixe pour les colonnes sticky */
+#data-table-collect th,
+#data-table-collect td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  white-space: nowrap;
+  text-align: left;
+}
+
+/* Largeurs des colonnes sticky */
+#data-table-collect th:nth-child(1),
+#data-table-collect td:nth-child(1),
+#data-table-collect thead th:nth-last-child(1),
+#data-table-collect tbody td:nth-last-child(1) {
+  width: 50px;
+  background-color: #bdbdbd;
+  position: sticky;
+  z-index: 5;
+}
+
+/* Sticky à gauche */
+
+/* 1ère colonne */
+#data-table-collect th:nth-child(1),
+#data-table-collect td:nth-child(1) {
+  left: 0;
+}
+
+/* 2ème colonne */
+#data-table-collect th:nth-child(2),
+#data-table-collect td:nth-child(2) {
+  position: sticky;
+  left: 50px; /* 1ère colonne = 50px */
+  background-color: #bdbdbd;
+  z-index: 5;
+  width: 50px;
+}
+
+/* 3ème colonne */
+#data-table-collect th:nth-child(3),
+#data-table-collect td:nth-child(3) {
+  position: sticky;
+  left: 100px; /* 50 + 50 */
+  background-color: #bdbdbd;
+  z-index: 5;
+  width: 50px;
+}
+
+/* Sticky à droite */
+
+/* Dernière colonne */
+#data-table-collect thead th:nth-last-child(1),
+#data-table-collect tbody td:nth-last-child(1) {
+  right: 0;
+}
+
+/* Avant-dernière colonne */
+#data-table-collect thead th:nth-last-child(2),
+#data-table-collect tbody td:nth-last-child(2) {
+  position: sticky;
+  right: 50px; /* 1ère colonne à droite */
+  background-color: #bdbdbd;
+  z-index: 5;
+  width: 50px;
+}
+
+/* 3ème colonne en partant de la fin */
+#data-table-collect thead th:nth-last-child(3),
+#data-table-collect tbody td:nth-last-child(3) {
+  position: sticky;
+  right: 100px; /* 50 + 50 */
+  background-color: #bdbdbd;
+  z-index: 5;
+  width: 50px;
 }
 
 .searchDatatable {
@@ -646,9 +724,6 @@ thead {
 
 }
 
-
-
-
 #global #list #table td.supp  a:hover {
     background-color: red; /* Gris clair au survol */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Accentuation de l'ombre */
@@ -661,7 +736,6 @@ thead {
     border-color: #bbb; /* Bordure légèrement plus foncée */
     transform: scale(0.98); /* Effet de clic */
 }
-
 
 .pagination {
     display: flex;
