@@ -1,5 +1,7 @@
 # Ignorer le dossier docker à la racine
 /docker/
+/public/
+/.history/
 
 # Ignorer le fichier docker-compose.yml à la racine
 /docker-compose.yml
