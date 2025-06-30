@@ -4,12 +4,12 @@ services:
     build:
       context: docker/php
       args:
-        USER_ID: 1000
-        GROUP_ID: 1000
+        USER_ID: ${HOST_UID?-1001}
+        GROUP_ID: ${HOST_GID?-1001}
     volumes:
-      - "./dev:/var/www/html:rw"
+      - "./dev:/srv/project:rw"
     ports:
-      - 8092:80
+      - 8092:8080
     networks:
       - vivacar
 
