@@ -204,6 +204,9 @@ class StrainController extends AbstractController
             foreach($strain->getDrugResistanceOnStrain() as $drug){
                 $em->remove($drug);
             }
+            foreach($strain->getCollec() as $collect){
+                $em->remove($collect);
+            }
 
             $em->remove($strain);
             $em->flush();

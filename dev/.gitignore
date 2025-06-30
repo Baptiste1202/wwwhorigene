@@ -12,4 +12,9 @@
 ###> symfony/asset-mapper ###
 /public/assets/
 /assets/vendor/
+/public/docs/
+/docker/
 ###< symfony/asset-mapper ###
+
+docker-compose.yml
+.env
