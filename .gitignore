@@ -3,6 +3,7 @@
 
 # Ignorer le fichier docker-compose.yml à la racine
 /docker-compose.yml
+.env
 
 
 
