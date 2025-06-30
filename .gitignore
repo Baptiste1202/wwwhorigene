@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 # Ignorer le dossier docker à la racine
 /docker/
 /public/
@@ -6,6 +7,26 @@
 # Ignorer le fichier docker-compose.yml à la racine
 /docker-compose.yml
 .env
+=======
 
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+>>>>>>> Stashed changes
 
+###> symfony/asset-mapper ###
+/public/assets/
+/assets/vendor/
+/public/docs/
+/docker/
+###< symfony/asset-mapper ###
+
+docker-compose.yml
+.env
 

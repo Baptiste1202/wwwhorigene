@@ -21,9 +21,10 @@
     {% if strains|length >= 30 %}
         <h2>Search Results (more than 30)</h2>
     {% else %}
-        <h2>Search Results ({{ strains.totalItemCount }})</h2>
+        <h2>Search Results ({{ strains|length }})</h2>
     {% endif %}
 {% endif %}
+
 
 <script>
 

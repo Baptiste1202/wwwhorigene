@@ -1,22 +1,33 @@
-FROM core-harbor.pictime-groupe-integ.com/docker-base/symfony-base:8.2
 
-USER root
-COPY --chmod=755 scripts/install.sh /usr/local/bin/install.sh
-RUN /usr/local/bin/install.sh
-COPY config/php.ini /etc/php82/php.ini
-COPY config/php-fpm/www.conf /etc/php82/php-fpm.d/www.conf
+FROM php:8.2-apache
 
-ARG USER_ID
-ARG GROUP_ID
-RUN groupmod -g ${GROUP_ID} ftpgrp && usermod -u ${USER_ID} -g ftpgrp web
-RUN chmod -R 777 /var/log/supervisor ; \
-    chmod -R 777 /var/run/supervisor; \
-    chmod -R 777 /var/log/php82; \
-    chmod -R 777 /var/run/php; \
-    chmod -R 777 /var/lib/nginx; \
-    chmod -R 777 /var/log/nginx; \
-    chmod -R 777 /var/run/nginx
-RUN apk -u add jpegoptim optipng pngquant gifsicle libwebp-tools libavif ffmpeg
-USER web
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-CMD ["/usr/bin/supervisord"]
+
+# Ajouter la directive ServerName pour éviter l'avertissement
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+RUN curl -sS https://get.symfony.com/cli/installer | bash && \
+    mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
+
+RUN    curl -sS https://getcomposer.org/installer | php && \
+mv composer.phar /usr/local/bin/composer
+
+# Activer le module Apache pour le rewrite (réécriture d'URL)
+RUN a2enmod rewrite
+
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 755 /var/www/html
+
+# Copier et remplacer 000-default.conf
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
+
+# Copier et remplacer .htacces
+COPY .htacces /var/www/html/public/.htaccess 
+
+
+COPY . /var/www/html/
+
+EXPOSE 80
+
+CMD ["apache2-foreground"]

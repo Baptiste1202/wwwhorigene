@@ -51,17 +51,13 @@ class StrainController extends AbstractController
         $strains = $elasticResponse['pagination'];
 
         if (!$strains) {
-            $query = new Query ();
+            $query = new Query();
             $matchAll = new MatchAll();
 
             $query->setQuery($matchAll);
             $query->setSort(['id' => ['order' => 'desc']]);
 
-            // Créer l'adaptateur de pagination
-            $paginatorAdapter = $this->finder->createPaginatorAdapter($query);
-
-            // Paginer pour récupérer 30 résultats max
-            $strains = $this->paginator->paginate($paginatorAdapter, $request->query->getInt('page', 1), 15);
+            $strains = $this->finder->find($query, 10000);
         }
 
         return $this->render('strain/main.html.twig', [
