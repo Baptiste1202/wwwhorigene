@@ -37,12 +37,10 @@
             {% endif %}
             {% for strain in strains %}
                 <tr class="list-strain"> 
-                    {# MODIFICATION ICI : Changement de <th> à <td> pour ID et Name #}
                     <td>
                         <input type="checkbox" name="selected_strain[]" value="{{ strain.id }}" class="select-checkbox" />
                     </td>
                     <td class="id">{{strain.id}}</td>
-                    <script>console.log('ID strain:', {{ strain.id }});</script>
                     <td class="name">{{ strain.nameStrain is not null ? strain.nameStrain : '--' }}</td>
                     <td class="date">
                     {% if strain.date is not null %}
@@ -90,10 +88,10 @@
                         {{strain.genotype.type}} <br>
                         {% if strain.descriptionGenotype is not empty %}
                             {% set desc = strain.descriptionGenotype ?: strain.descriptionGenotype %}
-                            {% set maxLength = 15 %}
+                            {% set maxLength = 25 %}
 
                             {% if desc|length > maxLength %}
-                                {% set prefix = desc|slice(0, 12) %}
+                                {% set prefix = desc|slice(0, 20) %}
                                 {{ prefix ~ '...'}}
                             {% else %}
                                 {{ desc }}
@@ -132,6 +130,8 @@
                         shelf:  {{strain.storage[0].shelf}} <br>
                         rack: {{strain.storage[0].rack}} <br>
                         volume: {{strain.storage[0].volume}} <br>
+                        container type: {{ strain.storage[0].containerType }}<br>
+                        container position: {{ strain.storage[0].containerPosition }}<br>
                     {% else %}
                         --
                     {% endif %}
@@ -343,6 +343,8 @@
                                     shelf: {{ strain.storage[i].shelf }}<br>
                                     rack: {{ strain.storage[i].rack }}<br>
                                     volume: {{ strain.storage[i].volume }}<br>
+                                    container type: {{ strain.storage[i].containerType }}<br>
+                                    container position: {{ strain.storage[i].containerPosition }}<br>
                                 {% endif %}
                                 </td>
                                 <td></td> {# Parent #}
@@ -472,10 +474,6 @@
 
         let currentStrainId = '', currentStrainName = '';
 
-        // Vérification du nombre de lignes dans tbody avant DataTables
-        console.log('Nombre de lignes dans tbody avant init DataTables :', table.querySelectorAll('tbody tr').length);
-
-
         // 1. Prétraitement : remplir cellules vides et propager ID/Souche
         for (const row of rows) {
             const idCell = row.querySelector('td.id');
@@ -505,8 +503,6 @@
             searching: false, //on utilisera notre recherche personalise par groupe
             ordering: true,
             info: true,
-            autoWidth: false,
-            responsive: false,
             dom: '<"datatable-header d-flex justify-content-between align-items-center"lfr>t<"datatable-footer d-flex justify-content-between align-items-center"ip>',
             order: [],
             columnDefs: [
