@@ -22,21 +22,24 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="project-add" class="group">
+    <div id="project-add" class="group" style="grid-column: 2;">
     {% endif %}
         <div id="project-add-info" class="hidden-tags">
-            <ul class="project"
+            <ul class="collec"
                 data-index="{{ strainForm.project|length > 0 ? strainForm.project|last.vars.name + 1 : 0 }}"
-                data-prototype="{{ form_row(strainForm.project.vars.prototype)|e('html_attr') }}"
-            ></ul>
+                data-prototype="{{ form_row(strainForm.project.vars.prototype)|e('html_attr') }}">
+                {% for subForm in strainForm.project %}
+                    <li>{{ form_row(subForm) }}</li>
+                {% endfor %}
+            </ul>
         </div>
 
-        <div id="project-add-btn" class="add-btn">
+        <div class="add-btn">
             <label>Project</label>
-            <button type="button" class="add_item_link" data-collection-holder-class="project">+</button>
+            <button type="button" class="add_item_link" data-collection-holder-class="collec">+</button>
         </div>
     {% if is_update %}
-        </div>
+    </div>
     {% endif %}
 
     {% if is_update %}
@@ -45,8 +48,11 @@
         <div id="collec-add-info" class="hidden-tags">
             <ul class="collec"
                 data-index="{{ strainForm.collec|length > 0 ? strainForm.collec|last.vars.name + 1 : 0 }}"
-                data-prototype="{{ form_row(strainForm.collec.vars.prototype)|e('html_attr') }}"
-            ></ul>
+                data-prototype="{{ form_row(strainForm.collec.vars.prototype)|e('html_attr') }}">
+                {% for subForm in strainForm.collec %}
+                    <li>{{ form_row(subForm) }}</li>
+                {% endfor %}
+            </ul>
         </div>
 
         <div id="collec-add-btn" class="add-btn">
@@ -54,7 +60,7 @@
             <button type="button" class="add_item_link" data-collection-holder-class="collec">+</button>
         </div>
     {% if is_update %}
-        </div>
+    </div>
     {% endif %}
 
     {% if is_update %}
@@ -63,8 +69,11 @@
         <div id="plasmyd-add-info" class="hidden-tags">
             <ul class="plasmyd"
                 data-index="{{ strainForm.plasmyd|length > 0 ? strainForm.plasmyd|last.vars.name + 1 : 0 }}"
-                data-prototype="{{ form_row(strainForm.plasmyd.vars.prototype)|e('html_attr') }}"
-            ></ul>
+                data-prototype="{{ form_row(strainForm.plasmyd.vars.prototype)|e('html_attr') }}">
+                {% for subForm in strainForm.plasmyd %}
+                    <li>{{ form_row(subForm) }}</li>
+                {% endfor %}
+            </ul>
         </div>
 
         <div id="plasmyd-add-btn" class="add-btn">
@@ -72,38 +81,45 @@
             <button type="button" class="add_item_link" data-collection-holder-class="plasmyd">+</button>
         </div>
     {% if is_update %}
-        </div>
+    </div>
     {% endif %}
 
     {% if is_update %}
-        <div id="publication-add" class="group">
+    <div id="publication-add" class="group">
     {% endif %}
         <div id="publication-add-info" class="hidden-tags">
             <ul class="publication"
                 data-index="{{ strainForm.publication|length > 0 ? strainForm.publication|last.vars.name + 1 : 0 }}"
-                data-prototype="{{ form_row(strainForm.publication.vars.prototype)|e('html_attr') }}"
-            ></ul>
-        </div>   
-        <div id="plasmyd-add-btn" class="add-btn">
+                data-prototype="{{ form_row(strainForm.publication.vars.prototype)|e('html_attr') }}">
+                {% for subForm in strainForm.publication %}
+                    <li>{{ form_row(subForm) }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div id="publication-add-btn" class="add-btn">
             <label>Publication</label>
             <button type="button" class="add_item_link" data-collection-holder-class="publication">+</button>
         </div>
     {% if is_update %}
-        </div>
+    </div>
     {% endif %}
 
     {% if is_update %}
-        <div id="drug-add" class="group">
+        <div id="drug-add" class="group long">
     {% endif %}
         <div id="drug-add-info" class="hidden-tags">
             <ul class="drugResistanceOnStrain"
                 data-index="{{ strainForm.drugResistanceOnStrain|length > 0 ? strainForm.drugResistanceOnStrain|last.vars.name + 1 : 0 }}"
-                data-prototype="{{ form_row(strainForm.drugResistanceOnStrain.vars.prototype)|e('html_attr') }}"
-            ></ul>
+                data-prototype="{{ form_row(strainForm.drugResistanceOnStrain.vars.prototype)|e('html_attr') }}">
+                {% for subForm in strainForm.drugResistanceOnStrain %}
+                    <li>{{ form_row(subForm) }}</li>
+                {% endfor %}
+            </ul>
         </div>
 
         <div id="drug-add-btn" class="add-btn">
-            <label>Drug Resistance</label>
+            <label>Drug</label>
             <button type="button" class="add_item_link" data-collection-holder-class="drugResistanceOnStrain">+</button>
         </div>
     {% if is_update %}
@@ -111,13 +127,16 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="transformability-add" class="group">
+        <div id="transformability-add" class="group long">
     {% endif %}
         <div id="transformability-add-info" class="hidden-tags">
             <ul class="transformability"
                 data-index="{{ strainForm.transformability|length > 0 ? strainForm.transformability|last.vars.name + 1 : 0 }}"
-                data-prototype="{{ form_row(strainForm.transformability.vars.prototype)|e('html_attr') }}"
-            ></ul>
+                data-prototype="{{ form_row(strainForm.transformability.vars.prototype)|e('html_attr') }}">
+                {% for subForm in strainForm.transformability %}
+                    <li>{{ form_row(subForm) }}</li>
+                {% endfor %}
+            </ul>
         </div>
 
         <div id="transformability-add-btn" class="add-btn">
@@ -129,13 +148,16 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="sequencing-add" class="group">
+        <div id="sequencing-add" class="group long">
     {% endif %}
         <div id="sequencing-add-info" class="hidden-tags">
             <ul class="sequencing"
                 data-index="{{ strainForm.methodSequencing|length > 0 ? strainForm.methodSequencing|last.vars.name + 1 : 0 }}"
-                data-prototype="{{ form_row(strainForm.methodSequencing.vars.prototype)|e('html_attr') }}"
-            ></ul>
+                data-prototype="{{ form_row(strainForm.methodSequencing.vars.prototype)|e('html_attr') }}">
+                {% for subForm in strainForm.methodSequencing %}
+                    <li>{{ form_row(subForm) }}</li>
+                {% endfor %}
+            </ul>
         </div>
 
         <div id="sequencing-add-btn" class="add-btn">
@@ -147,14 +169,18 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="storage-add" class="group">
+        <div id="storage-add" class="group long">
     {% endif %}
         <div id="storage-add-info" class="hidden-tags">
             <ul class="storage"
                 data-index="{{ strainForm.storage|length > 0 ? strainForm.storage|last.vars.name + 1 : 0 }}"
-                data-prototype="{{ form_row(strainForm.storage.vars.prototype)|e('html_attr') }}"
-            ></ul>
+                data-prototype="{{ form_row(strainForm.storage.vars.prototype)|e('html_attr') }}">
+                {% for subForm in strainForm.storage %}
+                    <li>{{ form_row(subForm) }}</li>
+                {% endfor %}
+            </ul>
         </div>
+
         <div id="storage-add-btn" class="add-btn">
             <label>Storage</label>
             <button type="button" class="add_item_link" data-collection-holder-class="storage">+</button>
@@ -164,15 +190,15 @@
     {% endif %}
 
     {% if is_update %}
-        <div class="prime group">
+        <div class="prime2 group">
     {% endif %}
         {{ form_row(strainForm.comment) }}
         {{ form_row(strainForm.description) }}
     {% if is_update %}
         </div>
     {% endif %}
-
-    <button class="btn-form-strain" type="submit">{{ button_label | default('Ajouter') }} </button>
+{# 
+    <button class="btn-form-strain" type="submit">{{ button_label | default('Ajouter') }} </button> #}
 
 {{ form_end(strainForm) }}
 
