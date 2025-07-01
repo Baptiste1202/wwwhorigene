@@ -5,7 +5,7 @@
         <table id="data-table-collect" class="display datatableComponent" style="visibility: hidden;"> {# masquer pour evider le flash#}
             <thead>
                 <tr>
-                    <th><input type="checkbox" id="select-all" /></th>
+                    <th><input type="checkbox" id="select-all" class="no-sort"/></th>
                     <th data-column="id">ID</th>
                     <th data-column="name">Name</th>
                     <th data-column="description">Description</th>
@@ -104,8 +104,8 @@
                 url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json"
             },
             columnDefs: [
-                // Désactive le tri pour la première colonne et les 3 dernières
-                { orderable: false, targets: [0, -1, -2, -3] }
+                // Désactive le tri pour la première colonne et les 3 dernières en class no-sort
+                { orderable: false, targets: 'no-sort' }
             ],
             // Affiche la table uniquement quand DataTables est complètement initialisé
             initComplete: function() {

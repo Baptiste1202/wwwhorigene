@@ -34,19 +34,16 @@ class CollecController extends AbstractController
     {
         $collecAdd = $this->createForm(CollecFormType::class); 
 
-        if ($security->isGranted('ROLE_SEARCH') || $security->isGranted('ROLE_ADMIN')){
+        if ($security->isGranted('ROLE_SEARCH') || $security->isGranted('ROLE_ADMIN')) {
             $collecAdd = $this->addForm($request, $em);  
         }
 
-        $allCollec = $this->collecRepository->findAll();
-
-        $collecs = $this->paginator->paginate($allCollec, $request->query->getInt('page', 1), 15);
+        $allCollec = $this->collecRepository->findAll(10000);
 
         return $this->render('collec/main.html.twig', [
             'collecForm' => $collecAdd, 
-            'collecs' => $collecs
+            'collecs' => $allCollec
         ]);
-
     }
 
     #[Route(path: '/collec', name: 'list_collecs')]

@@ -1,48 +1,143 @@
-<table>
-    <tr>
-        <th>ID</th>
-        <th>URL</th>
-        <th>Title</th>
-        <th>Autor</th>
-        <th>Year</th>
-        <th>DOI</th>
-        <th>Description</th>
-    </tr>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 
-    {% for publication in publications %}
-        <div class="list-collec">
-            <tr>
-                <td>{{publication.id}}</td>
-                <td>{{publication.articleUrl}}</td>
-                <td>{{publication.title}}</td>
-                <td>{{publication.autor}}</td>
-                <td>{{publication.year}}</td>
-                <td>{{publication.doi}}</td>
-                <td>{{publication.description}}</td>
-                <td><a href = "{{path("edit_publication", {id: publication.id})}}"> Modifie </a></td>
-                <td><a href = "{{path("delete_publication", {id: publication.id})}}" class="delete-link"> Delete </a></td>
-            </tr>
-        </div>
-    {% endfor %}
+<form id="multi-action-form" method="post">
+    <div id="data-table-wrapper" class="sticky-wrapper">
+        <table id="data-table-publications" class="display datatableComponent" style="visibility: hidden;">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all" /></th>
+                    <th data-column="id">ID</th>
+                    <th data-column="url">URL</th>
+                    <th data-column="title">Title</th>
+                    <th data-column="autor">Autor</th>
+                    <th data-column="year">Year</th>
+                    <th data-column="doi">DOI</th>
+                    <th data-column="description">Description</th>
+                    <th data-column="duplicate" class="no-sort"></th>
+                    <th data-column="edit" class="no-sort"></th>
+                    <th data-column="delete" class="no-sort"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if publications is empty %}
+                    <tr>
+                        <td colspan="10" class="no-data">No publications found.</td>
+                    </tr>
+                {% else %}
+                    {% for publication in publications %}
+                        <tr class="list-collec">
+                            <td>
+                                <input type="checkbox" name="selected_publications[]" value="{{ publication.id }}" class="select-checkbox" />
+                            </td>
+                            <td>{{ publication.id }}</td>
+                            <td>{{ publication.articleUrl is not null ? publication.articleUrl : '--' }}</td>
+                            <td>{{ publication.title is not null ? publication.title : '--' }}</td>
+                            <td>{{ publication.autor is not null ? publication.autor : '--' }}</td>
+                            <td>{{ publication.year is not null ? publication.year : '--' }}</td>
+                            <td>{{ publication.doi is not null ? publication.doi : '--' }}</td>
+                            <td>{{ publication.description is not null ? publication.description : '--' }}</td>
+                            <td><a href="{{ path('duplicate_publication', {id: publication.id}) }}">Duplicate</a></td>
+                            <td><a href="{{ path('edit_publication', {id: publication.id}) }}">Modifie</a></td>
+                            <td><a href="{{ path('delete_publication', {id: publication.id}) }}" class="delete-link">Delete</a></td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <input type="hidden" name="action" value="" />
 
-</table>
+    <button id="btn-delete-multiple" type="submit" formaction="{{ path('delete_multiple_publications') }}" onclick="this.form.action.value='delete'" class="btn btn-danger" style="margin-top: 10px; display: none;">
+        Suppression multiple
+    </button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 {% if app.session.flashbag.has('warning') %}
-    <script>
-        // Sélectionner tous les liens de suppression
-        document.querySelectorAll('.delete-link').forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault(); // Empêcher la redirection initiale
+<script>
+    // Confirmation suppression si flash warning
+    document.querySelectorAll('.delete-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var confirmDelete = confirm("{{ app.session.flashbag.get('warning')[0] }}");
+            if (confirmDelete) {
+                window.location.href = this.href + '?confirm=yes';
+            }
+        });
+    });
+</script>
+{% endif %}
 
-                // Afficher la confirmation si le flash warning existe
-                var confirmDelete = confirm("{{ app.session.flashbag.get('warning')[0] }}");
+<script>
+    function initDataTableWithFilters(tableId) {
+        const table = $('#' + tableId);
+        const totalColumns = table.find('thead th').length;
 
-                // Si l'utilisateur confirme, ajouter ?confirm=yes à l'URL et rediriger
-                if (confirmDelete) {
-                    // Redirection vers la suppression avec confirmation
-                    window.location.href = this.href + '?confirm=yes';
+        // Ajout ligne filtres sous le header si pas déjà présente
+        if (table.find('thead tr.filters').length === 0) {
+            const filterRow = $('<tr class="filters"></tr>').appendTo(table.find('thead'));
+            table.find('thead th').each(function(index) {
+                // Pas de filtre sur les colonnes avec classe no-sort (edit, delete)
+                if ($(this).hasClass('no-sort')) {
+                    filterRow.append('<th></th>');
+                } else {
+                    filterRow.append('<th><input type="text" placeholder="Filtrer" style="width: 100%; box-sizing: border-box;" /></th>');
                 }
             });
+        }
+
+        const dataTable = table.DataTable({
+            orderCellsTop: true,
+            fixedHeader: true,
+            paging: true,
+            searching: true,
+            info: true,
+            lengthChange: true,
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json"
+            },
+            columnDefs: [
+                // Désactive le tri pour les colonnes avec classe no-sort
+                { orderable: false, targets: 'no-sort' }
+            ],
+            initComplete: function() {
+                table.css('visibility', 'visible');
+                $('#btn-delete-multiple').show(); // Affiche le bouton
+            }
         });
-    </script>
-{% endif %}
+
+        // Applique le filtre sur chaque colonne (si input présent)
+        table.find('thead tr.filters input').on('keyup change clear', function() {
+            const colIndex = $(this).parent().index();
+            dataTable.column(colIndex).search(this.value).draw();
+        });
+
+        // Gestion de la checkbox "Tout sélectionner"
+        $('#select-all').on('click', function() {
+            const isChecked = $(this).prop('checked');
+            table.find('tbody input.select-checkbox').prop('checked', isChecked);
+        });
+
+        // Synchronisation des checkboxes individuelles avec "Tout sélectionner"
+        table.find('tbody').on('change', 'input.select-checkbox', function() {
+            const allChecked = table.find('tbody input.select-checkbox').length === table.find('tbody input.select-checkbox:checked').length;
+            $('#select-all').prop('checked', allChecked);
+        });
+
+        // Gestion du menu de colonnes masquées/visibles (si checkboxes présentes)
+        document.querySelectorAll('.toggle-column').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                const colIndex = parseInt(this.getAttribute('data-column'), 10);
+                const col = dataTable.column(colIndex);
+                col.visible(this.checked);
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initDataTableWithFilters('data-table-publications');
+    });
+</script>

@@ -122,6 +122,40 @@ class PublicationController extends AbstractController
         return $this->render('publication/create.html.twig', compact('publicationForm'));
     }
 
+    #[Route('strains/publication/duplicate/{id}', name: 'duplicate_publication')]
+    #[IsGranted('ROLE_SEARCH')]
+    public function duplicatePublication(Publication $publication, EntityManagerInterface $em, Security $security): Response
+    {
+        try {
+            // Récupérer l'utilisateur connecté (optionnel si besoin)
+            $user = $security->getUser();
+
+            // Créer une nouvelle instance de Publication (la copie)
+            $clone = new Publication();
+
+            // Copier les champs simples de l'entité originale
+            $clone->setTitle($publication->getTitle());
+            $clone->setArticleUrl($publication->getArticleUrl());
+            $clone->setAutor($publication->getAutor());
+            $clone->setYear($publication->getYear());
+            $clone->setDoi($publication->getDoi());
+            $clone->setDescription($publication->getDescription());
+
+            // Persister et flush
+            $em->persist($clone);
+            $em->flush();
+
+            // Message flash
+            $this->addFlash('success', 'Publication "' . $clone->getTitle() . '" dupliquée avec succès !');
+
+            return $this->redirectToRoute('page_publications');
+
+        } catch (\Throwable $e) {
+            $this->addFlash('error', 'Erreur lors de la duplication de la publication.');
+            return $this->redirectToRoute('page_publications');
+        }
+    }
+
     #[Route('strains/publication/edit/{id}', name: 'edit_publication')]
     #[IsGranted('ROLE_SEARCH')]
     public function edit(
@@ -162,19 +196,90 @@ class PublicationController extends AbstractController
     #[IsGranted('ROLE_SEARCH')]
     public function delete(Request $request, Publication $publication, EntityManagerInterface $em): Response
     {
+        // Récupérer tous les IDs des souches associées à cette publication
+        $soucheIds = $publication->getStrain()->map(function($strain) {
+            return $strain->getId();
+        })->toArray();
+
+        // Si la publication est associée à au moins une souche, empêcher la suppression
+        if (count($soucheIds) > 0) {
+            $soucheIdsString = implode(', ', $soucheIds);
+            $this->addFlash('error', 'Impossible de supprimer cette publication car elle est associée aux souches d\'ID suivants : ' . $soucheIdsString . '.');
+            return $this->redirectToRoute('page_publications');
+        }
+        
+        $this->addFlash('warning', 'Êtes-vous sûr de vouloir supprimer la publication "' . $publication->getTitle() . '" ? Cette action est irréversible.');
 
         if ($request->query->get('confirm') === 'yes') {
             $em->remove($publication);
             $em->flush();
 
-            $this->addFlash('success', 'Publication ' . $publication->getTitle() . ' deleted successfully!');
+            $this->addFlash('success', 'Publication "' . $publication->getTitle() . '" supprimée avec succès !');
             return $this->redirectToRoute('page_publications');
         }
 
-        $this->addFlash('warning', 'Are you sure you want to delete this publication ' . $publication->getTitle(). ' ? (Be aware. This action cannot be undone !)');
-
         return $this->redirectToRoute('page_publications');
     }
+
+    #[Route('strains/publications/delete-multiple', name: 'delete_multiple_publications', methods: ['POST'])]
+    #[IsGranted('ROLE_SEARCH')]
+    public function deleteMultiple(Request $request, EntityManagerInterface $em): Response
+    {
+        // Récupérer les ids sélectionnés via la requête POST
+        $ids = $request->request->all('selected_publications');
+
+        // Vérifier que ce soit un tableau non vide
+        if (!is_array($ids) || empty($ids)) {
+            $this->addFlash('error', 'Aucune publication sélectionnée.');
+            return $this->redirectToRoute('page_publications');
+        }
+
+        // Chercher toutes les publications correspondantes
+        $publications = $em->getRepository(Publication::class)->findBy(['id' => $ids]);
+
+        if (!$publications) {
+            $this->addFlash('error', 'Aucune publication trouvée pour suppression.');
+            return $this->redirectToRoute('page_publications');
+        }
+
+        $detailsDeleted = [];
+        $detailsBlocked = [];
+
+        foreach ($publications as $publication) {
+            // Blocage si la publication a des souches associées
+            if (count($publication->getStrain()) > 0) {
+                $detailsBlocked[] = sprintf('[ID: %d - Titre: %s]', $publication->getId(), $publication->getTitle());
+                continue;
+            }
+
+            // Sinon on supprime
+            $detailsDeleted[] = sprintf('[ID: %d - Titre: %s]', $publication->getId(), $publication->getTitle());
+            $em->remove($publication);
+        }
+
+        // Valider la suppression en base (pour les publications sans souches)
+        if (!empty($detailsDeleted)) {
+            $em->flush();
+        }
+
+        // Message succès pour les publications supprimées
+        if (!empty($detailsDeleted)) {
+            $this->addFlash('success', sprintf(
+                '%d publication(s) supprimée(s) avec succès : %s',
+                count($detailsDeleted),
+                implode(', ', $detailsDeleted)
+            ));
+        }
+
+        // Message d’erreur pour les publications bloquées
+        if (!empty($detailsBlocked)) {
+            $this->addFlash('error', 'Impossible de supprimer certaines publications car elles sont associées à des souches : ' . implode(', ', $detailsBlocked));
+        }
+
+        // Rediriger vers la page des publications
+        return $this->redirectToRoute('page_publications');
+    }
+
 
 
 }

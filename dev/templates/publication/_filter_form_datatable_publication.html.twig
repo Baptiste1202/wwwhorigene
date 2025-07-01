@@ -1,0 +1,31 @@
+<div id="menu-container">
+    <button id="menu-button">☰ Filters</button>
+
+    <div id="filter-menu" class="filter-menu">
+        <label><input type="checkbox" class="toggle-column" data-column="0" checked> Sélection</label>
+        <label><input type="checkbox" class="toggle-column" data-column="1" checked> ID</label>
+        <label><input type="checkbox" class="toggle-column" data-column="2" checked> URL</label>
+        <label><input type="checkbox" class="toggle-column" data-column="3" checked> Title</label>
+        <label><input type="checkbox" class="toggle-column" data-column="4" checked> Autor</label>
+        <label><input type="checkbox" class="toggle-column" data-column="5" checked> Year</label>
+        <label><input type="checkbox" class="toggle-column" data-column="6" checked> DOI</label>
+        <label><input type="checkbox" class="toggle-column" data-column="7" checked> Description</label>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const menuButton = document.getElementById('menu-button');
+    const filterMenu = document.getElementById('filter-menu');
+
+    menuButton.addEventListener('click', function() {
+        filterMenu.classList.toggle('visible');
+    });
+
+    document.addEventListener('click', function(event) {
+        if (!menuButton.contains(event.target) && !filterMenu.contains(event.target)) {
+            filterMenu.classList.remove('visible');
+        }
+    });
+});
+</script>
