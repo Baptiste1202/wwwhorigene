@@ -194,32 +194,24 @@ class PublicationController extends AbstractController
 
     #[Route('strains/publication/delete/{id}', name: 'delete_publication')]
     #[IsGranted('ROLE_SEARCH')]
-    public function delete(Request $request, Publication $publication, EntityManagerInterface $em): Response
+    public function delete(Publication $publication, EntityManagerInterface $em): Response
     {
-        // Récupérer tous les IDs des souches associées à cette publication
-        $soucheIds = $publication->getStrain()->map(function($strain) {
-            return $strain->getId();
-        })->toArray();
+        // Vérifie les souches associées
+        $soucheIds = $publication->getStrain()->map(fn($strain) => $strain->getId())->toArray();
 
-        // Si la publication est associée à au moins une souche, empêcher la suppression
         if (count($soucheIds) > 0) {
-            $soucheIdsString = implode(', ', $soucheIds);
-            $this->addFlash('error', 'Impossible de supprimer cette publication car elle est associée aux souches d\'ID suivants : ' . $soucheIdsString . '.');
-            return $this->redirectToRoute('page_publications');
-        }
-        
-        $this->addFlash('warning', 'Êtes-vous sûr de vouloir supprimer la publication "' . $publication->getTitle() . '" ? Cette action est irréversible.');
-
-        if ($request->query->get('confirm') === 'yes') {
+            $this->addFlash('error', 'Impossible de supprimer cette publication car elle est associée aux souches d\'ID suivants : ' . implode(', ', $soucheIds) . '.');
+        } else {
+            // Supprime directement
             $em->remove($publication);
             $em->flush();
 
             $this->addFlash('success', 'Publication "' . $publication->getTitle() . '" supprimée avec succès !');
-            return $this->redirectToRoute('page_publications');
         }
 
         return $this->redirectToRoute('page_publications');
     }
+
 
     #[Route('strains/publications/delete-multiple', name: 'delete_multiple_publications', methods: ['POST'])]
     #[IsGranted('ROLE_SEARCH')]

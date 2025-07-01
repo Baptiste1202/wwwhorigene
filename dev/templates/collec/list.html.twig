@@ -32,7 +32,13 @@
                             <td class="comment">{{ collec.comment is not null ? collec.comment : '--' }}</td>
                             <td><a href="{{ path('duplicate_collec', {id: collec.id}) }}">Duplicate</a></td>
                             <td><a href="{{ path('edit_collec', {id: collec.id}) }}">Modifie</a></td>
-                            <td><a href="{{ path('delete_collec', {id: collec.id}) }}" class="delete-link">Delete</a></td>
+                            <td>
+                                <a href="{{ path('delete_collec', {id: collec.id}) }}"
+                                    class="delete-link"
+                                    onclick="return confirm('Voulez-vous vraiment supprimer cette collection ?');">
+                                    Delete
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                 {% endif %}
@@ -45,8 +51,6 @@
     <button id="btn-delete-multiple" type="submit" formaction="{{ path('delete_multiple_collecs') }}" onclick="this.form.action.value='delete'" class="btn btn-danger" style="margin-top: 10px; display: none;">
         Suppression multiple
     </button>
-
-
 </form>
 
 

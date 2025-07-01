@@ -39,7 +39,13 @@
                             <td>{{ publication.description is not null ? publication.description : '--' }}</td>
                             <td><a href="{{ path('duplicate_publication', {id: publication.id}) }}">Duplicate</a></td>
                             <td><a href="{{ path('edit_publication', {id: publication.id}) }}">Modifie</a></td>
-                            <td><a href="{{ path('delete_publication', {id: publication.id}) }}" class="delete-link">Delete</a></td>
+                            <td>
+                                <a href="{{ path('delete_publication', {id: publication.id}) }}"
+                                    title="Supprimer"
+                                    onclick="return confirm('Voulez-vous vraiment supprimer ?')">
+                                    Supprimer
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                 {% endif %}
