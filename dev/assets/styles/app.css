@@ -523,7 +523,7 @@ button.btn-form-strain:hover {
 }
 
 #data-table-wrapper {
-    overflow-x: auto;  /* scroll horizontal */
+    overflow: auto;  /* scroll horizontal */
     position: relative;
     max-width: 100%;  /* pour limiter à la taille parent */
 }

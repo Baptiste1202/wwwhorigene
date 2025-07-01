@@ -162,8 +162,12 @@
                                 resistant: {{ strain.drugResistanceOnStrain|first ? (strain.drugResistanceOnStrain|first.resistant ? 'yes' : 'no') : '--' }}
                                 comment: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.comment   : '--'}}
                                 description: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.description  : '--'}}'
+<<<<<<< Updated upstream
                                 data-file='{{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.nameFile : '--'}}'
                     >
+=======
+                                data-file='{{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.name : "--" }}'>
+>>>>>>> Stashed changes
                     {% if strain.drugResistanceOnStrain is not empty %}
                         {{strain.drugResistanceOnStrain[0].drugResistance.name}} <br>
                         {{strain.drugResistanceOnStrain[0].concentration}}  
@@ -356,9 +360,15 @@
                                         name: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].drugResistance.name  : '--'}}
                                         concentration: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].concentration : '--'}}
                                         resistant: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? (strain.drugResistanceOnStrain[i].resistant  ? 'yes' : 'no') : '--' }}
+<<<<<<< Updated upstream
                                         comment: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].comment  : '--'}}
                                         description: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].description  : '--'}}'
                                     data-file='{{ (strain.drugResistanceOnStrain|length > i and strain.drugResistanceOnStrain[i].nameFile) ? strain.drugResistanceOnStrain[i].nameFile : "--" }}'>
+=======
+                                        comment: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].drugResistance.comment  : '--'}}
+                                        description: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].drugResistance.description  : '--'}}'
+                                        data-file='{{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.name : "--" }}'>
+>>>>>>> Stashed changes
                                 {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].drugResistance.name : '' }} <br>
                                 {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].concentration : '' }}
                                 {% if strain.drugResistanceOnStrain[i] is defined %}
