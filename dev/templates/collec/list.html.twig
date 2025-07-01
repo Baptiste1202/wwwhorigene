@@ -54,6 +54,27 @@
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 
+{% if app.session.flashbag.has('warning') %}
+    <script>
+        // Sélectionner tous les liens de suppression
+        document.querySelectorAll('.delete-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Empêcher la redirection initiale
+
+                // Afficher la confirmation si le flash warning existe
+                var confirmDelete = confirm("{{ app.session.flashbag.get('warning')[0] }}");
+
+                // Si l'utilisateur confirme, ajouter ?confirm=yes à l'URL et rediriger
+                if (confirmDelete) {
+                    // Redirection vers la suppression avec confirmation
+                    window.location.href = this.href + '?confirm=yes';
+                }
+            });
+        });
+    </script>
+{% endif %}
+
+
 <script>
     function initDataTableWithFilters(tableId) {
         const table = $('#' + tableId);
