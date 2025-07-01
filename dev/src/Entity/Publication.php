@@ -41,7 +41,7 @@ class Publication
     /**
      * @var Collection<int, Strain>
      */
-    #[ORM\ManyToMany(targetEntity: Strain::class, mappedBy: 'publication', orphanRemoval: true)]
+    #[ORM\ManyToMany(targetEntity: Strain::class, mappedBy: 'publication', orphanRemoval: false)]
     private Collection $strain;
 
     public function getId(): ?int

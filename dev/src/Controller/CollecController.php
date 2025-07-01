@@ -132,37 +132,55 @@ class CollecController extends AbstractController
         return $this->render('collec/edit.html.twig', compact('collecForm'));
     }
 
-    #[Route('/collecs/delete/{id}', name: 'delete_collec')]
+    // #[Route('/collecs/delete/{id}', name: 'delete_collec')]
+    // #[IsGranted('ROLE_SEARCH')]
+    // public function deleteCollec(?Collec $collec, EntityManagerInterface $em): Response
+    // {
+    //     try {
+    //         if (!$collec) {
+    //             $this->addFlash('error', 'Collection not found');
+    //             return $this->redirectToRoute('page_collecs');
+    //         }
+
+    //         // // Vérifier si des strains sont encore associés
+    //         // if (count($collec->getStrain()) > 0) {
+    //         //     $this->addFlash('error', sprintf(
+    //         //         'Impossible de supprimer la collection "%s" car elle possède encore des strains associés.',
+    //         //         $collec->getName()
+    //         //     ));
+    //         //     return $this->redirectToRoute('page_collecs');
+    //         // }
+
+    //         // Pas de strains : on peut supprimer
+    //         $em->remove($collec);
+    //         $em->flush();
+
+    //         $this->addFlash('success', 'Collection "' . $collec->getName() . '" supprimée avec succès.');
+    //         return $this->redirectToRoute('page_collecs');
+
+    //     } catch (\Throwable $e) {
+    //         $this->addFlash('error', 'Erreur lors de la suppression de la collection.');
+    //         return $this->redirectToRoute('page_collecs');
+    //     }
+    // }
+
+    #[Route('strains/collec/delete/{id}', name: 'delete_collec')]
     #[IsGranted('ROLE_SEARCH')]
-    public function deleteCollec(?Collec $collec, EntityManagerInterface $em): Response
+    public function delete(Request $request, Collec $collec, EntityManagerInterface $em): Response
     {
-        try {
-            if (!$collec) {
-                $this->addFlash('error', 'Collection introuvable.');
-                return $this->redirectToRoute('page_collecs');
-            }
-
-            // Vérifier si des strains sont encore associés
-            if (count($collec->getStrain()) > 0) {
-                $this->addFlash('error', sprintf(
-                    'Impossible de supprimer la collection "%s" car elle possède encore des strains associés.',
-                    $collec->getName()
-                ));
-                return $this->redirectToRoute('page_collecs');
-            }
-
-            // Pas de strains : on peut supprimer
+        if ($request->query->get('confirm') === 'yes') {
             $em->remove($collec);
             $em->flush();
 
-            $this->addFlash('success', 'Collection "' . $collec->getName() . '" supprimée avec succès.');
-            return $this->redirectToRoute('page_collecs');
-
-        } catch (\Throwable $e) {
-            $this->addFlash('error', 'Erreur lors de la suppression de la collection.');
+            $this->addFlash('success', 'Collection ' . $collec->getName() . ' deleted successfully!');
             return $this->redirectToRoute('page_collecs');
         }
+
+        $this->addFlash('warning', 'Are you sure you want to delete this collection ' . $collec->getName(). ' ? (Be aware. This action cannot be undone !)');
+
+        return $this->redirectToRoute('page_collecs');
     }
+
 
 
     #[Route('strains/collec/duplicate/{id}', name: 'duplicate_collec')]

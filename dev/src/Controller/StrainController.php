@@ -191,20 +191,35 @@ class StrainController extends AbstractController
             foreach ($strain->getTransformability() as $transfo){
                 $em->remove($transfo);
             }
-            foreach ($strain->getPublication() as $publi){
-                $em->remove($publi);
-            }
-            foreach($strain->getPlasmyd() as $plasmyd){
-                $em->remove($plasmyd);
-            }
             foreach($strain->getDrugResistanceOnStrain() as $drug){
                 $em->remove($drug);
             }
-            foreach($strain->getCollec() as $collect){
-                $em->remove($collect);
+
+            $collecs = $strain->getCollec()->toArray();
+            foreach($collecs as $collec) {
+                $strain->removeCollec($collec);
             }
 
+            $plasmyds = $strain->getPlasmyd()->toArray();
+            foreach($plasmyds as $plasmyd) {
+                $strain->removePlasmyd($plasmyd);
+            }
+
+            $publis = $strain->getPublication()->toArray();
+            foreach($publis as $publi) {
+                $strain->removePublication($publi);
+            }
+
+            $projects = $strain->getProject()->toArray();
+            foreach($projects as $project) {
+                $strain->removeProject($project);
+            }
+
+            // Flush les changements des relations avant de supprimer l'entité
+            $em->flush();
+
             $em->remove($strain);
+
             $em->flush();
 
             $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' delete with success !');

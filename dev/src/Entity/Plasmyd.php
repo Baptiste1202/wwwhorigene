@@ -32,7 +32,7 @@ class Plasmyd
     /**
      * @var Collection<int, Strain>
      */
-    #[ORM\ManyToMany(targetEntity: Strain::class, mappedBy: 'plasmyd', orphanRemoval: true)]
+    #[ORM\ManyToMany(targetEntity: Strain::class, mappedBy: 'plasmyd', orphanRemoval: false)]
     private Collection $strain;
 
     #[ORM\Column(length: 255, nullable: true)]

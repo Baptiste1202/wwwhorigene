@@ -95,8 +95,7 @@ class Strain
     /**
      * @var Collection<int, collec>
      */
-    #[ORM\ManyToMany(targetEntity: Collec::class, inversedBy: 'strain')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\ManyToMany(targetEntity: Collec::class, inversedBy: 'strain', orphanRemoval:false)]
     private ?Collection $collec = null;
 
     #[ORM\ManyToOne(targetEntity: Depot::class, inversedBy: 'strain')]
@@ -290,34 +289,31 @@ class Strain
         }
     }
 
-    public function getPlasmyd(): ?Collection
+    public function getPlasmyd(): Collection
     {
-        return $this->plasmyd;
+        return $this->plasmyd ?? new ArrayCollection();
     }
 
-    public function setPlasmyd(?Plasmyd $plasmyd): static
+    public function setPlasmyd(?Collection $plasmyd): static
     {
-        $this->plasmyd = $plasmyd;
-
+        $this->plasmyd = $plasmyd ?? new ArrayCollection();
         return $this;
     }
 
     public function addPlasmyd(?Plasmyd $plasmyd): static
     {
-        if (!$this->plasmyd->contains($plasmyd)) {
+        if ($plasmyd && !$this->getPlasmyd()->contains($plasmyd)) {
             $this->plasmyd->add($plasmyd);
             $plasmyd->addStrain($this);
         }
-
         return $this;
     }
 
     public function removePlasmyd(?Plasmyd $plasmyd): static
     {
-        if ($this->plasmyd->removeElement($plasmyd)) {
+        if ($plasmyd && $this->getPlasmyd()->removeElement($plasmyd)) {
             $plasmyd->removeStrain($this);
         }
-
         return $this;
     }
 
@@ -363,21 +359,20 @@ class Strain
         }
     }
 
-    public function getPublication(): ?Collection
+    public function getPublication(): Collection
     {
-        return $this->publication;
+        return $this->publication ?? new ArrayCollection();
     }
 
-    public function setPublication(?Publication $publication): static
+    public function setPublication(?Collection $publication): static
     {
-        $this->publication = $publication;
-
+        $this->publication = $publication ?? new ArrayCollection();
         return $this;
     }
 
     public function addPublication(?Publication $publication): static
     {
-        if (!$this->publication->contains($publication)) {
+        if ($publication && !$this->getPublication()->contains($publication)) {
             $this->publication->add($publication);
             $publication->addStrain($this);
         }
@@ -387,7 +382,7 @@ class Strain
 
     public function removePublication(?Publication $publication): static
     {
-        if ($this->publication->removeElement($publication)) {
+        if ($publication && $this->getPublication()->removeElement($publication)) {
             $publication->removeStrain($this);
         }
 
@@ -438,63 +433,57 @@ class Strain
 
     public function getProject(): ?Collection
     {
-        return $this->project;
+        return $this->project ?? new ArrayCollection();
     }
 
     public function setProject(?Project $project): static
     {
-        $this->project = $project;
-
+        $this->project = $project ?? new ArrayCollection();
         return $this;
     }
 
     public function addProject(?Project $project): static
     {
-        if (!$this->project->contains($project)) {
+        if ($project && !$this->getProject()->contains($project)) {
             $this->project->add($project);
             $project->addStrain($this);
         }
-
         return $this;
     }
 
     public function removeProject(?Project $project): static
     {
-        if ($this->project->removeElement($project)) {
+        if ($project && $this->getProject()->removeElement($project)) {
             $project->removeStrain($this);
         }
-
         return $this;
     }
 
-    public function getCollec(): ?Collection
+    public function getCollec(): Collection
     {
-        return $this->collec;
+        return $this->collec ?? new ArrayCollection();
     }
 
-    public function setCollec(?Collec $collec): static
+    public function setCollec(?Collection $collec): static
     {
-        $this->collec = $collec;
-
+        $this->collec = $collec ?? new ArrayCollection();
         return $this;
     }
 
     public function addCollec(?Collec $collec): static
     {
-        if (!$this->collec->contains($collec)) {
+        if ($collec && !$this->getCollec()->contains($collec)) {
             $this->collec->add($collec);
             $collec->addStrain($this);
         }
-
         return $this;
     }
-
+    
     public function removeCollec(?Collec $collec): static
     {
-        if ($this->collec->removeElement($collec)) {
+        if ($collec && $this->getCollec()->removeElement($collec)) {
             $collec->removeStrain($this);
         }
-
         return $this;
     }
 
