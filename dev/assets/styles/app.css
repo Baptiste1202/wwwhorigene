@@ -472,6 +472,9 @@ button.btn-form-strain:hover {
     background-color: #f9f9f9; /* Couleur de fond */
 }
 
+/* ===========================================================
+   CSS general des tables , datatable et boutton crud
+   =========================================================== */
 #global #list #table {
     margin-top : 10px; 
     table-layout: fixed; /* Fixe la largeur des colonnes */
@@ -512,6 +515,26 @@ button.btn-form-strain:hover {
     color: #555;
 }
 
+.sticky-wrapper {
+    /* overflow: scroll;  <-- enlevé */
+    position: relative;
+    width: auto;
+    height: 100%;
+}
+
+#data-table-wrapper {
+    overflow-x: auto;  /* scroll horizontal */
+    position: relative;
+    max-width: 100%;  /* pour limiter à la taille parent */
+}
+
+/* En-tête figé en haut */
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 15;
+}
+
 .button-crud {
     display: inline-block;
     padding: 6px 12px; /* Espacement interne */
@@ -533,7 +556,10 @@ button.btn-form-strain:hover {
     text-decoration: none; /* Évite le soulignement au survol */
 }
 
-/*CSS pour la DATATABLE de strain*/
+
+/* ===========================================================
+   CSS pour la DATATABLE de strain
+   =========================================================== */
 /*Regle de fixation*/
 /* Colonne 1 */
 thead th:nth-child(1),
@@ -586,25 +612,6 @@ tbody td:nth-last-child(3) {
   z-index: 5;
 }
 
-.sticky_wrapper{
-    overflow: scroll;
-    position: relative;
-    width: auto;
-    height: 100%;
-}
-
-#data-table-wrapper {
-  overflow-x: auto;
-  position: relative;
-}
-
-/* En-tête figé en haut */
-thead {
-  position: sticky;
-  top: 0;
-  z-index: 15;
-}
-
 /*Autre regles*/
 .resistant-display-green{
     color: green;
@@ -614,82 +621,77 @@ thead {
     color: red;
 }
 
-/*CSS pour les DATATABLE des composants*/
-/* Largeur fixe pour les colonnes sticky */
-#data-table-collect th,
-#data-table-collect td {
+/* ===========================================================
+   CSS pour les DATATABLE des composants
+   =========================================================== */
+.datatableComponent th,
+.datatableComponent td {
   border: 1px solid #ddd;
   padding: 8px 12px;
   white-space: nowrap;
   text-align: left;
 }
 
-/* Largeurs des colonnes sticky */
-#data-table-collect th:nth-child(1),
-#data-table-collect td:nth-child(1),
-#data-table-collect thead th:nth-last-child(1),
-#data-table-collect tbody td:nth-last-child(1) {
+/* Colonnes sticky à gauche */
+
+/* 1ère colonne */
+.datatableComponent th:nth-child(1),
+.datatableComponent td:nth-child(1) {
   width: 50px;
   background-color: #bdbdbd;
   position: sticky;
-  z-index: 5;
-}
-
-/* Sticky à gauche */
-
-/* 1ère colonne */
-#data-table-collect th:nth-child(1),
-#data-table-collect td:nth-child(1) {
   left: 0;
+  z-index: 5;
 }
 
 /* 2ème colonne */
-#data-table-collect th:nth-child(2),
-#data-table-collect td:nth-child(2) {
-  position: sticky;
-  left: 50px; /* 1ère colonne = 50px */
-  background-color: #bdbdbd;
-  z-index: 5;
+.datatableComponent th:nth-child(2),
+.datatableComponent td:nth-child(2) {
   width: 50px;
+  background-color: #bdbdbd;
+  position: sticky;
+  left: 50px; /* largeur de la 1ère colonne */
+  z-index: 5;
 }
 
 /* 3ème colonne */
-#data-table-collect th:nth-child(3),
-#data-table-collect td:nth-child(3) {
-  position: sticky;
-  left: 100px; /* 50 + 50 */
-  background-color: #bdbdbd;
-  z-index: 5;
+.datatableComponent th:nth-child(3),
+.datatableComponent td:nth-child(3) {
   width: 50px;
+  background-color: #bdbdbd;
+  position: sticky;
+  left: 100px; /* somme des 2 premières colonnes */
+  z-index: 5;
 }
 
-/* Sticky à droite */
+/* Colonnes sticky à droite */
 
 /* Dernière colonne */
-#data-table-collect thead th:nth-last-child(1),
-#data-table-collect tbody td:nth-last-child(1) {
+.datatableComponent thead th:nth-last-child(1),
+.datatableComponent tbody td:nth-last-child(1) {
+  width: 50px;
+  background-color: #bdbdbd;
+  position: sticky;
   right: 0;
+  z-index: 5;
 }
 
 /* Avant-dernière colonne */
-#data-table-collect thead th:nth-last-child(2),
-#data-table-collect tbody td:nth-last-child(2) {
-  position: sticky;
-  right: 50px; /* 1ère colonne à droite */
-  background-color: #bdbdbd;
-  z-index: 5;
+.datatableComponent thead th:nth-last-child(2),
+.datatableComponent tbody td:nth-last-child(2) {
   width: 50px;
+  background-color: #bdbdbd;
+  position: sticky;
+  right: 50px; /* largeur dernière colonne */
+  z-index: 5;
 }
 
-/* 3ème colonne en partant de la fin */
-#data-table-collect thead th:nth-last-child(3),
-#data-table-collect tbody td:nth-last-child(3) {
-  position: sticky;
-  right: 100px; /* 50 + 50 */
-  background-color: #bdbdbd;
-  z-index: 5;
-  width: 50px;
-}
+/* 3ème colonne depuis la fin */
+.datatableComponent thead th:n
+
+/* ===========================================================
+   Autre partie CSS
+   =========================================================== */
 
 .searchDatatable {
     margin: 10px 0 20px 0;

@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<div id="data-table-wrapper sticky-wrapper">
+<div id="data-table-wrapper" class="sticky-wrapper">
     <table id="data-table" class="display" style="visibility: hidden;"> {# Ajout de la classe 'display' pour DataTables #}
         <thead>
             <tr>
@@ -455,17 +455,6 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-
-{# Ajout d'une règle CSS pour forcer la visibilité des colonnes gérée par DataTables #}
-<style>
-    #data-table th.dt-column-hidden,
-    #data-table td.dt-column-hidden {
-        display: none !important;
-    }
-    #data-table {
-        visibility: hidden; 
-    }
-</style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
