@@ -515,12 +515,6 @@
                 // 2a. Affichage table une fois prête et reorganisation de la structure
                 table.style.visibility = 'visible';
 
-                // Affiche dans la console le nombre total de lignes détectées par DataTable
-                console.log('Nombre total de lignes dans DataTable :', api.rows().count());
-
-                // Affiche aussi le nombre de lignes visibles (non filtrées)
-                console.log('Nombre de lignes visibles :', api.rows({search:'applied'}).count());
-
                 // 2b. Checkboxes pour colonne : application + événements
                 document.querySelectorAll('input.toggle-column').forEach(checkbox => {
                     const colIdx = +checkbox.getAttribute('data-column');

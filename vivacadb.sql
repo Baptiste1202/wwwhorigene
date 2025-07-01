@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 28, 2025 at 06:25 PM
+-- Generation Time: Jul 01, 2025 at 12:28 AM
 -- Server version: 8.0.42
 -- PHP Version: 8.2.27
 
@@ -165,7 +165,8 @@ INSERT INTO `drug_resistance_on_strain` (`id`, `concentration`, `description`, `
 (13, 10, NULL, NULL, 28, 189, 1, 'screenshot-from-2025-06-28-04-40-56-68602cfa5dda5771807734.png'),
 (14, 100, NULL, NULL, 27, 190, 1, NULL),
 (15, 100, NULL, NULL, 26, 190, 0, 'screenshot-from-2025-06-28-04-41-07-68602ec383f1a522413453.png'),
-(16, 50, NULL, NULL, 30, 191, 0, NULL);
+(16, 50, NULL, NULL, 30, 191, 0, NULL),
+(17, 20, NULL, NULL, 25, 215, 1, 'screenshot-from-2025-06-28-20-12-20-68632b74ea2bb529568061.png');
 
 -- --------------------------------------------------------
 
@@ -227,7 +228,9 @@ INSERT INTO `method_sequencing` (`id`, `name`, `description`, `comment`, `name_f
 (92, 'illumina', NULL, NULL, 'screenshot-from-2025-06-28-04-41-02-68602bc71ba62928583165.png', 188, 'png'),
 (93, 'illumina', NULL, NULL, 'screenshot-from-2025-06-28-04-41-02-68602cfa5e535798994682.png', 189, 'png'),
 (94, 'illumina2', NULL, NULL, 'screenshot-from-2025-06-28-04-40-46-68602cfa5e918261988326.png', 189, 'png'),
-(95, 'illumina', NULL, NULL, 'screenshot-from-2025-06-28-04-40-52-68602ec384324466872199.png', 190, 'png');
+(95, 'illumina', NULL, NULL, 'screenshot-from-2025-06-28-04-40-52-68602ec384324466872199.png', 190, 'png'),
+(96, 'illumina', NULL, NULL, 'screenshot-from-2025-06-28-04-41-02-68632b74eb91a455226991.png', 215, 'png'),
+(97, 'illumina2', NULL, NULL, 'screenshot-from-2025-06-28-04-41-07-68632b74ec0ac871972459.png', 215, 'png');
 
 -- --------------------------------------------------------
 
@@ -363,7 +366,8 @@ CREATE TABLE `storage` (
 
 INSERT INTO `storage` (`id`, `room`, `rack`, `description`, `comment`, `strain_id`, `fridge`, `shelf`, `container_type`, `container_position`, `volume`) VALUES
 (99, 'room 1', 'rack 1', NULL, NULL, 191, 'cong 1', 'etag 1', 'boite 1', '1-2-3-4', '100yl'),
-(100, 'room 2', 'rack 2', NULL, NULL, 191, 'cong 2', 'etag 2', 'boite 2', '1-2-3-4', '100yl');
+(100, 'room 2', 'rack 2', NULL, NULL, 191, 'cong 2', 'etag 2', 'boite 2', '1-2-3-4', '100yl'),
+(101, 'room 1', 'rack 1', NULL, NULL, 215, 'cong 1', 'etag 1', 'boite 1', '1-2-3-4', '1ml');
 
 -- --------------------------------------------------------
 
@@ -413,7 +417,9 @@ INSERT INTO `strain` (`id`, `name_strain`, `specie`, `gender`, `comment`, `descr
 (188, 'AB5075', 'baumannii', 'Acinetobacter', NULL, NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 2, NULL, 2, 1, 'comM(FL) pho::ApraR #2'),
 (189, 'AB5075', 'baumannii', 'Acinetobacter', 'Insertion of the tetA gene on p2AB5075', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, 3, 1, NULL),
 (190, 'DH5α', 'Escherichia coli', 'Escherichia', NULL, NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 2, NULL, 3, 1, 'Δ(araD-araB)567, ΔlacZ4787'),
-(191, 'M2', 'nosocomialis', 'Acinetobacter', 'Made by co-culturing of M2 rpoB (Box6C4) with 40288 ∆comEC::aac, annotated as AB25', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 2, NULL, 3, 1, 'rpoB* vgrG::Tn2006 #7');
+(191, 'M2', 'nosocomialis', 'Acinetobacter', 'Made by co-culturing of M2 rpoB (Box6C4) with 40288 ∆comEC::aac, annotated as AB25', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 2, NULL, 3, 1, 'rpoB* vgrG::Tn2006 #7'),
+(200, 'AB5075', 'baumannii', 'Acinetobacter', 'premiere souche', NULL, 'BERTRAND Baptiste', '2025-06-28', NULL, 1, NULL, NULL, 1, NULL),
+(215, 'AB5075', 'baumannii', 'Acinetobacter', 'test 0107', NULL, 'BERTRAND Baptiste', '2025-07-01', NULL, 1, NULL, 2, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -431,11 +437,11 @@ CREATE TABLE `strain_collec` (
 --
 
 INSERT INTO `strain_collec` (`strain_id`, `collec_id`) VALUES
-(187, 1),
 (188, 3),
 (188, 4),
 (189, 5),
-(191, 4);
+(191, 4),
+(215, 1);
 
 -- --------------------------------------------------------
 
@@ -454,7 +460,9 @@ CREATE TABLE `strain_plasmyd` (
 
 INSERT INTO `strain_plasmyd` (`strain_id`, `plasmyd_id`) VALUES
 (189, 28),
-(190, 31);
+(190, 31),
+(215, 25),
+(215, 28);
 
 -- --------------------------------------------------------
 
@@ -476,7 +484,9 @@ INSERT INTO `strain_project` (`strain_id`, `project_id`) VALUES
 (187, 2),
 (188, 2),
 (189, 5),
-(191, 4);
+(191, 4),
+(215, 1),
+(215, 2);
 
 -- --------------------------------------------------------
 
@@ -496,7 +506,8 @@ CREATE TABLE `strain_publication` (
 INSERT INTO `strain_publication` (`strain_id`, `publication_id`) VALUES
 (189, 2),
 (190, 3),
-(191, 3);
+(191, 3),
+(215, 3);
 
 -- --------------------------------------------------------
 
@@ -699,7 +710,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `collec`
 --
 ALTER TABLE `collec`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT for table `depot`
@@ -717,7 +728,7 @@ ALTER TABLE `drug_resistance`
 -- AUTO_INCREMENT for table `drug_resistance_on_strain`
 --
 ALTER TABLE `drug_resistance_on_strain`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `file_sequencing`
@@ -735,7 +746,7 @@ ALTER TABLE `genotype`
 -- AUTO_INCREMENT for table `method_sequencing`
 --
 ALTER TABLE `method_sequencing`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT for table `plasmyd`
@@ -765,13 +776,13 @@ ALTER TABLE `sample`
 -- AUTO_INCREMENT for table `storage`
 --
 ALTER TABLE `storage`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
 
 --
 -- AUTO_INCREMENT for table `strain`
 --
 ALTER TABLE `strain`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=193;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=216;
 
 --
 -- AUTO_INCREMENT for table `transformability`
