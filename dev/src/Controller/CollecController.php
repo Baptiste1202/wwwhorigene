@@ -141,6 +141,10 @@ class CollecController extends AbstractController
                 $this->addFlash('error', 'Collection not found');
                 return $this->redirectToRoute('page_collecs');
             }
+            
+            $this->addFlash('warning', 'Are you sure you want to delete this collection ' . $collec->getName(). ' ? (Be aware. This action cannot be undone !)');
+
+            dd($request);
 
             if ($request->query->get('confirm') === 'yes') {
                 $em->remove($collec);
@@ -150,16 +154,6 @@ class CollecController extends AbstractController
                 return $this->redirectToRoute('page_collecs');
             }
 
-            $this->addFlash('warning', 'Are you sure you want to delete this collection ' . $collec->getName(). ' ? (Be aware. This action cannot be undone !)');
-            
-            // // Vérifier si des strains sont encore associés
-            // if (count($collec->getStrain()) > 0) {
-            //     $this->addFlash('error', sprintf(
-            //         'Impossible de supprimer la collection "%s" car elle possède encore des strains associés.',
-            //         $collec->getName()
-            //     ));
-            //     return $this->redirectToRoute('page_collecs');
-            // }
             return $this->redirectToRoute('page_collecs');
 
         } catch (\Throwable $e) {
@@ -167,25 +161,6 @@ class CollecController extends AbstractController
             return $this->redirectToRoute('page_collecs');
         }
     }
-
-    // #[Route('strains/collec/delete/{id}', name: 'delete_collec')]
-    // #[IsGranted('ROLE_SEARCH')]
-    // public function delete(Request $request, Collec $collec, EntityManagerInterface $em): Response
-    // {
-    //     if ($request->query->get('confirm') === 'yes') {
-    //         $em->remove($collec);
-    //         $em->flush();
-
-    //         $this->addFlash('success', 'Collection ' . $collec->getName() . ' deleted successfully!');
-    //         return $this->redirectToRoute('page_collecs');
-    //     }
-
-    //     $this->addFlash('warning', 'Are you sure you want to delete this collection ' . $collec->getName(). ' ? (Be aware. This action cannot be undone !)');
-
-    //     return $this->redirectToRoute('page_collecs');
-    // }
-
-
 
     #[Route('strains/collec/duplicate/{id}', name: 'duplicate_collec')]
     #[IsGranted('ROLE_SEARCH')]

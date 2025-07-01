@@ -162,6 +162,7 @@
                                 resistant: {{ strain.drugResistanceOnStrain|first ? (strain.drugResistanceOnStrain|first.resistant ? 'yes' : 'no') : '--' }}
                                 comment: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.comment   : '--'}}
                                 description: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.description  : '--'}}'
+                                data-file='{{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.nameFile : '--'}}'
                     >
                     {% if strain.drugResistanceOnStrain is not empty %}
                         {{strain.drugResistanceOnStrain[0].drugResistance.name}} <br>
@@ -350,14 +351,14 @@
                                 <td></td> {# Parent #}
                                 <td>{{ strain.project[i] is defined ? strain.project[i].name : '' }}</td>
                                 <td>{{ strain.collec[i] is defined ? strain.collec[i].name : '' }}</td>
-                                <td data-info='
+                                <td class="drugResistanceOnStrain" 
+                                    data-info='
                                         name: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].drugResistance.name  : '--'}}
                                         concentration: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].concentration : '--'}}
                                         resistant: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? (strain.drugResistanceOnStrain[i].resistant  ? 'yes' : 'no') : '--' }}
-                                        comment: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].drugResistance.comment  : '--'}}
-                                        description: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].drugResistance.description  : '--'}}'
-                                        data-file=
-                                        ''>
+                                        comment: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].comment  : '--'}}
+                                        description: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].description  : '--'}}'
+                                    data-file='{{ (strain.drugResistanceOnStrain|length > i and strain.drugResistanceOnStrain[i].nameFile) ? strain.drugResistanceOnStrain[i].nameFile : "--" }}'>
                                 {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].drugResistance.name : '' }} <br>
                                 {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].concentration : '' }}
                                 {% if strain.drugResistanceOnStrain[i] is defined %}
@@ -375,7 +376,6 @@
                                         mesure: {{ (strain.transformability|length > i) ? strain.transformability[i].mesure : "--" }}
                                         file: {{ (strain.transformability|length > i and strain.transformability[i].nom) ? strain.transformability[i].nom : "--" }}'
                                     data-file='{{ (strain.transformability|length > i and strain.transformability[i].nom) ? strain.transformability[i].nom : "--" }}'>
-
                                     {% if strain.transformability|length > i %}
                                         {{ strain.transformability[i].technique }} <br>
                                         {{ strain.transformability[i].mesure }}
@@ -387,7 +387,7 @@
                                 <td class="sequencing" data-info='
                                         method : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing[i].name  : '--'}}
                                         file : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing[i].nameFile  : '--'}}'
-                                        data-file='{{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing|first.nameFile : '--'}}'>
+                                        data-file='{{ (strain.methodSequencing|length > i and strain.methodSequencing[i].nameFile) ? strain.methodSequencing[i].nameFile : "--" }}'>
                                 {{ strain.methodSequencing[i] is defined ? strain.methodSequencing[i].name : '' }} <br>
                                 {% if strain.methodSequencing[i] is defined  %}
                                     {% set name = strain.methodSequencing[i].nameFile ?: strain.methodSequencing[i].nameFile %}
@@ -636,8 +636,12 @@
                 document.getElementById('popupTitle').innerText = 'Détails';
                 document.getElementById('popupDetails').innerText = info;
 
+                console.log('File Name:', fileName);
+                console.log('File Type:', fileType);
+                console.log(typeMap);
+
                 if (fileName && fileName !== '--' && fileType) {
-                    downloadLink.href = `/public/docs/${fileType}/${fileName}`;
+                    downloadLink.href = `/documents/download/${fileType}/${fileName}`;
                     downloadLink.style.display = 'inline-block';
 
                     // Ajout de l'attribut download pour forcer le téléchargement
