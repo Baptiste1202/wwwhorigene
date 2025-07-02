@@ -21,6 +21,8 @@ apt-get update && apt-get install -y git unzip zip
 composer install
 
 chown -R www-data:www-data /var/www/html/public/docs/sequencing
+chmod 777 /var/www/html/.env
+
 chmod -R 775 /var/www/html/public/docs/sequencing
 chown -R www-data:www-data /var/www/html/public/docs/transformability/
 chmod -R 755 /var/www/html/public/docs/transformability/
