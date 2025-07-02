@@ -6,7 +6,7 @@
 # Ignorer le fichier docker-compose.yml à la racine
 /docker-compose.yml
 /docker/
-/dev/.env
+# /dev/.env
 
 ###> symfony/framework-bundle ###
 /config/secrets/prod/prod.decrypt.private.php
