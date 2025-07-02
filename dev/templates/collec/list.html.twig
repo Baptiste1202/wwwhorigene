@@ -91,8 +91,13 @@
     </button>
 </form>
 
-
-
+<div id="infoPopup" class="hidden">
+    <h3 id="popupTitle"></h3>
+    <p id="popupDetails"></p>
+    <a id="popupDownload" href="#" style="display: none; padding: 5px 10px; background: blue; color: white; text-decoration: none; border-radius: 5px;">
+        Télécharger
+    </a>
+</div>
 
 {% if app.session.flashbag.has('warning') %}
     <script>
@@ -113,3 +118,4 @@
         });
     </script>
 {% endif %}
+

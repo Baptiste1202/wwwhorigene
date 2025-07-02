@@ -1,41 +1,71 @@
-<table id="data-table">
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Comment</th>
-    </tr>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 
-    {% for project in projects %}
-        <div class="list-project">
-            <tr>
-                <td>{{project.id}}</td>
-                <td>{{project.name}}</td>
-                <td>{{project.description}}</td>
-                <td>{{project.comment}}</td>
-                <td><a href = "{{path("edit_project", {id: project.id})}}"> Modifie </a></td>
-                <td><a href = "{{path("delete_project", {id: project.id})}}" class="delete-link"> Delete </a></td>
-            <tr>
-        </div>
-    {% endfor %}
+{# Pour datatable #}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-</table>
+<form id="multi-action-form" method="post">
+    <div id="data-table-wrapper" class="sticky-wrapper">
+        <table id="data-table-projects" class="display datatableComponent" style="visibility: hidden;">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all" /></th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Comment</th>
+                    <th data-column="duplicate" class="no-sort"></th>
+                    <th data-column="edit" class="no-sort"></th>
+                    <th data-column="delete" class="no-sort"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in projects %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="selected_projects[]" value="{{ project.id }}" class="select-checkbox" />
+                        </td>
+                        <td>{{ project.id }}</td>
+                        <td>{{ project.name }}</td>
+                        <td data-info="{{ project.description is not null ? project.description : '--' }}">
+                            {{ project.description is not null ? project.description : '--' }}
+                        </td>
+                        <td data-info="{{ project.comment is not null ? project.comment : '--' }}">
+                            {{ project.comment is not null ? project.comment : '--' }}
+                        </td>
+                        <td><a href="{{ path('duplicate_project', {id: project.id}) }}">Duplicate</a></td>
+                            <td><a href="{{ path('edit_project', {id: project.id}) }}">Modifie</a></td>
+                        <td>
+                            <a href="{{ path('delete_project', {id: project.id}) }}"
+                                title="Supprimer"
+                                onclick="return confirm('Voulez-vous vraiment supprimer ?')">
+                                Supprimer
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <input type="hidden" name="action" value="" />
+
+    <button id="btn-delete-multiple" type="submit" formaction="{{ path('delete_multiple_projects') }}" onclick="this.form.action.value='delete'" class="btn btn-danger" style="margin-top: 10px; display: none;">
+        Suppression multiple
+    </button>
+</form>
+
 {% if app.session.flashbag.has('warning') %}
-    <script>
-        // Sélectionner tous les liens de suppression
-        document.querySelectorAll('.delete-link').forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault(); // Empêcher la redirection initiale
-
-                // Afficher la confirmation si le flash warning existe
-                var confirmDelete = confirm("{{ app.session.flashbag.get('warning')[0] }}");
-
-                // Si l'utilisateur confirme, ajouter ?confirm=yes à l'URL et rediriger
-                if (confirmDelete) {
-                    // Redirection vers la suppression avec confirmation
-                    window.location.href = this.href + '?confirm=yes';
-                }
-            });
+<script>
+    document.querySelectorAll('.delete-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var confirmDelete = confirm("{{ app.session.flashbag.get('warning')[0] }}");
+            if (confirmDelete) {
+                window.location.href = this.href + '?confirm=yes';
+            }
         });
-    </script>
+    });
+</script>
 {% endif %}

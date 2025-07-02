@@ -37,37 +37,20 @@ class ProjectController extends AbstractController
 
     #[Route(path: 'strains/page_projects', name: 'page_projects')]
     public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
-    {
-        if ($security->isGranted('ROLE_SEARCH') || $security->isGranted('ROLE_ADMIN')){
-            $projectAdd = $this->addForm($request, $em);  
-        } 
+    {   
+        $projectAdd = $this->createForm(ProjectFormType::class);
 
-        $allProjects = $this->projectRepository->findAll();
+        if ($security->isGranted('ROLE_SEARCH') || $security->isGranted('ROLE_ADMIN')) {
+            $projectAdd = $this->addForm($request, $em);
+        }
 
-        // $query->setQuery($matchAll);
-        // $query->setSort(['date' => ['order' => 'desc']]);
-        // $query->setSize(30);
-
-        // // Créer l'adaptateur de pagination
-        // $paginatorAdapter = $this->finder->createPaginatorAdapter($query, ['project']);
-
-        // // Paginer pour récupérer 30 résultats max
-        $projects = $this->paginator->paginate($allProjects, $request->query->getInt('page', 1), 15);
+        $allProjects = $this->projectRepository->findAll(10000);
 
         return $this->render('project/main.html.twig', [
-            'projectForm' => $projectAdd, 
-            'projects' => $projects
+            'projectForm' => $projectAdd,
+            'projects' => $allProjects
         ]);
-    }
-
-    #[Route(path: '/project', name: 'list_projects')]
-    #[IsGranted('ROLE_INTERN')]
-    public function showAll(): Response
-    {
-        $projects = $this->projectRepository->findAll();
-
-        return $this->render('project/list.html.twig', ['projects' => $projects]);
-    }
+}
 
     #[Route(path: 'strains/projects/ajout', name: 'add_project')]
     #[IsGranted('ROLE_SEARCH')]
@@ -173,20 +156,113 @@ class ProjectController extends AbstractController
         return $this->render('project/edit.html.twig', compact('projectForm'));
     }
 
+    #[Route('projects/duplicate/{id}', name: 'duplicate_project')]
+    #[IsGranted('ROLE_SEARCH')]
+    public function duplicateProject(Project $project, EntityManagerInterface $em, Security $security): Response
+    {
+        try {
+            // Récupérer l'utilisateur connecté
+            $user = $security->getUser();
+
+            // Créer une nouvelle instance de Project (la copie)
+            $clone = new Project();
+
+            // Copier les champs simples de l'entité originale
+            $clone->setName($project->getName());
+            $clone->setDescription($project->getDescription());
+            $clone->setComment($project->getComment());
+
+            // Enregistrement en base de la copie
+            $em->persist($clone);
+            $em->flush();
+
+            // Message flash
+            $this->addFlash('success', 'Project "' . $clone->getName() . '" duplicated successfully!');
+
+            return $this->redirectToRoute('page_projects');
+
+        } catch (\Throwable $e) {
+            $this->addFlash('error', 'Error occurred while duplicating the project.');
+            return $this->redirectToRoute('page_projects');
+        }
+    }
+
     #[Route('strains/project/delete/{id}', name: 'delete_project')]
     #[IsGranted('ROLE_SEARCH')]
-    public function delete(Request $request, Project $project, EntityManagerInterface $em): Response
+    public function delete(Project $project, EntityManagerInterface $em): Response
     {
-        if ($request->query->get('confirm') === 'yes') {
+        // Get IDs of strains associated with the project
+        $strainIds = $project->getStrain()->map(fn($strain) => $strain->getId())->toArray();
+
+        if (count($strainIds) > 0) {
+            $this->addFlash('error', 'Cannot delete this project because it is associated with the following strain IDs: ' . implode(', ', $strainIds) . '.');
+        } else {
+            // Directly delete
             $em->remove($project);
             $em->flush();
 
-            $this->addFlash('success', 'Project ' . $project->getName() . ' deleted successfully!');
+            $this->addFlash('success', 'Project "' . $project->getName() . '" has been successfully deleted!');
+        }
+
+        return $this->redirectToRoute('page_projects');
+    }
+
+
+    #[Route('/projects/delete-multiple', name: 'delete_multiple_projects', methods: ['POST'])]
+    #[IsGranted('ROLE_SEARCH')]
+    public function deleteMultiple(Request $request, EntityManagerInterface $em): Response
+    {
+        // Récupérer les ids sélectionnés via la requête POST
+        $ids = $request->request->all('selected_projects');
+
+        // Vérifier que ce soit un tableau non vide
+        if (!is_array($ids) || empty($ids)) {
+            $this->addFlash('error', 'Aucun projet sélectionné.');
             return $this->redirectToRoute('page_projects');
         }
 
-        $this->addFlash('warning', 'Are you sure you want to delete this Project ' . $project->getName(). ' ? (Be aware. This action cannot be undone !)');
+        // Chercher tous les projets correspondants
+        $projects = $em->getRepository(Project::class)->findBy(['id' => $ids]);
 
+        if (!$projects) {
+            $this->addFlash('error', 'No project found for deletion.');
+            return $this->redirectToRoute('page_projects');
+        }
+
+        $detailsDeleted = [];
+        $detailsBlocked = [];
+
+        foreach ($projects as $project) {
+            // Si le projet a des souches associées, on bloque la suppression
+            if (count($project->getStrain()) > 0) {
+                $detailsBlocked[] = sprintf('[ID: %d - Nom: %s]', $project->getId(), $project->getName());
+                continue;
+            }
+            // Sinon on prépare la suppression et on stocke les détails pour message
+            $detailsDeleted[] = sprintf('[ID: %d - Nom: %s]', $project->getId(), $project->getName());
+            $em->remove($project);
+        }
+
+        // Valider la suppression en base (pour les projets sans souches)
+        if (!empty($detailsDeleted)) {
+            $em->flush();
+        }
+
+        // Message succès pour les projets supprimés
+        if (!empty($detailsDeleted)) {
+            $this->addFlash('success', sprintf(
+                '%d project(s) successfully deleted: %s',
+                count($detailsDeleted),
+                implode(', ', $detailsDeleted)
+            ));
+        }
+
+        // Message d’erreur pour les projets bloqués
+        if (!empty($detailsBlocked)) {
+            $this->addFlash('error', 'Unable to delete some projects because they are linked to strains: ' . implode(', ', $detailsBlocked));
+        }
+
+        // Rediriger vers la page des projets
         return $this->redirectToRoute('page_projects');
     }
 

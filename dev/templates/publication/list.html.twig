@@ -36,11 +36,17 @@
                             </td>
                             <td>{{ publication.id }}</td>
                             <td>{{ publication.articleUrl is not null ? publication.articleUrl : '--' }}</td>
-                            <td>{{ publication.title is not null ? publication.title : '--' }}</td>
+                            <td data-info="{{ publication.title is not null ? publication.title : '--' }}">
+                                {{ publication.title is not null ? publication.title : '--' }}
+                            </td>
                             <td>{{ publication.autor is not null ? publication.autor : '--' }}</td>
                             <td>{{ publication.year is not null ? publication.year : '--' }}</td>
-                            <td>{{ publication.doi is not null ? publication.doi : '--' }}</td>
-                            <td>{{ publication.description is not null ? publication.description : '--' }}</td>
+                            <td data-info="{{ publication.doi is not null ? publication.doi : '--' }}">
+                                {{ publication.doi is not null ? publication.doi : '--' }}
+                            </td>
+                            <td data-info="{{ publication.description is not null ? publication.description : '--' }}">
+                                {{ publication.description is not null ? publication.description : '--' }}
+                            </td>
                             <td><a href="{{ path('duplicate_publication', {id: publication.id}) }}">Duplicate</a></td>
                             <td><a href="{{ path('edit_publication', {id: publication.id}) }}">Modifie</a></td>
                             <td>
@@ -62,6 +68,14 @@
         Suppression multiple
     </button>
 </form>
+
+<div id="infoPopup" class="hidden">
+    <h3 id="popupTitle"></h3>
+    <p id="popupDetails"></p>
+    <a id="popupDownload" href="#" style="display: none; padding: 5px 10px; background: blue; color: white; text-decoration: none; border-radius: 5px;">
+        Télécharger
+    </a>
+</div>
 
 {% if app.session.flashbag.has('warning') %}
 <script>

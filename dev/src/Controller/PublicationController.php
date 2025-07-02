@@ -146,12 +146,12 @@ class PublicationController extends AbstractController
             $em->flush();
 
             // Message flash
-            $this->addFlash('success', 'Publication "' . $clone->getTitle() . '" dupliquée avec succès !');
+            $this->addFlash('success', 'Publication "' . $clone->getTitle() . '" duplicated successfully!');
 
             return $this->redirectToRoute('page_publications');
 
         } catch (\Throwable $e) {
-            $this->addFlash('error', 'Erreur lors de la duplication de la publication.');
+            $this->addFlash('error', 'Error occurred while duplicating the publication.');
             return $this->redirectToRoute('page_publications');
         }
     }
@@ -200,13 +200,13 @@ class PublicationController extends AbstractController
         $soucheIds = $publication->getStrain()->map(fn($strain) => $strain->getId())->toArray();
 
         if (count($soucheIds) > 0) {
-            $this->addFlash('error', 'Impossible de supprimer cette publication car elle est associée aux souches d\'ID suivants : ' . implode(', ', $soucheIds) . '.');
+            $this->addFlash('error', 'Unable to delete this publication because it is associated with strains having the following IDs: ' . implode(', ', $soucheIds) . '.');
         } else {
             // Supprime directement
             $em->remove($publication);
             $em->flush();
 
-            $this->addFlash('success', 'Publication "' . $publication->getTitle() . '" supprimée avec succès !');
+            $this->addFlash('success', 'Publication "' . $publication->getTitle() . '" deleted successfully!');
         }
 
         return $this->redirectToRoute('page_publications');
@@ -222,7 +222,7 @@ class PublicationController extends AbstractController
 
         // Vérifier que ce soit un tableau non vide
         if (!is_array($ids) || empty($ids)) {
-            $this->addFlash('error', 'Aucune publication sélectionnée.');
+            $this->addFlash('error', 'No publication selected.');
             return $this->redirectToRoute('page_publications');
         }
 
@@ -230,7 +230,7 @@ class PublicationController extends AbstractController
         $publications = $em->getRepository(Publication::class)->findBy(['id' => $ids]);
 
         if (!$publications) {
-            $this->addFlash('error', 'Aucune publication trouvée pour suppression.');
+            $this->addFlash('error', 'No publication found for deletion.');
             return $this->redirectToRoute('page_publications');
         }
 
@@ -257,7 +257,7 @@ class PublicationController extends AbstractController
         // Message succès pour les publications supprimées
         if (!empty($detailsDeleted)) {
             $this->addFlash('success', sprintf(
-                '%d publication(s) supprimée(s) avec succès : %s',
+                '%d publication(s) successfully deleted: %s',
                 count($detailsDeleted),
                 implode(', ', $detailsDeleted)
             ));
@@ -265,7 +265,7 @@ class PublicationController extends AbstractController
 
         // Message d’erreur pour les publications bloquées
         if (!empty($detailsBlocked)) {
-            $this->addFlash('error', 'Impossible de supprimer certaines publications car elles sont associées à des souches : ' . implode(', ', $detailsBlocked));
+            $this->addFlash('error', 'Unable to delete some publications because they are associated with strains: ' . implode(', ', $detailsBlocked));
         }
 
         // Rediriger vers la page des publications

@@ -131,27 +131,22 @@ class CollecController extends AbstractController
 
     #[Route('/collecs/delete/{id}', name: 'delete_collec')]
     #[IsGranted('ROLE_SEARCH')]
-    public function deleteCollec(Request $request, ?Collec $collec, EntityManagerInterface $em): Response
+    public function delete(Collec $collec, EntityManagerInterface $em): Response
     {
-        try { 
+        // Check if collec is associated with any strains
+        $strainIds = $collec->getStrain()->map(fn($strain) => $strain->getId())->toArray();
 
-            if (!$collec) {
-            $this->addFlash('error', 'Collection not found');
-            return $this->redirectToRoute('page_collecs');
-            }
-
-            // Supprime directement
+        if (count($strainIds) > 0) {
+            $this->addFlash('error', 'Cannot delete this collection because it is associated with the following strain IDs: ' . implode(', ', $strainIds) . '.');
+        } else {
+            // Directly delete
             $em->remove($collec);
             $em->flush();
 
-            $this->addFlash('success', 'Collection ' . $collec->getId() .  $collec->getName() . ' deleted successfully!');
-
-            return $this->redirectToRoute('page_collecs');
-
-        }catch (\Throwable $e) {
-            $this->addFlash('error', 'Erreur lors de la suppression de la collection.');
-            return $this->redirectToRoute('page_collecs');
+            $this->addFlash('success', 'Collection "' . $collec->getName() . '" has been successfully deleted!');
         }
+
+        return $this->redirectToRoute('page_collecs');
     }
 
     #[Route('strains/collec/duplicate/{id}', name: 'duplicate_collec')]
@@ -175,12 +170,12 @@ class CollecController extends AbstractController
             $em->flush();
 
             // Message flash
-            $this->addFlash('success', 'Collection "' . $clone->getName() . '" dupliquée avec succès !');
+            $this->addFlash('success', 'Collection "' . $clone->getName() . '" duplicated successfully!');
 
             return $this->redirectToRoute('page_collecs');
 
         } catch (\Throwable $e) {
-            $this->addFlash('error', 'Erreur lors de la duplication de la collection.');
+            $this->addFlash('error', 'Error occurred while duplicating the collection.');
             return $this->redirectToRoute('page_collecs');
         }
     }
@@ -194,7 +189,7 @@ class CollecController extends AbstractController
 
         // Vérifier que ce soit un tableau non vide
         if (!is_array($ids) || empty($ids)) {
-            $this->addFlash('error', 'Aucune collection sélectionnée.');
+            $this->addFlash('error', 'No collection selected.');
             return $this->redirectToRoute('page_collecs');
         }
 
@@ -202,7 +197,7 @@ class CollecController extends AbstractController
         $collecs = $em->getRepository(Collec::class)->findBy(['id' => $ids]);
 
         if (!$collecs) {
-            $this->addFlash('error', 'Aucune collection trouvée pour suppression.');
+            $this->addFlash('error', 'No collection found for deletion.');
             return $this->redirectToRoute('page_collecs');
         }
 
@@ -228,7 +223,7 @@ class CollecController extends AbstractController
         // Message succès pour les collections supprimées
         if (!empty($detailsDeleted)) {
             $this->addFlash('success', sprintf(
-                '%d collection(s) supprimée(s) avec succès : %s',
+                '%d collection(s) successfully deleted: %s',
                 count($detailsDeleted),
                 implode(', ', $detailsDeleted)
             ));
@@ -236,7 +231,7 @@ class CollecController extends AbstractController
 
         // Message d’erreur pour les collections bloquées
         if (!empty($detailsBlocked)) {
-            $this->addFlash('error', 'Impossible de supprimer certaines collections car elles sont associées à des souches : ' . implode(', ', $detailsBlocked));
+           $this->addFlash('error', 'Unable to delete some collections because they are associated with strains: ' . implode(', ', $detailsBlocked));
         }
 
         // Rediriger vers la page des collections

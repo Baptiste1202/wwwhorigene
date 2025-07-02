@@ -93,7 +93,31 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // 3. Recherche personnalisée par groupe 
+    // --- Partie 3 : Select All Checkbox ---
+    const selectAllCheckbox = document.getElementById('select-all');
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', () => {
+            const checkboxes = document.querySelectorAll('input.select-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = selectAllCheckbox.checked;
+            });
+        });
+
+        const childCheckboxes = document.querySelectorAll('input.select-checkbox');
+        childCheckboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                if (!cb.checked) {
+                    selectAllCheckbox.checked = false;
+                } else {
+                    const allChecked = Array.from(childCheckboxes).every(chk => chk.checked);
+                    selectAllCheckbox.checked = allChecked;
+                }
+            });
+        });
+    }
+    
+
+    // 4. Recherche personnalisée par groupe 
     const searchInput = document.getElementById('customSearch');
     if (searchInput) {
         searchInput.addEventListener('input', function () {
@@ -153,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // 4. Popups (info/fichier) pour le téléchargement et les bonnes directions
+    // 5. Popups (info/fichier) pour le téléchargement et les bonnes directions
     const typeMap = {
         sequencing: 'sequencing',
         transformability: 'transformability',
