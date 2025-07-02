@@ -1,0 +1,70 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<div id="data-table-wrapper" class="sticky-wrapper">
+    <table id="data-table" class="display"> {# Ajout de la classe 'display' pour DataTables #}
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="select-all" /></th>
+                <th class="id" data-column="id">ID</th>
+                <th class="name" data-column="name">Name</th>
+                <th data-column="date">Date</th>
+                <th data-column="specie">Specie</th>
+                <th data-column="gender">Gender</th>
+                <th data-column="sample">Sample</th>
+                <th data-column="genotype">Genotype</th>
+                <th data-column="plasmyd">Plasmyd</th>
+                <th data-column="storage">Storage</th>
+                <th data-column="parent">Parent</th>
+                <th data-column="project">Project</th>
+                <th data-column="collec">Collection</th>
+                <th data-column="drug">Drug Resistance</th>
+                <th data-column="transformability">Transformability</th>
+                <th data-column="sequencing">File Sequencing</th>
+                <th data-column="publication">Publication</th>
+                <th class="creator">Creator</th>
+                <th data-column="description">Description</th>
+                <th data-column="comment">Comment</th>
+                <th data-column="null"> </th> {# Duplicate #}
+                <th data-column="null"> </th> {# Modifie #}
+                <th data-column="null"> </th> {# x #}
+            </tr>
+        </thead>
+        <tbody>
+        
+        </tbody>
+    </table>
+</div>
+
+<div id="infoPopup" class="hidden">
+    <h3 id="popupTitle"></h3>
+    <p id="popupDetails"></p>
+    <a id="popupDownload" href="#" style="display: none; padding: 5px 10px; background: blue; color: white; text-decoration: none; border-radius: 5px;">
+        Télécharger
+    </a>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<!-- DataTables CSS + JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#data-table').DataTable({
+        processing: true,         
+        serverSide: true,         // Active le traitement côté serveur
+        ajax: {
+            url: "{{ path('ajax_strains') }}", // <- Utilisation de la route Symfony
+            type: "POST",  // <-- Ici tu forces POST
+        },
+        paging: true,             // Active la pagination
+        searching: true,          // Active la recherche
+        ordering: true,           // Active le tri
+        columnDefs: [
+            { orderable: false, targets: 0 } // Empêche le tri sur la 1re colonne (checkbox)
+        ]
+    });
+});
+</script>
+

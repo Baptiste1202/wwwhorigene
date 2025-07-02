@@ -475,4 +475,60 @@ class StrainController extends AbstractController
         ]);
     }
 
+    #[Route('/ajax/strains', name: 'ajax_strains', methods: ['GET', 'POST'])]
+    #[Route('/ajax/strains', name: 'ajax_strains', methods: ['POST'])]
+public function ajaxStrains(Request $request, EntityManagerInterface $em): JsonResponse
+{
+    $params = $request->request->all();
+
+    $draw = $params['draw'] ?? 0;
+    $start = $params['start'] ?? 0;
+    $length = $params['length'] ?? 10;
+
+    $searchValue = null;
+    if (isset($params['search']) && is_array($params['search']) && isset($params['search']['value'])) {
+        $searchValue = $params['search']['value'];
+    }
+
+    $repository = $em->getRepository(Strain::class);
+    $strains = $repository->findAll(); // TODO: appliquer filtrage $searchValue si besoin
+
+    $data = [];
+    foreach ($strains as $strain) {
+        $plasmydInfos = [];
+        foreach ($strain->getPlasmyd() as $plasmyd) {
+            $plasmydInfos[] = [
+                'type' => $plasmyd->getType() ?? '',
+                'description' => $plasmyd->getDescription() ?? '',
+            ];
+        }
+        $plasmydString = implode('<br>', array_map(function($info) {
+            return trim($info['type'] . ' - ' . $info['description'], " -");
+        }, $plasmydInfos));
+
+        $data[] = [
+            '<input type="checkbox" class="row-checkbox" data-id="' . $strain->getId() . '">',
+            $strain->getId(),
+            $strain->getNameStrain(),
+            $strain->getDate() ? $strain->getDate()->format('Y-m-d') : '',
+            $strain->getSpecie(),
+            $strain->getGender(),
+            $strain->getPrelevement() ? $strain->getPrelevement()->getName() : '',
+            $plasmydString,
+        ];
+    } // <-- assure-toi que cette accolade ferme bien la boucle foreach
+
+    $response = [
+        "draw" => intval($draw),
+        "recordsTotal" => count($strains),
+        "recordsFiltered" => count($strains),
+        "data" => $data,
+    ];
+
+    return new JsonResponse($response);
 }
+
+
+}
+
+
