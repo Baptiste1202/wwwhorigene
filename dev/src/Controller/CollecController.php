@@ -133,27 +133,22 @@ class CollecController extends AbstractController
     #[IsGranted('ROLE_SEARCH')]
     public function deleteCollec(Request $request, ?Collec $collec, EntityManagerInterface $em): Response
     {
-        try {
+        try { 
+
             if (!$collec) {
-                $this->addFlash('error', 'Collection not found');
-                return $this->redirectToRoute('page_collecs');
+            $this->addFlash('error', 'Collection not found');
+            return $this->redirectToRoute('page_collecs');
             }
-            
-            $this->addFlash('warning', 'Are you sure you want to delete this collection ' . $collec->getName(). ' ? (Be aware. This action cannot be undone !)');
 
-            dd($request);
+            // Supprime directement
+            $em->remove($collec);
+            $em->flush();
 
-            if ($request->query->get('confirm') === 'yes') {
-                $em->remove($collec);
-                $em->flush();
-
-                $this->addFlash('success', 'Collection ' . $collec->getName() . ' deleted successfully!');
-                return $this->redirectToRoute('page_collecs');
-            }
+            $this->addFlash('success', 'Collection ' . $collec->getId() .  $collec->getName() . ' deleted successfully!');
 
             return $this->redirectToRoute('page_collecs');
 
-        } catch (\Throwable $e) {
+        }catch (\Throwable $e) {
             $this->addFlash('error', 'Erreur lors de la suppression de la collection.');
             return $this->redirectToRoute('page_collecs');
         }

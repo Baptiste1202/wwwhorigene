@@ -28,8 +28,40 @@
                             </td>
                             <td class="id">{{ collec.id }}</td>
                             <td class="name">{{ collec.name is not null ? collec.name : '--' }}</td>
-                            <td class="description">{{ collec.description is not null ? collec.description : '--' }}</td>
-                            <td class="comment">{{ collec.comment is not null ? collec.comment : '--' }}</td>
+                            <td class="description" 
+                                data-info='{{ collec.description ? collec.description : '--'}}'
+                            >
+                                {% if collec.description is not null %}
+                                    {% set description = collec.description ?: collec.description %}
+                                    {% set maxLength = 10 %}
+
+                                    {% if description|length > maxLength %}
+                                        {% set prefix = description|slice(0, 8) %}
+                                        {{ prefix ~ '...'}}
+                                    {% else %}
+                                        {{ description }}
+                                    {% endif %} <br>
+                                {% else %}
+                                    --
+                                {% endif %}
+                            </td>
+                            <td class="comment" 
+                                data-info='{{ collec.comment ? collec.comment : '--'}}'
+                            >
+                                {% if collec.comment is not null %}
+                                    {% set comment = collec.comment ?: collec.comment %}
+                                    {% set maxLength = 10 %}
+
+                                    {% if comment|length > maxLength %}
+                                        {% set prefix = comment|slice(0, 8) %}
+                                        {{ prefix ~ '...'}}
+                                    {% else %}
+                                        {{ comment }}
+                                    {% endif %} <br>
+                                {% else %}
+                                    --
+                                {% endif %}
+                            </td>
                             <td><a href="{{ path('duplicate_collec', {id: collec.id}) }}">Duplicate</a></td>
                             <td><a href="{{ path('edit_collec', {id: collec.id}) }}">Modifie</a></td>
                             <td>
