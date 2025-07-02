@@ -1,35 +1,4 @@
 <script>
-
-    let radioOrder = document.querySelectorAll('#orderBy input')
-
-    for (let i = 0; i < radioOrder.length; i++){
-        radioOrder[i]
-        .addEventListener("change", async () => {
-            if ( radioOrder[i].checked === true ){
-                console.log(radioOrder[i])
-            }
-        })
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-    const checkboxes = document.querySelectorAll('#column-filters input[type="checkbox"]');
-        
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function () {
-                const columnClass = this.dataset.column;
-                const columnCells = document.querySelectorAll(`.${columnClass}`);
-                
-                if (this.checked) {
-                    // Afficher les colonnes
-                    columnCells.forEach(cell => cell.style.display = '');
-                } else {
-                    // Masquer les colonnes
-                    columnCells.forEach(cell => cell.style.display = 'none');
-                }
-            });
-        });
-    });
-
     window.addEventListener('DOMContentLoaded', () => {
         const messages = document.querySelectorAll('.flash-message');
         messages.forEach((msg) => {
@@ -44,5 +13,167 @@
             }, 5000); // totalement caché après 5 secondes
         });
     });
+</script>
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const table = document.getElementById('data-table');
+        const rows = table.querySelectorAll('tbody tr');
+        const tbody = table.querySelector('tbody');
+
+        // --- Bloc 1 : Remplir les cellules vides avec valeurs précédentes ou "--" ---
+        let currentStrainId = '';
+        let currentStrainName = '';
+
+        for (const row of rows) {
+            const idCell = row.querySelector('td.id');
+            const nameCell = row.querySelector('td.name');
+
+            if (idCell && idCell.textContent.trim() !== '') {
+                currentStrainId = idCell.textContent.trim();
+            } else if (idCell) {
+                idCell.textContent = currentStrainId;
+            }
+
+            if (nameCell && nameCell.textContent.trim() !== '') {
+                currentStrainName = nameCell.textContent.trim();
+            } else if (nameCell) {
+                nameCell.textContent = currentStrainName;
+            }
+
+            const cells = row.querySelectorAll('td');
+
+            for (let i = 1; i < cells.length - 3; i++) {
+                if (!cells[i].classList.contains('id') && !cells[i].classList.contains('name') && cells[i].textContent.trim() === '') {
+                    cells[i].textContent = '--';
+                }
+            }
+        }
+
+        // --- Bloc 2 : Ajout de lignes de regroupement (group-header) ---
+        const strainRows = Array.from(tbody.querySelectorAll('tr.list-strain'));
+        let lastGroupKey = '';
+
+        strainRows.forEach((row) => {
+            const idCell = row.querySelector('td.id');
+            const nameCell = row.querySelector('td.name');
+            const checkboxCell = row.querySelector('td:first-child');
+
+            const strainId = idCell?.textContent.trim();
+            const strainName = nameCell?.textContent.trim();
+            const groupKey = `${strainId}-${strainName}`;
+
+            if (groupKey !== lastGroupKey) {
+                const groupRow = document.createElement('tr');
+                groupRow.classList.add('group-header');
+
+                const groupCell = document.createElement('td');
+                groupCell.colSpan = table.querySelectorAll('thead th').length;
+                groupCell.innerHTML = `
+                    ${checkboxCell?.innerHTML || ''}
+                    <strong>ID :</strong> ${strainId} - <strong>Souche :</strong> ${strainName}
+                `;
+
+                groupRow.appendChild(groupCell);
+                tbody.insertBefore(groupRow, row);
+                lastGroupKey = groupKey;
+            }
+        });
+
+        // --- Bloc 3 : Gestion du popup d'information ---
+        const typeMap = {
+            sequencing: 'sequencing',
+            transformability: 'transformability',
+            drugResistanceOnStrain: 'drugs'
+        };
+
+        function showInfoPopup(cell, event) {
+            const info = cell.dataset.info;
+            const fileName = cell.dataset.file;
+            const popup = document.getElementById('infoPopup');
+            const downloadLink = document.getElementById('popupDownload');
+
+            let fileType = null;
+            for (const cls in typeMap) {
+                if (cell.classList.contains(cls)) {
+                    fileType = typeMap[cls];
+                    break;
+                }
+            }
+
+            document.getElementById('popupTitle').innerText = 'Détails';
+            document.getElementById('popupDetails').innerText = info;
+
+            if (fileName && fileName !== '--' && fileType) {
+                downloadLink.href = `/public/docs/${fileType}/${fileName}`;
+                downloadLink.style.display = 'inline-block';
+                downloadLink.setAttribute('download', fileName);
+            } else {
+                downloadLink.style.display = 'none';
+                downloadLink.removeAttribute('download');
+                downloadLink.removeAttribute('href');
+            }
+
+            const offsetX = 10;
+            const offsetY = 10;
+            let left = event.pageX + offsetX;
+            let top = event.pageY + offsetY;
+
+            const popupRect = popup.getBoundingClientRect();
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            if (left + popupRect.width > windowWidth) {
+                left = event.pageX - popupRect.width - offsetX;
+            }
+            if (top + popupRect.height > windowHeight) {
+                top = event.pageY - popupRect.height - offsetY;
+            }
+
+            popup.style.left = `${left}px`;
+            popup.style.top = `${top}px`;
+            popup.style.display = 'block';
+        }
+
+        // Attacher les événements sur les cellules avec data-info
+        document.querySelectorAll('td[data-info]').forEach(cell => {
+            cell.style.cursor = 'pointer';
+            cell.addEventListener('click', event => {
+                event.stopPropagation();
+                showInfoPopup(cell, event);
+            });
+        });
+
+        // Fermer le popup au clic en dehors
+        document.addEventListener('click', event => {
+            const popup = document.getElementById('infoPopup');
+            if (!popup.contains(event.target) && !event.target.closest('td[data-info]')) {
+                popup.style.display = 'none';
+            }
+        });
+
+        // --- Partie 4 : Select All Checkbox ---
+        const selectAllCheckbox = document.getElementById('select-all');
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener('change', () => {
+                const checkboxes = document.querySelectorAll('input.select-checkbox');
+                checkboxes.forEach(cb => {
+                    cb.checked = selectAllCheckbox.checked;
+                });
+            });
+
+            const childCheckboxes = document.querySelectorAll('input.select-checkbox');
+            childCheckboxes.forEach(cb => {
+                cb.addEventListener('change', () => {
+                    if (!cb.checked) {
+                        selectAllCheckbox.checked = false;
+                    } else {
+                        const allChecked = Array.from(childCheckboxes).every(chk => chk.checked);
+                        selectAllCheckbox.checked = allChecked;
+                    }
+                });
+            });
+        }
+    });
 </script>

@@ -1,0 +1,13 @@
+{# speed_search.html.twig #}
+
+<form action="{{ path('app_search') }}" method="GET" id="speedSearchForm">
+    <input
+        type="text"
+        name="query"
+        placeholder="Tapez votre recherche..."
+        required
+        autocomplete="off"
+        autofocus
+    >
+    <button type="submit">🔍</button>
+</form>

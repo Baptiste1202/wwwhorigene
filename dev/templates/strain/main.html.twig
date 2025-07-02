@@ -11,17 +11,22 @@
                     {% include 'strain/elastic_main.html.twig' %}
                 </div>
                 <div id="filter">
-                    {% include 'strain/_filter_form_datatable.html.twig' %}
+                    {% include 'strain/_filter_form.html.twig' %}
                 </div>
                 <div id="message">
                     {% include './message.html.twig' %}
                 </div>
-                {# 🔍 Champ de recherche DataTable ajouté ici #}
-                <div id="datatable-search">
-                    {% include 'strain/_datatable_search.html.twig' %}
+                <div id="pagination-limit-selector">
+                    {% include 'strain/pagination_limit_selector.html.twig' %}
+                </div>
+                <div id="speed-search">
+                    {% include 'strain/speed_search.html.twig' %}
                 </div>
                 <div id="table">
                     {% include "strain/list.html.twig" %}
+                </div>
+                <div id="paginator">
+                    {% include "strain/paginator.html.twig" %}
                 </div>
             </div>
             {% include 'strain/_js.html.twig' %}

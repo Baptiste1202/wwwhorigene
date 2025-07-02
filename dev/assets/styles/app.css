@@ -473,8 +473,147 @@ button.btn-form-strain:hover {
 }
 
 /* ===========================================================
-   CSS general des tables , datatable et boutton crud
+   CSS general de la page main
    =========================================================== */
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0;
+    list-style: none;
+    margin: 0; /* enlève marge extérieure */
+}
+
+.pagination li {
+    margin: 0px;
+}
+
+.pagination li a, .pagination li span {
+    display: inline-block;
+    padding: 8px 12px;
+    border: 1px solid #ccc; /* Contour fin */
+    border-radius: 8px; /* Bords arrondis */
+    text-decoration: none;
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 14px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.pagination li a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination .current, .pagination .current span {
+    background-color: #007bff;
+    color: white;
+    pointer-events: none;
+}
+
+#pagination-limit-selector {
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.85rem; /* ou 12px selon ta préférence */
+}
+
+#speed-search {
+    margin-bottom: 0rem;
+    font-size: 0.85rem;
+}
+
+
+.sticky-wrapper {
+    /* overflow: scroll;  <-- enlevé */
+    position: relative;
+    width: auto;
+    height: 100%;
+}
+
+#data-table-wrapper {
+    overflow: auto;  /* scroll horizontal */
+    position: relative;
+    max-width: 100%;  /* pour limiter à la taille parent */
+}
+
+.group-header {
+    background-color: #e0e0e0 !important;
+    font-weight: bold;
+    height: 40px;       /* hauteur fixe */
+    color: #333;
+}
+
+/* En-tête figé en haut */
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 15;
+}
+
+/* Background gris clair uniquement pour les 3 premières colonnes <td> */
+#data-table td:nth-child(1),
+#data-table td:nth-child(2),
+#data-table td:nth-child(3) {
+  background-color: #bdbdbd !important;
+}
+
+/* Background gris clair uniquement pour les 3 dernières colonnes <td> */
+#data-table td:nth-last-child(1),
+#data-table td:nth-last-child(2),
+#data-table td:nth-last-child(3) {
+  background-color: #bdbdbd !important;
+}
+
+
+/* Sticky à gauche (3 premières colonnes) */
+#data-table th:nth-child(1),
+#data-table td:nth-child(1) {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  min-width: 40px; /* largeur du checkbox */
+}
+
+#data-table th:nth-child(2),
+#data-table td:nth-child(2) {
+  position: sticky;
+  left: 40px; /* largeur de la 1ère colonne */
+  z-index: 10;
+  min-width: 60px; /* largeur id */
+}
+
+#data-table th:nth-child(3),
+#data-table td:nth-child(3) {
+  position: sticky;
+  left: 80px; /* 40 + 40 */
+  z-index: 10;
+  min-width: 100px; /* largeur name */
+}
+
+/* Sticky à droite (3 dernières colonnes) */
+#data-table th:nth-last-child(1),
+#data-table td:nth-last-child(1) {
+  position: sticky;
+  right: 0;
+  z-index: 10;
+  min-width: 50px;
+}
+
+#data-table th:nth-last-child(2),
+#data-table td:nth-last-child(2) {
+  position: sticky;
+  right: 50px; /* largeur dernière colonne */
+  z-index: 10;
+  min-width: 50px;
+}
+
+#data-table th:nth-last-child(3),
+#data-table td:nth-last-child(3) {
+  position: sticky;
+  right: 100px; /* 50 + 50 */
+  z-index: 10;
+  min-width: 50px;
+}
+
 #global #list #table {
     margin-top : 10px; 
     table-layout: fixed; /* Fixe la largeur des colonnes */
@@ -515,26 +654,6 @@ button.btn-form-strain:hover {
     color: #555;
 }
 
-.sticky-wrapper {
-    /* overflow: scroll;  <-- enlevé */
-    position: relative;
-    width: auto;
-    height: 100%;
-}
-
-#data-table-wrapper {
-    overflow: auto;  /* scroll horizontal */
-    position: relative;
-    max-width: 100%;  /* pour limiter à la taille parent */
-}
-
-/* En-tête figé en haut */
-thead {
-  position: sticky;
-  top: 0;
-  z-index: 15;
-}
-
 .button-crud {
     display: inline-block;
     padding: 6px 12px; /* Espacement interne */
@@ -556,63 +675,6 @@ thead {
     text-decoration: none; /* Évite le soulignement au survol */
 }
 
-
-/* ===========================================================
-   CSS pour la DATATABLE de strain
-   =========================================================== */
-/*Regle de fixation*/
-/* Colonne 1 */
-thead th:nth-child(1),
-tbody td:nth-child(1) {
-  position: sticky !important;
-  left: 0;
-  background-color: #bdbdbd;
-  z-index: 5;
-}
-
-/* Colonne 2 */
-thead th:nth-child(2),
-tbody td:nth-child(2) {
-  position: sticky !important;
-  left: 40px;
-  background-color: #bdbdbd;
-  z-index: 5;
-}
-
-/* Colonne 3 */
-thead th:nth-child(3),
-tbody td:nth-child(3) {
-  position: sticky !important;
-  left: 80px;
-  background-color: #bdbdbd;
-  z-index: 5;
-}
-
-thead th:nth-last-child(1),
-tbody td:nth-last-child(1) {
-  position: sticky;
-  right: 0;
-  background-color: #bdbdbd; 
-  z-index: 5;
-}
-
-thead th:nth-last-child(2),
-tbody td:nth-last-child(2) {
-  position: sticky;
-  right: 40px; 
-  background-color: #bdbdbd;
-  z-index: 5;
-}
-
-thead th:nth-last-child(3),
-tbody td:nth-last-child(3) {
-  position: sticky;
-  right: 80px; /* 2 x largeur colonne */
-  background-color: #bdbdbd;
-  z-index: 5;
-}
-
-/*Autre regles*/
 .resistant-display-green{
     color: green;
 }
@@ -622,8 +684,9 @@ tbody td:nth-last-child(3) {
 }
 
 /* ===========================================================
-   CSS pour les DATATABLE des composants
+   CSS general de datatable des composants
    =========================================================== */
+
 .datatableComponent th,
 .datatableComponent td {
   border: 1px solid #ddd;
@@ -632,62 +695,19 @@ tbody td:nth-last-child(3) {
   text-align: left;
 }
 
-/* Colonnes sticky à gauche */
-
-/* 1ère colonne */
-.datatableComponent th:nth-child(1),
-.datatableComponent td:nth-child(1) {
-  width: 50px;
-  background-color: #bdbdbd;
-  position: sticky;
-  left: 0;
-  z-index: 5;
-}
-
-/* 2ème colonne */
-.datatableComponent th:nth-child(2),
-.datatableComponent td:nth-child(2) {
-  width: 50px;
-  background-color: #bdbdbd;
-  position: sticky;
-  left: 50px; /* largeur de la 1ère colonne */
-  z-index: 5;
-}
-
-/* 3ème colonne */
-.datatableComponent th:nth-child(3),
+/* Background gris clair uniquement pour les 3 premières colonnes <td> */
+.datatableComponent td:nth-child(1),
+.datatableComponent td:nth-child(2),
 .datatableComponent td:nth-child(3) {
-  width: 50px;
-  background-color: #bdbdbd;
-  position: sticky;
-  left: 100px; /* somme des 2 premières colonnes */
-  z-index: 5;
+  background-color: #bdbdbd !important;
 }
 
-/* Colonnes sticky à droite */
-
-/* Dernière colonne */
-.datatableComponent thead th:nth-last-child(1),
-.datatableComponent tbody td:nth-last-child(1) {
-  width: 50px;
-  background-color: #bdbdbd;
-  position: sticky;
-  right: 0;
-  z-index: 5;
+/* Background gris clair uniquement pour les 3 dernières colonnes <td> */
+.datatableComponent td:nth-last-child(1),
+.datatableComponent td:nth-last-child(2),
+.datatableComponent td:nth-last-child(3) {
+  background-color: #bdbdbd !important;
 }
-
-/* Avant-dernière colonne */
-.datatableComponent thead th:nth-last-child(2),
-.datatableComponent tbody td:nth-last-child(2) {
-  width: 50px;
-  background-color: #bdbdbd;
-  position: sticky;
-  right: 50px; /* largeur dernière colonne */
-  z-index: 5;
-}
-
-/* 3ème colonne depuis la fin */
-.datatableComponent thead th:n
 
 /* ===========================================================
    Autre partie CSS
@@ -715,17 +735,6 @@ tbody td:nth-last-child(3) {
 }
 
 
-/* Style pour des colonnes spécifiques */
-#global #list #table td.id, 
-#global #list #table td.name{
-    text-align: center;
-    color:white;
-    min-width: 25px; 
-    font-weight: bold;
-    background-color: #bdbdbd;
-
-}
-
 #global #list #table td.supp  a:hover {
     background-color: red; /* Gris clair au survol */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Accentuation de l'ombre */
@@ -737,40 +746,6 @@ tbody td:nth-last-child(3) {
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2); /* Effet enfoncé */
     border-color: #bbb; /* Bordure légèrement plus foncée */
     transform: scale(0.98); /* Effet de clic */
-}
-
-.pagination {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 0;
-    list-style: none;
-}
-
-.pagination li {
-    margin: 5px;
-}
-
-.pagination li a, .pagination li span {
-    display: inline-block;
-    padding: 8px 12px;
-    border: 1px solid #ccc; /* Contour fin */
-    border-radius: 8px; /* Bords arrondis */
-    text-decoration: none;
-    background-color: #f9f9f9;
-    color: #333;
-    font-size: 14px;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-.pagination li a:hover {
-    background-color: #007bff;
-    color: white;
-}
-
-.pagination .current, .pagination .current span {
-    background-color: #007bff;
-    color: white;
-    pointer-events: none;
 }
 
 .hidden-tags {

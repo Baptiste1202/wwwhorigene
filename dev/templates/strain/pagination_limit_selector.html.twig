@@ -1,0 +1,10 @@
+<form method="get" action="{{ path('page_strains') }}">
+    <label for="limit">Show :</label>
+    <select id="limit" name="limit" onchange="this.form.submit()">
+        {% for value in [10, 25, 50, 100, 1000] %}
+            <option value="{{ value }}" {% if app.request.query.get('limit')|default(10) == value %}selected{% endif %}>
+                {{ value }}
+            </option>
+        {% endfor %}
+    </select> entries
+</form>

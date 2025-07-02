@@ -39,6 +39,10 @@ class StrainController extends AbstractController
     #[Route(path: 'strains/page', name: 'page_strains')]
     public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
     {
+        // Récupérer le paramètre 'limit' dans l'URL, sinon valeur par défaut 10
+        $limit = $request->query->getInt('limit', 10);
+
+        // Exécution de la commande Docker (si nécessaire)
         $cmd = 'docker exec -it claranet2-app-1 bash bin/console fos:elastica:populate';
         exec($cmd, $output, $returnCode);
 
@@ -57,15 +61,23 @@ class StrainController extends AbstractController
             $query->setQuery($matchAll);
             $query->setSort(['id' => ['order' => 'desc']]);
 
-            $strains = $this->finder->find($query, 10000);
+            // Créer l'adaptateur de pagination
+            $paginatorAdapter = $this->finder->createPaginatorAdapter($query);
+
+            // Paginer en utilisant la limite choisie par l'utilisateur
+            $strains = $this->paginator->paginate(
+                $paginatorAdapter,
+                $request->query->getInt('page', 1),
+                $limit // <-- ici on passe la limite
+            );
         }
 
         return $this->render('strain/main.html.twig', [
-            'strainForm' => $form->createView(), 
+            'strainForm' => $form->createView(),
             'form' => $formElastic->createView(),
-            'strains' => $strains
+            'strains' => $strains,
+            'limit' => $limit, // on peut passer la limite à la vue si besoin
         ]);
-
     }
 
     #[Route(path: 'strains/add', name: 'add_strain')]
