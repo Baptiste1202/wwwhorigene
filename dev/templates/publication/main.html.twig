@@ -19,19 +19,4 @@
             </div>
         <br></br>        
         </div>  
-
-        <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const messages = document.querySelectorAll('.flash-message');
-            messages.forEach(msg => {
-                msg.style.display = 'block';  // Assure la visibilité
-                setTimeout(() => {
-                    msg.style.opacity = '0';  // Lancement du fondu
-                    setTimeout(() => {
-                        msg.style.display = 'none';  // Caché après fondu
-                    }, 1000); // correspond à la durée de transition CSS
-                }, 5000); // 5 secondes avant de démarrer le fondu
-            });
-        });
-    </script>
 {% endblock %}

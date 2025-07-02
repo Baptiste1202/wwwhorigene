@@ -13,19 +13,3 @@
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const menuButton = document.getElementById('menu-button');
-    const filterMenu = document.getElementById('filter-menu');
-
-    menuButton.addEventListener('click', function() {
-        filterMenu.classList.toggle('visible');
-    });
-
-    document.addEventListener('click', function(event) {
-        if (!menuButton.contains(event.target) && !filterMenu.contains(event.target)) {
-            filterMenu.classList.remove('visible');
-        }
-    });
-});
-</script>
