@@ -1,6 +1,7 @@
-
 {{ form_start(strainForm, {
-    'action': path('add_strain'),
+    'action': is_update 
+        ? path('edit_strain', {'id': strain.id}) 
+        : path('add_strain'),
     'method': 'POST',
     'attr': {
         'class': is_update ? 'update-form' : ''

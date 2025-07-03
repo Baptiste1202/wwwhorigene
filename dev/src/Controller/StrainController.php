@@ -154,18 +154,22 @@ class StrainController extends AbstractController
             $strainForm->handleRequest($request);
 
             if ($strainForm->isSubmitted() && $strainForm->isValid()) {
-                //generate the slug
 
-                //stock data
-                $em->persist($strain);
                 $em->flush();
 
                 $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' modified with succes !');
 
                 return $this->redirectToRoute('page_strains');
             }
-            return $this->render('strain/edit.html.twig', compact('strainForm'));
+
+            return $this->render('strain/edit.html.twig', [
+                'strainForm' => $strainForm->createView(),
+                'strain' => $strain, 
+                'is_update' => true,
+            ]);
         } catch (\Throwable $e) {
+
+            dd($e);
             $this->addFlash('error', 'Une erreur est survenue lors de la modification de la souche. Veuillez réessayer.');
 
             return $this->redirectToRoute('page_strains');
