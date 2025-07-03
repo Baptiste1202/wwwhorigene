@@ -13,5 +13,5 @@
 /public/docs/
 /docker/
 ###< symfony/asset-mapper ###
-/docker-compose.yml
+# /docker-compose.yml
 # /.env
