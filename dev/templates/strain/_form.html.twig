@@ -300,13 +300,14 @@ function addFormToCollection(e) {
 
         const lastInputs = lastItem.querySelectorAll('input, select, textarea');
         const newInputs = item.querySelectorAll('input, select, textarea');
-
         lastInputs.forEach((input, i) => {
             if (newInputs[i]) {
                 if (input.tagName === 'SELECT') {
                     newInputs[i].value = input.value;
                 } else if (input.type === 'checkbox' || input.type === 'radio') {
                     newInputs[i].checked = input.checked;
+                } else if (input.type === 'file') {
+                    newInputs[i].value = ''; 
                 } else {
                     newInputs[i].value = input.value;
                 }
