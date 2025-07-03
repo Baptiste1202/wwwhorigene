@@ -12,12 +12,11 @@
 <body>
     <div class="vertical-menu">
         <ul>
-            <li><a href="{{ absolute_url(path('page_users')) }}">User</a></li>
-            <li><a href="{{ absolute_url(path('page_samples')) }}">Prelevement</a></li>
-            <li><a href="{{ absolute_url(path('page_strains')) }}">Strain</a></li>
-            <li><a href="{{ absolute_url(path('strain_search')) }}">Check Parents</a></li>
+            <li><a href="{{ absolute_url(path('page_users')) }}"> <i class="fa-solid fa-user"></i> User</a></li>
+            <li><a href="{{ absolute_url(path('page_strains')) }}"><i class="fa-solid fa-bacterium"></i> Strain</a></li>
+            <li><a href="{{ absolute_url(path('page_samples')) }}"><i class="fa-solid fa-location-dot"></i> Prelevement</a></li>
             <li class="dropdown">
-                <a class="dropdown-toggle">Component</a>
+                <a class="dropdown-toggle"><i class="fa-solid fa-file"></i> Components</a>
                 <ul class="dropdown-content">
                     <li><a href="{{ path('page_projects') }}">Project</a></li>
                     <li><a href="{{ path('page_collecs') }}">Collection</a></li>
@@ -26,6 +25,7 @@
                     <li><a href="{{ path('page_publications') }}">Publication</a></li>
                 </ul>
             </li>
+            <li><a href="{{ absolute_url(path('strain_search')) }}"><i class="fa-solid fa-magnifying-glass"></i> Check Parents</a></li>
             <li><a href="{{ path('app_logout') }}">Log Out</a></li>
             <li class="user-info">
                 user: {{ app.user.firstname }} <br>
