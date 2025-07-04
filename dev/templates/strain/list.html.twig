@@ -143,13 +143,13 @@
                                 container type : {{ strain.storage|first ? strain.storage|first.containerType : "--" }}
                                 container position : {{ strain.storage|first ? strain.storage|first.containerPosition : "--" }}'>
                     {% if strain.storage is not empty %}
-                        room : {{strain.storage[0].room}} <br>
-                        fridge:  {{strain.storage[0].fridge}} <br>
+                        room : {{strain.storage[0].room}} 
+                        fridge:  {{strain.storage[0].fridge}} 
                         shelf:  {{strain.storage[0].shelf}} <br>
-                        rack: {{strain.storage[0].rack}} <br>
-                        volume: {{strain.storage[0].volume}} <br>
-                        container type: {{ strain.storage[0].containerType }}<br>
-                        container position: {{ strain.storage[0].containerPosition }}<br>
+                        rack: {{strain.storage[0].rack}} 
+                        volume: {{strain.storage[0].volume}} 
+                        type: {{ strain.storage[0].containerType }}<br>
+                        position: {{ strain.storage[0].containerPosition }}
                     {% else %}
                         --
                     {% endif %}
@@ -187,9 +187,9 @@
                         {{strain.drugResistanceOnStrain[0].drugResistance.name}} <br>
                         {{strain.drugResistanceOnStrain[0].concentration}}  
                         {% if strain.drugResistanceOnStrain[0].resistant == 1 %}
-                            <a class="resistant-display-green">resistant : &#x2713;</a>
+                            <a class="resistant-display-red"> resistante : &#9888; </a>
                         {% else %}
-                            <a class="resistant-display-red">resistant : x</a>
+                            <a class="resistant-display-green"> sensible : &#x2713; </a>
                         {% endif %}
                     {% else %}
                         --
@@ -358,13 +358,13 @@
                                             container position : {{ strain.storage[i] is defined and strain.storage[i] ? strain.storage[i].containerPosition : "--" }}'
                                 >
                                 {% if strain.storage[i] is defined %}
-                                    room: {{ strain.storage[i].room }}<br>
-                                    fridge: {{ strain.storage[i].fridge }}<br>
-                                    shelf: {{ strain.storage[i].shelf }}<br>
-                                    rack: {{ strain.storage[i].rack }}<br>
-                                    volume: {{ strain.storage[i].volume }}<br>
-                                    container type: {{ strain.storage[i].containerType }}<br>
-                                    container position: {{ strain.storage[i].containerPosition }}<br>
+                                    room : {{strain.storage[0].room}} 
+                                    fridge:  {{strain.storage[0].fridge}} 
+                                    shelf:  {{strain.storage[0].shelf}} <br>
+                                    rack: {{strain.storage[0].rack}} 
+                                    volume: {{strain.storage[0].volume}} 
+                                    type: {{ strain.storage[0].containerType }}<br>
+                                    position: {{ strain.storage[0].containerPosition }}
                                 {% endif %}
                                 </td>
                                 <td></td> {# Parent #}
@@ -385,9 +385,9 @@
                                 {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].concentration : '' }}
                                 {% if strain.drugResistanceOnStrain[i] is defined %}
                                     {% if strain.drugResistanceOnStrain[i].resistant == 1 %}
-                                        <a class="resistant-display-green"> resistant : &#x2713; </a>
+                                        <a class="resistant-display-red"> resistante : &#9888; </a>
                                     {% else %}
-                                        <a class="resistant-display-red"> resistant : x </a>
+                                        <a class="resistant-display-green"> sensible : &#x2713; </a>
                                     {% endif %}
                                 {% endif %}
                                 </td>

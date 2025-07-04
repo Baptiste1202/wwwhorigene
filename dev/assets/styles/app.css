@@ -463,7 +463,7 @@ button.btn-form-strain:hover {
     background-color: #f9f9f9; /* Couleur de fond */
     display: flex; /* Utiliser flex pour l'alignement interne si nécessaire */
     flex-direction: column; /* Assure que le contenu est aligné en colonne */
-    height: 90vh; /* Hauteur s'adapte au contenu */
+    height: 91vh; /* Hauteur s'adapte au contenu */
     width: auto; /* Prend toute la largeur disponible */
 }
 
