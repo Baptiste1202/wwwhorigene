@@ -42,6 +42,8 @@ class StrainController extends AbstractController
         $cmd = 'docker exec -it claranet2-app-1 bash bin/console fos:elastica:populate';
         exec($cmd, $output, $returnCode);
 
+        $user = $security->getUser(); 
+
         if ($security->isGranted('ROLE_SEARCH') || $security->isGranted('ROLE_ADMIN')){
             $form = $this->createForm(StrainFormType::class);
         }
@@ -63,6 +65,7 @@ class StrainController extends AbstractController
         return $this->render('strain/main.html.twig', [
             'strainForm' => $form->createView(), 
             'form' => $formElastic->createView(),
+            'user' => $user,
             'strains' => $strains
         ]);
 

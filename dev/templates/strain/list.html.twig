@@ -437,7 +437,13 @@
                                 {{ strain.publication[i] is defined ? strain.publication[i].autor : '' }} <br>
                                 {{ strain.publication[i] is defined ? strain.publication[i].year : '' }}
                                 </td>
-                                <td></td> {# Creator #}
+                                <td class="createdBy hidden-cell">
+                                {% if strain.createdByName is not null %}
+                                    {{strain.createdByName}}
+                                {% else %}
+                                    --
+                                {% endif %}
+                                </td>
                                 <td></td> {# Description #}
                                 <td></td> {# Comment #}
                                 <td></td>

@@ -553,6 +553,10 @@ button.btn-form-strain:hover {
     max-width: 100%;  /* pour limiter à la taille parent */
 }
 
+.hidden-cell {
+    color: transparent;
+}
+
 /* En-tête figé en haut */
 thead {
   position: sticky;
@@ -726,14 +730,14 @@ tbody td:nth-last-child(3) {
 /* ===========================================================
    FCSS fonctionalites
 =========================================================== */
-
-.searchDatatable {
+.strain-searchDatatable {
     margin: 10px 0 20px 0;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.searchDatatable input#customSearch {
+.strain-searchDatatable .strain-search-left input#customSearch {
     width: 300px;
     padding: 8px 12px;
     font-size: 14px;
@@ -742,10 +746,14 @@ tbody td:nth-last-child(3) {
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.searchDatatable input#customSearch:focus {
+.strain-searchDatatable .strain-search-left input#customSearch:focus {
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
     outline: none;
+}
+
+.strain-searchDatatable .strain-search-right {
+    margin-left: 20px;
 }
 
 .pagination {

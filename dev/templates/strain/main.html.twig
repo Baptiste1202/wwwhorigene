@@ -16,9 +16,13 @@
                 <div id="message">
                     {% include './message.html.twig' %}
                 </div>
-                {# 🔍 Champ de recherche DataTable ajouté ici #}
-                <div id="datatable-search">
-                    {% include 'strain/_datatable_search.html.twig' %}
+                <div id="strain-datatable-search" class="strain-searchDatatable">
+                    <div class="strain-search-left">
+                        {% include 'strain/_datatable_search.html.twig' %}
+                    </div>
+                    <div class="strain-search-right">
+                        {% include 'strain/user_filter_button.html.twig' %}
+                    </div>
                 </div>
                 <div id="table">
                     {% include "strain/list.html.twig" %}

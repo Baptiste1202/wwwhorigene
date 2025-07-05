@@ -10,6 +10,7 @@ import './scriptJs/autoHideFlashMessage.js'
 import './scriptJs/datatableComponent.js'
 import './scriptJs/datatableStrain.js'
 import './scriptJs/toggleFilterMenu.js'
+import './scriptJs/filterByCreator.js'
 
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
