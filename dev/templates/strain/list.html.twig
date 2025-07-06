@@ -275,20 +275,19 @@
 
                     <td class="comment">
                     {% if strain.comment is not null %}
-                        {% set description = strain.description ?: strain.description %}
+                        {% set comment = strain.comment %}
                         {% set maxLength = 10 %}
-
-                        {% if description|length > maxLength %}
-                            {% set prefix = description|slice(0, 8) %}
-                            {{ prefix ~ '...'}}
+                        {% if comment|length > maxLength %}
+                            {% set prefix = comment|slice(0, 8) %}
+                            {{ prefix ~ '...' }}
                         {% else %}
-                            {{ description }}
-                        {% endif %} <br>
+                            {{ comment }}
+                        {% endif %}
                     {% else %}
                         --
                     {% endif %}
-                    </td>
-                    <td>
+                </td>
+                                    <td>
                         <a href="{{ path('duplicate_strain', {id: strain.id}) }}" class="button-crud" title="Dupliquer">
                             <i class="fa-solid fa-copy"></i>
                         </a>
