@@ -1,19 +1,24 @@
+{# templates/plasmyd/main.html.twig #}
 {% extends 'layout.html.twig' %}
+
 {% block body %}
-        <div id="global">
-            {% if (app.user.roles.0 != "ROLE_INTERN") %}
-                <div id="form">
-                    {% include "plasmyd/create.html.twig" %}
-                </div>
-            {% endif %}
-            <div id="list">
-                <div id="table">
-                    {% include "plasmyd/list.html.twig" %}
-                </div>
-                <div id="paginator">
-                    {% include "plasmyd/paginator.html.twig" %}
-                </div>
+    <div id="global">
+        {% if (app.user.roles.0 != "ROLE_INTERN") %}
+            <div id="form">
+                {% include "plasmyd/create.html.twig" %}
             </div>
-        <br></br>        
-        </div>  
+        {% endif %}
+        <div id="list">
+            <div id="filter">
+                {% include 'plasmyd/_filter_form_datatable_plasmyd.html.twig' %}
+            </div>
+            <div id="message">
+                {% include './message.html.twig' %}
+            </div>
+            <div id="table">
+                {% include "plasmyd/list.html.twig" %}
+            </div>
+        </div>
+        <br></br>
+    </div>  
 {% endblock %}

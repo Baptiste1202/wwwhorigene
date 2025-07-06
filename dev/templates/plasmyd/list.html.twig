@@ -1,44 +1,68 @@
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Comment</th>
-    </tr>
+<!-- ✅ Font Awesome + DataTables CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 
-    {% for plasmyd in plasmyds %}
-        <div class="list-plasmyd">
-            <tr>
-                <td>{{plasmyd.id}}</td>
-                <td>{{plasmyd.namePlasmyd}}</td>
-                <td>{{plasmyd.type}}</td>
-                <td>{{plasmyd.description}}</td>
-                <td>{{plasmyd.comment}}</td>
-                <td><a href = "{{path("edit_plasmyd", {id: plasmyd.id})}}"> Modifie </a></td>
-                <td><a href = "{{path("delete_plasmyd", {id: plasmyd.id})}}" class="delete-link"> Delete </a></td>
-            </tr>
-        </div>
-    {% endfor %}
+<!-- ✅ jQuery + DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-</table>
+<!-- ✅ Formulaire d'action multiple -->
+<form id="multi-action-form" method="post">
+    <div id="data-table-wrapper" class="sticky-wrapper">
+        <table id="data-table-plasmyds" class="display datatableComponent" style="visibility: hidden;">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all" /></th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Comment</th>
+                    <th data-column="duplicate" class="no-sort"></th>
+                    <th data-column="edit" class="no-sort"></th>
+                    <th data-column="delete" class="no-sort"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for plasmyd in plasmyds %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="selected_plasmyds[]" value="{{ plasmyd.id }}" class="select-checkbox" />
+                        </td>
+                        <td>{{ plasmyd.id }}</td>
+                        <td>{{ plasmyd.namePlasmyd }}</td>
+                        <td>{{ plasmyd.type }}</td>
+                        <td data-info="{{ plasmyd.description is not null ? plasmyd.description : '--' }}">
+                            {{ plasmyd.description is not null ? plasmyd.description : '--' }}
+                        </td>
+                        <td data-info="{{ plasmyd.comment is not null ? plasmyd.comment : '--' }}">
+                            {{ plasmyd.comment is not null ? plasmyd.comment : '--' }}
+                        </td>
+                        <td><a href="{{ path('duplicate_plasmyd', {id: plasmyd.id}) }}">Duplicate</a></td>
+                        <td><a href="{{ path('edit_plasmyd', {id: plasmyd.id}) }}">Modifie</a></td>
+                        <td>
+                            <a href="{{ path('delete_plasmyd', {id: plasmyd.id}) }}"
+                               class="delete-link"
+                               title="Supprimer"
+                               onclick="return confirm('Voulez-vous vraiment supprimer ?')">
+                               Supprimer
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-{% if app.session.flashbag.has('warning') %}
-    <script>
-        // Sélectionner tous les liens de suppression
-        document.querySelectorAll('.delete-link').forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault(); // Empêcher la redirection initiale
+    <input type="hidden" name="action" value="" />
 
-                // Afficher la confirmation si le flash warning existe
-                var confirmDelete = confirm("{{ app.session.flashbag.get('warning')[0] }}");
-
-                // Si l'utilisateur confirme, ajouter ?confirm=yes à l'URL et rediriger
-                if (confirmDelete) {
-                    // Redirection vers la suppression avec confirmation
-                    window.location.href = this.href + '?confirm=yes';
-                }
-            });
-        });
-    </script>
-{% endif %}
+    <!-- ✅ Bouton suppression multiple -->
+    <button id="btn-delete-multiple"
+            type="submit"
+            formaction="{{ path('delete_multiple_plasmyds') }}"
+            onclick="this.form.action.value='delete'"
+            class="btn btn-danger"
+            style="margin-top: 10px; display: none;">
+        Suppression multiple
+    </button>
+</form>
