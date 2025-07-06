@@ -119,13 +119,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 4. Recherche personnalisée par groupe 
     const searchInput = document.getElementById('customSearch');
+    const lengthSelect = document.querySelector('.dt-length select');
+    let previousPageLength = lengthSelect ? parseInt(lengthSelect.value) : dataTable.page.len();
+
+    console.log('Valeur initiale de la pagination (previousPageLength) :', previousPageLength);
+
+    // Mettre à jour previousPageLength quand l'utilisateur change la pagination
+    if (lengthSelect) {
+        lengthSelect.addEventListener('change', function() {
+            previousPageLength = parseInt(this.value);
+            console.log('Pagination modifiée par l\'utilisateur:', previousPageLength);
+        });
+    }
+    
     if (searchInput) {
         searchInput.addEventListener('input', function () {
             const term = this.value.trim().toLowerCase();
 
             // Si le champ est vide, réactiver la pagination à 25
             if (term === '') {
-                dataTable.page.len(25).draw();
+                dataTable.page.len(previousPageLength).draw();
 
                 // Réafficher toutes les lignes
                 dataTable.rows().nodes().toArray().forEach(row => {
@@ -227,4 +240,65 @@ document.addEventListener('DOMContentLoaded', function () {
             popup.style.display = 'none';
         }
     });
+
+    // --- Partie 6 : Exportation Excel des données des GROUPES actuellement VISIBLES ---
+    const exportExcelBtn = document.getElementById('exportExcelBtn');
+    if (exportExcelBtn) {
+        exportExcelBtn.addEventListener('click', function () {
+            // Récupérer UNIQUEMENT les lignes (<tr>) qui sont actuellement VISIBLES dans le DOM 
+            const visibleDataRows = Array.from(table.querySelectorAll('tbody tr')).filter(row => {
+                return row.style.display !== 'none';
+            });
+
+            // Récupérer les en-têtes de colonnes comme avant
+            const columns = dataTable.columns().header().toArray();
+
+            const headerNames = [];
+            const exportableColumnIndices = [];
+            $(columns).each(function(index) {
+                if (!$(this).hasClass('no-export') && ![0, 20, 21, 22].includes(index)) {
+                    if (index === 0) {
+                        headerNames.push('Select');
+                    } else if (index === 1) {
+                        headerNames.push('ID');
+                    } else if (index === 2) {
+                        headerNames.push('Souche');
+                    } else {
+                        headerNames.push($(this).text().trim());
+                    }
+                    exportableColumnIndices.push(index);
+                }
+            });
+
+            const exportData = [headerNames]; 
+
+            // Parcourir les lignes de données VISIBLES et extraire leurs contenus
+            visibleDataRows.forEach(rowElement => {
+                const rowToExport = [];
+                exportableColumnIndices.forEach(colIndex => {
+                    const cell = rowElement.cells[colIndex]; 
+                    let cellValue = cell ? cell.textContent.trim() : ''; 
+
+                    // Traitement spécial pour la case à cocher si nécessaire
+                    if (colIndex === 0) {
+                        const checkbox = cell ? cell.querySelector('input[type="checkbox"]') : null;
+                        cellValue = checkbox ? (checkbox.checked ? 'X' : '') : '';
+                    }
+                    // Nettoyer les '--' en chaînes vides
+                    if (cellValue === '--') {
+                        cellValue = '';
+                    }
+                    rowToExport.push(cellValue);
+                });
+                exportData.push(rowToExport);
+            });
+
+            const ws = XLSX.utils.aoa_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'DonnéesFiltréesParGroupe');
+
+            XLSX.writeFile(wb, 'dataTableStrain.xlsx');
+        });
+    }
 });
+

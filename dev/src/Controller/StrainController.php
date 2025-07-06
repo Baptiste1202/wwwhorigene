@@ -173,8 +173,7 @@ class StrainController extends AbstractController
         } catch (\Throwable $e) {
 
             dd($e);
-            $this->addFlash('error', 'Une erreur est survenue lors de la modification de la souche. Veuillez réessayer.');
-
+            $this->addFlash('error', 'An error occurred while updating the strain. Please try again.');
             return $this->redirectToRoute('page_strains');
         }
     }
@@ -236,7 +235,7 @@ class StrainController extends AbstractController
 
         } catch (\Throwable $e) {
             dump($e); // n'affiche que si mode debug activé
-            $this->addFlash('error', 'Une erreur est survenue lors de la suppresion de la souche. Veuillez réessayer.');
+            $this->addFlash('error', 'An error occurred while deleting the strain. Please try again.');
 
             return $this->redirectToRoute('page_strains');
         }
@@ -447,7 +446,7 @@ class StrainController extends AbstractController
 
             // Crée le paginator à partir de la query complète
             $results = $this->finder->createPaginatorAdapter($query);
-            $pagination = $this->paginator->paginate($results, $page, 15);
+            $pagination = $this->paginator->paginate($results, $page, 1000);
         } 
 
         return [
