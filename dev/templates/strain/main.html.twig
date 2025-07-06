@@ -1,33 +1,49 @@
-{% extends 'layout.html.twig' %}
+{% extends 'layout.html.twig' %} 
+
+{% block title %}Strains{% endblock %} 
+
 {% block body %}
-        <div id="global">
-            {% if (app.user.roles.0 != "ROLE_INTERN") %}
-                <div id="form">
-                    {% include "strain/create.html.twig" %}
-                </div>
-            {% endif %}
-            <div id="list">
-                <div id="filter">
-                    {% include 'strain/elastic_main.html.twig' %}
-                </div>
-                <div id="filter">
-                    {% include 'strain/_filter_form_datatable.html.twig' %}
-                </div>
-                <div id="message">
-                    {% include './message.html.twig' %}
-                </div>
-                <div id="strain-datatable-search" class="strain-searchDatatable">
-                    <div class="strain-search-left">
-                        {% include 'strain/_datatable_search.html.twig' %}
-                    </div>
-                    <div class="strain-search-right">
-                        {% include 'strain/user_filter_button.html.twig' %}
-                    </div>
-                </div>
-                <div id="table">
-                    {% include "strain/list.html.twig" %}
-                </div>
+    <div id="global">
+        {% if (app.user.roles.0 != "ROLE_INTERN") %}
+            <div id="form">
+                {% include "strain/create.html.twig" %}
             </div>
-        <br></br>        
-        </div>  
+        {% endif %}
+        <div id="list">
+            <div id="filter">
+                {% include 'strain/elastic_main.html.twig' %}
+            </div>
+            <div id="filter">
+                {% include 'strain/_filter_form_datatable.html.twig' %}
+            </div>
+            <div id="message">
+                {% include './message.html.twig' %}
+            </div>
+            <div id="pagination-limit-selector">
+                {% include 'strain/pagination_limit_selector.html.twig' %}
+            </div>
+            <div id="table">
+                {# list.html.twig est maintenant un fragment, il n'hérite pas #}
+                {% include "strain/list.html.twig" %}
+            </div>
+            <div id="paginator">
+                {% include "strain/paginator.html.twig" %}
+            </div>
+        </div>
+        <br></br>
+    </div>
+
+    {# Popup d'information - Ces éléments sont aussi déplacés ici car ils sont globaux à la page #}
+    <div id="custom-popup" class="custom-popup" style="display:none;">
+        <span class="close-button">&times;</span>
+        <h4 id="popup-title"></h4>
+        <div id="popup-content"></div>
+        <div id="popup-file-link" style="margin-top: 15px; text-align: center;"></div>
+    </div>
+    <div id="overlay" class="overlay" style="display:none;"></div>
+
 {% endblock %}
+
+
+
+
