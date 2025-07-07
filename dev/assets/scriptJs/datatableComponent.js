@@ -60,8 +60,10 @@ function initDataTableWithFilters(tableId) {
         searching: true,
         info: true,
         lengthChange: true,
+        dom: '<"datatable-header d-flex justify-content-between align-items-center"lf><"dt-buttons-top"B>t<"datatable-footer d-flex justify-content-between align-items-center"ip>',
+        buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
         language: {
-            url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json"
+            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/en-GB.json"
         },
         columnDefs: [
             { orderable: false, targets: 'no-sort' }
