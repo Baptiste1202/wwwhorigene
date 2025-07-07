@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
         searchInput.addEventListener('input', function () {
             const term = this.value.trim().toLowerCase();
 
-            // Si le champ est vide, réactiver la pagination à 25
+            // Si le champ est vide, reactive a la valeur du nombre de page initial
             if (term === '') {
                 dataTable.page.len(previousPageLength).draw();
 

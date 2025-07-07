@@ -43,16 +43,15 @@
                 <th class="creator">Creator</th>
                 <th data-column="description">Description</th>
                 <th data-column="comment">Comment</th>
-                <th data-column="null"> </th> {# Duplicate #}
-                <th data-column="null"> </th> {# Modifie #}
-                <th data-column="null"> </th> {# x #}
+                <th data-column="null"> </th> 
+                <th data-column="null"> </th> 
+                <th data-column="null"> </th>
             </tr>
         </thead>
-
         <tbody>
             {% if strains is empty %}
                 <tr>
-                    <td class="no-data">No strains found.</td> {# Correction du colspan #}
+                    <td class="no-data">No strains found.</td> 
                 </tr>
             {% endif %}
             {% for strain in strains %}
