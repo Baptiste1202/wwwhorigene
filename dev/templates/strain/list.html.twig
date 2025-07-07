@@ -333,13 +333,13 @@
                                 <td>
                                     <input type="checkbox" name="selected_strain[]" value="{{ strain.id }}" class="select-checkbox" />
                                 </td>
-                                <td class="id"></td>
-                                <td class="name"></td>
-                                <td></td> {# Date #}
-                                <td></td> {# Specie #}
-                                <td></td> {# Gender #}
-                                <td></td> {# Sample #}
-                                <td></td> {# Genotype #}
+                                <td class="id">{{strain.id}}</td>
+                                <td class="name">{{ strain.nameStrain is not null ? strain.nameStrain : '--' }}</td>
+                                <td>--</td> {# Date #}
+                                <td>--</td> {# Specie #}
+                                <td>--</td> {# Gender #}
+                                <td>--</td> {# Sample #}
+                                <td>--</td> {# Genotype #}
                                 <td class="plasmyd" 
                                     data-info='
                                             name: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.plasmyd[i].namePlasmyd : '--'}}
@@ -347,7 +347,7 @@
                                             description: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.plasmyd[i].description : "--" }}
                                             comment: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.plasmyd[i].comment : "--" }}'
                                 >
-                                {{ strain.plasmyd[i] is defined ? strain.plasmyd[i].namePlasmyd : '' }}</td>
+                                {{ strain.plasmyd[i] is defined ? strain.plasmyd[i].namePlasmyd : '--' }}</td>
                                 <td class="storage" 
                                     data-info='
                                             room: {{ strain.storage[i] is defined and strain.storage[i] ? strain.storage[i].room: '--'}}
@@ -366,12 +366,13 @@
                                     volume: {{strain.storage[0].volume}} 
                                     type: {{ strain.storage[0].containerType }}<br>
                                     position: {{ strain.storage[0].containerPosition }}
+                                {% else %}
+                                    --
                                 {% endif %}
                                 </td>
-                                <td></td> {# Parent #}
-                                <td>{{ strain.project[i] is defined ? strain.project[i].name : '' }}</td>
-                                <td>{{ strain.collec[i] is defined ? strain.collec[i].name : '' }}</td>
-                                <td class="drugResistanceOnStrain"
+                                <td>--</td> {# Parent #}
+                                <td>{{ strain.project[i] is defined ? strain.project[i].name : '--' }}</td>
+                                <td>{{ strain.collec[i] is defined ? strain.collec[i].name : '--' }}</td>
                                 <td class="drugResistanceOnStrain" 
                                     data-info='
                                         name: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].drugResistance.name  : '--'}}
@@ -390,6 +391,8 @@
                                     {% else %}
                                         <a class="resistant-display-green"> sensible : &#x2713; </a>
                                     {% endif %}
+                                {% else %}
+                                    --
                                 {% endif %}
                                 </td>
                                 <td class="transformability"
@@ -427,16 +430,21 @@
                                     --
                                 {% endif %}
                                 </td>
-                                <td data-info='
+                                <td class="publication" 
+                                    data-info='
                                         id: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].id  : '--'}}
                                         URL: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].articleURL  : "--" }}
                                         DOI: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].DOI  : "--" }}
                                         title: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].title  : "--" }}
                                         autor: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].autor : "--" }}
                                         year: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].year  : "--" }}'> 
-                                {{ strain.publication[i] is defined ? strain.publication[i].title : '' }} <br>
-                                {{ strain.publication[i] is defined ? strain.publication[i].autor : '' }} <br>
-                                {{ strain.publication[i] is defined ? strain.publication[i].year : '' }}
+                                    {% if strain.publication[i] is defined %}
+                                        {{ strain.publication[i].title }} <br>
+                                        {{ strain.publication[i].autor }} <br>
+                                        {{ strain.publication[i].year }}
+                                    {% else %}
+                                        --
+                                    {% endif %}
                                 </td>
                                 <td class="createdBy hidden-cell">
                                 {% if strain.createdByName is not null %}
@@ -445,8 +453,8 @@
                                     --
                                 {% endif %}
                                 </td>
-                                <td></td> {# Description #}
-                                <td></td> {# Comment #}
+                                <td>--</td> {# Description #}
+                                <td>--</td> {# Comment #}
                                 <td></td>
                                 <td></td>
                                 <td></td>

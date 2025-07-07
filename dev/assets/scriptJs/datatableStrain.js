@@ -2,31 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const table = document.getElementById('data-table');
     const rows = table.querySelectorAll('tbody tr');
 
-    let currentStrainId = '', currentStrainName = '';
-
-    // 1. Prétraitement : remplir cellules vides et propager ID/Souche
-    for (const row of rows) {
-        const idCell = row.querySelector('td.id');
-        const nameCell = row.querySelector('td.name');
-
-        if (idCell?.textContent.trim()) {
-            currentStrainId = idCell.textContent.trim();
-            currentStrainName = nameCell.textContent.trim();
-        } else {
-            idCell.textContent = currentStrainId;
-            nameCell.textContent = currentStrainName;
-        }
-        
-        const cells = row.querySelectorAll('td');
-        const lastEditable = cells.length - 3;
-
-        for (let i = 1; i < lastEditable; i++) {
-            if (!cells[i].classList.contains('id') && !cells[i].textContent.trim()) {
-                cells[i].textContent = '--';
-            }
-        }
-    }
-    
     const dataTable = $('#data-table').DataTable({
         deferRender: true,
         paging: true,
