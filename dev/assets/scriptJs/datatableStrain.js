@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const table = document.getElementById('data-table');
     const rows = table.querySelectorAll('tbody tr');
-    let previousPageLength = null; // déclaration globale accessible partout
+    let previousPageLength = null;
 
     const dataTable = $('#data-table').DataTable({
         deferRender: true,
@@ -9,48 +9,13 @@ document.addEventListener('DOMContentLoaded', function () {
         searching: false, //on utilisera notre recherche personalise par groupe
         ordering: true,
         info: true,
-        dom: '<"datatable-header d-flex justify-content-between align-items-center"lfB>t<"datatable-footer d-flex justify-content-between align-items-center"ip>',
+        dom:'lfBtip',   
         buttons: [
-            {
-                extend: 'copy',
-                exportOptions: {
-                    rows: function (idx, data, node) {
-                        return node.style.display !== 'none';
-                    }
-                }
-            },
-            {
-                extend: 'csv',
-                exportOptions: {
-                    rows: function (idx, data, node) {
-                        return node.style.display !== 'none';
-                    }
-                }
-            },
-            {
-                extend: 'excel',
-                exportOptions: {
-                    rows: function (idx, data, node) {
-                        return node.style.display !== 'none';
-                    }
-                }
-            },
-            {
-                extend: 'pdf',
-                exportOptions: {
-                    rows: function (idx, data, node) {
-                        return node.style.display !== 'none';
-                    }
-                }
-            },
-            {
-                extend: 'print',
-                exportOptions: {
-                    rows: function (idx, data, node) {
-                        return node.style.display !== 'none';
-                    }
-                }
-            }
+            { extend: 'copy',  exportOptions: { rows: (i,d,n) => n.style.display!=='none' } },
+            { extend: 'csv',   exportOptions: { rows: (i,d,n) => n.style.display!=='none' } },
+            { extend: 'excel', exportOptions: { rows: (i,d,n) => n.style.display!=='none' } },
+            { extend: 'pdf',   exportOptions: { rows: (i,d,n) => n.style.display!=='none' } },
+            { extend: 'print', exportOptions: { rows: (i,d,n) => n.style.display!=='none' } }
         ],
         order: [],
         columnDefs: [
@@ -58,20 +23,16 @@ document.addEventListener('DOMContentLoaded', function () {
         ],
         rowGroup: {
             dataSrc: 1,
-            startRender: function (rows, group) {
-                const firstRow = rows.data()[0];
-                const checkbox = firstRow[0];
-                const id = firstRow[1];
-                const name = firstRow[2];
-
-                return checkbox + ' ID : ' + id + ' - Souche : ' + name;
+            startRender(rows) {
+                const [ checkbox, id, name ] = rows.data()[0];
+                return checkbox + ' ID : ' + id + ' – Souche : ' + name;
             }
         },
         
         initComplete: function () {
             const api = this.api();
 
-            // 🔄 On récupère la pagination actuelle choisie par l'utilisateur
+            // 1a. On récupère la pagination actuelle choisie par l'utilisateur
             const lengthSelect = document.querySelector('.dataTables_length select');
             if (lengthSelect) {
                 previousPageLength = parseInt(lengthSelect.value);
@@ -120,6 +81,10 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     });
+
+    // 2) on deplace length, filter et buttons dans une div au dessus de la table pour la fixer
+    $('#data-table_wrapper .dataTables_length, #data-table_wrapper .dataTables_filter, #data-table_wrapper .dt-buttons')
+    .appendTo('#table-controls-header');
 
     // --- Partie 3 : Select All Checkbox ---
     const selectAllCheckbox = document.getElementById('select-all');

@@ -468,7 +468,7 @@ button.btn-form-strain:hover {
 }
 
 #global #list #filter {
-    padding : 10px; 
+    padding : 2px; 
     background-color: #f9f9f9; /* Couleur de fond */
 }
 
@@ -540,21 +540,24 @@ button.btn-form-strain:hover {
     color: #555;
 }
 
+.hidden-cell {
+    color: transparent;
+}
+
+/* ===========================================================
+   Scroll et position de la table
+=========================================================== */
+
 .sticky-wrapper {
-    /* overflow: scroll;  <-- enlevé */
     position: relative;
     width: auto;
     height: 100%;
 }
 
 #data-table-wrapper {
-    overflow: auto;  /* scroll horizontal */
+    overflow: auto;  
     position: relative;
-    max-width: 100%;  /* pour limiter à la taille parent */
-}
-
-.hidden-cell {
-    color: transparent;
+    max-width: 100%;  
 }
 
 /* En-tête figé en haut */
@@ -565,34 +568,56 @@ thead {
 }
 
 /* ===========================================================
-   CSS des bouttons crud
-=========================================================== */
-
-.button-crud {
-    display: inline-block;
-    padding: 6px 12px; /* Espacement interne */
-    background-color: #f3f3f3; /* Couleur de fond par défaut des boutons natifs */
-    color: #000; /* Texte noir */
-    text-decoration: none; /* Supprime le soulignement */
-    font-size: 13px; /* Taille de police par défaut */
-    text-align: center; /* Centre le texte */
-    border: 1px solid #ccc; /* Bordure légère */
-    border-radius: 3px; /* Coins légèrement arrondis */
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Légère ombre */
-    cursor: pointer;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.button-crud:hover {
-    background-color: #e6e6e6; /* Gris clair au survol */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Accentuation de l'ombre */
-    text-decoration: none; /* Évite le soulignement au survol */
-}
-
-
-/* ===========================================================
    CSS specifique pour la DATATABLE de strain
 =========================================================== */
+
+.strain-searchDatatable {
+    margin: 10px 0 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 !important;
+    margin-bottom: 5px;
+    line-height: 1.0;
+  font-size: 0.8rem; /* optionnel, si tu veux réduire légèrement la taille du texte */
+}
+
+.strain-searchDatatable .strain-search-left input#customSearch {
+    width: 200px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.strain-searchDatatable .strain-search-left input#customSearch:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+.strain-searchDatatable .strain-search-right {
+    margin-left: 20px;
+}
+
+/* #table-controls header */
+#table-controls-header {
+  display: flex;               
+  align-items: center;         
+  justify-content: flex-start; /* tous collés à gauche */
+  gap: 1rem;                   
+  margin-bottom: 1rem; 
+  padding: 0 !important;
+  margin-bottom: 0 !important;  /* on remet aussi la marge à zéro si besoin */
+  line-height: 1.0;
+  font-size: 0.8rem; /* optionnel, si tu veux réduire légèrement la taille du texte */
+}   
+
+/* si tu veux forcer une taille minimale / éviter le wrapping : */
+#table-controls-header > * {
+  flex: 0 0 auto;
+}
 
 /*Regle de fixation*/
 /* Colonne 1 */
@@ -726,36 +751,35 @@ tbody td:nth-last-child(3) {
   z-index: 5;
 }
 
+/* ===========================================================
+   CSS des bouttons crud
+=========================================================== */
+
+.button-crud {
+    display: inline-block;
+    padding: 6px 12px; /* Espacement interne */
+    background-color: #f3f3f3; /* Couleur de fond par défaut des boutons natifs */
+    color: #000; /* Texte noir */
+    text-decoration: none; /* Supprime le soulignement */
+    font-size: 13px; /* Taille de police par défaut */
+    text-align: center; /* Centre le texte */
+    border: 1px solid #ccc; /* Bordure légère */
+    border-radius: 3px; /* Coins légèrement arrondis */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Légère ombre */
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button-crud:hover {
+    background-color: #e6e6e6; /* Gris clair au survol */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Accentuation de l'ombre */
+    text-decoration: none; /* Évite le soulignement au survol */
+}
 
 /* ===========================================================
-   FCSS fonctionalites
+   CSS fonctionalites
 =========================================================== */
-.strain-searchDatatable {
-    margin: 10px 0 20px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.strain-searchDatatable .strain-search-left input#customSearch {
-    width: 300px;
-    padding: 8px 12px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.strain-searchDatatable .strain-search-left input#customSearch:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
-    outline: none;
-}
-
-.strain-searchDatatable .strain-search-right {
-    margin-left: 20px;
-}
-
+     
 .pagination {
     display: flex;
     flex-wrap: wrap;
