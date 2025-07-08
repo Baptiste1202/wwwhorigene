@@ -69,7 +69,7 @@
                                 <a href="{{ path('delete_publication', {id: publication.id}) }}"
                                     title="Supprimer"
                                     onclick="return confirm('Voulez-vous vraiment supprimer ?')">
-                                    Supprimer
+                                    Delete 
                                 </a>
                             </td>
                         </tr>
@@ -81,17 +81,9 @@
     <input type="hidden" name="action" value="" />
 
     <button id="btn-delete-multiple" type="submit" formaction="{{ path('delete_multiple_publications') }}" onclick="this.form.action.value='delete'" class="btn btn-danger" style="margin-top: 10px; display: none;">
-        Suppression multiple
+        Delete selected
     </button>
 </form>
-
-<div id="infoPopup" class="hidden">
-    <h3 id="popupTitle"></h3>
-    <p id="popupDetails"></p>
-    <a id="popupDownload" href="#" style="display: none; padding: 5px 10px; background: blue; color: white; text-decoration: none; border-radius: 5px;">
-        Télécharger
-    </a>
-</div>
 
 {% if app.session.flashbag.has('warning') %}
 <script>

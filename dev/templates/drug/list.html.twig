@@ -1,44 +1,86 @@
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Type</th>
-		<th>Description</th>
-		<th>Comment</th>
-    </tr>
+<!-- Font Awesome (optionnel) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-	{% for drug in drugs %}
-		<div class="list-drug">
-			<tr>
-				<td>{{drug.id}}</td>
-				<td>{{drug.name}}</td>
-				<td>{{drug.type}}</td>
-				<td>{{drug.description}}</td>
-				<td>{{drug.comment}}</td>
-				<td><a href = "{{path("edit_drug", {id: drug.id})}}"> Modifie </a></td>
-				<td><a href = "{{path("delete_drug", {id: drug.id})}}" class="delete-link"> Delete </a></td>
-			</tr>
-		</div>
-	{% endfor %}
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
 
-</table>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-{% if app.session.flashbag.has('warning') %}
-    <script>
-        // Sélectionner tous les liens de suppression
-        document.querySelectorAll('.delete-link').forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault(); // Empêcher la redirection initiale
+<!-- DataTables core -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-                // Afficher la confirmation si le flash warning existe
-                var confirmDelete = confirm("{{ app.session.flashbag.get('warning')[0] }}");
+<!-- DataTables Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 
-                // Si l'utilisateur confirme, ajouter ?confirm=yes à l'URL et rediriger
-                if (confirmDelete) {
-                    // Redirection vers la suppression avec confirmation
-                    window.location.href = this.href + '?confirm=yes';
-                }
-            });
-        });
-    </script>
-{% endif %}
+<!-- Dépendances export Excel/PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<!-- Multi-action form -->
+<form id="multi-action-form-drugs" method="post">
+    <div id="data-table-wrapper" class="sticky-wrapper">
+        <table id="data-table-drugs" class="display datatableComponent nowrap" style="visibility: hidden;">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all" /></th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Comment</th>
+                    <th data-column="duplicate" class="no-sort"></th>
+                    <th data-column="edit" class="no-sort"></th>
+                    <th data-column="delete" class="no-sort"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for drug in drugs %}
+                <tr>
+                    <td>
+                        <input type="checkbox" name="selected_drugs[]" value="{{ drug.id }}" class="select-checkbox" />
+                    </td>
+                    <td>{{ drug.id }}</td>
+                    <td>{{ drug.name }}</td>
+                    <td>{{ drug.type }}</td>
+                    <td data-info="{{ drug.description is not null ? drug.description : '--' }}">
+                        {{ drug.description is not null ? drug.description : '--' }}
+                    </td>
+                    <td data-info="{{ drug.comment is not null ? drug.comment : '--' }}">
+                        {{ drug.comment is not null ? drug.comment : '--' }}
+                    </td>
+                    <td>
+                        <a href="{{ path('duplicate_drug', {id: drug.id}) }}">Duplicate</a>
+                    </td>
+                    <td>
+                        <a href="{{ path('edit_drug', {id: drug.id}) }}">Modifie</a>
+                    </td>
+                    <td>
+                        <a href="{{ path('delete_drug', {id: drug.id}) }}"
+                            class="delete-link"
+                            title="Supprimer"
+                            onclick="return confirm('Voulez-vous vraiment supprimer ?')">
+                            Delete selected
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <input type="hidden" name="action" value="" />
+    <!-- Bouton suppression multiple -->
+    <button id="btn-delete-multiple"
+        type="submit"
+        formaction="{{ path('delete_multiple_drugs') }}"
+        onclick="this.form.action.value='delete'"
+        class="btn btn-danger"
+        style="margin-top: 10px; display: none;">
+        Delete selected
+    </button>
+</form>

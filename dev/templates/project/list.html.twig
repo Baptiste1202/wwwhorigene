@@ -55,7 +55,7 @@
                             <a href="{{ path('delete_project', {id: project.id}) }}"
                                 title="Supprimer"
                                 onclick="return confirm('Voulez-vous vraiment supprimer ?')">
-                                Supprimer
+                                Delete 
                             </a>
                         </td>
                     </tr>
@@ -67,7 +67,7 @@
     <input type="hidden" name="action" value="" />
 
     <button id="btn-delete-multiple" type="submit" formaction="{{ path('delete_multiple_projects') }}" onclick="this.form.action.value='delete'" class="btn btn-danger" style="margin-top: 10px; display: none;">
-        Suppression multiple
+        Delete selected
     </button>
 </form>
 

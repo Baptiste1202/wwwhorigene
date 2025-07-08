@@ -32,14 +32,16 @@ class DrugController extends AbstractController
     #[Route(path: 'page_drugs', name: 'page_drugs')]
     public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
     {
+        // Créer le formulaire
         $drugAdd = $this->createForm(DrugFormType::class); 
 
-        if ($security->isGranted('ROLE_SEARCH') || $security->isGranted('ROLE_ADMIN')){
-            $drugAdd = $this->addForm($request, $em);  
+        // Ajouter si l'utilisateur a les bons rôles
+        if ($security->isGranted('ROLE_SEARCH') || $security->isGranted('ROLE_ADMIN')) {
+            $drugAdd = $this->addForm($request, $em);   
         } 
 
-        $drugs = $this->drugRepository->findAll();
-        $drugs = $this->paginator->paginate($drugs, $request->query->getInt('page', 1), 15);
+        // Récupérer tous les drugs (sans pagination)
+        $drugs = $this->drugRepository->findAll(10000); // S'assurer que cette méthode accepte un limit
 
         return $this->render('drug/main.html.twig', [
             'drugForm' => $drugAdd, 
@@ -160,19 +162,107 @@ class DrugController extends AbstractController
 
     #[Route('strains/drug/delete/{id}', name: 'delete_drug')]
     #[IsGranted('ROLE_SEARCH')]
-    public function delete(Request $request, DrugResistance $drug, EntityManagerInterface $em): Response
+    public function delete(DrugResistance $drug, EntityManagerInterface $em): Response
     {
-        if ($request->query->get('confirm') === 'yes') {
+        // Récupère les IDs des strains associés au drug
+        $strainIds = $drug->getDrugResistanceOnStrains()->map(fn($strain) => $strain->getId())->toArray();
+
+        if (count($drug->getDrugResistanceOnStrains()) > 0) {
+            $this->addFlash('error', 'Cannot delete this drug because it is associated with the following strain IDs: ' . implode(', ', $strainIds) . '.');
+        } else {
+            // Supprime si aucune association
             $em->remove($drug);
             $em->flush();
 
-            $this->addFlash('success', 'Drug Resistance ' . $drug->getName() . ' deleted successfully!');
-            return $this->redirectToRoute('page_drugs');
+            $this->addFlash('success', 'Drug "' . $drug->getName() . '" has been successfully deleted!');
         }
-
-        $this->addFlash('warning', 'Are you sure you want to delete this Drug Resistance ' . $drug->getName(). ' ? (Be aware. This action cannot be undone !)');
 
         return $this->redirectToRoute('page_drugs');
     }
 
+    #[Route('drugs/duplicate/{id}', name: 'duplicate_drug')]
+    #[IsGranted('ROLE_SEARCH')]
+    public function duplicateDrug(DrugResistance $drug, EntityManagerInterface $em, Security $security): Response
+    {
+        try {
+            $user = $security->getUser();
+
+            // Créer une nouvelle instance Drug
+            $clone = new DrugResistance();
+
+            // Copier les champs simples (adapte si d'autres champs)
+            $clone->setName($drug->getName());
+            $clone->setType($drug->getType());
+            $clone->setDescription($drug->getDescription());
+            $clone->setComment($drug->getComment());
+
+            // Persist
+            $em->persist($clone);
+            $em->flush();
+
+            $this->addFlash('success', 'Drug "' . $clone->getName() . '" duplicated successfully!');
+
+            return $this->redirectToRoute('page_drugs');
+        } catch (\Throwable $e) {
+            $this->addFlash('error', 'An error occurred while duplicating the drug.');
+            return $this->redirectToRoute('page_drugs');
+        }
+    }
+
+    #[Route('/drugs/delete-multiple', name: 'delete_multiple_drugs', methods: ['POST'])]
+    #[IsGranted('ROLE_SEARCH')]
+    public function deleteMultipleDrugs(Request $request, EntityManagerInterface $em): Response
+    {
+        // Récupérer les IDs sélectionnés depuis la requête POST
+        $ids = $request->request->all('selected_drugs');
+
+        if (!is_array($ids) || empty($ids)) {
+            $this->addFlash('error', 'No drug selected.');
+            return $this->redirectToRoute('page_drugs');
+        }
+
+        // Chercher tous les drugs correspondants
+        $drugs = $em->getRepository(DrugResistance::class)->findBy(['id' => $ids]);
+
+        if (!$drugs) {
+            $this->addFlash('error', 'No drugs found for deletion.');
+            return $this->redirectToRoute('page_drugs');
+        }
+
+        $detailsDeleted = [];
+        $detailsBlocked = [];
+
+        foreach ($drugs as $drug) {
+            // Exemple : bloquer si le drug est lié à des souches (strains)
+            if (count($drug->getDrugResistanceOnStrains()) > 0) {
+                $detailsBlocked[] = sprintf('[ID: %d - Name: %s]', $drug->getId(), $drug->getName());
+                continue;
+            }
+
+            $detailsDeleted[] = sprintf('[ID: %d - Name: %s]', $drug->getId(), $drug->getName());
+            $em->remove($drug);
+        }
+
+        // Exécuter la suppression si des drugs sont valides
+        if (!empty($detailsDeleted)) {
+            $em->flush();
+        }
+
+        // Message succès
+        if (!empty($detailsDeleted)) {
+            $this->addFlash('success', sprintf(
+                '%d drug(s) successfully deleted: %s',
+                count($detailsDeleted),
+                implode(', ', $detailsDeleted)
+            ));
+        }
+
+        // Message erreur si des suppressions ont été bloquées
+        if (!empty($detailsBlocked)) {
+            $this->addFlash('error', 'Unable to delete some drugs because they are linked to strains: ' . implode(', ', $detailsBlocked));
+        }
+
+        // Redirection finale
+        return $this->redirectToRoute('page_drugs');
+    }
 }

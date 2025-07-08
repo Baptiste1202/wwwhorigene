@@ -277,9 +277,4 @@ class PlasmydController extends AbstractController
         // Redirection finale
         return $this->redirectToRoute('page_plasmyds');
     }
-
-    
-
-
-
 }

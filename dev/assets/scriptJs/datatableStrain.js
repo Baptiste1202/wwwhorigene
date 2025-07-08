@@ -11,11 +11,11 @@ document.addEventListener('DOMContentLoaded', function () {
         info: true,
         dom:'lfBtip',   
         buttons: [
-            { extend: 'copy',  exportOptions: { rows: (i,d,n) => n.style.display!=='none' } },
-            { extend: 'csv',   exportOptions: { rows: (i,d,n) => n.style.display!=='none' } },
-            { extend: 'excel', exportOptions: { rows: (i,d,n) => n.style.display!=='none' } },
-            { extend: 'pdf',   exportOptions: { rows: (i,d,n) => n.style.display!=='none' } },
-            { extend: 'print', exportOptions: { rows: (i,d,n) => n.style.display!=='none' } }
+            { extend: 'copy',  exportOptions: { columns: ':visible', rows: (i,d,n) => n.style.display!=='none' } },
+            { extend: 'csv',   exportOptions: { columns: ':visible', rows: (i,d,n) => n.style.display!=='none' } },
+            { extend: 'excel', exportOptions: { columns: ':visible', rows: (i,d,n) => n.style.display!=='none' } },
+            { extend: 'pdf',   exportOptions: { columns: ':visible', rows: (i,d,n) => n.style.display!=='none' } },
+            { extend: 'print', exportOptions: { columns: ':visible', rows: (i,d,n) => n.style.display!=='none' } }
         ],
         order: [],
         columnDefs: [
