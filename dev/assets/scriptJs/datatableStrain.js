@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ],
         order: [],
         columnDefs: [
-            { orderable: false, targets: [0,20, 21, 22] }
+            { orderable: false, targets: [0,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20, 21, 22] }
         ],
         rowGroup: {
             dataSrc: 1,
@@ -54,35 +54,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     api.column(colIdx).visible(this.checked);
                 });
             });
-
-            // 2c. Gestion tri à 3 états : ascendant descendant et retour initial
-            $('#data-table thead th').off('click.DT').on('click', function () {
-                const colIdx = $(this).index();
-
-                // ⚠️ Empêche le tri si la colonne est désactivée dans columnDefs
-                const nonTriables = [0, 20, 21, 22];
-                if (nonTriables.includes(colIdx)) return;
-
-                const currentOrder = api.order();
-                const currentColOrder = currentOrder.find(o => o[0] === colIdx);
-
-                $('#data-table thead th').removeClass('sorting_asc sorting_desc').addClass('sorting');
-
-                if (!currentColOrder) {
-                    api.order([[colIdx, 'asc']]).draw();
-                    $(this).removeClass('sorting').addClass('sorting_asc');
-                } else if (currentColOrder[1] === 'asc') {
-                    api.order([[colIdx, 'desc']]).draw();
-                    $(this).removeClass('sorting').addClass('sorting_desc');
-                } else {
-                    api.order([]).draw();
-                    $(this).removeClass('sorting_asc sorting_desc').addClass('sorting');
-                }
-            });
         }
     });
 
-    // 2) on deplace length, filter et buttons dans une div au dessus de la table pour la fixer
+    // --- Partie 2 : On deplace length, filter et buttons dans une div au dessus de la table pour la fixer
     $('#data-table_wrapper .dataTables_length, #data-table_wrapper .dataTables_filter, #data-table_wrapper .dt-buttons')
     .appendTo('#table-controls-header');
 
@@ -109,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
     
-    // 4. Recherche personnalisée par groupe 
+    // --- Partie 4. Recherche personnalisée par groupe 
     const searchInput = document.getElementById('customSearch');
 
     if (searchInput) {
@@ -171,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // 5. Popups (info/fichier) pour le téléchargement et les bonnes directions
+    // Partie 5. Popups (info/fichier) pour le téléchargement et les bonnes directions
     const typeMap = {
         sequencing: 'sequencing',
         transformability: 'transformability',

@@ -1,7 +1,14 @@
 {{ form_start(userForm) }}
 
-    {{ form_row(userForm.roles, {'label': 'Rôles'}) }}
+    {{ form_row(userForm.email) }}
+    {{ form_row(userForm.firstname) }}
+    {{ form_row(userForm.lastname) }}
+    {{ form_row(userForm.roles) }}
+    {{ form_row(userForm.password) }}
+    {{ form_row(userForm.isVerified) }}
 
-    <button type="submit">{{ button_label | default('Ajouter') }} </button>
+    <button type="submit" class="btn-form">
+        {{ button_label | default('Ajouter') }}
+    </button>
 
 {{ form_end(userForm) }}

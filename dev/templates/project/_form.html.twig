@@ -4,6 +4,8 @@
     {{ form_row(projectForm.description) }}
     {{ form_row(projectForm.comment) }}
 
-    <button type="submit">Ajouter</button>
+    <button type="submit" class="btn-form">
+        {{ button_label | default('Ajouter') }}
+    </button>
 
 {{ form_end(projectForm) }}

@@ -8,6 +8,8 @@
     {{ form_row(publicationForm.DOI) }}
     {{ form_row(publicationForm.description) }}
 
-    <button type="submit">{{ button_label | default('Ajouter') }} </button>
+    <button type="submit" class="btn-form">
+        {{ button_label | default('Ajouter') }}
+    </button>
 
 {{ form_end(publicationForm) }}

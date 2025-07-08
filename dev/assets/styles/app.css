@@ -157,7 +157,7 @@
     font-size: 1.5rem;
 }
 
-button.btn-form-strain {
+button.btn-form {
     padding: 0.5rem 1rem;
     margin-top : 0.5rem;
     border: none;
@@ -177,7 +177,7 @@ button.btn-form-strain {
     cursor: pointer;
 }
 
-button.btn-form-strain:hover {
+button.btn-form:hover {
     background-color: #357ABD;
 }
 
