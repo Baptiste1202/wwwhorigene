@@ -116,19 +116,22 @@ class SampleController extends AbstractController
     #[IsGranted('ROLE_SEARCH')]
     public function delete(Sample $sample, EntityManagerInterface $em): Response
     {
-        // Vérifie si le sample possède des souches liées (strains)
-        if (count($sample->getStrain()) > 0) {
-            $this->addFlash('error', 'Cannot delete this sample because it is associated with one or more strains.');
-            return $this->redirectToRoute('page_samples');
+        // Get IDs of strains associated with the sample
+        $strainIds = $sample->getStrain()->map(fn($strain) => $strain->getId())->toArray();
+
+        if (count($strainIds) > 0) {
+            $this->addFlash('error', 'Cannot delete this sample because it is associated with the following strain IDs: ' . implode(', ', $strainIds) . '.');
+        } else {
+            // Directly delete
+            $em->remove($sample);
+            $em->flush();
+
+            $this->addFlash('success', 'Sample "' . $sample->getName() . '" has been successfully deleted!');
         }
 
-        // Suppression du sample
-        $em->remove($sample);
-        $em->flush();
-
-        $this->addFlash('success', 'Sample "' . $sample->getName() . '" deleted successfully!');
         return $this->redirectToRoute('page_samples');
     }
+
 
     #[Route('samples/duplicate/{id}', name: 'duplicate_sample')]
     #[IsGranted('ROLE_SEARCH')]
