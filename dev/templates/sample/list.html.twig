@@ -1,36 +1,98 @@
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Date</th>
-        <th>Type</th>
-        <th>Country</th>
-        <th>City</th>
-        <th>Localisation</th>
-        <th>Under Localisation</th>
-        <th>GPS</th>
-        <th>Environnement</th>
-        <th>Other</th>
-        <th>Description</th>
-        <th>Comment</th>
-    </tr>
-    {% for sample in samples %}
-            <tr>
-                <td>{{sample.id}}</td>
-                <td>{{sample.date|date("d/m/Y")}}</td>
-                <td>{{sample.type}}</td>
-                <td>{{sample.country}}</td>
-                <td>{{sample.city}}</td>
-                <td>{{sample.localisation}}</td>
-                <td>{{sample.underLocalisation}}</td>
-                <td>{{sample.gps}}</td>
-                <td>{{sample.environment}}</td>
-                <td>{{sample.other}}</td>
-                <td>{{sample.description}}</td>
-                <td>{{sample.comment}}</td>
-                <td><a href = "{{path("duplicate_sample", {id: sample.id})}}"> Duplicate </a><td>
-                <td><a href = "{{path("edit_sample", {id: sample.id})}}"> Modifie </a><td>
-                <td class="supp"><a href = "{{path("delete_sample", {id: sample.id})}}"> x </a><td>
-            </tr>
-    {% endfor %}
+<!-- Font Awesome (optionnel) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-</table>
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables core -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<!-- DataTables Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+<!-- Dépendances export Excel/PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<form id="multi-action-form" method="post">
+    <div id="data-table-wrapper" class="sticky-wrapper">
+        <table id="data-table-samples" class="display datatableComponent nowrap" style="visibility: hidden;">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all" /></th>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Country</th>
+                    <th>City</th>
+                    <th>Localisation</th>
+                    <th>Under Localisation</th>
+                    <th>GPS</th>
+                    <th>Environnement</th>
+                    <th>Other</th>
+                    <th>Description</th>
+                    <th>Comment</th>
+                    <th>Creator</th> 
+                    <th data-column="duplicate" class="no-sort"></th>
+                    <th data-column="edit" class="no-sort"></th>
+                    <th data-column="delete" class="no-sort"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sample in samples %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="selected_samples[]" value="{{ sample.id }}" class="select-checkbox" />
+                        </td>
+                        <td>{{ sample.id }}</td>
+                        <td>{{ sample.date|date("d/m/Y") }}</td>
+                        <td>{{ sample.type }}</td>
+                        <td>{{ sample.country }}</td>
+                        <td>{{ sample.city }}</td>
+                        <td>{{ sample.localisation }}</td>
+                        <td>{{ sample.underLocalisation }}</td>
+                        <td>{{ sample.gps }}</td>
+                        <td>{{ sample.environment }}</td>
+                        <td>{{ sample.other }}</td>
+                        <td>{{ sample.description }}</td>
+                        <td>{{ sample.comment }}</td>
+                        <td>{{ sample.user }}</td> <!-- 🟢 Nouvelle colonne -->
+                        <td>
+                            <a href="{{ path('duplicate_sample', {id: sample.id}) }}">Duplicate</a>
+                        </td>
+                        <td>
+                            <a href="{{ path('edit_sample', {id: sample.id}) }}">Modifie</a>
+                        </td>
+                        <td>
+                            <a href="{{ path('delete_sample', {id: sample.id}) }}"
+                               class="delete-link"
+                               title="Delete"
+                               onclick="return confirm('Do you really want to delete?')">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <input type="hidden" name="action" value="" />
+
+    <!-- ✅ Bouton suppression multiple -->
+    <button id="btn-delete-multiple"
+            type="submit"
+            formaction="{{ path('delete_multiple_samples') }}"
+            onclick="this.form.action.value='delete'"
+            class="btn btn-danger"
+            style="margin-top: 10px; display: none;">
+        Delete selected
+    </button>
+</form>

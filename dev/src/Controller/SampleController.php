@@ -1,11 +1,11 @@
-<?php 
+<?php
 
 namespace App\Controller;
 
 use App\Entity\Sample;
+use App\Form\SampleFormType;
 use App\Repository\SampleRepository;
 use App\Repository\SampleRepositoryInterface;
-use App\Form\SampleFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -28,19 +28,18 @@ class SampleController extends AbstractController
     #[Route(path: 'samples/page', name: 'page_samples')]
     public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
     {
-        $role = $security->getUser()->getRoles(); 
+        $sampleAdd = $this->createForm(SampleFormType::class);
 
-        $responseAdd = $this->createForm(SampleFormType::class); 
+        if ($security->isGranted('ROLE_SEARCH') || $security->isGranted('ROLE_ADMIN')) {
+            $sampleAdd = $this->addForm($request, $em);
+        }
 
-        if ($security->isGranted('ROLE_SEARCH') || $security->isGranted('ROLE_ADMIN')){
-            $responseAdd = $this->add($request, $em, $security);  
-        } 
-
-        $samples = $this->sampleRepository->findAll();
+        // Ici, il faut bien que findAll accepte un paramètre de limit !
+        $samples = $this->sampleRepository->findAll(10000);
 
         return $this->render('sample/main.html.twig', [
-            'sampleForm' => $responseAdd, 
-            'samples' => $samples
+            'sampleForm' => $sampleAdd,
+            'samples'    => $samples
         ]);
     }
 
@@ -55,33 +54,41 @@ class SampleController extends AbstractController
 
     #[Route(path: 'samples/add', name: 'add_sample')]
     #[IsGranted('ROLE_ADMIN')]
-    public function add(Request $request, EntityManagerInterface $em): Form
+    public function addForm(Request $request, EntityManagerInterface $em): Form
     {
-        // $this->denyAccessUnlessGranted('ROLE_RENTER');
+        $sample = new Sample();
 
-        //Create a new vehicule
-        $sample = new sample();
-
-        //Create the form
         $sampleForm = $this->createForm(SampleFormType::class, $sample);
 
-        //
         $sampleForm->handleRequest($request);
 
         if ($sampleForm->isSubmitted() && $sampleForm->isValid()) {
-            //generate the slug -- not done yet
-            $newDate = $sample->getDate()->format('d/m/y'); 
-            //get the user -- not done yet
-
-            //stock data
             $em->persist($sample);
             $em->flush();
 
-            // redirect
+            // Tu peux ajouter un flash ici si tu veux
             return $sampleForm;
         }
 
         return $sampleForm;
+    }
+
+    #[Route(path: 'samples/add/response', name: 'add_sample_response')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function addResponse(Request $request, EntityManagerInterface $em): Response
+    {
+        $sample = new Sample();
+        $sampleForm = $this->createForm(SampleFormType::class, $sample);
+
+        $sampleForm->handleRequest($request);
+
+        if ($sampleForm->isSubmitted() && $sampleForm->isValid()) {
+            $em->persist($sample);
+            $em->flush();
+
+            return $this->redirectToRoute('page_samples');
+        }
+        return $this->render('sample/create.html.twig', compact('sampleForm'));
     }
 
     #[Route('strains/sample/edit/{id}', name: 'edit_sample')]
@@ -91,27 +98,14 @@ class SampleController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
     ): Response {
-
-        /*
-        if ($vehicule) {
-            $this->denyAccessUnlessGranted('vehicule.is_creator', $vehicule);
-        }
-        */
-
-        //Create the form
         $sampleForm = $this->createForm(SampleFormType::class, $sample);
-
-        //treat the request
         $sampleForm->handleRequest($request);
 
         if ($sampleForm->isSubmitted() && $sampleForm->isValid()) {
-            //generate the slug
-
-            //stock data
             $em->persist($sample);
             $em->flush();
 
-            $this->addFlash('success', 'sample ' . $sample->getName() . ' modified with succes !');
+            $this->addFlash('success', 'Sample "' . $sample->getName() . '" modified with success!');
 
             return $this->redirectToRoute('page_samples');
         }
@@ -122,44 +116,91 @@ class SampleController extends AbstractController
     #[IsGranted('ROLE_SEARCH')]
     public function delete(Sample $sample, EntityManagerInterface $em): Response
     {
-        /*
-        if ($vehicule) {
-            $this->denyAccessUnlessGranted('vehicule.is_creator', $vehicule);
+        // Vérifie si le sample possède des souches liées (strains)
+        if (count($sample->getStrain()) > 0) {
+            $this->addFlash('error', 'Cannot delete this sample because it is associated with one or more strains.');
+            return $this->redirectToRoute('page_samples');
         }
-        */
 
+        // Suppression du sample
         $em->remove($sample);
         $em->flush();
 
-        $this->addFlash('success', 'sample ' . $sample->getName() . ' delete with success !');
-
+        $this->addFlash('success', 'Sample "' . $sample->getName() . '" deleted successfully!');
         return $this->redirectToRoute('page_samples');
     }
 
     #[Route('samples/duplicate/{id}', name: 'duplicate_sample')]
     #[IsGranted('ROLE_SEARCH')]
-    public function duplicate(
-        Sample $sample,
-        Request $request,
-        EntityManagerInterface $em,
-        Security $security
-    ): Response {
+    public function duplicate(Sample $sample, EntityManagerInterface $em, Security $security): Response
+    {
+        try {
+            $user = $security->getUser();
 
-        $user = $security->getUser(); 
+            $clone = new Sample();
+            $clone->setName($sample->getName());
+            $clone->setType($sample->getType());
+            $clone->setDate($sample->getDate());
+            $clone->setCountry($sample->getCountry());
+            $clone->setCity($sample->getCity());
+            $clone->setLocalisation($sample->getLocalisation());
+            $clone->setUnderLocalisation($sample->getUnderLocalisation());
+            $clone->setGps($sample->getGps());
+            $clone->setEnvironment($sample->getEnvironment());
+            $clone->setOther($sample->getOther());
+            $clone->setDescription($sample->getDescription());
+            $clone->setComment($sample->getComment());
 
-        $sampleCloned = clone $sample; 
+            // ➡️ Nom + prénom comme creator
+            $clone->setUser($user->getFirstname() . ' ' . $user->getLastname());
 
-        $sampleCloned->setId(null);
-        $sampleCloned->setDate(new \DateTime());
-      
-        $em->persist($sampleCloned);
-        $em->flush();
+            $em->persist($clone);
+            $em->flush();
 
+            $this->addFlash('success', 'Sample "' . $clone->getName() . '" duplicated successfully!');
+            return $this->redirectToRoute('page_samples');
 
-        $this->addFlash('success', 'Strain ' . $sampleCloned->getName() . ' duplicate with succes !');
-
-        return $this->redirectToRoute('page_samples');
-
+        } catch (\Throwable $e) {
+            $this->addFlash('error', 'An error occurred while duplicating the sample.');
+            return $this->redirectToRoute('page_samples');
+        }
     }
 
+    #[Route('/samples/delete-multiple', name: 'delete_multiple_samples', methods: ['POST'])]
+    #[IsGranted('ROLE_SEARCH')]
+    public function deleteMultipleSamples(Request $request, EntityManagerInterface $em): Response
+    {
+        // Récupère les IDs sélectionnés
+        $ids = $request->request->all('selected_samples');
+
+        if (!is_array($ids) || empty($ids)) {
+            $this->addFlash('error', 'No sample selected.');
+            return $this->redirectToRoute('page_samples');
+        }
+
+        // Trouve tous les samples concernés
+        $samples = $em->getRepository(Sample::class)->findBy(['id' => $ids]);
+
+        if (!$samples) {
+            $this->addFlash('error', 'No samples found for deletion.');
+            return $this->redirectToRoute('page_samples');
+        }
+
+        $detailsDeleted = [];
+        foreach ($samples as $sample) {
+            $detailsDeleted[] = sprintf('[ID: %d - Name: %s]', $sample->getId(), $sample->getName());
+            $em->remove($sample);
+        }
+
+        if (!empty($detailsDeleted)) {
+            $em->flush();
+            $this->addFlash('success', sprintf(
+                '%d sample(s) successfully deleted: %s',
+                count($detailsDeleted),
+                implode(', ', $detailsDeleted)
+            ));
+        }
+
+        return $this->redirectToRoute('page_samples');
+    }
 }
