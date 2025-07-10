@@ -3,6 +3,13 @@
 
     <div id="filter-menu" class="filter-menu">
         <label>Afficher : </label>
+
+        <!-- ✅ Checkbox All -->
+        <label>
+            <input type="checkbox" id="toggle-all-columns" checked>
+            <b>Toutes les colonnes</b>
+        </label>
+        <hr>
         
         <label><input type="checkbox" class="toggle-column" data-column="0" checked> Selection</label>
         <label><input type="checkbox" class="toggle-column" data-column="1" checked> ID</label>
@@ -27,3 +34,31 @@
         {# Les colonnes d'action (Duplicate, Modifie, x) ne sont pas incluses dans les toggles par défaut #}
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleAll = document.getElementById('toggle-all-columns');
+
+    function setAllCheckboxes(state) {
+        document.querySelectorAll('.toggle-column').forEach(cb => {
+            if (cb.checked !== state) {
+                cb.checked = state;
+                cb.dispatchEvent(new Event('change'));
+            }
+        });
+    }
+
+    // Clic sur "Toutes les colonnes" => coche/décoche toutes
+    toggleAll.addEventListener('change', function() {
+        setAllCheckboxes(toggleAll.checked);
+    });
+
+    // Synchronise la case "Toutes les colonnes" selon l'état de chaque colonne
+    document.querySelectorAll('.toggle-column').forEach(cb => {
+        cb.addEventListener('change', function() {
+            const allChecked = Array.from(document.querySelectorAll('.toggle-column')).every(c => c.checked);
+            toggleAll.checked = allChecked;
+        });
+    });
+});
+</script>
