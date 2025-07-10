@@ -10,17 +10,22 @@
                 <div id="filter">
                     {% include 'strain/elastic_main.html.twig' %}
                 </div>
-                <div id="filter">
+                <div id="filter" style="margin-bottom:10px;">
                     {% include 'strain/_filter_form_datatable.html.twig' %}
                 </div>
                 <div id="message">
                     {% include './message.html.twig' %}
                 </div>
-                <div id="strain-datatable-search" class="strain-searchDatatable">
-                    <div class="strain-search-left">
+                <div id="table-header-toolbar" class="table-header-toolbar">
+                    <div class="table-header-search">
                         {% include 'strain/_datatable_search.html.twig' %}
                     </div>
-                    <div class="strain-search-right">
+
+                    <div id="multiple-download" class="table-header-download">
+                        {% include "strain/_download_file.html.twig" %}
+                    </div>
+
+                    <div class="table-header-filters">
                         {% include 'strain/user_filter_button.html.twig' %}
                     </div>
                 </div>

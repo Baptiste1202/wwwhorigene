@@ -1,0 +1,64 @@
+<!-- Button to open the modal -->
+<button id="multi-download-btn" class="btn btn-primary" style="margin-bottom:1rem;">
+    <i class="fa fa-download"></i> Multiple Download
+</button>
+
+<!-- Modal container (hidden by default) -->
+<div id="downloadModal" class="modal" role="dialog" tabindex="-1" style="display:none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Multiple Download</h5>
+                <button type="button" class="close" id="modal-close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="download-error" style="display:none;"></div>
+
+            <div class="modal-body">
+                <p>Select the types of files to include:</p>
+
+                <div>
+                    <label>
+                        <input type="checkbox" name="fileType" value="all">
+                        All
+                    </label>
+                    <br>
+                    <label>
+                        <input type="checkbox" name="fileType" value="sequencing">
+                        Sequencing
+                    </label>
+                    <br>
+                    <label>
+                        <input type="checkbox" name="fileType" value="transformability">
+                        Transformability
+                    </label>
+                    <br>
+                    <label>
+                        <input type="checkbox" name="fileType" value="drugResistance">
+                        Drug Resistance
+                    </label>
+                </div>
+
+                <div style="margin-top:10px;">
+                    <label>
+                        Extension (optional, e.g. <code>.fasta</code>):
+                        <input type="text" id="extension-input" placeholder=".ext" />
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="confirm-download-btn" class="btn btn-success">
+                    Download
+                </button>
+                <button type="button" id="modal-cancel" class="btn btn-secondary">
+                    Cancel
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

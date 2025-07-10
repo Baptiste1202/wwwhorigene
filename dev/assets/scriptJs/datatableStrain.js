@@ -92,6 +92,16 @@ document.addEventListener('DOMContentLoaded', function () {
             const term = this.value.trim().toLowerCase();
 
             if (term === '') {
+                // Décoche toutes les cases de lignes visibles
+                const selectAllCheckbox = document.getElementById('select-all');
+                if (selectAllCheckbox) {
+                    selectAllCheckbox.checked = false;
+                }
+                document.querySelectorAll('input.select-checkbox').forEach(cb => {
+                    cb.checked = false;
+                    cb.dispatchEvent(new Event('change'));
+                });
+                // Reviens a la pagination initiale
                 if (previousPageLength !== null) {
                     dataTable.page.len(previousPageLength).draw();
                 }

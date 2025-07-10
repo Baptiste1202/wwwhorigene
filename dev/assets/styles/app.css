@@ -571,7 +571,61 @@ thead {
    CSS specifique pour la DATATABLE de strain
 =========================================================== */
 
-.strain-searchDatatable {
+#downloadFile {
+    /* Centrer le contenu de ce div, optionnel si tu veux que le contenu soit centré dedans */
+    text-align: center;
+    flex-grow: 1;  /* fait prendre le max d'espace entre les 2 autres */
+}
+/* Overlay couvrant toute la fenêtre */
+#downloadModal.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  display: none;              /* caché par défaut */
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+/* Votre boîte de dialogue */
+#downloadModal .modal-dialog {
+  max-width: 400px;
+  width: 90%;
+}
+#downloadModal .modal-content {
+  background: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+}
+#downloadModal .modal-header,
+#downloadModal .modal-footer {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #eee;
+}
+#downloadModal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#downloadModal .modal-body {
+  padding: 1rem;
+}
+#downloadModal .modal-footer {
+  border-top: none;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+/* Bouton fermer */
+#downloadModal .close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.table-header-toolbar {
     margin: 10px 0 20px 0;
     display: flex;
     justify-content: space-between;
@@ -582,8 +636,8 @@ thead {
   font-size: 0.8rem; /* optionnel, si tu veux réduire légèrement la taille du texte */
 }
 
-.strain-searchDatatable .strain-search-left input#customSearch {
-    width: 200px;
+.table-header-toolbar .table-header-search input#customSearch {
+    width: 175px;
     padding: 8px 12px;
     font-size: 14px;
     border: 1px solid #ccc;
@@ -591,15 +645,16 @@ thead {
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.strain-searchDatatable .strain-search-left input#customSearch:focus {
+.table-header-toolbar .table-header-search input#customSearch:focus {
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
     outline: none;
 }
 
-.strain-searchDatatable .strain-search-right {
+.table-header-toolbar .table-header-filters {
     margin-left: 20px;
 }
+
 
 /* #table-controls header */
 #table-controls-header {
