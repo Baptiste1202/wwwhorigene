@@ -59,7 +59,7 @@ class Sample
     /**
      * @var Collection<int, Strain>
      */
-    #[ORM\OneToMany(targetEntity: Strain::class, mappedBy: 'sample', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Strain::class, mappedBy: 'prelevement', orphanRemoval: true)]
     private Collection $strain;
 
     public function getId(): ?int
