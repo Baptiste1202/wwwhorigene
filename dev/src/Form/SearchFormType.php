@@ -22,6 +22,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class SearchFormType extends AbstractType
 {
@@ -78,9 +79,14 @@ class SearchFormType extends AbstractType
                 'placeholder' => 'png, fastq...'
             ]
         ])
-        ->add('resistant', CheckboxType::class, [
+        ->add('resistant', ChoiceType::class, [
             'required' => false,
-            'label' => "Resistant"
+            'label' => "Résistance",
+            'placeholder' => 'all',
+            'choices' => [
+                'Résistant' => true,
+                'Sensible' => false,
+            ],
         ])
         ->setMethod('GET');
     }

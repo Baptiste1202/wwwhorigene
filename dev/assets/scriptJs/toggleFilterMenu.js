@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuButton = document.getElementById('menu-button');
     const filterMenu = document.getElementById('filter-menu');
 
+    // Vérifie la présence des deux éléments avant d’ajouter les listeners
+    if (!menuButton || !filterMenu) return;
+
     // Bascule la visibilité du menu au clic sur le bouton
     menuButton.addEventListener('click', function() {
         filterMenu.classList.toggle('visible');

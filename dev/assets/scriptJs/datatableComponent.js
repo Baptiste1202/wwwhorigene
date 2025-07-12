@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Cacher le popup si on clique ailleurs
     document.addEventListener('click', function (event) {
         const popup = document.getElementById('infoPopup');
+        if (!popup) return; // ← SECU ici AVANT d'appeler contains !
         if (!popup.contains(event.target) && !event.target.closest('td[data-info]')) {
             popup.style.display = 'none';
         }

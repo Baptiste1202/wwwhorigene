@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     const table = document.getElementById('data-table');
+    if (!table) {
+        // La table n'est pas sur cette page, on stoppe tout
+        return;
+    }
     const rows = table.querySelectorAll('tbody tr');
     let previousPageLength = null;
 
@@ -169,6 +173,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const fileName = cell.dataset.file;
             const popup = document.getElementById('infoPopup');
             const downloadLink = document.getElementById('popupDownload');
+
+            // AJOUTE cette ligne pour éviter l’erreur
+            if (!popup || !downloadLink) return;
 
             let fileType = null;
             for (const cls in typeMap) {

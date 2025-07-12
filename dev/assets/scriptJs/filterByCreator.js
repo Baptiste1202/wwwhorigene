@@ -2,12 +2,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const table = document.querySelector('#data-table');
     const btn = document.getElementById('filterByUserButton');
 
-    if (!btn) {
-        console.error("Bouton #filterByUserButton introuvable !");
-        return;
-    }
-    if (!table) {
-        console.error("Table #data-table introuvable !");
+    // Vérif présence éléments (pas d’erreur si absent)
+    if (!btn || !table) {
+        if (!btn) console.warn("Bouton #filterByUserButton introuvable !");
+        if (!table) console.warn("Table #data-table introuvable !");
         return;
     }
 
@@ -16,8 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const userLastname = btn.dataset.lastname;
     const currentUserName = `${userFirstname} ${userLastname}`.trim();
     
-    //console.log("Nom complet récupéré côté JS :", currentUserName);
-
     btn.dataset.active = "false";  // état initial
     btn.textContent = `🔍 Filter by: ${currentUserName}`;
 
@@ -25,13 +21,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const active = btn.dataset.active === "true";
 
         if (!active) {
-            //console.log(`Activation du filtre : affichage uniquement des lignes créées par ${currentUserName}.`);
             filterByCreator(true);
             btn.dataset.active = "true";
             btn.classList.add('active');
             btn.textContent = `Show all`;
         } else {
-            //console.log("Désactivation du filtre : affichage de toutes les lignes.");
             filterByCreator(false);
             btn.dataset.active = "false";
             btn.classList.remove('active');
@@ -49,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         if (creatorIndex === -1) {
-            console.error("Colonne 'Creator' introuvable !");
+            console.warn("Colonne 'Creator' introuvable !");
             return;
         }
 
@@ -62,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const text = creatorCell.textContent.trim();
 
             if (onlyWithCreator) {
-                if (text !== '' && text !== '--') { // Assuming '--' is a placeholder for empty creator
+                if (text !== '' && text !== '--') {
                     row.style.display = '';
                     countVisible++;
                 } else {
@@ -73,6 +67,5 @@ document.addEventListener('DOMContentLoaded', function () {
                 countVisible++;
             }
         });
-        //console.log(`Nombre de lignes visibles : ${countVisible}`);
     }
 });

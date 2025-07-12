@@ -55,7 +55,7 @@
         <tbody>
             {% if strains is empty %}
                 <tr>
-                    <td class="no-data">No strains found.</td> 
+                    <td class="no-data" colspan="23">No strains found.</td>
                 </tr>
             {% endif %}
             {% for strain in strains %}
@@ -290,7 +290,7 @@
                         --
                     {% endif %}
                 </td>
-                                    <td>
+                    <td>
                         <a href="{{ path('duplicate_strain', {id: strain.id}) }}" class="button-crud" title="Dupliquer">
                             <i class="fa-solid fa-copy"></i>
                         </a>
@@ -478,4 +478,5 @@
         Télécharger
     </a>
 </div>
+
 

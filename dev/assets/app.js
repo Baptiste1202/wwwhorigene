@@ -12,6 +12,8 @@ import './scriptJs/datatableStrain.js'
 import './scriptJs/toggleFilterMenu.js'
 import './scriptJs/filterByCreator.js'
 import './scriptJs/downloasMultipleFile.js'
+import './scriptJs/searchFormFloating.js'
+import './scriptJs/toggleColumns.js'
 
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
