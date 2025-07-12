@@ -2,8 +2,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     const toggleAll = document.getElementById('toggle-all-columns');
-    console.log('toggleColumns.js chargé !');
-
 
     function setAllCheckboxes(state) {
         document.querySelectorAll('.toggle-column').forEach(cb => {
