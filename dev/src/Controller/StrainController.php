@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Psr\Log\LoggerInterface;
 use App\Entity\Strain;
 use App\Form\ParentFormType;
 use App\Form\SearchFormType;
@@ -33,8 +34,10 @@ class StrainController extends AbstractController
         private StrainRepositoryInterface $strainRepository,
         private PaginatorInterface $paginator,
         private readonly PaginatedFinderInterface $finder,
+        LoggerInterface $logger 
     ) {
         $this->paginator = $paginator; 
+         $this->logger = $logger; 
     }
 
     #[Route(path: 'strains/page', name: 'page_strains')]
@@ -384,31 +387,40 @@ class StrainController extends AbstractController
     }
 
     #[Route('/search', name: 'app_search')]
-    public function elasticForm(Request $request): Array
+    public function elasticForm(Request $request): array
     {
-        $form = $this -> createForm(SearchFormType::class); 
+        $form = $this->createForm(SearchFormType::class); 
         $form->handleRequest($request); 
 
+        $this->logger->info('Form initialized for elastic search');
+
+        $pagination = [];
         if ($form->isSubmitted() && $form->isValid()){
             /** @var SearchModel $data */
             $data = $form->getData(); 
+            $this->logger->info('Form submitted', ['data' => (array) $data]);
             $page = $request->query->getInt('page',1);
+            $this->logger->info('Page requested', ['page' => $page]);
             
             $boolQuery = new BoolQuery();
 
             if ($data->query){
+                $this->logger->info('Add query', ['query' => $data->query]);
                 $boolQuery->addMust(new Wildcard('nameStrain', '*'.$data->query.'*')); 
             }
 
             if ($data->plasmyd){
+                $this->logger->info('Add plasmyd', ['plasmyd_id' => $data->plasmyd->getId()]);
                 $boolQuery->addFilter(new MatchQuery('plasmyd.id', $data->plasmyd->getId()));
             }
 
             if ($data->sequencing) {
+                $this->logger->info('Add sequencing', ['sequencing' => $data->sequencing]);
                 $boolQuery->addFilter(new MatchQuery('methodSequencing.typeFile', $data->sequencing));
             }
 
             if ($data->drug ){
+                $this->logger->info('Add drug', ['drug_id' => $data->drug->getId()]);
                 $nestedBool = new BoolQuery();
                 
                 if ($data->drug) {
@@ -416,6 +428,7 @@ class StrainController extends AbstractController
                 }
             
                 if ($data->resistant !== null) {
+                    $this->logger->info('Add resistant', ['resistant' => $data->resistant]);
                     $nestedBool->addFilter(new MatchQuery('drugResistanceOnStrain.resistant', $data->resistant));
                 }
 
@@ -427,36 +440,56 @@ class StrainController extends AbstractController
             }
 
             if ($data->genotype){
+                $this->logger->info('Add genotype', ['genotype_id' => $data->genotype->getId()]);
                 $boolQuery->addFilter(new MatchQuery('genotype.id', $data->genotype->getId()));
             }
 
             if ($data->project){
+                $this->logger->info('Add project', ['project_id' => $data->project->getId()]);
                 $boolQuery->addFilter(new MatchQuery('project.id', $data->project->getId()));
             }
 
             if ($data->sample){
+                $this->logger->info('Add sample', ['sample_id' => $data->sample->getId()]);
                 $boolQuery->addFilter(new MatchQuery('sample.id', $data->sample->getId()));
             }
 
             if ($data->user){
+                $this->logger->info('Add user', ['user_id' => $data->user->getId()]);
                 $boolQuery->addFilter(new MatchQuery('createdBy.id', $data->user->getId()));
             }
 
             if ($data->specie) {
+                $this->logger->info('Add specie', ['specie' => $data->specie]);
                 $boolQuery->addFilter(new Wildcard('specie', '*'.$data->specie.'*'));
             }
 
             if ($data->gender) {
+                $this->logger->info('Add gender', ['gender' => $data->gender]);
                 $boolQuery->addFilter(new Wildcard('gender', '*'.$data->gender.'*'));
             }
 
-            $query = new Query ($boolQuery);
+            $query = new Query($boolQuery);
             $query->setSort(['id' => ['order' => 'desc']]);
+
+            $this->logger->info('Final ES Query ready');
 
             // Crée le paginator à partir de la query complète
             $results = $this->finder->createPaginatorAdapter($query);
+            $this->logger->info('Elastic finder returned', [
+                'class' => is_object($results) ? get_class($results) : gettype($results)
+            ]);
             $pagination = $this->paginator->paginate($results, $page, 1000);
-        } 
+
+            // Nombre d’éléments renvoyés :
+            if (is_countable($pagination)) {
+                $this->logger->info('Pagination result count', ['count' => count($pagination)]);
+            } else {
+                $this->logger->info('Pagination not countable');
+            }
+        } else {
+            $this->logger->info('Form not submitted or invalid');
+        }
 
         return [
             'form' => $form,
