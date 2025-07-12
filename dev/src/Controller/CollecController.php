@@ -12,12 +12,14 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Throwable;
 
 class CollecController extends AbstractController
 {
@@ -30,6 +32,7 @@ class CollecController extends AbstractController
     }
 
     #[Route(path: 'page_collecs', name: 'page_collecs')]
+    #[IsGranted('ROLE_INTERN')]
     public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
     {
         $collecAdd = $this->createForm(CollecFormType::class); 
@@ -76,27 +79,6 @@ class CollecController extends AbstractController
         return $collecForm;
     }
 
-    #[Route(path: 'strains/collections/ajout/response', name: 'add_collec')]
-    #[IsGranted('ROLE_SEARCH')]
-    public function addResponse(Request $request, EntityManagerInterface $em): Response
-    {
-        $collec = new Collec();
-
-        $collecForm = $this->createForm(CollecFormType::class, $collec);
-
-        $collecForm->handleRequest($request);
-
-        if ($collecForm->isSubmitted() && $collecForm->isValid()) {
-            $em->persist($collec);
-            $em->flush();
-
-            $this->addFlash('success', 'Collection ' . $collec->getName() . 'added with success !');
-
-            return $this->redirectToRoute('page_strains');
-        }
-        return $this->render('collec/create.html.twig', compact('collecForm'));
-    }
-
     #[Route('strains/collec/edit/{id}', name: 'edit_collec')]
     #[IsGranted('ROLE_SEARCH')]
     public function edit(
@@ -104,14 +86,7 @@ class CollecController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
     ): Response {
-
-        /*
-        if ($vehicule) {
-            $this->denyAccessUnlessGranted('vehicule.is_creator', $vehicule);
-        }
-        */
-
-        //Create the form
+        
         $collecForm = $this->createForm(CollecFormType::class, $collec);
 
         //treat the request

@@ -29,68 +29,49 @@ class UserController extends AbstractController
     }
 
     #[Route(path: 'page_users', name: 'page_users')]
+    #[IsGranted('ROLE_ADMIN')]
     public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
     {
-        $userForm = $this->createForm(UserFormType::class);
-
-        if ($security->isGranted('ROLE_ADMIN')) {
-            $userForm = $this->addForm($request, $em);
-        }
-
-        $users = $this->userRepository->findAll(10000); // Meme logique que Plasmyd
+        $users = $this->userRepository->findAll(10000); 
 
         return $this->render('user/main.html.twig', [
-            'userForm' => $userForm,
             'users' => $users,
         ]);
     }
 
-    #[Route(path: 'strains/user/ajout', name: 'add_user')]
+    #[Route('user/edit/{id}', name: 'edit_user')]
     #[IsGranted('ROLE_ADMIN')]
-    public function addForm(Request $request, EntityManagerInterface $em): Form
-    {
-        $user = new User();
+    public function edit(
+        User $user,
+        Request $request,
+        EntityManagerInterface $em,
+    ): Response {
 
-        $form = $this->createForm(UserFormType::class, $user);
-        $form->handleRequest($request);
+        $userForm = $this->createForm(UserFormType::class, $user);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $userForm->handleRequest($request);
+
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
+
             $em->persist($user);
             $em->flush();
 
-            $this->addFlash('success', 'User ' . $user->getFirstname() . ' added successfully!');
-        }
+            $this->addFlash('success', 'user ' . $user->getFirstname() . $user->getLastname(). ' modified with succes !');
 
-        return $form;
-    }
-
-    #[Route(path: 'strains/user/edit/{id}', name: 'edit_user')]
-    #[IsGranted('ROLE_ADMIN')]
-    public function edit(User $user, Request $request, EntityManagerInterface $em): Response
-    {
-        $form = $this->createForm(UserFormType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($user);
-            $em->flush();
-
-            $this->addFlash('success', 'User ' . $user->getFirstname() . ' updated successfully!');
             return $this->redirectToRoute('page_users');
         }
-
-        return $this->render('user/edit.html.twig', compact('form'));
+        return $this->render('user/edit.html.twig', compact('userForm'));
     }
 
-    #[Route(path: 'strains/user/delete/{id}', name: 'delete_user')]
+    #[Route('strains/user/delete/{id}', name: 'delete_user')]
     #[IsGranted('ROLE_ADMIN')]
-    public function delete(User $user, EntityManagerInterface $em): Response
+    public function delete(user $user, EntityManagerInterface $em): Response
     {
-        // Suppression directe sans dépendance ici (ajuster si besoin)
         $em->remove($user);
         $em->flush();
 
-        $this->addFlash('success', 'User deleted successfully!');
+        $this->addFlash('success', 'user ' . $user->getFirstname() . $user->getLastname() . ' delete with success !');
+
         return $this->redirectToRoute('page_users');
     }
 }

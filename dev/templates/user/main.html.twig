@@ -1,11 +1,6 @@
 {% extends 'layout.html.twig' %}
 {% block body %}
         <div id="global">
-            {% if (app.user.roles.0 != "ROLE_INTERN") %}
-                <div id="form">
-                    {% include "user/create.html.twig" %}
-                </div>
-            {% endif %}
             <div id="list">
                 <div id="table" class="table-user">
                     {% include "user/list.html.twig" %}

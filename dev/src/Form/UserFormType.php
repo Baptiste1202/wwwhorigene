@@ -33,14 +33,6 @@ class UserFormType extends AbstractType
                 'multiple' => true, 
                 'expanded' => false, 
                 'label' => 'Role',
-            ])
-            ->add('password', PasswordType::class, [
-                'label' => 'Mot de passe',
-                'required' => true,
-            ])
-            ->add('isVerified', CheckboxType::class, [
-                'label' => 'Verifie',
-                'required' => false,
             ]);
     }
 }

@@ -12,7 +12,9 @@
 <body>
     <div class="vertical-menu">
         <ul>
-            <li><a href="{{ absolute_url(path('page_users')) }}"> <i class="fa-solid fa-user"></i> User</a></li>
+            {% if (app.user.roles.0 == "ROLE_ADMIN") %}
+                <li><a href="{{ absolute_url(path('page_users')) }}"> <i class="fa-solid fa-user"></i> User</a></li>
+            {% endif %}
             <li><a href="{{ absolute_url(path('page_strains')) }}"><i class="fa-solid fa-bacterium"></i> Strain</a></li>
             <li><a href="{{ absolute_url(path('page_samples')) }}"><i class="fa-solid fa-location-dot"></i> Prelevement</a></li>
             <li class="dropdown">

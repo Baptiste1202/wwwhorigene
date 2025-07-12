@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -71,7 +72,7 @@ class StrainController extends AbstractController
 
     }
 
-    #[Route(path: 'strains/add', name: 'add_strain')]
+    #[Route(path: 'strain/add', name: 'add_strain')]
     #[IsGranted('ROLE_SEARCH')]
     public function add(Request $request, EntityManagerInterface $em, Security $security, StrainIndexer $indexer): Response
     {
@@ -137,7 +138,7 @@ class StrainController extends AbstractController
         }
     }
 
-    #[Route('vehicules/edit/{id}', name: 'edit_strain')]
+    #[Route('strain/edit/{id}', name: 'edit_strain')]
     #[IsGranted('ROLE_SEARCH')]
     public function edit(
         Strain $strain,
@@ -147,9 +148,10 @@ class StrainController extends AbstractController
 
         try{
             if ($strain) {
-                $this->denyAccessUnlessGranted('strain.is_creator', $strain);
+                if (!$this->isGranted('strain.is_creator', $strain)) {
+                    throw new AccessDeniedException('');
+                }
             }
-
             //Create the form
             $strainForm = $this->createForm(StrainFormType::class, $strain);
 
@@ -170,15 +172,17 @@ class StrainController extends AbstractController
                 'strain' => $strain, 
                 'is_update' => true,
             ]);
+        } catch (AccessDeniedException $e) {
+            $this->addFlash('error', 'Vous n\'avez pas les droits pour modifier cette souche.');
+            return $this->redirectToRoute('page_strains');
         } catch (\Throwable $e) {
-
-            dd($e);
             $this->addFlash('error', 'An error occurred while updating the strain. Please try again.');
             return $this->redirectToRoute('page_strains');
         }
+
     }
 
-    #[Route('strains/delete/{id}', name: 'delete_strain')]
+    #[Route('strain/delete/{id}', name: 'delete_strain')]
     #[IsGranted('ROLE_SEARCH')]
     public function delete(?Strain $strain, EntityManagerInterface $em, StrainIndexer $indexer): Response
     {
@@ -189,8 +193,11 @@ class StrainController extends AbstractController
             }
 
             if ($strain) {
-                $this->denyAccessUnlessGranted('strain.is_creator', $strain);
+                if (!$this->isGranted('strain.is_creator', $strain)) {
+                    throw new AccessDeniedException('');
+                }
             }
+
             foreach ($strain->getMethodSequencing() as $sequencing){
                 $em->remove($sequencing);
             }
@@ -232,7 +239,9 @@ class StrainController extends AbstractController
             sleep(1);
 
             return $this->redirectToRoute('page_strains');
-
+        } catch (AccessDeniedException $e) {
+                    $this->addFlash('error', 'Vous n\'avez pas les droits pour supprimer cette souche.');
+                    return $this->redirectToRoute('page_strains');
         } catch (\Throwable $e) {
             dump($e); // n'affiche que si mode debug activé
             $this->addFlash('error', 'An error occurred while deleting the strain. Please try again.');

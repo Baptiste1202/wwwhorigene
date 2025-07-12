@@ -40,4 +40,5 @@ services:
     App\Service\StrainIndexer:
         arguments:
             $persister: '@fos_elastica.object_persister.strain'
+
             
