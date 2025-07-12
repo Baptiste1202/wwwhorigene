@@ -17,12 +17,11 @@ class DrugOnFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('drugResistance', type:DrugAutocompleteField::class, options:[ 
-                'placeholder' => 'Select a drug',  
-                'required' => true,
-            ])
             ->add('concentration', options:[
-                'label' => 'Concentration'
+                'label' => 'Concentration',
+                'attr' => [
+                    'placeholder' => 'Concentration',
+                ],
             ])
             ->add('resistant', CheckboxType::class, options:[
                 'label' => 'Resistant',
@@ -37,7 +36,11 @@ class DrugOnFormType extends AbstractType
             ])
             ->add('comment', options:[
                 'label' => 'Comments'
-            ]);   
+            ])  
+            ->add('drugResistance', type:DrugAutocompleteField::class, options:[ 
+                'placeholder' => 'Select a drug',  
+                'required' => true,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
