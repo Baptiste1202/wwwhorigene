@@ -165,7 +165,9 @@ class DrugController extends AbstractController
     public function delete(DrugResistance $drug, EntityManagerInterface $em): Response
     {
         // Récupère les IDs des strains associés au drug
-        $strainIds = $drug->getDrugResistanceOnStrains()->map(fn($strain) => $strain->getId())->toArray();
+        $strainIds = $drug->getDrugResistanceOnStrains()
+            ->map(fn($rel) => $rel->getStrain()->getId())
+            ->toArray();
 
         if (count($drug->getDrugResistanceOnStrains()) > 0) {
             $this->addFlash('error', 'Cannot delete this drug because it is associated with the following strain IDs: ' . implode(', ', $strainIds) . '.');

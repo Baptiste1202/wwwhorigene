@@ -29,7 +29,7 @@ class DrugResistance
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $comment = null;
 
-    #[ORM\OneToMany(targetEntity: DrugResistanceOnStrain::class, mappedBy: 'drugResistanceOnStrain', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: DrugResistanceOnStrain::class, mappedBy: 'drugResistance', orphanRemoval: false)]
     private Collection $drugResistanceOnStrains;
 
     public function __construct()
