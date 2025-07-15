@@ -1,30 +1,32 @@
-<button id="openFormBtn">&#x1F50D;</button>
+<div id="searchFormContainer">
+    <button id="openFormBtn">&#x1F50D;</button>
+    
+    <div id="floatingForm" class="hidden">
+        {{form_start(form)}}
+                {{form_row(form.query)}}
+                {{form_row(form.plasmyd)}}
+                {{form_row(form.drug)}}
+                {{form_row(form.resistant)}}
+                {{form_row(form.genotype)}}
+                {{form_row(form.project)}}
+                {{form_row(form.sample)}}
+                {{form_row(form.user)}}
+                {{form_row(form.specie)}}
+                {{form_row(form.gender)}}
+                {{form_row(form.sequencing)}}
+                <button id="btn-search">Search</button>
+                <button type="button" id="btn-clear">Clear</button>
+        {{form_end(form)}}
+    </div>
 
-<div id="floatingForm" class="hidden">
-    {{form_start(form)}}
-            {{form_row(form.query)}}
-            {{form_row(form.plasmyd)}}
-            {{form_row(form.drug)}}
-            {{form_row(form.resistant)}}
-            {{form_row(form.genotype)}}
-            {{form_row(form.project)}}
-            {{form_row(form.sample)}}
-            {{form_row(form.user)}}
-            {{form_row(form.specie)}}
-            {{form_row(form.gender)}}
-            {{form_row(form.sequencing)}}
-            <button id="btn-search">Search</button>
-            <button type="button" id="btn-clear">Clear</button>
-    {{form_end(form)}}
-</div>
-
-{% if strains is not empty %}
-    {% if strains|length >= 30 %}
-        <h2>Search Results (more than 30)</h2>
-    {% else %}
-        <h2>Search Results ({{ strains|length }})</h2>
+    {% if strains is not empty %}
+        {% if strains|length >= 30 %}
+            <h2>Search Results (more than 30)</h2>
+        {% else %}
+            <h2>Search Results ({{ strains|length }})</h2>
+        {% endif %}
     {% endif %}
-{% endif %}
+</div>
 
 
 

@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
             dataSrc: 1,
             startRender(rows) {
                 const [ checkbox, id, name ] = rows.data()[0];
-                return checkbox + ' ID : ' + id + ' – Souche : ' + name;
+                return 'ID : ' + id + ' – Souche : ' + name;
             }
         },
         

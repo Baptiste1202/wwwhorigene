@@ -49,8 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (resistance.tomselect) {
                     resistance.tomselect.setValue('');
                 }
-                // Pour Select2 (optionnel)
-                // if (window.$) $(resistance).val('').trigger('change');
             }
         });
     }

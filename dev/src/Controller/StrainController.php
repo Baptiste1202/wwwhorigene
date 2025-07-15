@@ -135,7 +135,7 @@ class StrainController extends AbstractController
             ]);
         }
         catch (\Throwable $e) {
-            $this->addFlash('error', 'Une erreur est survenue lors de la création de la souche. Veuillez réessayer.');
+            $this->addFlash('error', 'An error occurred while creating the strain. Please try again.');
 
             return $this->redirectToRoute('page_strains');
         }
@@ -176,7 +176,7 @@ class StrainController extends AbstractController
                 'is_update' => true,
             ]);
         } catch (AccessDeniedException $e) {
-            $this->addFlash('error', 'Vous n\'avez pas les droits pour modifier cette souche.');
+            $this->addFlash('error', 'You do not have permission to edit this strain.');
             return $this->redirectToRoute('page_strains');
         } catch (\Throwable $e) {
             $this->addFlash('error', 'An error occurred while updating the strain. Please try again.');
@@ -243,8 +243,8 @@ class StrainController extends AbstractController
 
             return $this->redirectToRoute('page_strains');
         } catch (AccessDeniedException $e) {
-                    $this->addFlash('error', 'Vous n\'avez pas les droits pour supprimer cette souche.');
-                    return $this->redirectToRoute('page_strains');
+            $this->addFlash('error', 'You do not have permission to delete this strain.');
+            return $this->redirectToRoute('page_strains');
         } catch (\Throwable $e) {
             dump($e); // n'affiche que si mode debug activé
             $this->addFlash('error', 'An error occurred while deleting the strain. Please try again.');
@@ -342,7 +342,7 @@ class StrainController extends AbstractController
 
             return $this->redirectToRoute('page_strains');
         } catch (\Throwable $e) {
-            $this->addFlash('error', 'Une erreur est survenue lors de la duplication de la souche. Veuillez réessayer.');
+            $this->addFlash('error', 'An error occurred while duplicating the strain. Please try again.');
 
             return $this->redirectToRoute('edit_strain');
         }

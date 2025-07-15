@@ -387,6 +387,7 @@ button.btn-form:hover {
     position: relative;
     width : 100%; 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
 }
 
 #global #list #filter #menu-button {
@@ -463,7 +464,7 @@ button.btn-form:hover {
     background-color: #f9f9f9; /* Couleur de fond */
     display: flex; /* Utiliser flex pour l'alignement interne si nécessaire */
     flex-direction: column; /* Assure que le contenu est aligné en colonne */
-    height: 91vh; /* Hauteur s'adapte au contenu */
+    height: 92vh; /* Hauteur s'adapte au contenu */
     width: auto; /* Prend toute la largeur disponible */
 }
 
@@ -570,59 +571,79 @@ thead {
 /* ===========================================================
    CSS specifique pour la DATATABLE de strain
 =========================================================== */
+#searchFormContainer {
+    display: flex;
+    align-items: center;   /* Aligne verticalement */
+    gap: 2em;              /* Espace entre le formulaire et le nombre */
+}
+
+#floatingForm {
+    /* Optionnel : largeur maximale */
+    max-width: 600px;
+}
 
 #downloadFile {
-    /* Centrer le contenu de ce div, optionnel si tu veux que le contenu soit centré dedans */
     text-align: center;
     flex-grow: 1;  /* fait prendre le max d'espace entre les 2 autres */
 }
+
 /* Overlay couvrant toute la fenêtre */
 #downloadModal.modal {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw;  height: 100vh;
-  background: rgba(0,0,0,0.5);
-  display: none;              /* caché par défaut */
-  align-items: center;
-  justify-content: center;
-  z-index: 1050;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;  height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: none;              /* caché par défaut */
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
 }
 
 /* Votre boîte de dialogue */
 #downloadModal .modal-dialog {
-  max-width: 400px;
-  width: 90%;
+    max-width: 400px;
+    width: 90%;
 }
+
 #downloadModal .modal-content {
-  background: #fff;
-  border-radius: 4px;
-  overflow: hidden;
+    background: #fff;
+    border-radius: 4px;
+    overflow: hidden;
 }
+
 #downloadModal .modal-header,
 #downloadModal .modal-footer {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #eee;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eee;
 }
+
 #downloadModal .modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
+
 #downloadModal .modal-body {
-  padding: 1rem;
+    padding: 1rem;
 }
+
 #downloadModal .modal-footer {
-  border-top: none;
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
+    border-top: none;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
 }
+
 /* Bouton fermer */
 #downloadModal .close {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+div.download-error {
+    color: #c00 !important;
 }
 
 .table-header-toolbar {
@@ -633,12 +654,12 @@ thead {
     padding: 0 !important;
     margin-bottom: 5px;
     line-height: 1.0;
-  font-size: 0.8rem; /* optionnel, si tu veux réduire légèrement la taille du texte */
+    font-size: 0.8rem; /* optionnel, si tu veux réduire légèrement la taille du texte */
 }
 
 .table-header-toolbar .table-header-search input#customSearch {
-    width: 175px;
-    padding: 8px 12px;
+    width: 150px;
+    padding: 7px 11px;
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 6px;

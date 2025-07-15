@@ -32,43 +32,43 @@ $(document).ready(function () {
     $fileTypeAll.on('change', () => {
         if ($fileTypeAll.is(':checked')) {
             $fileTypes.prop('checked', false);
-            console.log('[Download] "all" checked → autres décochées');
+            //console.log('[Download] "all" checked → autres décochées');
         }
     });
     $fileTypes.on('change', function() {
         if ($(this).is(':checked')) {
             $fileTypeAll.prop('checked', false);
-            console.log('[Download] Option individuelle cochée → "all" décochée');
+            //console.log('[Download] Option individuelle cochée → "all" décochée');
         }
     });
 
     // 1) Ouvrir la modal
     $openBtn.on('click', () => {
         hideError();
-        console.log('[Download] Open button clicked');
+        //console.log('[Download] Open button clicked');
         // On ne compte que les cases visibles cochées
         const selectedCount = $('input[name="selected_strain[]"]:checked').filter(function() {
             return $(this).is(':visible');
         }).length;
-        console.log('[Download] Number of visible strains selected:', selectedCount);
+        //console.log('[Download] Number of visible strains selected:', selectedCount);
         if (selectedCount === 0) {
             alert('Please select at least one strain first.');
             return;
         }
-        console.log('[Download] Showing modal');
+        //console.log('[Download] Showing modal');
         $modal.css('display', 'flex');
     });
 
     // 2) Fermer la modal
     $closeBtns.on('click', () => {
-        console.log('[Download] Close button clicked, hiding modal');
+        //console.log('[Download] Close button clicked, hiding modal');
         $modal.hide();
     });
 
     // 3) Fermer si clic hors du dialogue
     $modal.on('click', e => {
         if (e.target === $modal[0]) {
-            console.log('[Download] Clicked outside modal-dialog, hiding modal');
+            //console.log('[Download] Clicked outside modal-dialog, hiding modal');
             $modal.hide();
         }
     });
@@ -103,16 +103,16 @@ $(document).ready(function () {
     // 4) Handler du bouton "Télécharger"
     $confirmBtn.on('click', async () => {
         hideError();
-        console.log('[Download] Confirm download clicked');
+        //console.log('[Download] Confirm download clicked');
 
         // 4.1) IDs de souches cochées (uniquement cases visibles)
         let strainIds = $('input[name="selected_strain[]"]:checked').filter(function() {
             return $(this).is(':visible');
         }).map((_, el) => el.value).get();
 
-        console.log('[Download] Raw visible Strain IDs:', strainIds);
+        //console.log('[Download] Raw visible Strain IDs:', strainIds);
         strainIds = [...new Set(strainIds)];
-        console.log('[Download] De-duplicated Strain IDs:', strainIds);
+        //console.log('[Download] De-duplicated Strain IDs:', strainIds);
         if (!strainIds.length) {
             showError('Please select at least one strain.');
             return;
@@ -122,14 +122,14 @@ $(document).ready(function () {
         let types = $('input[name="fileType"]:checked')
             .map((_, el) => el.value)
             .get();
-        console.log('[Download] File types selected:', types);
+        //console.log('[Download] File types selected:', types);
         if (!types.length) {
             showError('Please select at least one file type.');
             return;
         }
         if (types.includes('all')) {
             types = ['sequencing','transformability','drugs'];
-            console.log('[Download] "all" detected, expanded types to:', types);
+            //console.log('[Download] "all" detected, expanded types to:', types);
         }
 
         // 4.3) Construire fileEntries avec { id, type, name }
@@ -138,7 +138,7 @@ $(document).ready(function () {
             const $rows = $('#data-table tbody tr').filter(function () {
                 return $(this).find('td.id').text().trim() === strainId && $(this).is(':visible');
             });
-            console.log(`[Download] Rows for strain ${strainId}:`, $rows.length);
+            //console.log(`[Download] Rows for strain ${strainId}:`, $rows.length);
             $rows.each(function (rowIndex) {
                 const $row = $(this);
                 types.forEach(type => {
@@ -152,12 +152,12 @@ $(document).ready(function () {
                     const fn = $cell.data('file');
                     if (fn && fn !== '--') {
                         fileEntries.push({ id: strainId, type, name: fn });
-                        console.log('[Download] Added entry:', { id: strainId, type, name: fn });
+                        //console.log('[Download] Added entry:', { id: strainId, type, name: fn });
                     }
                 });
             });
         });
-        console.log('[Download] All file entries:', fileEntries);
+        //console.log('[Download] All file entries:', fileEntries);
         if (!fileEntries.length) {
             showError('Pas de fichier disponible pour votre sélection.');
             return;
@@ -166,11 +166,11 @@ $(document).ready(function () {
         // 4.4) Préparer payload
         const extension = $('#extension-input').val().trim();
         const payload   = { entries: fileEntries, extension };
-        console.log('[Download] Payload to send:', payload);
+        //console.log('[Download] Payload to send:', payload);
 
         // 4.5) Envoi via fetch
         const url = '/public/download-multiple';
-        console.log('[Download] Fetch POST to', url);
+        //console.log('[Download] Fetch POST to', url);
         try {
             const res = await fetch(url, {
                 method:  'POST',
@@ -186,7 +186,7 @@ $(document).ready(function () {
             }
 
             const blob = await res.blob();
-            console.log('[Download] Fetch success, received blob');
+            //console.log('[Download] Fetch success, received blob');
             const downloadUrl = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href     = downloadUrl;
@@ -195,7 +195,7 @@ $(document).ready(function () {
             a.click();
             a.remove();
             URL.revokeObjectURL(downloadUrl);
-            console.log('[Download] Download triggered, hiding modal');
+            //console.log('[Download] Download triggered, hiding modal');
             $modal.hide();
 
         } catch (err) {
