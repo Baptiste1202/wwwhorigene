@@ -91,8 +91,6 @@ class PublicationController extends AbstractController
     public function addResponse(Request $request, EntityManagerInterface $em): Response
     {
 
-        // $this->denyAccessUnlessGranted('ROLE_RENTER');
-
         //Create a new vehicule
         $publication = new Publication();
 
@@ -111,7 +109,7 @@ class PublicationController extends AbstractController
             $em->persist($publication);
             $em->flush();
 
-            // $this->addFlash('success', 'Vehicule ' . $vehicule->getSlug() . 'ajouté avec succés !');
+            $this->addFlash('success', 'Publication ' . $publication->getSlug() . 'added with success !');
 
 
             // redirect

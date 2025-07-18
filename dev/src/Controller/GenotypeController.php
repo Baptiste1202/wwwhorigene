@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Twig\Environment;
 
 class GenotypeController extends AbstractController
@@ -32,6 +33,7 @@ class GenotypeController extends AbstractController
     }
 
     #[Route(path: 'genotypes/ajout', name: 'add_genotype')]
+    #[IsGranted('ROLE_SEARCH')]
     public function add(Request $request, EntityManagerInterface $em): Response
     {
 

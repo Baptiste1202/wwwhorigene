@@ -123,7 +123,6 @@ class DrugController extends AbstractController
     #[IsGranted('ROLE_SEARCH')]
     public function delete(DrugResistance $drug, EntityManagerInterface $em): Response
     {
-        // Récupère les IDs des strains associés au drug
         $strainIds = $drug->getDrugResistanceOnStrains()
             ->map(fn($rel) => $rel->getStrain()->getId())
             ->toArray();
