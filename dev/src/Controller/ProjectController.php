@@ -36,6 +36,7 @@ class ProjectController extends AbstractController
     }
 
     #[Route(path: 'strains/page_projects', name: 'page_projects')]
+    #[IsGranted('ROLE_INTERN')]
     public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
     {   
         $projectAdd = $this->createForm(ProjectFormType::class);
@@ -56,9 +57,6 @@ class ProjectController extends AbstractController
     #[IsGranted('ROLE_SEARCH')]
     public function addForm(Request $request, EntityManagerInterface $em): Form
     {
-
-        // $this->denyAccessUnlessGranted('ROLE_RENTER');
-
         //Create a new vehicule
         $project = new Project();
 
@@ -128,14 +126,8 @@ class ProjectController extends AbstractController
         Project $project,
         Request $request,
         EntityManagerInterface $em,
-    ): Response {
-
-        /*
-        if ($vehicule) {
-            $this->denyAccessUnlessGranted('vehicule.is_creator', $vehicule);
-        }
-        */
-
+    ): Response
+    {
         //Create the form
         $projectForm = $this->createForm(ProjectFormType::class, $project);
 

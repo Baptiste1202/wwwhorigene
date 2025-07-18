@@ -387,6 +387,7 @@ class StrainController extends AbstractController
     }
 
     #[Route('/search', name: 'app_search')]
+    #[IsGranted('ROLE_INTERN')]
     public function elasticForm(Request $request): array
     {
         $form = $this->createForm(SearchFormType::class); 
@@ -498,6 +499,7 @@ class StrainController extends AbstractController
     }
 
     #[Route('/api/strain/{id}', name: 'api_strain_get', methods: ['GET'])]
+    #[IsGranted('ROLE_SEARCH')]
     public function getStrain(Strain $strain): JsonResponse
     {
         return $this->json([

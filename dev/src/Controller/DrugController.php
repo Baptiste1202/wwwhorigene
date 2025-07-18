@@ -30,6 +30,7 @@ class DrugController extends AbstractController
     }
 
     #[Route(path: 'page_drugs', name: 'page_drugs')]
+    #[IsGranted('ROLE_INTERN')]
     public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
     {
         // Créer le formulaire
@@ -62,31 +63,16 @@ class DrugController extends AbstractController
     #[IsGranted('ROLE_SEARCH')]
     public function addForm(Request $request, EntityManagerInterface $em): Form
     {
-
-        // $this->denyAccessUnlessGranted('ROLE_RENTER');
-
-        //Create a new vehicule
         $drug = new DrugResistance();
-
-        //Create the form
         $drugForm = $this->createForm(DrugFormType::class, $drug);
-
-        //
         $drugForm->handleRequest($request);
 
         if ($drugForm->isSubmitted() && $drugForm->isValid()) {
-            //generate the slug -- not done yet
-
-            //get the user -- not done yet
-
-            //stock data
             $em->persist($drug);
             $em->flush();
 
-            // $this->addFlash('success', 'Vehicule ' . $vehicule->getSlug() . 'ajouté avec succés !');
+            $this->addFlash('success', 'Drug ' . $drug->getName() . 'added with success !');
 
-
-            // redirect
             return $drugForm;
         }
         return $drugForm;
@@ -96,31 +82,16 @@ class DrugController extends AbstractController
     #[IsGranted('ROLE_SEARCH')]
     public function addResponse(Request $request, EntityManagerInterface $em): Response
     {
-
-        // $this->denyAccessUnlessGranted('ROLE_RENTER');
-
-        //Create a new vehicule
         $drug = new DrugResistance();
-
-        //Create the form
         $drugForm = $this->createForm(DrugFormType::class, $drug);
-
-        //
         $drugForm->handleRequest($request);
 
         if ($drugForm->isSubmitted() && $drugForm->isValid()) {
-            //generate the slug -- not done yet
-
-            //get the user -- not done yet
-
-            //stock data
             $em->persist($drug);
             $em->flush();
 
-            // $this->addFlash('success', 'Vehicule ' . $vehicule->getSlug() . 'ajouté avec succés !');
+            $this->addFlash('success', 'Drug ' . $drug->getName() . 'added with success !');
 
-
-            // redirect
             return $this->redirectToRoute('page_strains');
         }
         return $this->render('drug/create.html.twig', compact('drugForm'));
@@ -132,24 +103,12 @@ class DrugController extends AbstractController
         DrugResistance $drug,
         Request $request,
         EntityManagerInterface $em,
-    ): Response {
-
-        /*
-        if ($vehicule) {
-            $this->denyAccessUnlessGranted('vehicule.is_creator', $vehicule);
-        }
-        */
-
-        //Create the form
+    ): Response
+    {
         $drugForm = $this->createForm(DrugFormType::class, $drug);
-
-        //treat the request
         $drugForm->handleRequest($request);
 
         if ($drugForm->isSubmitted() && $drugForm->isValid()) {
-            //generate the slug
-
-            //stock data
             $em->persist($drug);
             $em->flush();
 

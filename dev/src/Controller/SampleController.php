@@ -26,6 +26,7 @@ class SampleController extends AbstractController
     }
 
     #[Route(path: 'samples/page', name: 'page_samples')]
+    #[IsGranted('ROLE_INTERN')]
     public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
     {
         $sampleAdd = $this->createForm(SampleFormType::class);
@@ -92,7 +93,7 @@ class SampleController extends AbstractController
     }
 
     #[Route('strains/sample/edit/{id}', name: 'edit_sample')]
-    #[IsGranted('ROLE_SEARCH')]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(
         Sample $sample,
         Request $request,
@@ -113,7 +114,7 @@ class SampleController extends AbstractController
     }
 
     #[Route('strains/sample/delete/{id}', name: 'delete_sample')]
-    #[IsGranted('ROLE_SEARCH')]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Sample $sample, EntityManagerInterface $em): Response
     {
         // Get IDs of strains associated with the sample
@@ -134,7 +135,7 @@ class SampleController extends AbstractController
 
 
     #[Route('samples/duplicate/{id}', name: 'duplicate_sample')]
-    #[IsGranted('ROLE_SEARCH')]
+    #[IsGranted('ROLE_ADMIN')]
     public function duplicate(Sample $sample, EntityManagerInterface $em, Security $security): Response
     {
         try {
@@ -154,8 +155,8 @@ class SampleController extends AbstractController
             $clone->setDescription($sample->getDescription());
             $clone->setComment($sample->getComment());
 
-            // ➡️ Nom + prénom comme creator
-            $clone->setUser($user->getFirstname() . ' ' . $user->getLastname());
+            // // ➡️ Nom + prénom comme creator 
+            // $clone->setUser($user->getFirstname() . ' ' . $user->getLastname());
 
             $em->persist($clone);
             $em->flush();
@@ -170,7 +171,7 @@ class SampleController extends AbstractController
     }
 
     #[Route('/samples/delete-multiple', name: 'delete_multiple_samples', methods: ['POST'])]
-    #[IsGranted('ROLE_SEARCH')]
+    #[IsGranted('ROLE_ADMIN')]
     public function deleteMultipleSamples(Request $request, EntityManagerInterface $em): Response
     {
         // Récupère les IDs sélectionnés

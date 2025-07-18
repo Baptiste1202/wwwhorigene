@@ -9,9 +9,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class DrugOnController extends AbstractController {
     #[Route(path: 'strains/drugs_on_strain/ajout', name: 'add_drug_on_strain')]
+    #[IsGranted('ROLE_SEARCH')]
     public function addForm(Request $request, EntityManagerInterface $em): Response
     {
 

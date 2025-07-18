@@ -23,6 +23,7 @@ class GenotypeController extends AbstractController
     }
 
     #[Route(path: '/genotype', name: 'list_genotypes')]
+    #[IsGranted('ROLE_INTERN')]
     public function showAll(): Response
     {
         $genotypes = $this->genotypeRepository->findAll();

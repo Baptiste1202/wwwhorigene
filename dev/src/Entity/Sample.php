@@ -53,6 +53,7 @@ class Sample
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $comment = null;
 
+    // A MODIFIER par une entité User
     #[ORM\Column(length: 255)]
     private ?string $user = null;
 

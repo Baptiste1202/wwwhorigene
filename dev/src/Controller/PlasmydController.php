@@ -31,6 +31,7 @@ class PlasmydController extends AbstractController
     }
 
     #[Route(path: 'page_plasmyds', name: 'page_plasmyds')]
+    #[IsGranted('ROLE_INTERN')]
     public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
     {
         // Créer le formulaire
@@ -137,12 +138,6 @@ class PlasmydController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
     ): Response {
-
-        /*
-        if ($vehicule) {
-            $this->denyAccessUnlessGranted('vehicule.is_creator', $vehicule);
-        }
-        */
 
         //Create the form
         $plasmydForm = $this->createForm(PlasmydFormType::class, $plasmyd);

@@ -8,10 +8,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class DownloadMultipleController extends AbstractController
 {
     #[Route('/download-multiple', name: 'download_multiple', methods: ['POST'])]
+    #[IsGranted('ROLE_INTERN')]
     public function downloadMultiple(Request $request, LoggerInterface $logger): Response
     {
         $data      = json_decode($request->getContent(), true);

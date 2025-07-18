@@ -26,6 +26,7 @@ class PublicationController extends AbstractController
     }
 
     #[Route(path: 'page_publications', name: 'page_publications')]
+    #[IsGranted('ROLE_INTERN')]
     public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
     {
 
@@ -56,9 +57,6 @@ class PublicationController extends AbstractController
     #[IsGranted('ROLE_SEARCH')]
     public function addForm(Request $request, EntityManagerInterface $em): Form
     {
-
-        // $this->denyAccessUnlessGranted('ROLE_RENTER');
-
         //Create a new vehicule
         $publication = new Publication();
 
@@ -79,7 +77,7 @@ class PublicationController extends AbstractController
             $em->persist($publication);
             $em->flush();
 
-            // $this->addFlash('success', 'Vehicule ' . $vehicule->getSlug() . 'ajouté avec succés !');
+            $this->addFlash('success', 'Publication ' . $publication->getSlug() . 'added with success !');
 
 
             // redirect
@@ -162,14 +160,8 @@ class PublicationController extends AbstractController
         Publication $publication,
         Request $request,
         EntityManagerInterface $em,
-    ): Response {
-
-        /*
-        if ($vehicule) {
-            $this->denyAccessUnlessGranted('vehicule.is_creator', $vehicule);
-        }
-        */
-
+    ): Response
+    {
         //Create the form
         $publicationForm = $this->createForm(PublicationFormType::class, $publication);
 

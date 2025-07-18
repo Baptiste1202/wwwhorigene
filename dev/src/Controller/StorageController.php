@@ -34,8 +34,6 @@ class StorageController extends AbstractController
     public function add(Request $request, EntityManagerInterface $em): Response
     {
 
-        // $this->denyAccessUnlessGranted('ROLE_RENTER');
-
         //Create a new vehicule
         $storage = new Storage();
 
