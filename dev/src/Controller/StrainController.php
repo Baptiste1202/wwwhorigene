@@ -34,7 +34,7 @@ class StrainController extends AbstractController
         private StrainRepositoryInterface $strainRepository,
         private PaginatorInterface $paginator,
         private readonly PaginatedFinderInterface $finder,
-        LoggerInterface $logger 
+        private LoggerInterface $logger 
     ) {
         $this->paginator = $paginator; 
          $this->logger = $logger; 
