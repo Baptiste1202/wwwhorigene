@@ -2,7 +2,7 @@
 
 {% block body %}
     <div id="global">
-        {% if (app.user.roles.0 != "ROLE_INTERN") %}
+        {% if 'ROLE_SEARCH' in app.user.roles %}
             <div id="form">
                 {% include "drug/create.html.twig" %}
             </div>

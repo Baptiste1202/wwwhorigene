@@ -80,12 +80,17 @@ class CollecController extends AbstractController
     }
 
     #[Route('strains/collec/edit/{id}', name: 'edit_collec')]
-    #[IsGranted('ROLE_SEARCH')]
     public function edit(
         Collec $collec,
         Request $request,
         EntityManagerInterface $em,
+        Security $security
     ): Response {
+
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to edit a collection.');
+            return $this->redirectToRoute('page_collecs');
+        }
         
         $collecForm = $this->createForm(CollecFormType::class, $collec);
 
@@ -105,9 +110,13 @@ class CollecController extends AbstractController
     }
 
     #[Route('/collecs/delete/{id}', name: 'delete_collec')]
-    #[IsGranted('ROLE_SEARCH')]
-    public function delete(Collec $collec, EntityManagerInterface $em): Response
+    public function delete(Collec $collec, EntityManagerInterface $em,  Security $security): Response
     {
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to delete a collection.');
+            return $this->redirectToRoute('page_collecs');
+        }
+
         // Check if collec is associated with any strains
         $strainIds = $collec->getStrain()->map(fn($strain) => $strain->getId())->toArray();
 
@@ -125,12 +134,14 @@ class CollecController extends AbstractController
     }
 
     #[Route('strains/collec/duplicate/{id}', name: 'duplicate_collec')]
-    #[IsGranted('ROLE_SEARCH')]
     public function duplicateCollec(Collec $collec, EntityManagerInterface $em, Security $security): Response
     {
         try {
-            // Récupérer l'utilisateur connecté
-            $user = $security->getUser();
+
+            if (!$security->isGranted('ROLE_SEARCH')) {
+                $this->addFlash('error', 'You do not have permission to duplicate a collection.');
+                return $this->redirectToRoute('page_collecs');
+            }
 
             // Créer une nouvelle instance de Collec (la copie)
             $clone = new Collec();
@@ -149,6 +160,9 @@ class CollecController extends AbstractController
 
             return $this->redirectToRoute('page_collecs');
 
+        } catch (AccessDeniedException $e) {
+            $this->addFlash('error', 'You do not have permission to edit this strain.');
+            return $this->redirectToRoute('page_strains');
         } catch (\Throwable $e) {
             $this->addFlash('error', 'Error occurred while duplicating the collection.');
             return $this->redirectToRoute('page_collecs');

@@ -3,7 +3,7 @@
 
 {% block body %}
     <div id="global">
-        {% if (app.user.roles.0 != "ROLE_INTERN") %}
+        {% if 'ROLE_SEARCH' in app.user.roles %}
             <div id="form">
                 {% include "plasmyd/create.html.twig" %}
             </div>

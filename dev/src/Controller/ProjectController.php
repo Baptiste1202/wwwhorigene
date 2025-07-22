@@ -126,8 +126,14 @@ class ProjectController extends AbstractController
         Project $project,
         Request $request,
         EntityManagerInterface $em,
+        Security $security
     ): Response
     {
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to edit a project.');
+            return $this->redirectToRoute('page_collecs');
+        }
+
         //Create the form
         $projectForm = $this->createForm(ProjectFormType::class, $project);
 
@@ -149,12 +155,13 @@ class ProjectController extends AbstractController
     }
 
     #[Route('projects/duplicate/{id}', name: 'duplicate_project')]
-    #[IsGranted('ROLE_SEARCH')]
     public function duplicateProject(Project $project, EntityManagerInterface $em, Security $security): Response
     {
         try {
-            // Récupérer l'utilisateur connecté
-            $user = $security->getUser();
+            if (!$security->isGranted('ROLE_SEARCH')) {
+                $this->addFlash('error', 'You do not have permission to duplicate a project.');
+                return $this->redirectToRoute('page_collecs');
+            }
 
             // Créer une nouvelle instance de Project (la copie)
             $clone = new Project();
@@ -180,9 +187,13 @@ class ProjectController extends AbstractController
     }
 
     #[Route('strains/project/delete/{id}', name: 'delete_project')]
-    #[IsGranted('ROLE_SEARCH')]
-    public function delete(Project $project, EntityManagerInterface $em): Response
+    public function delete(Project $project, EntityManagerInterface $em, Security $security): Response
     {
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to delete a project.');
+            return $this->redirectToRoute('page_collecs');
+        }
+
         // Get IDs of strains associated with the project
         $strainIds = $project->getStrain()->map(fn($strain) => $strain->getId())->toArray();
 

@@ -12,7 +12,7 @@
 <body>
     <div class="vertical-menu">
         <ul>
-            {% if (app.user.roles.0 == "ROLE_ADMIN") %}
+            {% if 'ROLE_ADMIN' in app.user.roles %}
                 <li><a href="{{ absolute_url(path('page_users')) }}"> <i class="fa-solid fa-user"></i> User</a></li>
             {% endif %}
             <li><a href="{{ absolute_url(path('page_strains')) }}"><i class="fa-solid fa-bacterium"></i> Strain</a></li>
@@ -31,7 +31,11 @@
             <li><a href="{{ path('app_logout') }}">Log Out</a></li>
             <li class="user-info">
                 user: {{ app.user.firstname }} <br>
-                role: {{ app.user.roles.0 }}
+                {% if app.user.roles|length > 0 %}
+                    role: {{ app.user.roles|last }}
+                {% else %}
+                    role: aucun
+                {% endif %}
             </li>
         </ul>
     </div>
