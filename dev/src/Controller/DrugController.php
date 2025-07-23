@@ -79,9 +79,14 @@ class DrugController extends AbstractController
     }
 
     #[Route(path: 'strains/drugs/ajout/response', name: 'add_drug')]
-    #[IsGranted('ROLE_SEARCH')]
-    public function addResponse(Request $request, EntityManagerInterface $em): Response
+    #[IsGranted('ROLE_INTERN')]
+    public function addResponse(Request $request, EntityManagerInterface $em, Security $security): Response
     {
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to add a drug.');
+            return $this->redirectToRoute('page_drugs');
+        }
+
         $drug = new DrugResistance();
         $drugForm = $this->createForm(DrugFormType::class, $drug);
         $drugForm->handleRequest($request);
@@ -98,13 +103,19 @@ class DrugController extends AbstractController
     }
 
     #[Route('strains/drug/edit/{id}', name: 'edit_drug')]
-    #[IsGranted('ROLE_SEARCH')]
+    #[IsGranted('ROLE_INTERN')]
     public function edit(
         DrugResistance $drug,
         Request $request,
         EntityManagerInterface $em,
+        Security $security
     ): Response
     {
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to edit a drug.');
+            return $this->redirectToRoute('page_drugs');
+        }
+
         $drugForm = $this->createForm(DrugFormType::class, $drug);
         $drugForm->handleRequest($request);
 
@@ -120,9 +131,14 @@ class DrugController extends AbstractController
     }
 
     #[Route('strains/drug/delete/{id}', name: 'delete_drug')]
-    #[IsGranted('ROLE_SEARCH')]
-    public function delete(DrugResistance $drug, EntityManagerInterface $em): Response
+    #[IsGranted('ROLE_INTERN')]
+    public function delete(DrugResistance $drug, EntityManagerInterface $em, Security $security): Response
     {
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to delete a drug.');
+            return $this->redirectToRoute('page_drugs');
+        }
+
         $strainIds = $drug->getDrugResistanceOnStrains()
             ->map(fn($rel) => $rel->getStrain()->getId())
             ->toArray();
@@ -141,12 +157,15 @@ class DrugController extends AbstractController
     }
 
     #[Route('drugs/duplicate/{id}', name: 'duplicate_drug')]
-    #[IsGranted('ROLE_SEARCH')]
+    #[IsGranted('ROLE_INTERN')]
     public function duplicateDrug(DrugResistance $drug, EntityManagerInterface $em, Security $security): Response
     {
-        try {
-            $user = $security->getUser();
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to duplicate a drug.');
+            return $this->redirectToRoute('page_drugs');
+        }
 
+        try {
             // Créer une nouvelle instance Drug
             $clone = new DrugResistance();
 

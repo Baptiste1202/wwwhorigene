@@ -87,9 +87,13 @@ class PublicationController extends AbstractController
     }
 
     #[Route(path: 'strains/publications/ajout/response', name: 'add_publication_response')]
-    #[IsGranted('ROLE_SEARCH')]
-    public function addResponse(Request $request, EntityManagerInterface $em): Response
+    #[IsGranted('ROLE_INTERN')]
+    public function addResponse(Request $request, EntityManagerInterface $em, Security $security): Response
     {
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to add a publication.');
+            return $this->redirectToRoute('page_publications');
+        }
 
         //Create a new vehicule
         $publication = new Publication();
@@ -119,9 +123,14 @@ class PublicationController extends AbstractController
     }
 
     #[Route('strains/publication/duplicate/{id}', name: 'duplicate_publication')]
-    #[IsGranted('ROLE_SEARCH')]
+    #[IsGranted('ROLE_INTERN')]
     public function duplicatePublication(Publication $publication, EntityManagerInterface $em, Security $security): Response
     {
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to duplicate a publication.');
+            return $this->redirectToRoute('page_publications');
+        }
+
         try {
             // Récupérer l'utilisateur connecté (optionnel si besoin)
             $user = $security->getUser();
@@ -153,13 +162,19 @@ class PublicationController extends AbstractController
     }
 
     #[Route('strains/publication/edit/{id}', name: 'edit_publication')]
-    #[IsGranted('ROLE_SEARCH')]
+    #[IsGranted('ROLE_INTERN')]
     public function edit(
         Publication $publication,
         Request $request,
         EntityManagerInterface $em,
+        Security $security
     ): Response
     {
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to edit a publication.');
+            return $this->redirectToRoute('page_publications');
+        }
+
         //Create the form
         $publicationForm = $this->createForm(PublicationFormType::class, $publication);
 
@@ -183,9 +198,14 @@ class PublicationController extends AbstractController
     }
 
     #[Route('strains/publication/delete/{id}', name: 'delete_publication')]
-    #[IsGranted('ROLE_SEARCH')]
-    public function delete(Publication $publication, EntityManagerInterface $em): Response
+    #[IsGranted('ROLE_INTERN')]
+    public function delete(Publication $publication, EntityManagerInterface $em, Security $security): Response
     {
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to delete a publication.');
+            return $this->redirectToRoute('page_publications');
+        }
+
         // Vérifie les souches associées
         $soucheIds = $publication->getStrain()->map(fn($strain) => $strain->getId())->toArray();
 

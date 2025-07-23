@@ -39,7 +39,7 @@ class PlasmydController extends AbstractController
 
         // Ajouter si l'utilisateur a les bons rôles
         if ($security->isGranted('ROLE_SEARCH') || $security->isGranted('ROLE_ADMIN')) {
-            $plasmydAdd = $this->addForm($request, $em);   
+            $plasmydAdd = $this->addForm($request, $em, $security);   
         } 
 
         // Récupérer tous les plasmyds (sans pagination)
@@ -63,11 +63,8 @@ class PlasmydController extends AbstractController
 
     #[Route(path: 'strains/plasmyds/ajout', name: 'add_plasmyd')]
     #[IsGranted('ROLE_SEARCH')]
-    public function addForm(Request $request, EntityManagerInterface $em): Form
+    public function addForm(Request $request, EntityManagerInterface $em, Security $security): Form
     {
-
-        // $this->denyAccessUnlessGranted('ROLE_RENTER');
-
         //Create a new vehicule
         $plasmyd = new Plasmyd();
 
@@ -98,11 +95,13 @@ class PlasmydController extends AbstractController
     }
 
     #[Route(path: 'strains/plasmyds/ajout/response', name: 'add_plasmyd_reponse')]
-    #[IsGranted('ROLE_SEARCH')]
-    public function addResponse(Request $request, EntityManagerInterface $em): Response
+    public function addResponse(Request $request, EntityManagerInterface $em, Security $security): Response
     {
 
-        // $this->denyAccessUnlessGranted('ROLE_RENTER');
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to add a plasmyd.');
+            return $this->redirectToRoute('page_plasmyds');
+        }
 
         //Create a new vehicule
         $plasmyd = new Plasmyd();
@@ -132,13 +131,17 @@ class PlasmydController extends AbstractController
     }
     
     #[Route('strains/plasmyd/edit/{id}', name: 'edit_plasmyd')]
-    #[IsGranted('ROLE_SEARCH')]
     public function edit(
         Plasmyd $plasmyd,
         Request $request,
         EntityManagerInterface $em,
+        Security $security
     ): Response {
 
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to edit a plasmyd.');
+            return $this->redirectToRoute('page_plasmyds');
+        }
         //Create the form
         $plasmydForm = $this->createForm(PlasmydFormType::class, $plasmyd);
 
@@ -162,9 +165,12 @@ class PlasmydController extends AbstractController
     }
 
     #[Route('strains/plasmyd/delete/{id}', name: 'delete_plasmyd')]
-    #[IsGranted('ROLE_SEARCH')]
-    public function delete(Plasmyd $plasmyd, EntityManagerInterface $em): Response
+    public function delete(Plasmyd $plasmyd, EntityManagerInterface $em, Security $security): Response
     {
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to delete a plasmyd.');
+            return $this->redirectToRoute('page_plasmyds');
+        }
         // Get IDs of strains associated with the plasmyd
         $strainIds = $plasmyd->getStrain()->map(fn($strain) => $strain->getId())->toArray();
 
@@ -182,9 +188,14 @@ class PlasmydController extends AbstractController
     }
 
     #[Route('plasmyds/duplicate/{id}', name: 'duplicate_plasmyd')]
-    #[IsGranted('ROLE_SEARCH')]
+    #[IsGranted('ROLE_INTERN')]
     public function duplicatePlasmyd(Plasmyd $plasmyd, EntityManagerInterface $em, Security $security): Response
     {
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to duplicate a plasmyd.');
+            return $this->redirectToRoute('page_plasmyds');
+        }
+
         try {
             // Récupérer l'utilisateur actuellement connecté
             $user = $security->getUser();

@@ -32,7 +32,7 @@
             <li class="user-info">
                 user: {{ app.user.firstname }} <br>
                 {% if app.user.roles|length > 0 %}
-                    role: {{ app.user.roles|last }}
+                    role: {{ app.user.roles|first }}
                 {% else %}
                     role: aucun
                 {% endif %}

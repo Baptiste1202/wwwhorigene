@@ -1,7 +1,7 @@
 {% extends 'layout.html.twig' %}
 {% block body %}
         <div id="global">
-            {% if 'ROLE_SEARCH' in app.user.roles %}
+            {% if 'ROLE_SEARCH' in app.user.roles or 'ROLE_ADMIN' in app.user.roles %}
                 <div id="form">
                     {% include "strain/create.html.twig" %}
                 </div>
