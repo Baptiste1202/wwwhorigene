@@ -7,6 +7,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 
 class TransformabilityFormType extends AbstractType
 {
@@ -19,8 +21,15 @@ class TransformabilityFormType extends AbstractType
                     'placeholder' => 'Technique'
                 ]
             ])
-            ->add('mesure', options:[
-                'label' => 'Mesure'
+            ->add('mesure', ChoiceType::class, [
+                'label' => 'Measure',
+                'choices' => [
+                    'Poor' => 'poor',
+                    'Average' => 'average',
+                    'Good' => 'good',
+                    'Very Good' => 'very_good'
+                ],
+                'placeholder' => 'Select a measure'
             ])
             ->add('file', VichFileType::class, options:[
                 'required' => false,
