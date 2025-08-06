@@ -56,7 +56,7 @@ class StrainFormType extends AbstractType
                 'empty_data' => null
             ])
             ->add('specie', options:[
-                'label' => 'Specie',
+                'label' => 'Species',
                 'required' => false, 
                 'empty_data' => null
             ])
