@@ -160,8 +160,15 @@
                     {% endif %}
                     </td>
 
-                    <td class="parent">{{ strain.parentStrain is not null ? strain.parentStrain.nameStrain : '--' }}</td>
-
+                    <td class="parent">
+                        {% if strain.parentStrain %}
+                            {{ strain.parentStrain.nameStrain }}<br>
+                            {{ strain.parentStrain.id }}
+                        {% else %}
+                            --
+                        {% endif %}
+                    </td>
+                    
                     <td class="project">
                     {% if strain.project is not empty %}
                         {{strain.project[0].name}}

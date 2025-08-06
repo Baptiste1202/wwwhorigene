@@ -24,9 +24,14 @@ class StrainAutocompleteField extends AbstractType
                 'specie',
                 'gender'
             ],
-            'choice_label' => function (Strain $strain) {
-                return $strain->getNameStrain(); 
-            }
+            // Affiche "NomDeSouche – ID" dans la liste
+            'choice_label'     => function (Strain $strain) {
+                return sprintf(
+                    '%s – %d',
+                    $strain->getNameStrain(),
+                    $strain->getId()
+                );
+            },
 
             // if the autocomplete endpoint needs to be secured
             //'security' => 'ROLE_FOOD_ADMIN',
