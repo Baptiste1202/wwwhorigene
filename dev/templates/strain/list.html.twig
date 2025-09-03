@@ -41,7 +41,7 @@
                 <th data-column="project">Project</th>
                 <th data-column="collec">Collection</th>
                 <th data-column="drug">Drug Resistance</th>
-                <th data-column="transformability">Transformability</th>
+                <th data-column="phenotype">phenotype</th>
                 <th data-column="sequencing">File Sequencing</th>
                 <th data-column="publication">Publication</th>
                 <th class="creator">Creator</th>
@@ -208,15 +208,15 @@
                     {% endif %}
                     </td>
 
-                    <td class="transformability" data-info='
-                                id: {{ strain.transformability|first ? strain.transformability|first.id : '--'}}
-                                technique: {{ strain.transformability|first ? strain.transformability|first.technique : "--" }}
-                                mesure: {{ strain.transformability|first ? strain.transformability|first.mesure : "--" }}
-                                file: {{ strain.transformability|first ? strain.transformability|first.nom : "--" }}'
-                                data-file='{{ strain.transformability|first ? strain.transformability|first.nom : '--'}}'>
-                    {% if strain.transformability is not empty %}
-                        {{strain.transformability[0].technique}} <br>
-                        {{strain.transformability[0].mesure}}
+                    <td class="phenotype" data-info='
+                                id: {{ strain.phenotype|first ? strain.phenotype|first.id : '--'}}
+                                technique: {{ strain.phenotype|first ? strain.phenotype|first.technique : "--" }}
+                                mesure: {{ strain.phenotype|first ? strain.phenotype|first.mesure : "--" }}
+                                file: {{ strain.phenotype|first ? strain.phenotype|first.nom : "--" }}'
+                                data-file='{{ strain.phenotype|first ? strain.phenotype|first.nom : '--'}}'>
+                    {% if strain.phenotype is not empty %}
+                        {{strain.phenotype[0].technique}} <br>
+                        {{strain.phenotype[0].mesure}}
                     {% else %}
                         --
                     {% endif %}
@@ -317,7 +317,7 @@
                 {% if (
                     strain.drugResistanceOnStrain is not empty or
                     strain.publication is not empty or
-                    strain.transformability is not empty or
+                    strain.phenotype is not empty or
                     strain.methodSequencing is not empty or
                     strain.project is not empty or
                     strain.collec is not empty or 
@@ -328,7 +328,7 @@
                     {% set maxLength = max(
                     strain.drugResistanceOnStrain|length,
                     strain.publication|length, 
-                    strain.transformability|length, 
+                    strain.phenotype|length, 
                     strain.methodSequencing|length,
                     strain.project|length,
                     strain.collec|length,
@@ -405,16 +405,16 @@
                                     --
                                 {% endif %}
                                 </td>
-                                <td class="transformability"
+                                <td class="phenotype"
                                     data-info='
-                                        id: {{ (strain.transformability|length > i) ? strain.transformability[i].id : "--" }}
-                                        technique: {{ (strain.transformability|length > i) ? strain.transformability[i].technique : "--" }}
-                                        mesure: {{ (strain.transformability|length > i) ? strain.transformability[i].mesure : "--" }}
-                                        file: {{ (strain.transformability|length > i and strain.transformability[i].nom) ? strain.transformability[i].nom : "--" }}'
-                                    data-file='{{ (strain.transformability|length > i and strain.transformability[i].nom) ? strain.transformability[i].nom : "--" }}'>
-                                    {% if strain.transformability|length > i %}
-                                        {{ strain.transformability[i].technique }} <br>
-                                        {{ strain.transformability[i].mesure }}
+                                        id: {{ (strain.phenotype|length > i) ? strain.phenotype[i].id : "--" }}
+                                        technique: {{ (strain.phenotype|length > i) ? strain.phenotype[i].technique : "--" }}
+                                        mesure: {{ (strain.phenotype|length > i) ? strain.phenotype[i].mesure : "--" }}
+                                        file: {{ (strain.phenotype|length > i and strain.phenotype[i].nom) ? strain.phenotype[i].nom : "--" }}'
+                                    data-file='{{ (strain.phenotype|length > i and strain.phenotype[i].nom) ? strain.phenotype[i].nom : "--" }}'>
+                                    {% if strain.phenotype|length > i %}
+                                        {{ strain.phenotype[i].technique }} <br>
+                                        {{ strain.phenotype[i].mesure }}
                                     {% else %}
                                         --
                                     {% endif %}

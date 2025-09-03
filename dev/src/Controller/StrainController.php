@@ -208,7 +208,7 @@ class StrainController extends AbstractController
             foreach ($strain->getMethodSequencing() as $sequencing){
                 $em->remove($sequencing);
             }
-            foreach ($strain->getTransformability() as $transfo){
+            foreach ($strain->getPhenotype() as $transfo){
                 $em->remove($transfo);
             }
             foreach($strain->getDrugResistanceOnStrain() as $drug){
@@ -287,11 +287,11 @@ class StrainController extends AbstractController
             // Relation vers le parent (on ne copie pas l'arbre entier)
             $clone->setParentStrain($strain->getParentStrain());
 
-            // Transformability (OneToMany)
-            foreach ($strain->getTransformability() as $transfo) {
+            // Phenotype (OneToMany)
+            foreach ($strain->getPhenotype() as $transfo) {
                 $newTransfo = clone $transfo;
                 $newTransfo->setStrain($clone);
-                $clone->addTransformability($newTransfo);
+                $clone->addPhenotype($newTransfo);
             }
 
             // DrugResistanceOnStrain (OneToMany)

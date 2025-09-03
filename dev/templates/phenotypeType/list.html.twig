@@ -1,0 +1,25 @@
+{% if types is defined and types|length > 0 %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for type in types %}
+                <tr>
+                    <td>{{ type.id }}</td>
+                    <td>{{ type.type }}</td>
+                    <td>
+                        <a href="{{ path('edit_phenotypetype', {id: type.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
+                        <a href="{{ path('delete_phenotypetype', {id: type.id}) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce type?');">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Aucun type de phénotype n'a été trouvé.</p>
+{% endif %}

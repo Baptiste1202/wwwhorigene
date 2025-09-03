@@ -128,21 +128,21 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="transformability-add" class="group long">
+        <div id="phenotype-add" class="group long">
     {% endif %}
-        <div id="transformability-add-info" class="hidden-tags">
-            <ul class="transformability"
-                data-index="{{ strainForm.transformability|length > 0 ? strainForm.transformability|last.vars.name + 1 : 0 }}"
-                data-prototype="{{ form_row(strainForm.transformability.vars.prototype)|e('html_attr') }}">
-                {% for subForm in strainForm.transformability %}
+        <div id="phenotype-add-info" class="hidden-tags">
+            <ul class="phenotype"
+                data-index="{{ strainForm.phenotype|length > 0 ? strainForm.phenotype|last.vars.name + 1 : 0 }}"
+                data-prototype="{{ form_row(strainForm.phenotype.vars.prototype)|e('html_attr') }}">
+                {% for subForm in strainForm.phenotype %}
                     <li>{{ form_row(subForm) }}</li>
                 {% endfor %}
             </ul>
         </div>
 
-        <div id="transformability-add-btn" class="add-btn">
-            <label>Transformability</label>
-            <button type="button" class="add_item_link" data-collection-holder-class="transformability">+</button>
+        <div id="phenotype-add-btn" class="add-btn">
+            <label>Phenotype</label>
+            <button type="button" class="add_item_link" data-collection-holder-class="phenotype">+</button>
         </div>
     {% if is_update %}
         </div>
@@ -330,7 +330,7 @@ function addFormToCollection(e) {
 }
 
   document
-    .querySelectorAll('ul.drugResistanceOnStrain li, ul.sequencing li, ul.transformability li, ul.storage li')
+    .querySelectorAll('ul.drugResistanceOnStrain li, ul.sequencing li, ul.phenotype li, ul.storage li')
     .forEach((tag) => {
         addTagFormDeleteLink(tag)
     })

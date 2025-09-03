@@ -2,18 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\TransformabilityRepository;
+use App\Repository\PhenotypeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-#[ORM\Entity(repositoryClass: TransformabilityRepository::class)]
+#[ORM\Entity(repositoryClass: PhenotypeRepository::class)]
 #[Vich\Uploadable]
-class Transformability
+class Phenotype
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -23,11 +20,11 @@ class Transformability
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $technique = null;
 
-    #[Vich\UploadableField(mapping: 'transformability_docs', fileNameProperty: 'nom')]
+    #[Vich\UploadableField(mapping: 'phenotype_docs', fileNameProperty: 'nom')]
     private ?File $file = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?string $nom = null;
+    #[ORM\ManyToOne(targetEntity: PhenotypeType::class)]
+    private ?PhenotypeType $phenotypeType = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $mesure = null;
@@ -38,7 +35,7 @@ class Transformability
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $comment = null;
 
-    #[ORM\ManyToOne(targetEntity: Strain::class, inversedBy: 'transformability')]
+    #[ORM\ManyToOne(targetEntity: Strain::class, inversedBy: 'phenotype')]
     private Strain $strain;
 
     public function getId(): ?int
@@ -80,17 +77,6 @@ class Transformability
         return $this->file;
     }
 
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
-    public function setNom(?string $nom): void
-    {
-        $this->nom = $nom;
-
-    }
-
     public function getDescription(): ?string
     {
         return $this->description;
@@ -126,4 +112,15 @@ class Transformability
         return $this;
     }
 
+    public function getPhenotypeType(): ?PhenotypeType
+    {
+        return $this->phenotypeType;
+    }
+
+    public function setPhenotypeType(?PhenotypeType $phenotypeType): self
+    {
+        $this->phenotypeType = $phenotypeType;
+        
+        return $this;
+    }
 }

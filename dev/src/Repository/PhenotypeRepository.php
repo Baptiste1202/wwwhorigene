@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Phenotype;
 use App\Entity\Transformability;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -14,11 +15,11 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Transformability[]    findAll()
  * @method Transformability[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TransformabilityRepository extends ServiceEntityRepository implements TransformabilityRepositoryInterface
+class PhenotypeRepository extends ServiceEntityRepository implements TransformabilityRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Transformability::class);
+        parent::__construct($registry, Phenotype::class);
     }
 
 //    /**

@@ -316,7 +316,7 @@ button.btn-form:hover {
 
 .drugResistanceOnStrain li div div,
 .sequencing li div div,
-.transformability li div div,
+.phenotype li div div,
 .storage li div div{
     display:flex;
     flex-direction: column;
@@ -324,7 +324,7 @@ button.btn-form:hover {
 
 .drugResistanceOnStrain li div div div,
 .sequencing li div div div,
-.transformability li div div div,
+.phenotype li div div div,
 .storage li div div div{
     display:flex;
     flex-direction: row;
@@ -332,14 +332,14 @@ button.btn-form:hover {
 
 .drugResistanceOnStrain li div div div input,
 .sequencing li div div div input,
-.transformability li div div div input,
+.phenotype li div div div input,
 .storage li div div div input{
     width: 100%;
 }
 
 .drugResistanceOnStrain li div div div:not(:first-of-type),
 .sequencing li div div div:not(:first-of-type),
-.transformability li div div div:not(:first-of-type),
+.phenotype li div div div:not(:first-of-type),
 .storage li div div div:not(:first-of-type){
     font-size: 0.9rem; /* Taille réduite */
     font-weight: normal;
@@ -931,7 +931,7 @@ thead th, tbody td {
     z-index: 1000;
 }
 
-#strain_form_transformability,
+#strain_form_phenotype,
 #strain_form_plasmyd,
 #strain_form_drugResistance,
 #strain_form_publication, 
@@ -1112,15 +1112,15 @@ ul.drugResistanceOnStrain > li {
     grid-row: 1/5;
 }
 
-.update-form #transformability-add,
-.update-form #strain_form_transformability{
+.update-form #phenotype-add,
+.update-form #strain_form_phenotype{
     display: flex;
     flex-direction: column;
     grid-column: 1;
     grid-row: 5/8;
 }
 
-.update-form div[id*="strain_form_transformability_"] {
+.update-form div[id*="strain_form_phenotype_"] {
     display: flex;
     flex-direction: column;
     grid-column: 1;

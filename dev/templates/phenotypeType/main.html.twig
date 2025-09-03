@@ -1,0 +1,18 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <div id="global">
+        <div id="form">
+            {% include "phenotypeType/create.html.twig" %}
+        </div>
+        <div id="list">
+            <div id="message">
+                {% include './message.html.twig' %}
+            </div>
+            <div id="table">
+                {% include "phenotypeType/list.html.twig" %}
+            </div>
+        </div>
+        <br></br>
+    </div> 
+{% endblock %}

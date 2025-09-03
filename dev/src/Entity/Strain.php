@@ -51,11 +51,11 @@ class Strain
     private ?string $descriptionGenotype = null;
 
     /**
-     * @var Collection<int, transformability>
+     * @var Collection<int, phenotype>
      */
-    #[ORM\OneToMany(targetEntity: Transformability::class, mappedBy: 'strain', cascade:['persist', 'remove'], orphanRemoval:true)]
+    #[ORM\OneToMany(targetEntity: Phenotype::class, mappedBy: 'strain', cascade:['persist', 'remove'], orphanRemoval:true)]
     #[ORM\JoinColumn(nullable: true)]
-    private ?Collection $transformability;
+    private ?Collection $phenotype;
 
     /**
      * @var Collection<int, plasmyd>
@@ -127,7 +127,7 @@ class Strain
     {
         $this->drugResistanceOnStrain = new ArrayCollection();
         $this->publication = new ArrayCollection();
-        $this->transformability = new ArrayCollection();
+        $this->phenotype = new ArrayCollection();
         $this->plasmyd = new ArrayCollection();
         $this->methodSequencing = new ArrayCollection();
         $this->project = new ArrayCollection();
@@ -247,33 +247,33 @@ class Strain
         return $this;
     }
 
-    public function getTransformability(): ?Collection
+    public function getPhenotype(): ?Collection
     {
-        return $this->transformability;
+        return $this->phenotype;
     }
 
-    public function setTransformability(?Transformability $transformability): static
+    public function setPhenotype(?Phenotype $phenotype): static
     {
-        $this->transformability = $transformability;
+        $this->phenotype = $phenotype;
 
         return $this;
     }
 
-    public function addTransformability(?Transformability $transformability): static
+    public function addPhenotype(?Phenotype $phenotype): static
     {
-        if (!$this->transformability->contains($transformability)) {
-            $this->transformability->add($transformability);
-            $transformability->setStrain($this);
+        if (!$this->phenotype->contains($phenotype)) {
+            $this->phenotype->add($phenotype);
+            $phenotype->setStrain($this);
         }
 
         return $this;
     }
 
-    public function removeTransformability(?Transformability $transformability): static
+    public function removePhenotype(?Phenotype $phenotype): static
     {
-        if ($this->transformability->removeElement($transformability)) {
-            if ($transformability->getStrain() === $this) {
-                $transformability->setStrain(null);
+        if ($this->phenotype->removeElement($phenotype)) {
+            if ($phenotype->getStrain() === $this) {
+                $phenotype->setStrain(null);
             }
         }
 
@@ -282,9 +282,9 @@ class Strain
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function updateTransformability(): void
+    public function updatePhenotype(): void
     {
-        foreach ($this->transformability as $transfo) {
+        foreach ($this->phenotype as $transfo) {
             $transfo->setStrain($this);
         }
     }

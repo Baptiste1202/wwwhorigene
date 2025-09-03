@@ -11,7 +11,7 @@ use App\Entity\Project;
 use App\Entity\Publication;
 use App\Entity\Sample;
 use App\Entity\Strain;
-use App\Entity\Transformability;
+use App\Entity\Phenotype;
 use App\Form\Autocomplete\CollecAutocompleteField;
 use App\Form\Autocomplete\PlasmydAutocompleteField;
 use App\Form\Autocomplete\ProjectAutocompleteField;
@@ -105,8 +105,8 @@ class StrainFormType extends AbstractType
                     'placeholder' => 'Description Genotype...'
                 ]
             ])
-            ->add('transformability', type:CollectionType::class, options:[
-                'entry_type' => TransformabilityFormType::class,
+            ->add('phenotype', type:CollectionType::class, options:[
+                'entry_type' => PhenotypeFormType::class,
                 'entry_options' => ['label' => false],
                 'allow_add' => true,  // Permet d'ajouter dynamiquement des entrées
                 'allow_delete' => true, // Permet de supprimer dynamiquement

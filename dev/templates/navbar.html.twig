@@ -25,6 +25,9 @@
                     <li><a href="{{ path('page_plasmyds') }}">Plasmid</a></li>
                     <li><a href="{{ path('page_drugs') }}">Drug Resistance</a></li>
                     <li><a href="{{ path('page_publications') }}">Publication</a></li>
+                    {% if 'ROLE_ADMIN' in app.user.roles %}
+                        <li><a href="{{ absolute_url(path('page_phenotypetypes')) }}"> <i class="fa-solid"></i>Phenotype</a></li>
+                    {% endif %}
                 </ul>
             </li>
             <li><a href="{{ absolute_url(path('strain_search')) }}"><i class="fa-solid fa-magnifying-glass"></i> Check Parents</a></li>
