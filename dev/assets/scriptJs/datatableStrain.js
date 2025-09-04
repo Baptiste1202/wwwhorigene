@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const dataTable = $('#data-table').DataTable({
         deferRender: true,
         paging: true,
+        pageLength: 25,
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Tous']],
+        stateSave: true,
         searching: false, //on utilisera notre recherche personalise par groupe
         ordering: true,
         info: true,
