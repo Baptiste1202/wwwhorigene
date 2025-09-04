@@ -292,6 +292,13 @@ function addFormToCollection(e) {
 
     // Ajouter au DOM
     collectionHolder.appendChild(item);
+       // Ajouter au DOM (avant le bouton spécial 🆕 s’il existe)
+    const specialLi = collectionHolder.querySelector('li.create-plasmid-li');
+    if (specialLi) {
+        collectionHolder.insertBefore(item, specialLi);
+    } else {
+        collectionHolder.appendChild(item);
+    }
 
     // Copier les valeurs depuis le dernier élément si existant
     const existingItems = collectionHolder.querySelectorAll('li');
@@ -327,6 +334,9 @@ function addFormToCollection(e) {
 
     // Incrémenter l'index
     collectionHolder.dataset.index++;
+
+    // Toujours remettre le bouton 🆕 à la fin
+    ensureCreatePlasmidButton(collectionHolder);
 }
 
   document
@@ -358,4 +368,184 @@ function addTagFormDeleteLink(tag) {
         }
     });
 }
+</script>
+
+<!-- Modal pour créer un nouveau plasmide -->
+<div id="plasmid-modal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+    <div class="modal-content" style="background-color: #fefefe; margin: 10% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 5px;">
+        <span class="close-modal" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+        <h2>Créer un nouveau plasmide</h2>
+        <div id="plasmid-form-container">
+            <form id="plasmid-create-form">
+                <div class="form-group">
+                    <label for="plasmid_name">Nom du plasmide</label>
+                    <input type="text" id="plasmid_name" name="namePlasmyd" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="plasmid_name">Type</label>
+                    <select id="plasmid_type" name="type" required class="form-control">
+                        <option value="WT">WT</option>
+                        <option value="GMO">GMO</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="plasmid_description">Description</label>
+                    <textarea id="plasmid_description" name="description" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="plasmid_comment">Commentaire</label>
+                    <textarea id="plasmid_comment" name="comment" class="form-control"></textarea>
+                </div>
+                <button type="submit" class="btn-form">Ajouter le plasmide</button>
+            </form>
+        </div>
+        <div id="plasmid-form-result" style="margin-top: 20px; display: none;"></div>
+    </div>
+</div>
+
+<script>
+// Fonction qui garantit qu’il y a un li spécial "Créer un plasmide"
+function ensureCreatePlasmidButton(collectionHolder) {
+    // Compter uniquement les vrais items (exclure le li spécial)
+    const items = collectionHolder.querySelectorAll('li:not(.create-plasmid-li)');
+
+    let specialLi = collectionHolder.querySelector('li.create-plasmid-li');
+    if (!specialLi) {
+        specialLi = document.createElement('li');
+        specialLi.classList.add('create-plasmid-li');
+
+        const createBtn = document.createElement('button');
+        createBtn.type = 'button';
+        createBtn.id = 'create-plasmid-btn';
+        createBtn.className = 'add_item_plasmid create-plasmid-btn';
+        createBtn.title = 'Create a new plasmid';
+        createBtn.textContent = 'Create a new plasmid';
+
+        createBtn.addEventListener('click', function() {
+            document.getElementById('plasmid-modal').style.display = 'block';
+        });
+
+        specialLi.appendChild(createBtn);
+        collectionHolder.appendChild(specialLi);
+    }
+
+    // ✅ Masquer si aucun élément, sinon afficher
+    if (items.length === 0) {
+        specialLi.style.display = 'none';
+    } else {
+        specialLi.style.display = '';
+        collectionHolder.appendChild(specialLi); // le replacer toujours en bas
+    }
+}
+
+
+// Gestion de la modal pour la création de plasmide
+document.addEventListener('DOMContentLoaded', function() {
+    const plasmidUl = document.querySelector('ul.plasmyd');
+    if (plasmidUl) {
+        ensureCreatePlasmidButton(plasmidUl);
+    }
+    // Éléments DOM
+    const modal = document.getElementById('plasmid-modal');
+    const createBtn = document.getElementById('create-plasmid-btn');
+    const closeBtn = document.querySelector('.close-modal');
+    const form = document.getElementById('plasmid-create-form');
+    const resultDiv = document.getElementById('plasmid-form-result');
+    
+    // Ouvrir la modal
+    createBtn.addEventListener('click', function() {
+        modal.style.display = 'block';
+    });
+    
+    // Fermer la modal
+    closeBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+        // Réinitialiser le formulaire et les messages
+        form.reset();
+        resultDiv.style.display = 'none';
+    });
+    
+    // Fermer la modal si on clique en dehors
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+            // Réinitialiser le formulaire et les messages
+            form.reset();
+            resultDiv.style.display = 'none';
+        }
+    });
+    
+    // Gérer la soumission du formulaire
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Afficher un message de chargement
+        resultDiv.innerHTML = '<p>Création du plasmide en cours...</p>';
+        resultDiv.style.display = 'block';
+        
+        // Récupérer les données du formulaire
+        const formData = {
+            namePlasmyd: document.getElementById('plasmid_name').value,
+            type: document.getElementById('plasmid_type').value,
+            description: document.getElementById('plasmid_description').value,
+            comment: document.getElementById('plasmid_comment').value
+        };
+        
+        // Envoyer les données à l'API
+        fetch('/api/plasmyd/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Afficher un message de succès
+                resultDiv.innerHTML = '<p style="color: green;">' + data.message + '</p>';
+                
+                // Réinitialiser le formulaire
+                form.reset();
+                
+                // Mettre à jour les sélecteurs de plasmide dans le formulaire
+                updatePlasmidSelectors(data.plasmid);
+                
+                // Fermer la modal après 2 secondes
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    resultDiv.style.display = 'none';
+                }, 2000);
+            } else {
+                // Afficher un message d'erreur
+                resultDiv.innerHTML = '<p style="color: red;">' + data.message + '</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            resultDiv.innerHTML = '<p style="color: red;">Une erreur est survenue lors de la communication avec le serveur.</p>';
+        });
+    });
+    
+    // Fonction pour mettre à jour les sélecteurs de plasmide
+    function updatePlasmidSelectors(plasmid) {
+        // Trouver tous les sélecteurs de plasmide dans le formulaire
+        const plasmidSelectors = document.querySelectorAll('select[id$="_plasmyd"]');
+        
+        if (plasmidSelectors.length > 0) {
+            plasmidSelectors.forEach(selector => {
+                // Créer une nouvelle option
+                const option = document.createElement('option');
+                option.value = plasmid.id;
+                option.text = plasmid.name + ' - ' + plasmid.type;
+                
+                // Ajouter l'option au sélecteur
+                selector.appendChild(option);
+                
+                // Sélectionner la nouvelle option
+                selector.value = plasmid.id;
+            });
+        }
+    }
+});
 </script>

@@ -283,4 +283,67 @@ class PlasmydController extends AbstractController
         // Redirection finale
         return $this->redirectToRoute('page_plasmyds');
     }
+    
+    #[Route('/api/plasmyd/create', name: 'api_create_plasmyd', methods: ['POST'])]
+    public function apiCreatePlasmyd(Request $request, EntityManagerInterface $em): Response
+    {
+        // Vérifier les permissions
+        if (!$this->isGranted('ROLE_SEARCH')) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Vous n\'avez pas les permissions nécessaires pour créer un plasmide.'
+            ], 403);
+        }
+        
+        // Récupérer les données
+        $data = json_decode($request->getContent(), true);
+        
+        if (!$data) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Données invalides.'
+            ], 400);
+        }
+        
+        try {
+            // Créer le nouveau plasmide
+            $plasmyd = new Plasmyd();
+            $plasmyd->setNamePlasmyd($data['namePlasmyd']);
+            $plasmyd->setType($data['type']);
+            
+            // Champs optionnels
+            if (isset($data['description'])) {
+                $plasmyd->setDescription($data['description']);
+            }
+            
+            if (isset($data['comment'])) {
+                $plasmyd->setComment($data['comment']);
+            }
+            
+            // Générer le slug
+            $slug = $plasmyd->getNamePlasmyd(). ' - ' . $plasmyd->getType();
+            $plasmyd->setSlug($slug);
+            
+            // Persister et flusher
+            $em->persist($plasmyd);
+            $em->flush();
+            
+            // Retourner le résultat avec les données du nouveau plasmide
+            return $this->json([
+                'success' => true,
+                'message' => 'Plasmide créé avec succès.',
+                'plasmid' => [
+                    'id' => $plasmyd->getId(),
+                    'name' => $plasmyd->getNamePlasmyd(),
+                    'type' => $plasmyd->getType()
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Une erreur est survenue lors de la création du plasmide: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

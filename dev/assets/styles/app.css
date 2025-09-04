@@ -273,6 +273,18 @@ button.btn-form:hover {
     flex-direction: column !important;
 }
 
+.add_item_plasmid{
+    width: 100%; /* Taille du carré */
+    height: 20px; /* Taille du carré */
+    background-color: #f9f9f9; /* Couleur du bouton */
+    color: #000; /* Couleur du texte (icône ou texte) */
+    border: 1px solid #ccc;
+    border-radius: 4px; /* Coins légèrement arrondis */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .col-12 form div.add-btn button{
     width: 30px; /* Taille du carré */
@@ -1279,5 +1291,11 @@ form .g-inp{
     font-size: 14px;
     color: white;
     font-weight: 500;
+}
+
+ul.plasmyd li.create-plasmid-li {
+    list-style-type: none; /* Supprime la puce */
+    margin-left: 0;        /* Supprime le décalage */
+    padding-left: 0;       /* Supprime l'espace de la puce */
 }
 
