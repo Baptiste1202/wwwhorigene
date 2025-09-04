@@ -26,7 +26,7 @@ class PhenotypeFormType extends AbstractType
                 'choice_label' => function (PhenotypeType $phenotypetype) {
                     return $phenotypetype->getType(); 
                 },
-                'required' => false,   
+                'required' => true,   
                 'placeholder' => '',  
                 'empty_data' => null,
             ])
@@ -43,9 +43,10 @@ class PhenotypeFormType extends AbstractType
                     'Poor' => 'poor',
                     'Average' => 'average',
                     'Good' => 'good',
-                    'Very Good' => 'very_good'
+                    'Very Good' => 'very_good',
                 ],
-                'placeholder' => 'Select a measure'
+                'placeholder' => 'Select a measure',
+                'required' => true,
             ])
             ->add('date', DateType::class, [
                 'widget' => 'single_text', 

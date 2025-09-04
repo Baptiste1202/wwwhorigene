@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Partie 5. Popups (info/fichier) pour le téléchargement et les bonnes directions
     const typeMap = {
         sequencing: 'sequencing',
-        transformability: 'transformability',
+        phenotype: 'phenotype',
         drugResistanceOnStrain: 'drugs'
     };
 
