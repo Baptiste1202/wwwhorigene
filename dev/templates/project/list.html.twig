@@ -50,7 +50,7 @@
                             {{ project.comment is not null ? project.comment : '--' }}
                         </td>
                         <td><a href="{{ path('duplicate_project', {id: project.id}) }}">Duplicate</a></td>
-                            <td><a href="{{ path('edit_project', {id: project.id}) }}">Modifie</a></td>
+                        <td><a href="{{ path('edit_project', {id: project.id}) }}">Modifie</a></td>
                         <td>
                             <a href="{{ path('delete_project', {id: project.id}) }}"
                                 title="Supprimer"

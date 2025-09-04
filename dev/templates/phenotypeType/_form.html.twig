@@ -1,9 +1,6 @@
-{{ form_start(phenotypetypeForm) }}
-
-    {{ form_row(phenotypetypeForm.type) }}
-
-    <button type="submit" class="btn-form">
-        {{ button_label | default('Add phenotype') }}
-    </button>
-
-{{ form_end(phenotypetypeForm) }}
+{{ form_start(phenotypeTypeForm) }}
+  {{ form_row(phenotypeTypeForm.type) }}
+  <button type="submit" class="btn-form">
+    {{ button_label | default('Add phenotype') }}
+  </button>
+{{ form_end(phenotypeTypeForm) }}
