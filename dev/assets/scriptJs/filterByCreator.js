@@ -5,9 +5,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('customSearch');
 
     if (!btn || !table) {
-        if (!btn)   console.warn("⚠️ Bouton #filterByUserButton introuvable !");
-        if (!table) console.warn("⚠️ Table #data-table introuvable !");
+        if (!btn)   console.warn("⚠️ Bouton #filterByUserButton introuvable !");
+        if (!table) console.warn("⚠️ Table #data-table introuvable !");
         return;
+    }
+
+    // Récupère l’instance DataTables SI elle existe déjà (on n’en crée pas)
+    let dt = null;
+    if (window.jQuery && window.jQuery.fn && window.jQuery.fn.dataTable && window.jQuery.fn.dataTable.isDataTable(table)) {
+        dt = window.jQuery(table).DataTable();
     }
 
     // DEV: récupère prénom/nom
@@ -39,6 +45,14 @@ document.addEventListener('DOMContentLoaded', function () {
         searchInput.addEventListener('input', function () {
             searchTerm = this.value.trim().toLowerCase();
             applyFilters();
+        });
+    }
+
+    // ⤵️ Ré-appliquer ton filtre quand l’utilisateur change de page dans DataTables
+    if (dt) {
+        window.jQuery(table).on('page.dt', function () {
+            // attendre le rendu de la nouvelle page
+            setTimeout(applyFilters, 0);
         });
     }
 
