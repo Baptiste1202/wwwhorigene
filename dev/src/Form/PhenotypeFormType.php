@@ -10,6 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 
 class PhenotypeFormType extends AbstractType
@@ -26,6 +27,13 @@ class PhenotypeFormType extends AbstractType
                 'required' => false,   
                 'placeholder' => '',  
                 'empty_data' => null,
+            ])
+            ->add('technique', type: TextType::class, options: [
+                'label'    => 'Technique',
+                'required' => false,
+                'attr'     => [
+                    'placeholder' => 'Ex. PCR, MIC, etc.'
+                ],
             ])
             ->add('mesure', ChoiceType::class, [
                 'label' => 'Measure',
