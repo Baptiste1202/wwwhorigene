@@ -335,8 +335,9 @@ function addFormToCollection(e) {
     // Incrémenter l'index
     collectionHolder.dataset.index++;
 
-    // Toujours remettre le bouton 🆕 à la fin
-    ensureCreatePlasmidButton(collectionHolder);
+    if (collectionHolder.classList.contains('plasmyd')) {
+        ensureCreatePlasmidButton(collectionHolder);
+    }
 }
 
   document
@@ -345,16 +346,16 @@ function addFormToCollection(e) {
         addTagFormDeleteLink(tag)
     })
 
-function addTagFormDeleteLink(tag) {
-    const removeFormButton = document.createElement('button');
-    removeFormButton.innerText = 'x';
-    removeFormButton.classList.add('remove-tag-btn'); // Ajoute une classe pour le bouton
+    function addTagFormDeleteLink(tag) {
+        const removeFormButton = document.createElement('button');
+        removeFormButton.innerText = 'x';
+        removeFormButton.classList.add('remove-tag-btn'); // Ajoute une classe pour le bouton
 
-    // Ajoute le bouton après le premier element (ou autre contenu du tag)
-    const firstElement = tag.querySelector('select, input');
-    firstElement.after(removeFormButton);
+        // Ajoute le bouton après le premier element (ou autre contenu du tag)
+        const firstElement = tag.querySelector('select, input');
+        firstElement.after(removeFormButton);
 
-    removeFormButton.addEventListener('click', (e) => {
+        removeFormButton.addEventListener('click', (e) => {
         e.preventDefault();
         const ul = tag.parentElement; // La liste contenant le tag
         const containerDiv = ul.closest('div'); // La <div> qui entoure la liste
@@ -362,9 +363,13 @@ function addTagFormDeleteLink(tag) {
         // Supprime l'élément complet
         tag.remove();
 
-        // Vérifie si la liste est vide
-        if (ul.children.length === 0) {
-            containerDiv.classList.add('hidden-tags'); // Ajoute la classe "hidden" pour masquer la div
+        // Vérifie si la liste est vide (hors li spécial)
+        const realItems = ul.querySelectorAll('li:not(.create-plasmid-li)');
+        if (realItems.length === 0) {
+            containerDiv.classList.add('hidden-tags'); // masque la div si tu veux
+            // Supprime le bouton spécial aussi
+            const specialLi = ul.querySelector('li.create-plasmid-li');
+            if (specialLi) specialLi.remove();
         }
     });
 }
@@ -374,11 +379,11 @@ function addTagFormDeleteLink(tag) {
 <div id="plasmid-modal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
     <div class="modal-content" style="background-color: #fefefe; margin: 10% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 5px;">
         <span class="close-modal" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
-        <h2>Créer un nouveau plasmide</h2>
+        <h2>Create a new plasmid</h2>
         <div id="plasmid-form-container">
             <form id="plasmid-create-form">
                 <div class="form-group">
-                    <label for="plasmid_name">Nom du plasmide</label>
+                    <label for="plasmid_name">Name</label>
                     <input type="text" id="plasmid_name" name="namePlasmyd" required class="form-control">
                 </div>
                 <div class="form-group">
@@ -393,10 +398,10 @@ function addTagFormDeleteLink(tag) {
                     <textarea id="plasmid_description" name="description" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="plasmid_comment">Commentaire</label>
+                    <label for="plasmid_comment">Comment</label>
                     <textarea id="plasmid_comment" name="comment" class="form-control"></textarea>
                 </div>
-                <button type="submit" class="btn-form">Ajouter le plasmide</button>
+                <button type="submit" class="btn-form">Add this plasmid</button>
             </form>
         </div>
         <div id="plasmid-form-result" style="margin-top: 20px; display: none;"></div>
@@ -408,8 +413,8 @@ function addTagFormDeleteLink(tag) {
 function ensureCreatePlasmidButton(collectionHolder) {
     // Compter uniquement les vrais items (exclure le li spécial)
     const items = collectionHolder.querySelectorAll('li:not(.create-plasmid-li)');
-
     let specialLi = collectionHolder.querySelector('li.create-plasmid-li');
+
     if (!specialLi) {
         specialLi = document.createElement('li');
         specialLi.classList.add('create-plasmid-li');
