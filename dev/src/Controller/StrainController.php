@@ -139,6 +139,12 @@ class StrainController extends AbstractController
             ]);
         }
         catch (\Throwable $e) {
+            
+            // En environnement debug, laisse Symfony afficher la page d’erreur
+            if ($this->getParameter('kernel.debug')) {
+                throw $e;
+            }
+
             $this->addFlash('error', 'An error occurred while creating the strain. Please try again.');
 
             return $this->redirectToRoute('page_strains');
