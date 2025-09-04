@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PhenotypeRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\File\File;
@@ -20,8 +21,14 @@ class Phenotype
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $technique = null;
 
-    #[Vich\UploadableField(mapping: 'phenotype_docs', fileNameProperty: 'nom')]
+    #[Vich\UploadableField(mapping: 'phenotype_docs', fileNameProperty: 'fileName')]
     private ?File $file = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $fileName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?DateTime $date = null;
 
     #[ORM\ManyToOne(targetEntity: PhenotypeType::class)]
     private ?PhenotypeType $phenotypeType = null;
@@ -121,6 +128,30 @@ class Phenotype
     {
         $this->phenotypeType = $phenotypeType;
         
+        return $this;
+    }
+
+        public function getFileName(): ?string
+    {
+        return $this->fileName;
+    }
+
+    public function setFileName(?string $fileName): self
+    {
+        $this->fileName = $fileName;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTime
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTime $date): self
+    {
+        $this->date = $date;
+
         return $this;
     }
 }

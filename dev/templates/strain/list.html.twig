@@ -209,11 +209,12 @@
                     </td>
 
                     <td class="phenotype" data-info='
-                                id: {{ strain.phenotype|first ? strain.phenotype|first.id : '--'}}
+                                phenotype: {{ strain.phenotype|first ? strain.phenotype|first.phenotypeType.type : '--'}}
                                 technique: {{ strain.phenotype|first ? strain.phenotype|first.technique : "--" }}
                                 mesure: {{ strain.phenotype|first ? strain.phenotype|first.mesure : "--" }}
-                                file: {{ strain.phenotype|first ? strain.phenotype|first.nom : "--" }}'
-                                data-file='{{ strain.phenotype|first ? strain.phenotype|first.nom : '--'}}'>
+                                date: {{ strain.phenotype|first ? strain.phenotype|first.date|date('d/m/Y') : "--" }}
+                                file: {{ strain.phenotype|first ? strain.phenotype|first.fileName : "--" }}'
+                                data-file='{{ strain.phenotype|first ? strain.phenotype|first.fileName : '--'}}'>
                     {% if strain.phenotype is not empty %}
                         {{strain.phenotype[0].technique}} <br>
                         {{strain.phenotype[0].mesure}}
@@ -407,11 +408,12 @@
                                 </td>
                                 <td class="phenotype"
                                     data-info='
-                                        id: {{ (strain.phenotype|length > i) ? strain.phenotype[i].id : "--" }}
+                                        phenotype: {{ (strain.phenotype|length > i) ? strain.phenotype[i].phenotypeType.type : "--" }}
                                         technique: {{ (strain.phenotype|length > i) ? strain.phenotype[i].technique : "--" }}
                                         mesure: {{ (strain.phenotype|length > i) ? strain.phenotype[i].mesure : "--" }}
-                                        file: {{ (strain.phenotype|length > i and strain.phenotype[i].nom) ? strain.phenotype[i].nom : "--" }}'
-                                    data-file='{{ (strain.phenotype|length > i and strain.phenotype[i].nom) ? strain.phenotype[i].nom : "--" }}'>
+                                        date: {{ (strain.phenotype|length > i) ? strain.phenotype[i].date|date('d/m/Y') : "--" }}
+                                        file: {{ (strain.phenotype|length > i and strain.phenotype[i].fileName) ? strain.phenotype[i].fileName : "--" }}'
+                                    data-file='{{ (strain.phenotype|length > i and strain.phenotype[i].fileName) ? strain.phenotype[i].fileName : "--" }}'>
                                     {% if strain.phenotype|length > i %}
                                         {{ strain.phenotype[i].technique }} <br>
                                         {{ strain.phenotype[i].mesure }}

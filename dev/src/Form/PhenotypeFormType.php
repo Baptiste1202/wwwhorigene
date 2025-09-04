@@ -10,6 +10,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 
@@ -44,6 +46,10 @@ class PhenotypeFormType extends AbstractType
                     'Very Good' => 'very_good'
                 ],
                 'placeholder' => 'Select a measure'
+            ])
+            ->add('date', DateType::class, [
+                'widget' => 'single_text', 
+                'required' => false,
             ])
             ->add('file', VichFileType::class, options:[
                 'required' => false,
