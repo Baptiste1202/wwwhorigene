@@ -475,20 +475,20 @@ class StrainController extends AbstractController
             }
 
             // --- Phenotype measure (nested, indépendant de phenotypeType) ---
-if ($data->phenotypeMeasure) {
-    $measure = (string) $data->phenotypeMeasure;
-    $this->logger->info('Add phenotype measure', ['mesure' => $measure]);
+            if ($data->phenotypeMeasure) {
+                $measure = (string) $data->phenotypeMeasure;
+                $this->logger->info('Add phenotype measure', ['mesure' => $measure]);
 
-    $nestedBool = new \Elastica\Query\BoolQuery();
-    // champ indexé : phenotype.mesure (keyword)
-    $nestedBool->addFilter(new \Elastica\Query\Term(['phenotype.mesure' => $measure]));
+                $nestedBool = new \Elastica\Query\BoolQuery();
+                // champ indexé : phenotype.mesure (keyword)
+                $nestedBool->addFilter(new \Elastica\Query\Term(['phenotype.mesure' => $measure]));
 
-    $nested = new \Elastica\Query\Nested();
-    $nested->setPath('phenotype'); // même path que pour phenotypeType
-    $nested->setQuery($nestedBool);
+                $nested = new \Elastica\Query\Nested();
+                $nested->setPath('phenotype'); // même path que pour phenotypeType
+                $nested->setQuery($nestedBool);
 
-    $boolQuery->addFilter($nested);
-}
+                $boolQuery->addFilter($nested);
+            }
 
 
             if ($data->project){
