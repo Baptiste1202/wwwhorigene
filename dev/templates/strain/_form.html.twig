@@ -447,110 +447,166 @@ function ensureCreatePlasmidButton(collectionHolder) {
 // Gestion de la modal pour la création de plasmide
 document.addEventListener('DOMContentLoaded', function() {
     const plasmidUl = document.querySelector('ul.plasmyd');
-    if (plasmidUl) {
+    if (plasmidUl && typeof ensureCreatePlasmidButton === 'function') {
         ensureCreatePlasmidButton(plasmidUl);
     }
+
     // Éléments DOM
-    const modal = document.getElementById('plasmid-modal');
+    const modal     = document.getElementById('plasmid-modal');
     const createBtn = document.getElementById('create-plasmid-btn');
-    const closeBtn = document.querySelector('.close-modal');
-    const form = document.getElementById('plasmid-create-form');
+    const closeBtn  = document.querySelector('.close-modal');
+    const form      = document.getElementById('plasmid-create-form');
     const resultDiv = document.getElementById('plasmid-form-result');
-    
+
+    // --- Helpers UI ---
+    function showMessage(html, color = null) {
+        resultDiv.innerHTML = html;
+        if (color) resultDiv.style.color = color;
+        resultDiv.style.display = 'block';
+    }
+    function clearMessage() {
+        resultDiv.innerHTML = '';
+        resultDiv.style.display = 'none';
+        resultDiv.style.removeProperty('color');
+    }
+
     // Ouvrir la modal
-    createBtn.addEventListener('click', function() {
+    createBtn?.addEventListener('click', function() {
+        clearMessage();
         modal.style.display = 'block';
     });
-    
+
     // Fermer la modal
-    closeBtn.addEventListener('click', function() {
+    closeBtn?.addEventListener('click', function() {
         modal.style.display = 'none';
-        // Réinitialiser le formulaire et les messages
         form.reset();
-        resultDiv.style.display = 'none';
+        clearMessage();
     });
-    
-    // Fermer la modal si on clique en dehors
+
+    // Fermer la modal si clic en dehors
     window.addEventListener('click', function(event) {
         if (event.target === modal) {
             modal.style.display = 'none';
-            // Réinitialiser le formulaire et les messages
             form.reset();
-            resultDiv.style.display = 'none';
+            clearMessage();
         }
     });
-    
+
+    // --- POST API avec fallback / logs / gestion non-JSON ---
+    async function postPlasmid(formData) {
+        const urls = ['/public/api/plasmyd/create', '/api/plasmyd/create']; // primary + fallback
+        let lastErr = null;
+
+        for (const url of urls) {
+            try {
+                console.log('[Plasmid][POST] ->', url, formData);
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'same-origin', // envoie cookies de session si besoin
+                    body: JSON.stringify(formData)
+                });
+
+                const raw = await res.text(); // lire une seule fois
+                let data = null;
+                try { data = raw ? JSON.parse(raw) : null; }
+                catch (e) {
+                    console.warn('[Plasmid] Réponse non-JSON. Corps brut:', raw);
+                }
+
+                console.log('[Plasmid][RESP]', res.status, data ?? raw);
+
+                if (!res.ok) {
+                    // Message serveur si fourni, sinon code HTTP
+                    const msg = (data && data.message) ? data.message : `HTTP ${res.status}`;
+                    throw new Error(msg);
+                }
+
+                // Succès
+                return data || { success: true, message: 'Plasmide créé.', plasmid: null };
+
+            } catch (e) {
+                console.warn('[Plasmid] Failed on', url, '→', e.message);
+                lastErr = e;
+                // on tente l’URL suivante
+            }
+        }
+
+        // Si toutes les URLs ont échoué
+        throw lastErr || new Error('Network / server error');
+    }
+
     // Gérer la soumission du formulaire
-    form.addEventListener('submit', function(e) {
+    form?.addEventListener('submit', async function(e) {
         e.preventDefault();
-        
-        // Afficher un message de chargement
-        resultDiv.innerHTML = '<p>Création du plasmide en cours...</p>';
-        resultDiv.style.display = 'block';
-        
+
         // Récupérer les données du formulaire
         const formData = {
-            namePlasmyd: document.getElementById('plasmid_name').value,
-            type: document.getElementById('plasmid_type').value,
-            description: document.getElementById('plasmid_description').value,
-            comment: document.getElementById('plasmid_comment').value
+            namePlasmyd: document.getElementById('plasmid_name')?.value?.trim() || '',
+            type:        document.getElementById('plasmid_type')?.value?.trim() || '',
+            description: document.getElementById('plasmid_description')?.value?.trim() || '',
+            comment:     document.getElementById('plasmid_comment')?.value?.trim() || ''
         };
-        
-        // Envoyer les données à l'API
-        fetch('/api/plasmyd/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Afficher un message de succès
-                resultDiv.innerHTML = '<p style="color: green;">' + data.message + '</p>';
-                
-                // Réinitialiser le formulaire
+
+        // Petites validations côté client
+        if (!formData.namePlasmyd || !formData.type) {
+            showMessage('Please fill in at least the plasmid name and type.', 'red');
+            return;
+        }
+
+        // UI: état de chargement
+        showMessage('Plasmid creation in progress…');
+        const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+        if (submitBtn) submitBtn.disabled = true;
+
+        try {
+            const data = await postPlasmid(formData);
+
+            if (data?.success) {
+                showMessage((data.message || 'Plasmid created successfully.'), 'green');
                 form.reset();
-                
-                // Mettre à jour les sélecteurs de plasmide dans le formulaire
-                updatePlasmidSelectors(data.plasmid);
-                
-                // Fermer la modal après 2 secondes
+
+                // Mettre à jour les sélecteurs si on reçoit l’objet plasmid
+                if (data.plasmid) updatePlasmidSelectors(data.plasmid);
+
+                // Fermer la modal après un court délai
                 setTimeout(() => {
                     modal.style.display = 'none';
-                    resultDiv.style.display = 'none';
-                }, 2000);
+                    clearMessage();
+                }, 1500);
             } else {
-                // Afficher un message d'erreur
-                resultDiv.innerHTML = '<p style="color: red;">' + data.message + '</p>';
+                showMessage((data?.message || 'Plasmid creation failed.'), 'red');
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            resultDiv.innerHTML = '<p style="color: red;">Une erreur est survenue lors de la communication avec le serveur.</p>';
-        });
+        } catch (error) {
+            console.error('[Plasmid] Error:', error);
+            showMessage('An error occurred while communicating with the server.', 'red');
+        } finally {
+            if (submitBtn) submitBtn.disabled = false;
+        }
     });
-    
-    // Fonction pour mettre à jour les sélecteurs de plasmide
+
+    // Mettre à jour les sélecteurs de plasmide
     function updatePlasmidSelectors(plasmid) {
-        // Trouver tous les sélecteurs de plasmide dans le formulaire
+        // Trouver tous les <select> ciblant un plasmide (suffixe _plasmyd)
         const plasmidSelectors = document.querySelectorAll('select[id$="_plasmyd"]');
-        
-        if (plasmidSelectors.length > 0) {
-            plasmidSelectors.forEach(selector => {
-                // Créer une nouvelle option
+        if (!plasmidSelectors.length) return;
+
+        plasmidSelectors.forEach(selector => {
+            // Vérifie si l’option existe déjà (évite doublons)
+            const exists = Array.from(selector.options).some(opt => String(opt.value) === String(plasmid.id));
+            if (!exists) {
                 const option = document.createElement('option');
                 option.value = plasmid.id;
-                option.text = plasmid.name + ' - ' + plasmid.type;
-                
-                // Ajouter l'option au sélecteur
+                option.text  = `${plasmid.name} - ${plasmid.type}`;
                 selector.appendChild(option);
-                
-                // Sélectionner la nouvelle option
-                selector.value = plasmid.id;
-            });
-        }
+            }
+            // Sélectionner la nouvelle option
+            selector.value = plasmid.id;
+        });
     }
 });
+
 </script>

@@ -291,7 +291,7 @@ class PlasmydController extends AbstractController
         if (!$this->isGranted('ROLE_SEARCH')) {
             return $this->json([
                 'success' => false,
-                'message' => 'Vous n\'avez pas les permissions nécessaires pour créer un plasmide.'
+                'message' => 'You do not have the necessary permissions to create a plasmid.'
             ], 403);
         }
         
@@ -331,7 +331,7 @@ class PlasmydController extends AbstractController
             // Retourner le résultat avec les données du nouveau plasmide
             return $this->json([
                 'success' => true,
-                'message' => 'Plasmide créé avec succès.',
+                'message' => 'Plasmid created successfully.',
                 'plasmid' => [
                     'id' => $plasmyd->getId(),
                     'name' => $plasmyd->getNamePlasmyd(),
@@ -342,7 +342,7 @@ class PlasmydController extends AbstractController
         } catch (\Exception $e) {
             return $this->json([
                 'success' => false,
-                'message' => 'Une erreur est survenue lors de la création du plasmide: ' . $e->getMessage()
+                'message' => 'An error occurred while creating the plasmid: ' . $e->getMessage()
             ], 500);
         }
     }
