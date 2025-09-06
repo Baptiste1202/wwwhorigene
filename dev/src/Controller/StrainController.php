@@ -413,7 +413,7 @@ class StrainController extends AbstractController
             $this->logger->info('Form submitted', ['data' => (array) $data]);
             $page = $request->query->getInt('page',1);
             $this->logger->info('Page requested', ['page' => $page]);
-            
+
             $boolQuery = new BoolQuery();
 
             if ($data->query){
@@ -455,6 +455,41 @@ class StrainController extends AbstractController
                 $this->logger->info('Add genotype', ['genotype_id' => $data->genotype->getId()]);
                 $boolQuery->addFilter(new MatchQuery('genotype.id', $data->genotype->getId()));
             }
+
+            // --- PhenotypeType (nested, path: phenotype) ---
+            if ($data->phenotypeType && $data->phenotypeType->getId()) {
+                $ptId = (int) $data->phenotypeType->getId();
+
+                $this->logger->info('Add phenotypeType', ['phenotype_type_id' => $ptId]);
+
+                $nestedBool = new \Elastica\Query\BoolQuery();
+
+                // IDs ⇒ égalité stricte
+                $nestedBool->addFilter(new \Elastica\Query\Term(['phenotype.phenotype_type_id' => $ptId]));
+
+                $nested = new \Elastica\Query\Nested();
+                $nested->setPath('phenotype'); // ← sans “s”, comme le mapping
+                $nested->setQuery($nestedBool);
+
+                $boolQuery->addFilter($nested);
+            }
+
+            // --- Phenotype measure (nested, indépendant de phenotypeType) ---
+if ($data->phenotypeMeasure) {
+    $measure = (string) $data->phenotypeMeasure;
+    $this->logger->info('Add phenotype measure', ['mesure' => $measure]);
+
+    $nestedBool = new \Elastica\Query\BoolQuery();
+    // champ indexé : phenotype.mesure (keyword)
+    $nestedBool->addFilter(new \Elastica\Query\Term(['phenotype.mesure' => $measure]));
+
+    $nested = new \Elastica\Query\Nested();
+    $nested->setPath('phenotype'); // même path que pour phenotypeType
+    $nested->setQuery($nestedBool);
+
+    $boolQuery->addFilter($nested);
+}
+
 
             if ($data->project){
                 $this->logger->info('Add project', ['project_id' => $data->project->getId()]);

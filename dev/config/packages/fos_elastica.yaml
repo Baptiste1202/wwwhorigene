@@ -57,3 +57,19 @@ fos_elastica:
         gender:
         date:
           type: date
+
+        # 👇 AJOUT ICI (note bien: property_path = phenotype, pas de “s”)
+        phenotype:
+          type: nested
+          property_path: phenotype
+          properties:
+            phenotype_type_id:
+              type: integer
+              property_path: phenotypeType.id
+            # (optionnel) autres champs si tu veux les exploiter ensuite
+            date:        { type: date }
+            mesure:      { type: keyword }
+            file:        { type: keyword }
+            description: { type: text }
+            comment:     { type: text }
+            

@@ -472,7 +472,7 @@ button.btn-form:hover {
 }
 
 #global #list #filter #floatingForm label{
-    flex: 0 0 100px; /* Fixe une largeur pour les labels */
+    flex: 0 0 170px; /* Fixe une largeur pour les labels */
     margin-right: 0.5rem; /* Ajoute un espacement entre le label et l'input */
     text-align: left; /* Aligne le texte à droite */
 }

@@ -9,6 +9,7 @@ use App\Entity\Plasmyd;
 use App\Entity\Project;
 use App\Entity\Sample;
 use App\Entity\User;
+use App\Entity\PhenotypeType;
 use App\Form\Autocomplete\PlasmydAutocompleteField;
 use App\Form\Autocomplete\DrugAutocompleteField;
 use App\Form\Autocomplete\ProjectAutocompleteField;
@@ -45,6 +46,25 @@ class SearchFormType extends AbstractType
         // ])
         ->add('drug', DrugAutocompleteField::class, [
             'required' => false,
+        ])
+        ->add('phenotypeType', EntityType::class, [
+            'class'        => PhenotypeType::class,
+            'required'     => false,
+            'label'        => 'Phenotype type',
+            'choice_label' => function (PhenotypeType $pt) {
+                return $pt->getType();
+            },
+        ])
+        ->add('phenotypeMeasure', ChoiceType::class, [
+            'required'   => false,
+            'label'      => 'Phenotype measure',
+            'placeholder'=> 'all',
+            'choices'    => [
+                'Poor'       => 'poor',
+                'Average'    => 'average',
+                'Good'       => 'good',
+                'Very Good'  => 'very_good',
+            ],
         ])
         ->add('genotype', EntityType::class, [
             'class' => Genotype::class,
