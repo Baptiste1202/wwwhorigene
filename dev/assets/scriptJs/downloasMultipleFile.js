@@ -10,32 +10,32 @@ $(document).ready(function () {
     const $fileTypes    = $('input[name="fileType"]').not('[value="all"]');
     const $phenotypeOpt = $('input[name="fileType"][value="phenotype"]');
 
-    // --- API pour charger la liste des types de phénotype (sans Twig) ---
+    // --- API to load phenotype types (without Twig) ---
     const API_PT_PRIMARY   = '/public/apiphenotypetype';
     const API_PT_FALLBACK  = '/apiphenotypetype';
 
     async function fetchJsonWithFallback(urlPrimary, urlFallback) {
-        console.log('[PT] fetchJsonWithFallback -> try primary:', urlPrimary);
+        // //console.log('[PT] fetchJsonWithFallback -> try primary:', urlPrimary);
         try {
             const r1 = await fetch(urlPrimary, { headers: { 'Accept': 'application/json' } });
-            console.log('[PT] primary status:', r1.status);
+            // //console.log('[PT] primary status:', r1.status);
             if (r1.ok) return r1.json();
             if (r1.status !== 404) {
                 const t = await r1.text().catch(()=> '');
                 throw new Error(`HTTP ${r1.status} ${r1.statusText} - ${t}`);
             }
         } catch (e) {
-            console.warn('[PT] primary failed, will try fallback. Reason:', e);
+            // //console.warn('[PT] primary failed, will try fallback. Reason:', e);
         }
-        console.log('[PT] trying fallback:', urlFallback);
+        // //console.log('[PT] trying fallback:', urlFallback);
         const r2 = await fetch(urlFallback, { headers: { 'Accept': 'application/json' } });
-        console.log('[PT] fallback status:', r2.status);
+        // //console.log('[PT] fallback status:', r2.status);
         if (r2.ok) return r2.json();
         const t = await r2.text().catch(()=> '');
         throw new Error(`HTTP ${r2.status} ${r2.statusText} - ${t}`);
     }
 
-    // --- Affichage d’erreurs dans la modal ---
+    // --- Error display in modal ---
     function showError(msg) {
         let $err = $modalDialog.find('.download-error');
         if (!$err.length) {
@@ -49,57 +49,57 @@ $(document).ready(function () {
                 });
             $modalDialog.prepend($err);
         }
-        console.error('[Download][UI-Error]:', msg);
+        // //console.error('[Download][UI-Error]:', msg);
         $err.text(msg).show();
     }
     function hideError() {
         $modalDialog.find('.download-error').hide();
     }
 
-    // === Bloc "Types de phénotype" (UI + data) ===
+    // === Phenotype types block (UI + data) ===
     let phenotypeTypesCache = null;
 
-    // Bloc UI inséré juste sous l’option phenotype (pas besoin de toucher le HTML existant)
+    // UI block inserted just under the phenotype option (no need to modify existing HTML)
     const $ptBlock = $(`
       <div id="phenotype-type-block" style="display:none; margin:.5rem 0 0 2rem;">
-        <div style="font-weight:600; margin-bottom:.35rem;">Types de phénotype</div>
+        <div style="font-weight:600; margin-bottom:.35rem;">Phenotype types</div>
         <div id="phenotype-type-list"></div>
         <div style="font-size:.9em; color:#555; margin-top:.25rem;">
-          Cochez les types de phénotype à inclure.
+          Tick the phenotype types to include.
         </div>
       </div>
     `);
     (function insertPtBlockUnderPhenotype() {
         const $anchor = $phenotypeOpt.closest('.form-check, .option, .form-group, label, div').first();
         if ($anchor.length) {
-            console.log('[PT] Insert block after phenotype option anchor');
+            // //console.log('[PT] Insert block after phenotype option anchor');
             $ptBlock.insertAfter($anchor);
         } else {
-            console.log('[PT] Anchor not found, appending block to modal');
+            // //console.log('[PT] Anchor not found, appending block to modal');
             ($modalBody.length ? $modalBody : $modalDialog).append($ptBlock);
         }
     })();
 
     async function getPhenotypeTypes() {
         if (phenotypeTypesCache) {
-            console.log('[PT] using cached phenotype types:', phenotypeTypesCache);
+            // //console.log('[PT] using cached phenotype types:', phenotypeTypesCache);
             return phenotypeTypesCache;
         }
         let json;
         try {
             json = await fetchJsonWithFallback(API_PT_PRIMARY, API_PT_FALLBACK);
         } catch (e) {
-            console.error('[PT] load error:', e);
-            throw new Error('Impossible de charger les types de phénotype.');
+            // //console.error('[PT] load error:', e);
+            throw new Error('Unable to load phenotype types.');
         }
         phenotypeTypesCache = Array.isArray(json) ? json : [];
-        console.log('[PT] loaded phenotype types:', phenotypeTypesCache);
+        // //console.log('[PT] loaded phenotype types:', phenotypeTypesCache);
         return phenotypeTypesCache;
     }
 
     function renderPhenotypeTypeCheckboxes(types) {
         const $ptList = $('#phenotype-type-list').empty();
-        console.log('[PT] rendering phenotype type checkboxes, count =', types.length);
+        // //console.log('[PT] rendering phenotype type checkboxes, count =', types.length);
         types.forEach(t => {
             const id = `pt-${t.id}`;
             const label = (t.type ?? t.name ?? t.label ?? '').toString();
@@ -114,7 +114,7 @@ $(document).ready(function () {
 
     async function ensurePtBlockReadyIfNeeded() {
         const hasPhenotype = $phenotypeOpt.is(':checked') || $fileTypeAll.is(':checked');
-        console.log('[PT] ensurePtBlockReadyIfNeeded -> hasPhenotype?', hasPhenotype);
+        // //console.log('[PT] ensurePtBlockReadyIfNeeded -> hasPhenotype?', hasPhenotype);
         if (hasPhenotype) {
             $('#phenotype-type-block').show();
             if (!$('#phenotype-type-list').children().length) {
@@ -130,59 +130,59 @@ $(document).ready(function () {
         }
     }
 
-    // --- Interactions entre “all” et les autres types ---
+    // --- Interactions between “all” and other types ---
     $fileTypeAll.on('change', () => {
-        console.log('[UI] changed -> ALL checked?', $fileTypeAll.is(':checked'));
+        // //console.log('[UI] changed -> ALL checked?', $fileTypeAll.is(':checked'));
         if ($fileTypeAll.is(':checked')) {
             $fileTypes.prop('checked', false);
         }
         ensurePtBlockReadyIfNeeded();
     });
     $fileTypes.on('change', function() {
-        console.log('[UI] fileType changed:', this.value, 'checked?', $(this).is(':checked'));
+        // //console.log('[UI] fileType changed:', this.value, 'checked?', $(this).is(':checked'));
         if ($(this).is(':checked')) {
             $fileTypeAll.prop('checked', false);
         }
         ensurePtBlockReadyIfNeeded();
     });
 
-    // 1) Ouvrir la modal
+    // 1) Open modal
     $openBtn.on('click', () => {
         hideError();
         const selectedCount = $('input[name="selected_strain[]"]:checked')
             .filter(function(){ return $(this).is(':visible'); }).length;
-        console.log('[OpenModal] selected visible strains count =', selectedCount);
+        // //console.log('[OpenModal] selected visible strains count =', selectedCount);
         if (selectedCount === 0) {
             alert('Please select at least one strain first.');
             return;
         }
         ensurePtBlockReadyIfNeeded();
         $modal.css('display', 'flex');
-        console.log('[OpenModal] modal opened');
+        // //console.log('[OpenModal] modal opened');
     });
 
-    // 2) Fermer la modal
+    // 2) Close modal
     $closeBtns.on('click', () => { 
-        console.log('[Modal] close clicked');
+        // //console.log('[Modal] close clicked');
         $modal.hide(); 
     });
 
-    // 3) Fermer si clic hors du dialogue
+    // 3) Close when clicking outside the dialog
     $modal.on('click', e => { 
         if (e.target === $modal[0]) { 
-            console.log('[Modal] click outside -> hide'); 
+            // //console.log('[Modal] click outside -> hide'); 
             $modal.hide(); 
         } 
     });
 
-    // --- Select All qui ne coche que les cases visibles ---
+    // --- Select All that only checks visible checkboxes ---
     const selectAllCheckbox = document.getElementById('select-all');
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener('change', () => {
             const visibleCheckboxes = Array.from(document.querySelectorAll('input.select-checkbox'))
                 .filter(cb => cb.offsetParent !== null);
             visibleCheckboxes.forEach(cb => { cb.checked = selectAllCheckbox.checked; });
-            console.log('[SelectAll] master:', selectAllCheckbox.checked, '-> visible children count:', visibleCheckboxes.length);
+            // //console.log('[SelectAll] master:', selectAllCheckbox.checked, '-> visible children count:', visibleCheckboxes.length);
         });
         const childCheckboxes = document.querySelectorAll('input.select-checkbox');
         childCheckboxes.forEach(cb => {
@@ -193,118 +193,118 @@ $(document).ready(function () {
                         .filter(cb => cb.offsetParent !== null);
                     selectAllCheckbox.checked = visibleCheckboxes.every(chk => chk.checked);
                 }
-                console.log('[SelectAll] child changed -> master now:', selectAllCheckbox.checked);
+                // //console.log('[SelectAll] child changed -> master now:', selectAllCheckbox.checked);
             });
         });
     }
 
-    // 4) Handler du bouton "Télécharger"
+    // 4) "Download" button handler
     $confirmBtn.on('click', async () => {
         hideError();
-        console.log('================= [Download] START =================');
+        // //console.log('================= [Download] START =================');
 
-        // 4.1) IDs de souches cochées (uniquement cases visibles)
+        // 4.1) Checked strain IDs (only visible checkboxes)
         let strainIds = $('input[name="selected_strain[]"]:checked')
             .filter(function(){ return $(this).is(':visible'); })
             .map((_, el) => el.value).get();
         strainIds = [...new Set(strainIds)];
-        console.log('[Download] strainIds (visible, unique) =', strainIds);
+        // //console.log('[Download] strainIds (visible, unique) =', strainIds);
         if (!strainIds.length) {
             showError('Please select at least one strain.');
-            console.log('================= [Download] ABORT: no strains =================');
+            // //console.log('================= [Download] ABORT: no strains =================');
             return;
         }
 
-        // 4.2) Types cochés
+        // 4.2) Checked types
         let types = $('input[name="fileType"]:checked').map((_, el) => el.value).get();
-        console.log('[Download] file types selected (raw) =', types);
+        // //console.log('[Download] file types selected (raw) =', types);
 
-        // ✅ normalisation: mappe 'drugResistance' -> 'drugs' (sans changer le HTML)
+        // normalization: map 'drugResistance' -> 'drugs' (without changing HTML)
         types = types.map(t => (t === 'drugResistance' ? 'drugs' : t));
 
         if (!types.length) { 
             showError('Please select at least one file type.'); 
-            console.log('================= [Download] ABORT: no types =================');
+            // //console.log('================= [Download] ABORT: no types =================');
             return; 
         }
         if (types.includes('all')) {
             types = ['sequencing','phenotype','drugs'];
         }
-        console.log('[Download] file types after normalize/expand =', types);
+        // //console.log('[Download] file types after normalize/expand =', types);
 
-        // 4.3) Si phenotype demandé → IDs des types cochés (pour le serveur)
+        // 4.3) If phenotype requested → IDs of checked phenotype types (for the server)
         let phenotypeTypeIds = [];
         if (types.includes('phenotype')) {
             phenotypeTypeIds = $('input[name="phenotypeType[]"]:checked')
                 .map((_, el) => parseInt(el.value, 10)).get();
         }
-        console.log('[Download] phenotypeTypeIds =', phenotypeTypeIds);
+        // //console.log('[Download] phenotypeTypeIds =', phenotypeTypeIds);
 
-        // 4.3 bis) Construire fileEntries pour sequencing/drugs SEULEMENT
+        // 4.3 bis) Build fileEntries for sequencing/drugs ONLY
         const fileEntries = [];
-        const dedup = new Set(); // dédup par "id|type|name"
+        const dedup = new Set(); // dedup by "id|type|name"
 
         strainIds.forEach(strainId => {
             const $rows = $('#data-table tbody tr').filter(function () {
                 return $(this).find('td.id').text().trim() === strainId && $(this).is(':visible');
             });
-            console.log(`[Download] rows for strain ${strainId} =`, $rows.length);
+            // //console.log(`[Download] rows for strain ${strainId} =`, $rows.length);
 
             $rows.each(function (idx) {
                 const $row = $(this);
-                console.log(`[Download] row[${idx}] ->`, $row.get(0));
+                // //console.log(`[Download] row[${idx}] ->`, $row.get(0));
 
                 // sequencing
                 if (types.includes('sequencing')) {
                     const $cellS = $row.find('td.sequencing');
                     const fnS = $cellS.data('file');
-                    console.log(`[Download] strain ${strainId} sequencing cell data-file =`, fnS);
+                    // //console.log(`[Download] strain ${strainId} sequencing cell data-file =`, fnS);
                     if (fnS && fnS !== '--') {
                         const key = `${strainId}|sequencing|${fnS}`;
                         if (!dedup.has(key)) {
                             dedup.add(key);
                             fileEntries.push({ id: strainId, type: 'sequencing', name: fnS, downloadName: fnS });
-                            console.log(`[Download] +ADD sequencing ->`, { id: strainId, name: fnS });
+                            // //console.log(`[Download] +ADD sequencing ->`, { id: strainId, name: fnS });
                         } else {
-                            console.log(`[Download] sequencing duplicate skipped ->`, key);
+                            // //console.log(`[Download] sequencing duplicate skipped ->`, key);
                         }
                     } else {
-                        console.warn(`[Download] sequencing: data-file manquant pour strain ${strainId} sur cette ligne`, $cellS.get(0));
+                        // //console.warn(`[Download] sequencing: missing data-file for strain ${strainId} on this row`, $cellS.get(0));
                     }
                 }
 
-                // drugs (ex "drugResistance" normalisé plus haut)
+                // drugs (ex "drugResistance" normalized above)
                 if (types.includes('drugs')) {
                     const $cellD = $row.find('td.drugResistanceOnStrain');
                     const fnD = $cellD.data('file');
-                    console.log(`[Download] strain ${strainId} drugs cell data-file =`, fnD);
+                    // //console.log(`[Download] strain ${strainId} drugs cell data-file =`, fnD);
                     if (fnD && fnD !== '--') {
                         const key = `${strainId}|drugs|${fnD}`;
                         if (!dedup.has(key)) {
                             dedup.add(key);
                             fileEntries.push({ id: strainId, type: 'drugs', name: fnD, downloadName: fnD });
-                            console.log(`[Download] +ADD drugs ->`, { id: strainId, name: fnD });
+                            // //console.log(`[Download] +ADD drugs ->`, { id: strainId, name: fnD });
                         } else {
-                            console.log(`[Download] drugs duplicate skipped ->`, key);
+                            // //console.log(`[Download] drugs duplicate skipped ->`, key);
                         }
                     } else {
-                        console.warn(`[Download] drugs: data-file manquant pour strain ${strainId} sur cette ligne`, $cellD.get(0));
+                        // //console.warn(`[Download] drugs: missing data-file for strain ${strainId} on this row`, $cellD.get(0));
                     }
                 }
 
-                // phenotype -> NE RIEN FAIRE côté front (serveur filtrera via phenotypeTypeIds)
+                // phenotype -> NOTHING to do on front-end (server will filter via phenotypeTypeIds)
             });
         });
 
-        console.log('[Download] fileEntries (sequencing/drugs only) =', fileEntries);
+        // //console.log('[Download] fileEntries (sequencing/drugs only) =', fileEntries);
 
         if (!fileEntries.length && !types.includes('phenotype')) {
-            showError('Pas de fichier disponible pour votre sélection.');
-            console.log('================= [Download] ABORT: no entries and no phenotype =================');
+            showError('No file available for your selection.');
+            // //console.log('================= [Download] ABORT: no entries and no phenotype =================');
             return;
         }
 
-        // 4.4) Préparer payload
+        // 4.4) Prepare payload
         const extension = $('#extension-input').val().trim();
         const payload   = {
             strainIds,
@@ -313,11 +313,11 @@ $(document).ready(function () {
             types,
             phenotypeTypeIds
         };
-        console.log('[Download] Final payload =', payload);
+        // //console.log('[Download] Final payload =', payload);
 
-        // 4.5) Envoi via fetch
+        // 4.5) Send via fetch
         const url = '/public/download-multiple';
-        console.log('[Download] POST =>', url);
+        // //console.log('[Download] POST =>', url);
         try {
             const res = await fetch(url, {
                 method:  'POST',
@@ -325,12 +325,12 @@ $(document).ready(function () {
                 body:    JSON.stringify(payload),
             });
 
-            console.log('[Download] Response status =', res.status);
+            // //console.log('[Download] Response status =', res.status);
             if (!res.ok) {
                 const txt = await res.text();
-                console.error('[Download] Server error response:', txt);
+                // //console.error('[Download] Server error response:', txt);
                 showError('Server error: ' + txt);
-                console.log('================= [Download] END (server error) =================');
+                // //console.log('================= [Download] END (server error) =================');
                 return;
             }
 
@@ -338,7 +338,7 @@ $(document).ready(function () {
             const cd = res.headers.get('Content-Disposition') || '';
             const m  = /filename\*?=(?:UTF-8''|")?([^\";]+)/i.exec(cd);
             const filename = m ? decodeURIComponent(m[1]) : `files_${Date.now()}.zip`;
-            console.log('[Download] Content-Disposition:', cd, '-> filename =', filename);
+            // //console.log('[Download] Content-Disposition:', cd, '-> filename =', filename);
 
             const downloadUrl = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -349,12 +349,12 @@ $(document).ready(function () {
             a.remove();
             URL.revokeObjectURL(downloadUrl);
             $modal.hide();
-            console.log('================= [Download] END (success) =================');
+            // //console.log('================= [Download] END (success) =================');
 
         } catch (err) {
-            console.error('[Download] Fetch exception:', err);
+            // //console.error('[Download] Fetch exception:', err);
             showError('An unexpected error occurred: ' + err.message);
-            console.log('================= [Download] END (exception) =================');
+            // //console.log('================= [Download] END (exception) =================');
         }
     });
 });
