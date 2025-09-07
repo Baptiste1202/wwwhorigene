@@ -143,28 +143,37 @@ class PhenotypeTypeController extends AbstractController
         }
     }
 
-    #[Route('strains/phenotypetype/delete/{id}', name: 'delete_phenotypetype')]
+    #[Route('/strains/phenotypetype/delete/{id}', name: 'delete_phenotypetype', methods: ['POST','GET'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function delete(PhenotypeType $phenotypetype, EntityManagerInterface $em, Security $security): Response
+    public function delete(PhenotypeType $phenotypetype, EntityManagerInterface $em): Response
     {
-        if (!$security->isGranted('ROLE_ADMIN')) {
-            $this->addFlash('error', 'You do not have permission to delete a phenotype type.');
+        // Get IDs of strains whose phenotype is linked to this phenotype type
+        $rows = $em->createQuery(
+            'SELECT s.id
+            FROM App\Entity\Strain s
+            JOIN s.phenotype p
+            WHERE p.phenotypeType = :pt'
+        )
+        ->setParameter('pt', $phenotypetype)
+        ->getScalarResult(); // => [ ['id' => 123], ['id' => 456], ...]
+
+        $ids = array_map(fn(array $r) => (string) $r['id'], $rows);
+
+        if (!empty($ids)) {
+            $this->addFlash(
+                'error',
+                'Cannot delete this phenotype type because it is associated with the following strain IDs: ' . implode(', ', $ids) . '.'
+            );
             return $this->redirectToRoute('page_phenotypetypes');
         }
 
-        // bloquer si des Phenotype y sont liés
-        $linkedCount = $em->getRepository(Phenotype::class)->count(['phenotypeType' => $phenotypetype]);
+        $em->remove($phenotypetype);
+        $em->flush();
 
-        if ($linkedCount > 0) {
-            $this->addFlash('error', sprintf(
-                'Cannot delete this phenotype type because it is associated with %d phenotype(s).',
-                $linkedCount
-            ));
-        } else {
-            $em->remove($phenotypetype);
-            $em->flush();
-            $this->addFlash('success', 'Phenotype type "' . $phenotypetype->getType() . '" has been successfully deleted!');
-        }
+        $this->addFlash('success', sprintf(
+            'Phenotype type "%s" has been successfully deleted.',
+            method_exists($phenotypetype, 'getType') ? $phenotypetype->getType() : (string) $phenotypetype->getId()
+        ));
 
         return $this->redirectToRoute('page_phenotypetypes');
     }
@@ -191,12 +200,29 @@ class PhenotypeTypeController extends AbstractController
         $detailsBlocked = [];
 
         foreach ($types as $type) {
-            $linkedCount = $em->getRepository(Phenotype::class)->count(['phenotypeType' => $type]);
-            if ($linkedCount > 0) {
-                $detailsBlocked[] = sprintf('[ID: %d - Type: %s]', $type->getId(), $type->getType());
+            // Check if this type is linked to at least one strain
+            $rows = $em->createQuery(
+                'SELECT s.id
+                FROM App\Entity\Strain s
+                JOIN s.phenotype p
+                WHERE p.phenotypeType = :pt'
+            )
+            ->setParameter('pt', $type)
+            ->getScalarResult();
+
+            $strainIds = array_map(fn(array $r) => (string) $r['id'], $rows);
+
+            if (!empty($strainIds)) {
+                $detailsBlocked[] = sprintf(
+                    '[PhenotypeType ID: %d - Type: %s → Linked Strains: %s]',
+                    $type->getId(),
+                    $type->getType(),
+                    implode(', ', $strainIds)
+                );
                 continue;
             }
-            $detailsDeleted[] = sprintf('[ID: %d - Type: %s]', $type->getId(), $type->getType());
+
+            $detailsDeleted[] = sprintf('[PhenotypeType ID: %d - Type: %s]', $type->getId(), $type->getType());
             $em->remove($type);
         }
 
@@ -210,9 +236,14 @@ class PhenotypeTypeController extends AbstractController
         }
 
         if (!empty($detailsBlocked)) {
-            $this->addFlash('error', 'Unable to delete some phenotype types because they are linked to phenotypes: ' . implode(', ', $detailsBlocked));
+            $this->addFlash(
+                'error',
+                'Unable to delete the following phenotype type(s) because they are linked to strains: '
+                . implode(', ', $detailsBlocked)
+            );
         }
 
         return $this->redirectToRoute('page_phenotypetypes');
     }
+
 }
