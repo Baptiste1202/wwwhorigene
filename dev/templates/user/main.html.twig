@@ -1,11 +1,24 @@
 {% extends 'layout.html.twig' %}
+
 {% block body %}
-        <div id="global">
-            <div id="list">
-                <div id="table" class="table-user">
-                    {% include "user/list.html.twig" %}
-                </div>
+    <div id="global">
+        {% if 'ROLE_ADMIN' in app.user.roles %}
+            <div id="form">
+                {% include "user/create.html.twig" %}
             </div>
-        <br></br>        
-        </div>  
+        {% endif %}
+
+        <div id="list">
+            <div id="filter">
+                {% include 'user/_filter_form_datatable_user.html.twig' %}
+            </div>
+            <div id="message">
+                {% include './message.html.twig' %}
+            </div>
+            <div id="table" class="table-user">
+                {% include "user/list.html.twig" %}
+            </div>
+        </div>
+        <br>
+    </div>
 {% endblock %}

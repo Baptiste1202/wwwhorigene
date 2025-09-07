@@ -1,26 +1,88 @@
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Email</th>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>isVerified</th>
-        <th></th>
-        <th></th>
-    </tr>
-            {% for user in users %}
-            <tr>
-                <div class="list-collec">
-                    <td>{{user.id}}</td>
-                    <td>{{user.email}}</td>
-                    <td>{{user.firstname}}</td>
-                    <td>{{user.lastname}}</td>
-                    <td>{{user.roles|first}}</td>
-                    <td>{{user.isVerified}}</td>
-                    <td><a href = "{{path("edit_user", {id: user.id})}}"> Modifie </a></td>
-                    <td><a href = "{{path("delete_user", {id: user.id})}}"> Delete </a></td>
-                </div>
-            </tr>
-            {% endfor %}
-       
-</table>
+<!-- Font Awesome (optionnel) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables core -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<!-- DataTables Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+<!-- Dépendances export Excel/PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+
+<form id="multi-action-form" method="post">
+    <div id="data-table-wrapper" class="sticky-wrapper">
+        <table id="data-table-users" class="display datatableComponent nowrap" style="visibility: hidden;">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all" /></th>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Roles</th>
+                    <th>Password</th>  
+                    <th data-column="duplicate" class="no-sort"></th>
+                    <th data-column="edit" class="no-sort"></th>
+                    <th data-column="delete" class="no-sort"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="selected_users[]" value="{{ user.id }}" class="select-checkbox" />
+                        </td>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.firstname }}</td>
+                        <td>{{ user.lastname }}</td>
+                        <td>{{ user.roles is iterable ? user.roles|join(', ') : user.roles }}</td>
+                        <td class="hidden-col">
+                            {{ user.password ? '**************' : '' }}
+                        </td>
+                        <td>
+                            <a href="{{ path('duplicate_user', {id: user.id}) }}">Duplicate</a>
+                        </td>
+                        <td>
+                            <a href="{{ path('edit_user', {id: user.id}) }}">Modify</a>
+                        </td>
+                        <td>
+                            <a href="{{ path('delete_user', {id: user.id}) }}"
+                               class="delete-link"
+                               title="Delete"
+                               onclick="return confirm('Do you really want to delete this user?')">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <input type="hidden" name="action" value="" />
+
+    <!-- ✅ Bouton suppression multiple -->
+    <button id="btn-delete-multiple"
+            type="submit"
+            formaction="{{ path('delete_multiple_users') }}"
+            onclick="this.form.action.value='delete'"
+            class="btn btn-danger"
+            style="margin-top: 10px; display: none;">
+        Delete selected
+    </button>
+</form>
+

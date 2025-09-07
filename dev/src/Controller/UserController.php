@@ -3,20 +3,21 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Strain; 
 use App\Form\UserFormType;
 use App\Repository\UserRepository;
 use App\Repository\UserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Knp\Component\Pager\PaginatorInterface;
-use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends AbstractController
 {
@@ -25,17 +26,48 @@ class UserController extends AbstractController
         private UserRepositoryInterface $userRepository,
         private PaginatorInterface $paginator,
         private readonly PaginatedFinderInterface $finder
-    ) {
-    }
+    ) {}
 
     #[Route(path: 'page_users', name: 'page_users')]
     #[IsGranted('ROLE_ADMIN')]
-    public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
-    {
-        $users = $this->userRepository->findAll(10000); 
+    public function showPage(
+        Request $request,
+        EntityManagerInterface $em,
+        Security $security,
+        UserPasswordHasherInterface $passwordHasher
+    ): Response {
+        // Form de création (page réservée aux admins)
+        $form = $this->createForm(UserFormType::class, new User(), [
+            'password_required' => true,
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
+            $user = $form->getData();
+
+            // Hash du mot de passe
+            $plain = (string) $form->get('plainPassword')->getData();
+            $hashed = $passwordHasher->hashPassword($user, $plain);
+            $user->setPassword($hashed);
+
+            // Rôle par défaut si vide (optionnel)
+            if (empty($user->getRoles())) {
+                $user->setRoles(['ROLE_USER']);
+            }
+
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash('success', 'User created successfully.');
+            return $this->redirectToRoute('page_users');
+        }
+
+        $allUsers = $this->userRepository->findAll(10000);
 
         return $this->render('user/main.html.twig', [
-            'users' => $users,
+            'userForm' => $form->createView(),
+            'users'    => $allUsers,
         ]);
     }
 
@@ -45,32 +77,149 @@ class UserController extends AbstractController
         User $user,
         Request $request,
         EntityManagerInterface $em,
+        UserPasswordHasherInterface $passwordHasher
     ): Response {
+        // À l’édition, le mot de passe est optionnel
+        $form = $this->createForm(UserFormType::class, $user, [
+            'password_required' => false,
+        ]);
+        $form->handleRequest($request);
 
-        $userForm = $this->createForm(UserFormType::class, $user);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Ne hasher que si un nouveau password est saisi
+            $plain = $form->has('plainPassword') ? (string) $form->get('plainPassword')->getData() : '';
+            if ($plain !== '') {
+                $hashed = $passwordHasher->hashPassword($user, $plain);
+                $user->setPassword($hashed);
+            }
 
-        $userForm->handleRequest($request);
-
-        if ($userForm->isSubmitted() && $userForm->isValid()) {
-
-            $em->persist($user);
             $em->flush();
 
-            $this->addFlash('success', 'user ' . $user->getFirstname() . $user->getLastname(). ' modified with succes !');
+            $this->addFlash('success', sprintf(
+                'User %s %s modified successfully!',
+                (string) $user->getFirstname(),
+                (string) $user->getLastname()
+            ));
 
             return $this->redirectToRoute('page_users');
         }
-        return $this->render('user/edit.html.twig', compact('userForm'));
+
+        return $this->render('user/edit.html.twig', [
+            'userForm' => $form->createView()
+        ]);
+    }
+
+    #[Route('user/duplicate/{id}', name: 'duplicate_user')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function duplicateUser(User $user, EntityManagerInterface $em): Response
+    {
+        // Duplication SIMPLE (on ne gère pas les conflits d'email)
+        $clone = new User();
+        $clone->setFirstname($user->getFirstname());
+        $clone->setLastname($user->getLastname());
+        $clone->setRoles($user->getRoles());
+        $clone->setPassword($user->getPassword()); // même mot de passe (déjà hashé)
+
+        // Email dérivé très simple
+        $email = (string) $user->getEmail();
+        $clone->setEmail($email . '-copy');
+
+        $em->persist($clone);
+        $em->flush();
+
+        $this->addFlash('success', sprintf(
+            'User "%s %s" duplicated successfully.',
+            (string) $user->getFirstname(),
+            (string) $user->getLastname()
+        ));
+
+        return $this->redirectToRoute('page_users');
     }
 
     #[Route('strains/user/delete/{id}', name: 'delete_user')]
     #[IsGranted('ROLE_ADMIN')]
-    public function delete(user $user, EntityManagerInterface $em): Response
+    public function delete(User $user, EntityManagerInterface $em): Response
     {
-        $em->remove($user);
-        $em->flush();
+        // Récupère les souches liées à cet utilisateur (FK createdBy)
+        $strains   = $em->getRepository(Strain::class)->findBy(['createdBy' => $user]);
+        $strainIds = array_map(fn(Strain $s) => $s->getId(), $strains);
 
-        $this->addFlash('success', 'user ' . $user->getFirstname() . $user->getLastname() . ' delete with success !');
+        if (count($strainIds) > 0) {
+            $this->addFlash(
+                'error',
+                'Cannot delete this user because it is associated with the following strain IDs: ' . implode(', ', $strainIds) . '.'
+            );
+        } else {
+            $em->remove($user);
+            $em->flush();
+            $this->addFlash('success', 'User "' . $user->getFirstname() . ' ' . $user->getLastname() . '" has been successfully deleted!');
+        }
+
+        return $this->redirectToRoute('page_users');
+    }
+
+    #[Route('/users/delete-multiple', name: 'delete_multiple_users', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function deleteMultiple(Request $request, EntityManagerInterface $em, Security $security): Response
+    {
+        $ids = $request->request->all('selected_users');
+
+        if (!is_array($ids) || empty($ids)) {
+            $this->addFlash('error', 'No user selected.');
+            return $this->redirectToRoute('page_users');
+        }
+
+        $users = $em->getRepository(User::class)->findBy(['id' => $ids]);
+
+        if (!$users) {
+            $this->addFlash('error', 'No user found for deletion.');
+            return $this->redirectToRoute('page_users');
+        }
+
+        $detailsDeleted = [];
+        $detailsBlocked = [];
+
+        foreach ($users as $u) {
+            // Option : bloquer la suppression de soi-même
+            if ($security->getUser() && $security->getUser()->getId() === $u->getId()) {
+                $detailsBlocked[] = sprintf('[ID: %d - %s %s] (current account)', $u->getId(), (string) $u->getFirstname(), (string) $u->getLastname());
+                continue;
+            }
+
+            // 🔒 Bloque si des Strain référencent cet utilisateur (FK createdBy)
+            $strains   = $em->getRepository(Strain::class)->findBy(['createdBy' => $u]);
+            $strainIds = array_map(fn(Strain $s) => $s->getId(), $strains);
+
+            if (!empty($strainIds)) {
+                $detailsBlocked[] = sprintf(
+                    '[ID: %d - %s %s → Linked Strains: %s]',
+                    $u->getId(),
+                    (string) $u->getFirstname(),
+                    (string) $u->getLastname(),
+                    implode(', ', $strainIds)
+                );
+                continue;
+            }
+
+            // ✅ OK pour suppression
+            $detailsDeleted[] = sprintf('[ID: %d - %s %s]', $u->getId(), (string) $u->getFirstname(), (string) $u->getLastname());
+            $em->remove($u);
+        }
+
+        if (!empty($detailsDeleted)) {
+            $em->flush();
+            $this->addFlash('success', sprintf(
+                '%d user(s) successfully deleted: %s',
+                count($detailsDeleted),
+                implode(', ', $detailsDeleted)
+            ));
+        }
+
+        if (!empty($detailsBlocked)) {
+            $this->addFlash('error',
+                'Unable to delete some user(s) because they are linked to strains or are the current account: ' . implode(', ', $detailsBlocked)
+            );
+        }
 
         return $this->redirectToRoute('page_users');
     }
