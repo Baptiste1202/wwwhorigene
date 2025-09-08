@@ -11,8 +11,24 @@ document.addEventListener('DOMContentLoaded', function () {
         deferRender: true,
         paging: true,
         pageLength: 25,
-        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Tous']],
+        lengthMenu: [
+            [10, 25, 50, 100, 250, 500, 1000, 5000, 10000],
+            ['10','25','50','100','250','500','1000','5000','10000']
+        ],
         stateSave: true,
+        // <<<<< AJOUTE CES DEUX CALLBACKS ICI
+        stateSaveParams: function (settings, data) {
+            // Ne mémorise pas la longueur → ton défaut (25) reste actif au prochain chargement
+            delete data.length;
+        },
+        stateLoadParams: function (settings, data) {
+            // Si pas de ?highlight, on force 25 au chargement
+            if (!new URLSearchParams(location.search).has('highlight')) {
+            data.length = 25;
+            }
+        },
+        // >>>>>
+
         searching: false, //on utilisera notre recherche personalise par groupe
         ordering: true,
         info: true,
@@ -61,6 +77,49 @@ document.addEventListener('DOMContentLoaded', function () {
                     api.column(colIdx).visible(this.checked);
                 });
             });
+                        
+            // 2c. Surligner la souche ciblée : forcer pagination à 1000 puis centrer la ligne
+            const highlightId = new URLSearchParams(location.search).get('highlight');
+
+            if (highlightId) {
+                const selector = '#strain-' + highlightId;
+                const $box = $('#data-table-wrapper'); // conteneur scrollable
+                const $lengthSelect = $('#data-table_wrapper .dataTables_length select');
+
+                // 1) Prépare le scroll quand la table aura redraw
+                api.one('draw', function () {
+                    const $tr = $(selector);
+                    if (!$box.length || !$tr.length) return;
+
+                    // centre la ligne dans le wrapper
+                    const boxH   = $box.height();
+                    const trH    = $tr.outerHeight(true);
+                    const relTop = $tr.offset().top - $box.offset().top;
+                    const target = $box.scrollTop() + relTop - (boxH/2 - trH/2);
+
+                    const maxScroll = $box[0].scrollHeight - boxH;
+                    const clamped   = Math.max(0, Math.min(target, maxScroll));
+
+                    $box.stop(true).animate({ scrollTop: clamped }, 300);
+
+                    // surlignage
+                    $tr.addClass('dt-highlight');
+                    setTimeout(() => $tr.removeClass('dt-highlight'), 3000);
+                });
+
+                // 2) Mimer l'action utilisateur : passer le select à 10000 et déclencher change
+                if ($lengthSelect.length) {
+                    if (parseInt($lengthSelect.val(), 10) !== 10000) {
+                    $lengthSelect.val('10000').trigger('change'); // DataTables fera le draw
+                    } else {
+                    // déjà sur 10000 → forcer un draw pour déclencher le scroll
+                    api.page.len(10000).draw(false);
+                    }
+                } else {
+                    // fallback si le select n'existe pas (rare)
+                    api.page.len(10000).draw(false);
+                }
+            }
         }
     });
 

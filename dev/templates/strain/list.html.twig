@@ -59,7 +59,7 @@
                 </tr>
             {% endif %}
             {% for strain in strains %}
-                <tr class="list-strain"> 
+                <tr id="strain-{{ strain.id }}" class="list-strain">
                     <td>
                         <input type="checkbox" name="selected_strain[]" value="{{ strain.id }}" class="select-checkbox" />
                     </td>

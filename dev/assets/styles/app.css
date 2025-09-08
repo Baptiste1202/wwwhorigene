@@ -510,6 +510,8 @@ button.btn-form:hover {
     height: 100%;
 }
 
+.dt-highlight { outline: 2px solid #ff9800; background:#fff3cd; }
+
 /* Style pour des colonnes spécifiques */
 #global #list #table td.id, 
 #global #list #table td.name{

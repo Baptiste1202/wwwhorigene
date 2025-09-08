@@ -172,7 +172,7 @@ class StrainController extends AbstractController
 
                 $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' modified with succes !');
 
-                return $this->redirectToRoute('page_strains');
+                return $this->redirectToRoute('page_strains', ['highlight' => $strain->getId()]);
             }
 
             return $this->render('strain/edit.html.twig', [
