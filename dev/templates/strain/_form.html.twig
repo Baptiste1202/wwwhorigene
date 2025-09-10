@@ -301,26 +301,29 @@ function addFormToCollection(e) {
     }
 
     // Copier les valeurs depuis le dernier élément si existant
-    const existingItems = collectionHolder.querySelectorAll('li');
-    if (existingItems.length > 1) {
-        const lastItem = existingItems[existingItems.length - 2]; // Avant-dernier (le dernier est celui qu'on vient d'ajouter)
+    if (!collectionHolder.classList.contains('drugResistanceOnStrain')) {
+        const existingItems = collectionHolder.querySelectorAll('li');
+        if (existingItems.length > 1) {
+            const lastItem = existingItems[existingItems.length - 2]; // Avant-dernier (le dernier est celui qu'on vient d'ajouter)
 
-        const lastInputs = lastItem.querySelectorAll('input, select, textarea');
-        const newInputs = item.querySelectorAll('input, select, textarea');
-        lastInputs.forEach((input, i) => {
-            if (newInputs[i]) {
-                if (input.tagName === 'SELECT') {
-                    newInputs[i].value = input.value;
-                } else if (input.type === 'checkbox' || input.type === 'radio') {
-                    newInputs[i].checked = input.checked;
-                } else if (input.type === 'file') {
-                    newInputs[i].value = ''; 
-                } else {
-                    newInputs[i].value = input.value;
+            const lastInputs = lastItem.querySelectorAll('input, select, textarea');
+            const newInputs = item.querySelectorAll('input, select, textarea');
+            lastInputs.forEach((input, i) => {
+                if (newInputs[i]) {
+                    if (input.tagName === 'SELECT') {
+                        newInputs[i].value = input.value;
+                    } else if (input.type === 'checkbox' || input.type === 'radio') {
+                        newInputs[i].checked = input.checked;
+                    } else if (input.type === 'file') {
+                        newInputs[i].value = ''; 
+                    } else {
+                        newInputs[i].value = input.value;
+                    }
                 }
-            }
-        });
+            });
+        }
     }
+
 
     // Mettre à jour le label
     const labelType = e.currentTarget.closest('div')?.querySelector('label')?.textContent.trim();
