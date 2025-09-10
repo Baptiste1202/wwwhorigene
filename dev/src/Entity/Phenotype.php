@@ -43,7 +43,8 @@ class Phenotype
     private ?string $comment = null;
 
     #[ORM\ManyToOne(targetEntity: Strain::class, inversedBy: 'phenotype')]
-    private Strain $strain;
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Strain $strain;
 
     public function getId(): ?int
     {
