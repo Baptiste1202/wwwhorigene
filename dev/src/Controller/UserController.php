@@ -36,37 +36,9 @@ class UserController extends AbstractController
         Security $security,
         UserPasswordHasherInterface $passwordHasher
     ): Response {
-        // Form de création (page réservée aux admins)
-        $form = $this->createForm(UserFormType::class, new User(), [
-            'password_required' => true,
-        ]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var User $user */
-            $user = $form->getData();
-
-            // Hash du mot de passe
-            $plain = (string) $form->get('plainPassword')->getData();
-            $hashed = $passwordHasher->hashPassword($user, $plain);
-            $user->setPassword($hashed);
-
-            // Rôle par défaut si vide (optionnel)
-            if (empty($user->getRoles())) {
-                $user->setRoles(['ROLE_USER']);
-            }
-
-            $em->persist($user);
-            $em->flush();
-
-            $this->addFlash('success', 'User created successfully.');
-            return $this->redirectToRoute('page_users');
-        }
-
         $allUsers = $this->userRepository->findAll(10000);
 
         return $this->render('user/main.html.twig', [
-            'userForm' => $form->createView(),
             'users'    => $allUsers,
         ]);
     }

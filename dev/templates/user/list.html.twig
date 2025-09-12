@@ -33,7 +33,6 @@
                     <th>Firstname</th>
                     <th>Lastname</th>
                     <th>Roles</th>
-                    <th>Password</th>  
                     <th data-column="duplicate" class="no-sort"></th>
                     <th data-column="edit" class="no-sort"></th>
                     <th data-column="delete" class="no-sort"></th>
@@ -49,10 +48,7 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.lastname }}</td>
-                        <td>{{ user.roles is iterable ? user.roles|join(', ') : user.roles }}</td>
-                        <td class="hidden-col">
-                            {{ user.password ? '**************' : '' }}
-                        </td>
+                        <td>{{ user.roles|first }}</td>
                         <td>
                             <a href="{{ path('duplicate_user', {id: user.id}) }}">Duplicate</a>
                         </td>
