@@ -24,6 +24,7 @@ class DownloadController extends AbstractController
         if (!file_exists($filePath)) {
             throw $this->createNotFoundException('Le fichier n\'existe pas.');
         }
+        //test MR
 
         $response = new BinaryFileResponse($filePath);
         $response->setContentDisposition(
