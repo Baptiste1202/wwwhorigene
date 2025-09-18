@@ -255,6 +255,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 downloadLink.href = `/documents/download/${fileType}/${fileName}`;
                 downloadLink.style.display = 'inline-block';
                 //test MR
+                //test MR2
 
                 // Forcer le téléchargement du fichier
                 downloadLink.setAttribute('download', fileName);
