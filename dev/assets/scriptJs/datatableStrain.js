@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('popupDetails').innerText = info;
 
             if (fileName && fileName !== '--' && fileType) {
-                downloadLink.href = `/public/docs/${fileType}/${fileName}`;
+                downloadLink.href = `/documents/download/${fileType}/${fileName}`;
                 downloadLink.style.display = 'inline-block';
 
                 // Forcer le téléchargement du fichier

@@ -11,7 +11,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/documents')]
 class DownloadController extends AbstractController
 {
-    #[Route('/download/{fileType}/{fileName}', name: 'document_download')]
+    #[Route(
+        '/download/{fileType}/{fileName}', 
+        name: 'document_download',
+        requirements: ['fileName' => '.+']
+    )]
     #[IsGranted('ROLE_INTERN')]
     public function download(string $fileType, string $fileName): BinaryFileResponse
     {
