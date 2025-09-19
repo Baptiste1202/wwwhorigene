@@ -275,7 +275,8 @@
                     {% endif %}
                     </td>
 
-                    <td class="description">
+                    <td class="description" data-info='
+                                {{ strain.description}}'>
                     {% if strain.description is not null %}
                         {% set description = strain.description ?: strain.description %}
                         {% set maxLength = 10 %}
@@ -291,7 +292,8 @@
                     {% endif %}
                     </td>
 
-                    <td class="comment">
+                    <td class="comment" data-info='
+                                {{ strain.comment}}'>
                     {% if strain.comment is not null %}
                         {% set comment = strain.comment %}
                         {% set maxLength = 10 %}
