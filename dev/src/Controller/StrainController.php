@@ -139,8 +139,13 @@ class StrainController extends AbstractController
             ]);
         }
         catch (\Throwable $e) {
-            
-            $this->addFlash('error', 'An error occurred while creating the strain. Please try again.');
+            $this->logger->error('Error creating strain', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+
+            $this->addFlash('error', 'An unexpected error occurred. Please try again later.');
 
             return $this->redirectToRoute('page_strains');
         }
