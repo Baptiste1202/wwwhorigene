@@ -943,6 +943,8 @@ thead th, tbody td {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 200px;
     z-index: 1000;
+    white-space: normal; /* permet le retour à la ligne */
+    word-wrap: break-word; /* coupe les mots trop longs */
 }
 
 #strain_form_phenotype,
