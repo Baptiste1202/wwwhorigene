@@ -26,15 +26,14 @@ document.addEventListener('DOMContentLoaded', function () {
         btnClear.addEventListener('click', function(e) {
             e.preventDefault();
 
-            // Le formulaire dans la popin flottante
             const form = floatingForm.querySelector('form');
             if (!form) return;
 
-            // Reset natif (pour tous les input, textarea, select de base)
+            // Reset natif
             form.reset();
 
-            // Forcer le reset des champs Autocomplete TomSelect/Symfony UX
-            form.querySelectorAll('select[data-controller*="autocomplete"]').forEach(function(select) {
+            // Clear tous les select (TomSelect ou natifs)
+            form.querySelectorAll('select').forEach(select => {
                 if (select.tomselect) {
                     select.tomselect.clear();
                 } else {
@@ -42,14 +41,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
 
-            // Forcer "placeholder" (option vide) pour Résistance
-            const resistance = form.querySelector('select[name="resistant"]');
-            if (resistance) {
-                resistance.value = '';
-                if (resistance.tomselect) {
-                    resistance.tomselect.setValue('');
-                }
-            }
+            // Clear tous les champs autocomplete Symfony UX
+            form.querySelectorAll('input[data-controller*="autocomplete"]').forEach(input => {
+                input.value = '';
+            });
+
+            // Clear tous les champs text/textarea
+            form.querySelectorAll('input[type="text"], input[type="search"], textarea').forEach(input => {
+                input.value = '';
+            });
+
+            // Forcer le trigger 'change' pour que les composants JS réagissent
+            form.querySelectorAll('select, input, textarea').forEach(el => {
+                el.dispatchEvent(new Event('change', { bubbles: true }));
+            });
         });
     }
 });

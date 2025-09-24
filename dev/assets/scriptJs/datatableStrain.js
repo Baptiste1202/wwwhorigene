@@ -77,49 +77,73 @@ document.addEventListener('DOMContentLoaded', function () {
                     api.column(colIdx).visible(this.checked);
                 });
             });
-                        
-            // 2c. Surligner la souche ciblée : forcer pagination à 1000 puis centrer la ligne
+
+            // 2c. Surligner la souche ciblée : centrer la ligne + flash même avec filtre actif
             const highlightId = new URLSearchParams(location.search).get('highlight');
 
             if (highlightId) {
-                const selector = '#strain-' + highlightId;
-                const $box = $('#data-table-wrapper'); // conteneur scrollable
+                const selector = '#strain-' + (window.CSS && CSS.escape ? CSS.escape(String(highlightId)) : String(highlightId));
+                const $box = $('#data-table-wrapper'); // conteneur scrollable du tableau
                 const $lengthSelect = $('#data-table_wrapper .dataTables_length select');
+                const wantLen = 10000;
+                let done = false;
 
-                // 1) Prépare le scroll quand la table aura redraw
-                api.one('draw', function () {
+                function tryHighlight() {
+                    if (done || !$box.length) return;
+
                     const $tr = $(selector);
-                    if (!$box.length || !$tr.length) return;
 
-                    // centre la ligne dans le wrapper
+                    // ligne présente ET visible ?
+                    if (!$tr.length || !$tr.is(':visible')) return;
+
                     const boxH   = $box.height();
                     const trH    = $tr.outerHeight(true);
-                    const relTop = $tr.offset().top - $box.offset().top;
-                    const target = $box.scrollTop() + relTop - (boxH/2 - trH/2);
+
+                    // position relative au conteneur, + fiable que offset() avec des rows masquées
+                    const relTop = $tr.position().top; 
+                    const target = $box.scrollTop() + relTop - (boxH / 2 - trH / 2);
 
                     const maxScroll = $box[0].scrollHeight - boxH;
                     const clamped   = Math.max(0, Math.min(target, maxScroll));
 
                     $box.stop(true).animate({ scrollTop: clamped }, 300);
 
-                    // surlignage
+                    // flash de surbrillance
                     $tr.addClass('dt-highlight');
                     setTimeout(() => $tr.removeClass('dt-highlight'), 3000);
-                });
 
-                // 2) Mimer l'action utilisateur : passer le select à 10000 et déclencher change
-                if ($lengthSelect.length) {
-                    if (parseInt($lengthSelect.val(), 10) !== 10000) {
-                    $lengthSelect.val('10000').trigger('change'); // DataTables fera le draw
-                    } else {
-                    // déjà sur 10000 → forcer un draw pour déclencher le scroll
-                    api.page.len(10000).draw(false);
-                    }
-                } else {
-                    // fallback si le select n'existe pas (rare)
-                    api.page.len(10000).draw(false);
+                    done = true;
+                    $('#data-table').off('draw.dt', onDraw);
                 }
-            }
+
+                function onDraw() {
+                    // laisse le temps aux scripts de filtrage de finir (rowgroup/applyFilters)
+                    setTimeout(tryHighlight, 250); // ⬅ délai ajouté
+                }
+
+                // 1) essayer tout de suite avec un petit délai
+                setTimeout(tryHighlight, 250);
+
+                // 2) sinon, attendre les prochains redraws
+                if (!done) {
+                    $('#data-table').on('draw.dt', onDraw);
+                }
+
+                // 3) garantir qu'on affiche 10000 lignes
+                if ($lengthSelect.length) {
+                    if (parseInt($lengthSelect.val(), 10) !== wantLen) {
+                        $lengthSelect.val(String(wantLen)).trigger('change'); // provoque un draw
+                    } else if (!done) {
+                        api.page.len(wantLen).draw(false);
+                    }
+                } else if (typeof api.page.len === 'function') {
+                    if (api.page.len() !== wantLen) {
+                        api.page.len(wantLen).draw(false);
+                    } else if (!done) {
+                        api.draw(false);
+                    }
+                }
+            }   
         }
     });
 

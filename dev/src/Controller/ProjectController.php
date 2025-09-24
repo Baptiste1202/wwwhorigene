@@ -186,7 +186,7 @@ class ProjectController extends AbstractController
         }
     }
 
-    #[Route('strains/project/delete/{id}', name: 'delete_project')]
+   #[Route('strains/project/delete/{id}', name: 'delete_project')]
     public function delete(Project $project, EntityManagerInterface $em, Security $security): Response
     {
         if (!$security->isGranted('ROLE_SEARCH')) {
@@ -198,18 +198,32 @@ class ProjectController extends AbstractController
         $strainIds = $project->getStrain()->map(fn($strain) => $strain->getId())->toArray();
 
         if (count($strainIds) > 0) {
-            $this->addFlash('error', 'Cannot delete this project because it is associated with the following strain IDs: ' . implode(', ', $strainIds) . '.');
+            $this->addFlash(
+                'error',
+                sprintf(
+                    'Cannot delete Project (ID: %d, Name: "%s") because it is associated with the following strain IDs: %s.',
+                    $project->getId(),
+                    $project->getName(),
+                    implode(', ', $strainIds)
+                )
+            );
         } else {
             // Directly delete
             $em->remove($project);
             $em->flush();
 
-            $this->addFlash('success', 'Project "' . $project->getName() . '" has been successfully deleted!');
+            $this->addFlash(
+                'success',
+                sprintf(
+                    'Project (ID: %d, Name: "%s") has been successfully deleted!',
+                    $project->getId(),
+                    $project->getName()
+                )
+            );
         }
 
         return $this->redirectToRoute('page_projects');
     }
-
 
     #[Route('/projects/delete-multiple', name: 'delete_multiple_projects', methods: ['POST'])]
     #[IsGranted('ROLE_SEARCH')]
@@ -236,23 +250,26 @@ class ProjectController extends AbstractController
         $detailsBlocked = [];
 
         foreach ($projects as $project) {
-            // Si le projet a des souches associées, on bloque la suppression
-            if (count($project->getStrain()) > 0) {
-                $detailsBlocked[] = sprintf('[ID: %d - Nom: %s]', $project->getId(), $project->getName());
+            $strainIds = $project->getStrain()->map(fn($strain) => $strain->getId())->toArray();
+
+            if (!empty($strainIds)) {
+                $detailsBlocked[] = sprintf(
+                    '[ID: %d - Name: "%s" → Linked Strains: %s]',
+                    $project->getId(),
+                    $project->getName(),
+                    implode(', ', $strainIds)
+                );
                 continue;
             }
-            // Sinon on prépare la suppression et on stocke les détails pour message
-            $detailsDeleted[] = sprintf('[ID: %d - Nom: %s]', $project->getId(), $project->getName());
+
+            // Préparer la suppression et stocker les détails pour message
+            $detailsDeleted[] = sprintf('[ID: %d - Name: "%s"]', $project->getId(), $project->getName());
             $em->remove($project);
         }
 
         // Valider la suppression en base (pour les projets sans souches)
         if (!empty($detailsDeleted)) {
             $em->flush();
-        }
-
-        // Message succès pour les projets supprimés
-        if (!empty($detailsDeleted)) {
             $this->addFlash('success', sprintf(
                 '%d project(s) successfully deleted: %s',
                 count($detailsDeleted),
@@ -262,11 +279,15 @@ class ProjectController extends AbstractController
 
         // Message d’erreur pour les projets bloqués
         if (!empty($detailsBlocked)) {
-            $this->addFlash('error', 'Unable to delete some projects because they are linked to strains: ' . implode(', ', $detailsBlocked));
+            $this->addFlash(
+                'error',
+                'Unable to delete some projects because they are linked to strains: ' . implode(', ', $detailsBlocked)
+            );
         }
 
         // Rediriger vers la page des projets
         return $this->redirectToRoute('page_projects');
     }
+
 
 }

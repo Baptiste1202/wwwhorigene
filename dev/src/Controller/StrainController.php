@@ -153,48 +153,66 @@ class StrainController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
     ): Response {
+        try {
+            if ($strain && !$this->isGranted('strain.is_creator', $strain)) {
+                throw new AccessDeniedException('');
+            }
 
-        try{
-            if ($strain) {
-                if (!$this->isGranted('strain.is_creator', $strain)) {
-                    throw new AccessDeniedException('');
+            // 1) Essaye GET/POST
+            $filter = $request->get('filter');
+
+            // 2) Sinon, récupère depuis le Referer (URL de la liste)
+            if ($filter === null || $filter === '') {
+                $referer = $request->headers->get('referer'); // ex: /strains/page?...&filter=BERTRAND+Baptiste
+                if ($referer) {
+                    $queryString = parse_url($referer, PHP_URL_QUERY);
+                    if ($queryString) {
+                        parse_str($queryString, $params);
+                        $filter = $params['filter'] ?? null;
+                    }
                 }
             }
-            //Create the form
-            $strainForm = $this->createForm(StrainFormType::class, $strain);
 
-            //treat the request
+            // 3) Valeur par défaut
+            if ($filter === null || $filter === '') {
+                $filter = 'all';
+            }
+
+            $strainForm = $this->createForm(StrainFormType::class, $strain);
             $strainForm->handleRequest($request);
 
             if ($strainForm->isSubmitted() && $strainForm->isValid()) {
-
                 $em->flush();
 
                 $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' modified with succes !');
 
-                return $this->redirectToRoute('page_strains', ['highlight' => $strain->getId()]);
+                // Renvoie en conservant le filtre
+                return $this->redirectToRoute('page_strains', [
+                    'highlight' => $strain->getId(),
+                    'filter'    => $filter,
+                ]);
             }
 
             return $this->render('strain/edit.html.twig', [
                 'strainForm' => $strainForm->createView(),
-                'strain' => $strain, 
-                'is_update' => true,
+                'strain'     => $strain,
+                'is_update'  => true,
+                'filter'     => $filter,
             ]);
+
         } catch (AccessDeniedException $e) {
             $this->addFlash('error', 'You do not have permission to edit this strain.');
-            return $this->redirectToRoute('page_strains');
+            // même logique de fallback au besoin
+            $filter = $request->get('filter', 'all');
+            return $this->redirectToRoute('page_strains', ['filter' => $filter]);
         } catch (\Throwable $e) {
-            
-            // En environnement debug, laisse Symfony afficher la page d’erreur
-            if ($this->getParameter('kernel.debug')) {
-                throw $e;
-            }
-            
+            if ($this->getParameter('kernel.debug')) { throw $e; }
             $this->addFlash('error', 'An error occurred while updating the strain. Please try again.');
-            return $this->redirectToRoute('page_strains');
+            $filter = $request->get('filter', 'all');
+            return $this->redirectToRoute('page_strains', ['filter' => $filter]);
         }
-
     }
+
 
     #[Route('strain/delete/{id}', name: 'delete_strain')]
     #[IsGranted('ROLE_SEARCH')]

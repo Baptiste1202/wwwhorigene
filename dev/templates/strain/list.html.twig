@@ -54,8 +54,15 @@
         </thead>
         <tbody>
             {% if strains is empty %}
-                <tr>
-                    <td class="no-data" colspan="23">No strains found.</td>
+                <tr id="no-data-row">
+                    {% for i in 1..23 %}
+                        {% if i == 1 %}
+                            <td colspan="23" style="text-align:center; font-style:italic; color:gray;" data-not-found="true">No data found</td>
+                        {% else %}
+                            {# Ces td sont ignorés par DataTables mais nécessaires pour le comptage #}
+                            <td style="display:none"></td>
+                        {% endif %}
+                    {% endfor %}
                 </tr>
             {% endif %}
             {% for strain in strains %}
@@ -303,8 +310,12 @@
                             <i class="fa-solid fa-copy"></i>
                         </a>
                     </td>
-                    <td>
-                        <a href="{{ path('edit_strain', {id: strain.id}) }}" class="button-crud" title="Modifier">
+                   <td>
+                        <a href="{{ path('edit_strain', {
+                            id: strain.id,
+                            filter: app.request.get('filter', app.request.get('query', 'all'))
+                        }) }}"
+                            class="button-crud" title="Modifier">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </a>
                     </td>
