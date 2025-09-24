@@ -121,7 +121,7 @@
                             {% set maxLength = 25 %}
 
                             {% if desc|length > maxLength %}
-                                {% set prefix = desc|slice(0, 20) %}
+                                {% set prefix = desc|slice(0, 10) %}
                                 {{ prefix ~ '...'}}
                             {% else %}
                                 {{ desc }}
@@ -197,8 +197,8 @@
                             name: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.name  : '--'}}
                             concentration: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.concentration : '--'}}
                             resistant: {{ strain.drugResistanceOnStrain|first ? (strain.drugResistanceOnStrain|first.resistant ? 'yes' : 'no') : '--' }}
-                            comment: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.comment   : '--'}}
-                            description: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.description  : '--'}}
+                            comment: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.comment   : '--'}}
+                            description: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.description  : '--'}}
                             file: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.nameFile : '--'}}'                       
                         data-file='{{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.nameFile : '--'}}'>
 
@@ -275,7 +275,8 @@
                     {% endif %}
                     </td>
 
-                    <td class="description">
+                    <td class="description" data-info='
+                                {{ strain.description}}'>
                     {% if strain.description is not null %}
                         {% set description = strain.description ?: strain.description %}
                         {% set maxLength = 10 %}
@@ -291,7 +292,8 @@
                     {% endif %}
                     </td>
 
-                    <td class="comment">
+                    <td class="comment" data-info='
+                                {{ strain.comment}}'>
                     {% if strain.comment is not null %}
                         {% set comment = strain.comment %}
                         {% set maxLength = 10 %}

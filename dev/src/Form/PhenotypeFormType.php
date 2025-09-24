@@ -12,6 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 
@@ -56,11 +57,21 @@ class PhenotypeFormType extends AbstractType
                 'required' => false,
                 'label' => 'Upload File'
             ])
-            ->add('description', options:[
-                'label' => 'Description'
+            ->add('description', TextareaType::class, options:[
+                'label' => 'Description',
+                'attr' => [
+                    'rows' => 1, 
+                    'maxlength' => 245, 
+                    'placeholder' => 'Enter your description here...'
+                ]
             ])
-            ->add('comment', options:[
-                'label' => 'Comments'
+            ->add('comment', TextareaType::class, options:[
+                'label' => 'Comments',
+                'attr' => [
+                    'rows' => 1, 
+                    'maxlength' => 245, 
+                    'placeholder' => 'Enter your comment here...'
+                ]
             ]);  
     }
 
