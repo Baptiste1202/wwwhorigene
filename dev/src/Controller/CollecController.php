@@ -109,30 +109,6 @@ class CollecController extends AbstractController
         return $this->render('collec/edit.html.twig', compact('collecForm'));
     }
 
-    #[Route('/collecs/delete/{id}', name: 'delete_collec')]
-    public function delete(Collec $collec, EntityManagerInterface $em,  Security $security): Response
-    {
-        if (!$security->isGranted('ROLE_SEARCH')) {
-            $this->addFlash('error', 'You do not have permission to delete a collection.');
-            return $this->redirectToRoute('page_collecs');
-        }
-
-        // Check if collec is associated with any strains
-        $strainIds = $collec->getStrain()->map(fn($strain) => $strain->getId())->toArray();
-
-        if (count($strainIds) > 0) {
-            $this->addFlash('error', 'Cannot delete this collection because it is associated with the following strain IDs: ' . implode(', ', $strainIds) . '.');
-        } else {
-            // Directly delete
-            $em->remove($collec);
-            $em->flush();
-
-            $this->addFlash('success', 'Collection "' . $collec->getName() . '" has been successfully deleted!');
-        }
-
-        return $this->redirectToRoute('page_collecs');
-    }
-
     #[Route('strains/collec/duplicate/{id}', name: 'duplicate_collec')]
     public function duplicateCollec(Collec $collec, EntityManagerInterface $em, Security $security): Response
     {
@@ -169,7 +145,46 @@ class CollecController extends AbstractController
         }
     }
 
-    #[Route('/collecs/delete-multiple', name: 'delete_multiple_collecs', methods: ['POST'])]
+    #[Route('/collecs/delete/{id}', name: 'delete_collec')]
+    public function delete(Collec $collec, EntityManagerInterface $em, Security $security): Response
+    {
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to delete a collection.');
+            return $this->redirectToRoute('page_collecs');
+        }
+
+        // Check if collec is associated with any strains
+        $strainIds = $collec->getStrain()->map(fn($strain) => $strain->getId())->toArray();
+
+        if (count($strainIds) > 0) {
+            $this->addFlash(
+                'error',
+                sprintf(
+                    'Cannot delete Collection (ID: %d, Name: "%s") because it is associated with the following strain IDs: %s.',
+                    $collec->getId(),
+                    $collec->getName(),
+                    implode(', ', $strainIds)
+                )
+            );
+        } else {
+            // Directly delete
+            $em->remove($collec);
+            $em->flush();
+
+            $this->addFlash(
+                'success',
+                sprintf(
+                    'Collection (ID: %d, Name: "%s") has been successfully deleted!',
+                    $collec->getId(),
+                    $collec->getName()
+                )
+            );
+        }
+
+        return $this->redirectToRoute('page_collecs');
+    }
+
+   #[Route('/collecs/delete-multiple', name: 'delete_multiple_collecs', methods: ['POST'])]
     #[IsGranted('ROLE_SEARCH')]
     public function deleteMultiple(Request $request, EntityManagerInterface $em): Response
     {
@@ -194,23 +209,26 @@ class CollecController extends AbstractController
         $detailsBlocked = [];
 
         foreach ($collecs as $collec) {
-            // Si la collection a des souches associées, on bloque la suppression
-            if (count($collec->getStrain()) > 0) {
-                $detailsBlocked[] = sprintf('[ID: %d - Nom: %s]', $collec->getId(), $collec->getName());
+            $strainIds = $collec->getStrain()->map(fn($strain) => $strain->getId())->toArray();
+
+            if (!empty($strainIds)) {
+                $detailsBlocked[] = sprintf(
+                    '[ID: %d - Name: "%s" → Linked Strains: %s]',
+                    $collec->getId(),
+                    $collec->getName(),
+                    implode(', ', $strainIds)
+                );
                 continue;
             }
-            // Sinon on prépare la suppression et on stocke les détails pour message
-            $detailsDeleted[] = sprintf('[ID: %d - Nom: %s]', $collec->getId(), $collec->getName());
+
+            // Préparer la suppression et stocker les détails pour message
+            $detailsDeleted[] = sprintf('[ID: %d - Name: "%s"]', $collec->getId(), $collec->getName());
             $em->remove($collec);
         }
 
         // Valider la suppression en base (pour les collections sans souches)
         if (!empty($detailsDeleted)) {
             $em->flush();
-        }
-
-        // Message succès pour les collections supprimées
-        if (!empty($detailsDeleted)) {
             $this->addFlash('success', sprintf(
                 '%d collection(s) successfully deleted: %s',
                 count($detailsDeleted),
@@ -220,7 +238,10 @@ class CollecController extends AbstractController
 
         // Message d’erreur pour les collections bloquées
         if (!empty($detailsBlocked)) {
-           $this->addFlash('error', 'Unable to delete some collections because they are associated with strains: ' . implode(', ', $detailsBlocked));
+        $this->addFlash(
+            'error',
+            'Unable to delete some collections because they are linked to strains: ' . implode(', ', $detailsBlocked)
+        );
         }
 
         // Rediriger vers la page des collections

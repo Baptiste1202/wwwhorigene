@@ -171,21 +171,38 @@ class PlasmydController extends AbstractController
             $this->addFlash('error', 'You do not have permission to delete a plasmyd.');
             return $this->redirectToRoute('page_plasmyds');
         }
+
         // Get IDs of strains associated with the plasmyd
         $strainIds = $plasmyd->getStrain()->map(fn($strain) => $strain->getId())->toArray();
 
         if (count($strainIds) > 0) {
-            $this->addFlash('error', 'Cannot delete this plasmyd because it is associated with the following strain IDs: ' . implode(', ', $strainIds) . '.');
+            $this->addFlash(
+                'error',
+                sprintf(
+                    'Cannot delete Plasmyd (ID: %d, Name: "%s") because it is associated with the following strain IDs: %s.',
+                    $plasmyd->getId(),
+                    $plasmyd->getNamePlasmyd(),
+                    implode(', ', $strainIds)
+                )
+            );
         } else {
             // Directly delete if no associated strains
             $em->remove($plasmyd);
             $em->flush();
 
-            $this->addFlash('success', 'Plasmyd "' . $plasmyd->getNamePlasmyd() . '" has been successfully deleted!');
+            $this->addFlash(
+                'success',
+                sprintf(
+                    'Plasmyd (ID: %d, Name: "%s") has been successfully deleted!',
+                    $plasmyd->getId(),
+                    $plasmyd->getNamePlasmyd()
+                )
+            );
         }
 
         return $this->redirectToRoute('page_plasmyds');
     }
+
 
     #[Route('plasmyds/duplicate/{id}', name: 'duplicate_plasmyd')]
     #[IsGranted('ROLE_INTERN')]
@@ -250,9 +267,16 @@ class PlasmydController extends AbstractController
         $detailsBlocked = [];
 
         foreach ($plasmyds as $plasmyd) {
-            // Exemple : bloquer si le plasmyd est lié à des souches (strains)
-            if (count($plasmyd->getStrain()) > 0) {
-                $detailsBlocked[] = sprintf('[ID: %d - Name: %s]', $plasmyd->getId(), $plasmyd->getNamePlasmyd());
+            $strainIds = $plasmyd->getStrain()->map(fn($strain) => $strain->getId())->toArray();
+
+            if (!empty($strainIds)) {
+                // Bloqué : on ajoute le plasmide + ses strains
+                $detailsBlocked[] = sprintf(
+                    '[ID: %d - Name: %s - Strain IDs: %s]',
+                    $plasmyd->getId(),
+                    $plasmyd->getNamePlasmyd(),
+                    implode(', ', $strainIds)
+                );
                 continue;
             }
 
@@ -277,12 +301,16 @@ class PlasmydController extends AbstractController
 
         // Message erreur si des suppressions ont été bloquées
         if (!empty($detailsBlocked)) {
-            $this->addFlash('error', 'Unable to delete some plasmyds because they are linked to strains: ' . implode(', ', $detailsBlocked));
+            $this->addFlash(
+                'error',
+                'Unable to delete some plasmyds because they are linked to strains: ' . implode(', ', $detailsBlocked)
+            );
         }
 
         // Redirection finale
         return $this->redirectToRoute('page_plasmyds');
     }
+
     
     #[Route('/api/plasmyd/create', name: 'api_create_plasmyd', methods: ['POST'])]
     public function apiCreatePlasmyd(Request $request, EntityManagerInterface $em): Response

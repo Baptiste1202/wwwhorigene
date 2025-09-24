@@ -316,7 +316,7 @@ $(document).ready(function () {
         // //console.log('[Download] Final payload =', payload);
 
         // 4.5) Send via fetch
-        const url = '/public/download-multiple';
+        const url = '/download-multiple';
         // //console.log('[Download] POST =>', url);
         try {
             const res = await fetch(url, {

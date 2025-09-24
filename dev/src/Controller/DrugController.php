@@ -130,32 +130,6 @@ class DrugController extends AbstractController
         return $this->render('drug/edit.html.twig', compact('drugForm'));
     }
 
-    #[Route('strains/drug/delete/{id}', name: 'delete_drug')]
-    #[IsGranted('ROLE_INTERN')]
-    public function delete(DrugResistance $drug, EntityManagerInterface $em, Security $security): Response
-    {
-        if (!$security->isGranted('ROLE_SEARCH')) {
-            $this->addFlash('error', 'You do not have permission to delete a drug.');
-            return $this->redirectToRoute('page_drugs');
-        }
-
-        $strainIds = $drug->getDrugResistanceOnStrains()
-            ->map(fn($rel) => $rel->getStrain()->getId())
-            ->toArray();
-
-        if (count($drug->getDrugResistanceOnStrains()) > 0) {
-            $this->addFlash('error', 'Cannot delete this drug because it is associated with the following strain IDs: ' . implode(', ', $strainIds) . '.');
-        } else {
-            // Supprime si aucune association
-            $em->remove($drug);
-            $em->flush();
-
-            $this->addFlash('success', 'Drug "' . $drug->getName() . '" has been successfully deleted!');
-        }
-
-        return $this->redirectToRoute('page_drugs');
-    }
-
     #[Route('drugs/duplicate/{id}', name: 'duplicate_drug')]
     #[IsGranted('ROLE_INTERN')]
     public function duplicateDrug(DrugResistance $drug, EntityManagerInterface $em, Security $security): Response
@@ -188,6 +162,47 @@ class DrugController extends AbstractController
         }
     }
 
+    #[Route('strains/drug/delete/{id}', name: 'delete_drug')]
+    #[IsGranted('ROLE_INTERN')]
+    public function delete(DrugResistance $drug, EntityManagerInterface $em, Security $security): Response
+    {
+        if (!$security->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to delete a drug.');
+            return $this->redirectToRoute('page_drugs');
+        }
+
+        $strainIds = $drug->getDrugResistanceOnStrains()
+            ->map(fn($rel) => $rel->getStrain()->getId())
+            ->toArray();
+
+        if (count($strainIds) > 0) {
+            $this->addFlash(
+                'error',
+                sprintf(
+                    'Cannot delete Drug (ID: %d, Name: "%s") because it is associated with the following strain IDs: %s.',
+                    $drug->getId(),
+                    $drug->getName(),
+                    implode(', ', $strainIds)
+                )
+            );
+        } else {
+            // Supprime si aucune association
+            $em->remove($drug);
+            $em->flush();
+
+            $this->addFlash(
+                'success',
+                sprintf(
+                    'Drug (ID: %d, Name: "%s") has been successfully deleted!',
+                    $drug->getId(),
+                    $drug->getName()
+                )
+            );
+        }
+
+        return $this->redirectToRoute('page_drugs');
+    }
+
     #[Route('/drugs/delete-multiple', name: 'delete_multiple_drugs', methods: ['POST'])]
     #[IsGranted('ROLE_SEARCH')]
     public function deleteMultipleDrugs(Request $request, EntityManagerInterface $em): Response
@@ -212,23 +227,27 @@ class DrugController extends AbstractController
         $detailsBlocked = [];
 
         foreach ($drugs as $drug) {
-            // Exemple : bloquer si le drug est lié à des souches (strains)
-            if (count($drug->getDrugResistanceOnStrains()) > 0) {
-                $detailsBlocked[] = sprintf('[ID: %d - Name: %s]', $drug->getId(), $drug->getName());
+            $strainIds = $drug->getDrugResistanceOnStrains()
+                ->map(fn($rel) => $rel->getStrain()->getId())
+                ->toArray();
+
+            if (!empty($strainIds)) {
+                $detailsBlocked[] = sprintf(
+                    '[ID: %d - Name: "%s" → Linked Strains: %s]',
+                    $drug->getId(),
+                    $drug->getName(),
+                    implode(', ', $strainIds)
+                );
                 continue;
             }
 
-            $detailsDeleted[] = sprintf('[ID: %d - Name: %s]', $drug->getId(), $drug->getName());
+            $detailsDeleted[] = sprintf('[ID: %d - Name: "%s"]', $drug->getId(), $drug->getName());
             $em->remove($drug);
         }
 
         // Exécuter la suppression si des drugs sont valides
         if (!empty($detailsDeleted)) {
             $em->flush();
-        }
-
-        // Message succès
-        if (!empty($detailsDeleted)) {
             $this->addFlash('success', sprintf(
                 '%d drug(s) successfully deleted: %s',
                 count($detailsDeleted),
@@ -238,10 +257,14 @@ class DrugController extends AbstractController
 
         // Message erreur si des suppressions ont été bloquées
         if (!empty($detailsBlocked)) {
-            $this->addFlash('error', 'Unable to delete some drugs because they are linked to strains: ' . implode(', ', $detailsBlocked));
+            $this->addFlash(
+                'error',
+                'Unable to delete some drugs because they are linked to strains: ' . implode(', ', $detailsBlocked)
+            );
         }
 
         // Redirection finale
         return $this->redirectToRoute('page_drugs');
     }
+
 }

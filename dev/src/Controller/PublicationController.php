@@ -207,21 +207,35 @@ class PublicationController extends AbstractController
         }
 
         // Vérifie les souches associées
-        $soucheIds = $publication->getStrain()->map(fn($strain) => $strain->getId())->toArray();
+        $strainIds = $publication->getStrain()->map(fn($strain) => $strain->getId())->toArray();
 
-        if (count($soucheIds) > 0) {
-            $this->addFlash('error', 'Unable to delete this publication because it is associated with strains having the following IDs: ' . implode(', ', $soucheIds) . '.');
+        if (count($strainIds) > 0) {
+            $this->addFlash(
+                'error',
+                sprintf(
+                    'Cannot delete Publication (ID: %d, Title: "%s") because it is associated with the following strain IDs: %s.',
+                    $publication->getId(),
+                    $publication->getTitle(),
+                    implode(', ', $strainIds)
+                )
+            );
         } else {
             // Supprime directement
             $em->remove($publication);
             $em->flush();
 
-            $this->addFlash('success', 'Publication "' . $publication->getTitle() . '" deleted successfully!');
+            $this->addFlash(
+                'success',
+                sprintf(
+                    'Publication (ID: %d, Title: "%s") has been successfully deleted!',
+                    $publication->getId(),
+                    $publication->getTitle()
+                )
+            );
         }
 
         return $this->redirectToRoute('page_publications');
     }
-
 
     #[Route('strains/publications/delete-multiple', name: 'delete_multiple_publications', methods: ['POST'])]
     #[IsGranted('ROLE_SEARCH')]
@@ -248,24 +262,26 @@ class PublicationController extends AbstractController
         $detailsBlocked = [];
 
         foreach ($publications as $publication) {
-            // Blocage si la publication a des souches associées
-            if (count($publication->getStrain()) > 0) {
-                $detailsBlocked[] = sprintf('[ID: %d - Titre: %s]', $publication->getId(), $publication->getTitle());
+            $strainIds = $publication->getStrain()->map(fn($strain) => $strain->getId())->toArray();
+
+            if (!empty($strainIds)) {
+                $detailsBlocked[] = sprintf(
+                    '[ID: %d - Title: "%s" → Linked Strains: %s]',
+                    $publication->getId(),
+                    $publication->getTitle(),
+                    implode(', ', $strainIds)
+                );
                 continue;
             }
 
             // Sinon on supprime
-            $detailsDeleted[] = sprintf('[ID: %d - Titre: %s]', $publication->getId(), $publication->getTitle());
+            $detailsDeleted[] = sprintf('[ID: %d - Title: "%s"]', $publication->getId(), $publication->getTitle());
             $em->remove($publication);
         }
 
         // Valider la suppression en base (pour les publications sans souches)
         if (!empty($detailsDeleted)) {
             $em->flush();
-        }
-
-        // Message succès pour les publications supprimées
-        if (!empty($detailsDeleted)) {
             $this->addFlash('success', sprintf(
                 '%d publication(s) successfully deleted: %s',
                 count($detailsDeleted),
@@ -275,13 +291,14 @@ class PublicationController extends AbstractController
 
         // Message d’erreur pour les publications bloquées
         if (!empty($detailsBlocked)) {
-            $this->addFlash('error', 'Unable to delete some publications because they are associated with strains: ' . implode(', ', $detailsBlocked));
+            $this->addFlash(
+                'error',
+                'Unable to delete some publications because they are associated with strains: ' 
+                . implode(', ', $detailsBlocked)
+            );
         }
 
         // Rediriger vers la page des publications
         return $this->redirectToRoute('page_publications');
     }
-
-
-
 }
