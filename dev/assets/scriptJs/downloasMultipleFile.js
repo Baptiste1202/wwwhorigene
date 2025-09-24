@@ -9,6 +9,27 @@ $(document).ready(function () {
     const $fileTypeAll  = $('input[name="fileType"][value="all"]');
     const $fileTypes    = $('input[name="fileType"]').not('[value="all"]');
     const $phenotypeOpt = $('input[name="fileType"][value="phenotype"]');
+    
+    // >>> AJOUT : gestion du champ d'extension <<<
+    const $extInput = $('#extension-input');
+    function ensureExtensionUI() {
+        if (!$extInput.length) return;
+        // Placeholder de suggestion
+        $extInput.attr('placeholder', '.csv, .tsv, .xlsx');
+        // Petit hint sous le champ, si absent
+        if (!$('#extension-hint').length) {
+            $('<div id="extension-hint" style="font-size:.9em;color:#555;margin-top:.25rem;">' +
+              'Exemples&nbsp;: <code>.csv</code>, <code>.tsv</code>, <code>.xlsx</code>. ' +
+              'The dot is added automatically if you forget it.' +
+              '</div>').insertAfter($extInput);
+        }
+        // Auto-préfixer "." si oublié
+        $extInput.off('blur.ext').on('blur.ext', function () {
+            const v = $(this).val().trim();
+            if (v && !v.startsWith('.')) $(this).val('.' + v);
+        });
+    }
+    // <<< FIN AJOUT
 
     // --- API to load phenotype types (without Twig) ---
     const API_PT_PRIMARY   = '/public/apiphenotypetype';
@@ -157,6 +178,7 @@ $(document).ready(function () {
             return;
         }
         ensurePtBlockReadyIfNeeded();
+        ensureExtensionUI();
         $modal.css('display', 'flex');
         // //console.log('[OpenModal] modal opened');
     });
