@@ -788,6 +788,14 @@ thead th, tbody td {
   color: red;
 }
 
+.table-action-bar {
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  z-index: 50;
+  padding: 2px; /* espace minimal */
+}
+
 
 /* ===========================================================
    CSS pour les DATATABLE des composants
