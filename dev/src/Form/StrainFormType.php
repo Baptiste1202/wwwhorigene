@@ -58,12 +58,18 @@ class StrainFormType extends AbstractType
             ->add('specie', options:[
                 'label' => 'Species',
                 'required' => false, 
-                'empty_data' => null
+                'empty_data' => null,
+                'attr' => [
+                    'maxlength' => 30, 
+                ]
             ])
             ->add('gender', options:[
                 'label' => 'Gender',
                 'required' => false, 
-                'empty_data' => null
+                'empty_data' => null,
+                 'attr' => [
+                    'maxlength' => 30, 
+                ]
             ])
             ->add('comment', TextareaType::class, [
                 'label' => 'Comments',
@@ -71,7 +77,7 @@ class StrainFormType extends AbstractType
                 'empty_data' => null,
                 'attr' => [
                     'rows' => 5, 
-                    'maxlength' => 250, 
+                    'maxlength' => 245, 
                     'placeholder' => 'Enter your comments here...'
                 ]
             ])
@@ -81,7 +87,7 @@ class StrainFormType extends AbstractType
                 'empty_data' => null,
                 'attr' => [
                     'rows' => 5, 
-                    'maxlength' => 250, 
+                    'maxlength' => 245, 
                     'placeholder' => 'Enter a detailed description...'
                 ]
             ])

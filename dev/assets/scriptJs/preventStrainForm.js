@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const specieInput = document.getElementById("strain_form_specie");
     const genderInput = document.getElementById("strain_form_gender");
     const nameInput = document.getElementById("strain_form_nameStrain");
+    const concentration = document.getElementById(strain_form_drugResistanceOnStrain_0_concentration);
 
 
     form.addEventListener("submit", function (event) {
@@ -35,6 +36,14 @@ document.addEventListener("DOMContentLoaded", function () {
             genderInput.value = "";
             genderInput.setCustomValidity("Gender must not be empty!");
             genderInput.reportValidity();
+            hasError = true;
+        }
+
+        // Vérif Concentration
+        if (concentration.value > 9999) {
+            concentration.value = "";
+            concentration.setCustomValidity("Concentration must be under 9999");
+            concentration.reportValidity();
             hasError = true;
         }
 

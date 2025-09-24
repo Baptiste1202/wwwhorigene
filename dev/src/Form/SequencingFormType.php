@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\MethodSequencing;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,11 +21,21 @@ class SequencingFormType extends AbstractType
             ->add('name', options:[
                 'label' => 'Method'
             ])
-            ->add('comment', options:[
-                'label' => 'Comments'
+            ->add('description', TextareaType::class, options:[
+                'label' => 'Description',
+                'attr' => [
+                    'rows' => 1, 
+                    'maxlength' => 245, 
+                    'placeholder' => 'Enter your description here...'
+                ]
             ])
-            ->add('description', options:[
-                'label' => 'Description'
+            ->add('comment', TextareaType::class, options:[
+                'label' => 'Comments',
+                'attr' => [
+                    'rows' => 1, 
+                    'maxlength' => 245, 
+                    'placeholder' => 'Enter your comment here...'
+                ]
             ]);           
 
             
