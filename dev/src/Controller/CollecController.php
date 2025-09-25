@@ -184,10 +184,13 @@ class CollecController extends AbstractController
         return $this->redirectToRoute('page_collecs');
     }
 
-   #[Route('/collecs/delete-multiple', name: 'delete_multiple_collecs', methods: ['POST'])]
-    #[IsGranted('ROLE_SEARCH')]
+    #[Route('/collecs/delete-multiple', name: 'delete_multiple_collecs', methods: ['POST'])]
     public function deleteMultiple(Request $request, EntityManagerInterface $em): Response
     {
+        if (!$this->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to perform this action.');
+            return $this->redirectToRoute('page_collecs'); // ou vers le referer
+        }
         // Récupérer les ids sélectionnés via la requête POST
         $ids = $request->request->all('selected_collecs');
 

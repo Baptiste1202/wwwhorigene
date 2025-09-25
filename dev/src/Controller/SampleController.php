@@ -94,12 +94,17 @@ class SampleController extends AbstractController
     }
 
     #[Route('strains/sample/edit/{id}', name: 'edit_sample')]
-    #[IsGranted('ROLE_ADMIN')]
     public function edit(
         Sample $sample,
         Request $request,
         EntityManagerInterface $em,
     ): Response {
+        
+        if (!$this->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to perform this action.');
+            return $this->redirectToRoute('page_samples'); // ou vers le referer
+        }
+
         $sampleForm = $this->createForm(SampleFormType::class, $sample);
         $sampleForm->handleRequest($request);
 
@@ -115,9 +120,13 @@ class SampleController extends AbstractController
     }
 
     #[Route('strains/sample/delete/{id}', name: 'delete_sample')]
-    #[IsGranted('ROLE_ADMIN')]
     public function delete(Sample $sample, EntityManagerInterface $em): Response
     {
+        if (!$this->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to perform this action.');
+            return $this->redirectToRoute('page_samples'); // ou vers le referer
+        }
+
         // Get IDs of strains associated with the sample
         $strainIds = $sample->getStrain()->map(fn($strain) => $strain->getId())->toArray();
 
@@ -135,12 +144,17 @@ class SampleController extends AbstractController
     }
 
     #[Route('samples/duplicate/{id}', name: 'duplicate_sample')]
-    #[IsGranted('ROLE_ADMIN')]
     public function duplicate(
         Sample $sample,
         EntityManagerInterface $em,
         Security $security
     ): Response {
+        
+        if (!$this->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to perform this action.');
+            return $this->redirectToRoute('page_samples'); // ou vers le referer
+        }
+
         try {
             $user = $security->getUser();
 
@@ -171,9 +185,12 @@ class SampleController extends AbstractController
     }
 
     #[Route('/samples/delete-multiple', name: 'delete_multiple_samples', methods: ['POST'])]
-    #[IsGranted('ROLE_ADMIN')]
     public function deleteMultipleSamples(Request $request, EntityManagerInterface $em): Response
     {
+        if (!$this->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to perform this action.');
+            return $this->redirectToRoute('page_samples'); // ou vers le referer
+        }
         // Récupère les IDs sélectionnés
         $ids = $request->request->all('selected_samples');
 

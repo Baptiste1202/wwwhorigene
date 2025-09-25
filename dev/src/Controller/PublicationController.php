@@ -87,14 +87,10 @@ class PublicationController extends AbstractController
     }
 
     #[Route(path: 'strains/publications/ajout/response', name: 'add_publication_response')]
-    #[IsGranted('ROLE_INTERN')]
+    #[IsGranted('ROLE_SEARCH')]
     public function addResponse(Request $request, EntityManagerInterface $em, Security $security): Response
     {
-        if (!$security->isGranted('ROLE_SEARCH')) {
-            $this->addFlash('error', 'You do not have permission to add a publication.');
-            return $this->redirectToRoute('page_publications');
-        }
-
+        
         //Create a new vehicule
         $publication = new Publication();
 
@@ -123,7 +119,6 @@ class PublicationController extends AbstractController
     }
 
     #[Route('strains/publication/duplicate/{id}', name: 'duplicate_publication')]
-    #[IsGranted('ROLE_INTERN')]
     public function duplicatePublication(Publication $publication, EntityManagerInterface $em, Security $security): Response
     {
         if (!$security->isGranted('ROLE_SEARCH')) {
@@ -162,7 +157,6 @@ class PublicationController extends AbstractController
     }
 
     #[Route('strains/publication/edit/{id}', name: 'edit_publication')]
-    #[IsGranted('ROLE_INTERN')]
     public function edit(
         Publication $publication,
         Request $request,
@@ -198,7 +192,6 @@ class PublicationController extends AbstractController
     }
 
     #[Route('strains/publication/delete/{id}', name: 'delete_publication')]
-    #[IsGranted('ROLE_INTERN')]
     public function delete(Publication $publication, EntityManagerInterface $em, Security $security): Response
     {
         if (!$security->isGranted('ROLE_SEARCH')) {
@@ -238,9 +231,13 @@ class PublicationController extends AbstractController
     }
 
     #[Route('strains/publications/delete-multiple', name: 'delete_multiple_publications', methods: ['POST'])]
-    #[IsGranted('ROLE_SEARCH')]
     public function deleteMultiple(Request $request, EntityManagerInterface $em): Response
     {
+        if (!$this->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to perform this action.');
+            return $this->redirectToRoute('page_publications'); // ou vers le referer
+        }
+
         // Récupérer les ids sélectionnés via la requête POST
         $ids = $request->request->all('selected_publications');
 
