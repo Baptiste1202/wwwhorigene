@@ -606,10 +606,14 @@ class StrainController extends AbstractController
 
         // 2) TRAITER CHAQUE SOUCHE COMME TON DELETE UNITAIRE
         foreach ($strains as $strain) {
+            // Sauvegarder l'info AVANT suppression
+            $id   = (int) $strain->getId();
+            $name = (string) ($strain->getNameStrain() ?? '');
+
             try {
                 // droit auteur
                 if (!$this->isGranted('strain.is_creator', $strain)) {
-                    $blocked[] = sprintf('ID: %d - Name: "%s" (insufficient rights)', $strain->getId(), (string) $strain->getNameStrain());
+                    $blocked[] = sprintf('ID: %d - Name: "%s" (insufficient rights)', $id, $name !== '' ? $name : '--');
                     continue;
                 }
 
@@ -623,25 +627,24 @@ class StrainController extends AbstractController
                 foreach ($strain->getPublication()->toArray() as $publi){ $strain->removePublication($publi); }
                 foreach ($strain->getProject()->toArray() as $project)  { $strain->removeProject($project); }
 
-                // b) flush des ruptures de relations (comme en unitaire)
+                // b) flush des ruptures
                 $em->flush();
 
                 // c) suppression de la souche
                 $em->remove($strain);
 
-                // d) flush final pour CETTE souche (comme en unitaire)
+                // d) flush final pour CETTE souche
                 $em->flush();
 
-                $deleted[] = sprintf('ID: %d - Name: "%s"', $strain->getId(), (string) $strain->getNameStrain());
+                $deleted[] = sprintf('ID: %d - Name: "%s"', $id, $name !== '' ? $name : '--');
 
             } catch (\Throwable $e) {
                 $blocked[] = sprintf(
                     'ID: %d - Name: "%s" (error: %s)',
-                    $strain->getId(),
-                    (string) $strain->getNameStrain(),
+                    $id,
+                    $name !== '' ? $name : '--',
                     $e->getMessage()
                 );
-                // IMPORTANT : ne pas faire $em->clear() ici, on continue proprement
             }
         }
 
