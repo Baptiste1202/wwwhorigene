@@ -532,37 +532,3 @@
 </script>
 {% endif %}
 
-<script>
-document.getElementById('multi-action-form').addEventListener('submit', function (e) {
-    // Récupère toutes les cases cochées
-    const checked = Array.from(document.querySelectorAll('.select-checkbox:checked'));
-
-    if (checked.length === 0) {
-        e.preventDefault();
-        alert('No strain selected.');
-        return;
-    }
-
-    // Construit une liste unique {id, name}
-    const selectedMap = new Map();
-    for (const cb of checked) {
-        const id = cb.value;
-        if (!selectedMap.has(id)) {
-            const tr = cb.closest('tr');
-            const nameCell = tr ? tr.querySelector('td.name') : null;
-            const name = nameCell ? nameCell.textContent.trim() : '--';
-            selectedMap.set(id, { id, name });
-        }
-    }
-
-    // Message de confirmation avec ID + Name
-    const lines = Array.from(selectedMap.values())
-        .map(item => `- ${item.id} — ${item.name}`);
-    const message = "Are you sure you want to delete the following strains?\n\n"
-        + lines.join('\n');
-
-    if (!confirm(message)) {
-        e.preventDefault();
-    }
-});
-</script>
