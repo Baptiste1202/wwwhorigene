@@ -574,12 +574,11 @@ class StrainController extends AbstractController
         EntityManagerInterface $em
     ): Response {
         // 0) Action attendue depuis ton bouton
-        $action = (string) $request->request->get('bulk_action', '');
-        if (strtolower($action) !== 'delete') {
+        $action = strtolower((string) $request->request->get('action', ''));
+        if ($action !== 'delete') {
             $this->addFlash('error', 'Invalid bulk action.');
             return $this->redirectToRoute('page_strains');
         }
-
 
         // 1) IDs depuis name="selected_strain[]"
         $ids = $request->request->all('selected_strain');

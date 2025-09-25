@@ -324,7 +324,10 @@
                             </a>
                         </td>
                         <td>
-                            <a href="{{ path('delete_strain', {id: strain.id}) }}" class="button-crud" title="Supprimer" onclick="return confirm('Voulez-vous vraiment supprimer ?');">
+                            <a href="{{ path('delete_strain', {id: strain.id}) }}"
+                            class="button-crud"
+                            title="Supprimer"
+                            onclick="return confirm('Do you really want to delete strain {{ strain.id }} - {{ strain.nameStrain|e('js') }} ?');">
                                 <i class="fa-solid fa-trash"></i>
                             </a>
                         </td> 
@@ -493,14 +496,15 @@
                 {% endfor %}
             </tbody>
         </table>
-        <input type="hidden" name="bulk_action" id="bulk-action" value="">
+        <input type="hidden" name="action" value="" />
         <div class="table-action-bar">
             <button id="btn-delete-multiple"
                     type="submit"
+                    form="multi-action-form"
                     formaction="{{ path('delete_multiple_strains') }}"
-                    onclick="document.getElementById('bulk-action').value='delete'"
+                    onclick="document.getElementById('multi-action-form').elements['action'].value='delete'"
                     class="btn btn-danger">
-                Delete selected
+            Delete selected
             </button>
         </div>
     </form>
