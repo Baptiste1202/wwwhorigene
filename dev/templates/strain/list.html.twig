@@ -23,51 +23,49 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
-
 <div id="data-table-wrapper" class="sticky-wrapper">
-    <form id="multi-action-form" method="post">
-        <table id="data-table" class="display nowrap" style="visibility: hidden;"> 
-            <thead>
-                <tr>
-                    <th><input type="checkbox" id="select-all" /></th>
-                    <th class="id" data-column="id">ID</th>
-                    <th class="name" data-column="name">Name</th>
-                    <th data-column="date">Date</th>
-                    <th data-column="specie">Species</th>
-                    <th data-column="gender">Gender</th>
-                    <th data-column="sample">Sample</th>
-                    <th data-column="genotype">Genotype</th>
-                    <th data-column="plasmyd">Plasmid</th>
-                    <th data-column="storage">Storage</th>
-                    <th data-column="parent">Parent</th>
-                    <th data-column="project">Project</th>
-                    <th data-column="collec">Collection</th>
-                    <th data-column="drug">Drug Resistance</th>
-                    <th data-column="phenotype">Phenotype</th>
-                    <th data-column="sequencing">File Sequencing</th>
-                    <th data-column="publication">Publication</th>
-                    <th class="creator">Creator</th>
-                    <th data-column="description">Description</th>
-                    <th data-column="comment">Comment</th>
-                    <th data-column="null"> </th> 
-                    <th data-column="null"> </th> 
-                    <th data-column="null"> </th>
+    <table id="data-table" class="display nowrap" style="visibility: hidden;"> 
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="select-all" /></th>
+                <th class="id" data-column="id">ID</th>
+                <th class="name" data-column="name">Name</th>
+                <th data-column="date">Date</th>
+                <th data-column="specie">Species</th>
+                <th data-column="gender">Gender</th>
+                <th data-column="sample">Sample</th>
+                <th data-column="genotype">Genotype</th>
+                <th data-column="plasmyd">Plasmid</th>
+                <th data-column="storage">Storage</th>
+                <th data-column="parent">Parent</th>
+                <th data-column="project">Project</th>
+                <th data-column="collec">Collection</th>
+                <th data-column="drug">Drug Resistance</th>
+                <th data-column="phenotype">Phenotype</th>
+                <th data-column="sequencing">File Sequencing</th>
+                <th data-column="publication">Publication</th>
+                <th class="creator">Creator</th>
+                <th data-column="description">Description</th>
+                <th data-column="comment">Comment</th>
+                <th data-column="null"> </th> 
+                <th data-column="null"> </th> 
+                <th data-column="null"> </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if strains is empty %}
+                <tr id="no-data-row">
+                    {% for i in 1..23 %}
+                        {% if i == 1 %}
+                            <td colspan="23" style="text-align:center; font-style:italic; color:gray;" data-not-found="true">No data found</td>
+                        {% else %}
+                            {# Ces td sont ignorés par DataTables mais nécessaires pour le comptage #}
+                            <td style="display:none"></td>
+                        {% endif %}
+                    {% endfor %}
                 </tr>
-            </thead>
-            <tbody>
-                {% if strains is empty %}
-                    <tr id="no-data-row">
-                        {% for i in 1..23 %}
-                            {% if i == 1 %}
-                                <td colspan="23" style="text-align:center; font-style:italic; color:gray;" data-not-found="true">No data found</td>
-                            {% else %}
-                                {# Ces td sont ignorés par DataTables mais nécessaires pour le comptage #}
-                                <td style="display:none"></td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                {% endif %}
-                {% for strain in strains %}
+            {% endif %}
+            {% for strain in strains %}
                     <tr id="strain-{{ strain.id }}" class="list-strain">
                         <td>
                             <input type="checkbox" name="selected_strain[]" value="{{ strain.id }}" class="select-checkbox" />
@@ -103,7 +101,7 @@
                                     name: {{ strain.prelevement ? strain.prelevement.name : "--" }}
                                     type: {{ strain.prelevement ? strain.prelevement.type : "--" }}
                                     created : {{ strain.prelevement ? strain.prelevement.date|date("d/m/Y") : "--" }}
-                                    
+
                                     country : {{ strain.prelevement ? strain.prelevement.country : "--" }}
                                     city : {{ strain.prelevement ? strain.prelevement.city : "--" }}
                                     localisation : {{ strain.prelevement ? strain.prelevement.localisation : "--" }}
@@ -127,14 +125,14 @@
                                     {{ prefix ~ '...'}}
                                 {% else %}
                                     {{ desc }}
-                                {% endif %} 
+                                {% endif %}
                             {% endif %}
                         {% else %}
                             --
                         {% endif %}
                         </td>
 
-                        <td class="plasmyd" 
+                        <td class="plasmyd"
                             data-info='
                                     name: {{ strain.plasmyd|first ? strain.plasmyd|first.namePlasmyd : '--'}}
                                     type: {{ strain.plasmyd|first ? strain.plasmyd|first.type : "--" }}
@@ -157,11 +155,11 @@
                                     container type : {{ strain.storage|first ? strain.storage|first.containerType : "--" }}
                                     container position : {{ strain.storage|first ? strain.storage|first.containerPosition : "--" }}'>
                         {% if strain.storage is not empty %}
-                            room : {{strain.storage[0].room}} 
-                            fridge:  {{strain.storage[0].fridge}} 
+                            room : {{strain.storage[0].room}}
+                            fridge:  {{strain.storage[0].fridge}}
                             shelf:  {{strain.storage[0].shelf}} <br>
-                            rack: {{strain.storage[0].rack}} 
-                            volume: {{strain.storage[0].volume}} 
+                            rack: {{strain.storage[0].rack}}
+                            volume: {{strain.storage[0].volume}}
                             type: {{ strain.storage[0].containerType }}<br>
                             position: {{ strain.storage[0].containerPosition }}
                         {% else %}
@@ -177,7 +175,7 @@
                                 --
                             {% endif %}
                         </td>
-                        
+
                         <td class="project">
                         {% if strain.project is not empty %}
                             {{strain.project[0].name}}
@@ -194,19 +192,19 @@
                         {% endif %}
                         </td>
 
-                        <td class="drugResistanceOnStrain" 
+                        <td class="drugResistanceOnStrain"
                             data-info='
                                 name: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.name  : '--'}}
                                 concentration: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.concentration : '--'}}
                                 resistant: {{ strain.drugResistanceOnStrain|first ? (strain.drugResistanceOnStrain|first.resistant ? 'yes' : 'no') : '--' }}
                                 comment: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.comment   : '--'}}
                                 description: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.description  : '--'}}
-                                file: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.nameFile : '--'}}'                       
+                                file: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.nameFile : '--'}}'
                             data-file='{{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.nameFile : '--'}}'>
 
                             {% if strain.drugResistanceOnStrain is not empty %}
                             {{strain.drugResistanceOnStrain[0].drugResistance.name}} <br>
-                            {{strain.drugResistanceOnStrain[0].concentration}} <br> 
+                            {{strain.drugResistanceOnStrain[0].concentration}} <br>
                             {% if strain.drugResistanceOnStrain[0].resistant == 1 %}
                                 <a class="resistant-display-red"> resistante : &#9888; </a>
                             {% else %}
@@ -231,7 +229,7 @@
                             --
                         {% endif %}
                         </td>
-                        
+
                         <td class="sequencing" data-info='
                                     method : {{ strain.methodSequencing|first ? strain.methodSequencing|first.name  : '--'}}
                                     file : {{ strain.methodSequencing|first ? strain.methodSequencing|first.nameFile  : '--'}}'
@@ -308,46 +306,59 @@
                         {% else %}
                             --
                         {% endif %}
-                    </td>
-                        <td>
-                            <a href="{{ path('duplicate_strain', {id: strain.id}) }}" class="button-crud" title="Dupliquer">
-                                <i class="fa-solid fa-copy"></i>
-                            </a>
                         </td>
-                    <td>
-                            <a href="{{ path('edit_strain', {
-                                id: strain.id,
-                                filter: app.request.get('filter', app.request.get('query', 'all'))
-                            }) }}"
-                                class="button-crud" title="Modifier">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{{ path('delete_strain', {id: strain.id}) }}"
-                            class="button-crud"
-                            title="Supprimer"
-                            onclick="return confirm('Do you really want to delete strain {{ strain.id }} - {{ strain.nameStrain|e('js') }} ?');">
-                                <i class="fa-solid fa-trash"></i>
-                            </a>
-                        </td> 
+                       {% if is_bin == false %}
+                            <td>
+                                <a href="{{ path('duplicate_strain', {id: strain.id}) }}" class="button-crud" title="Copy">
+                                    <i class="fa-solid fa-copy"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ path('edit_strain', {
+                                    id: strain.id,
+                                    filter: app.request.get('filter', app.request.get('query', 'all'))
+                                }) }}"
+                                    class="button-crud" title="Modifie">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ path('archive_strain', {id: strain.id}) }}" class="button-crud" title="Delete" onclick="return confirm('Do you really want to delete ?');">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a href="{{ path('restore_strain', {id: strain.id}) }}" class="button-crud button-restore" title="Restaurer">
+                                    <i class="fa-solid fa-undo"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ path('delete_strain', {id: strain.id}) }}" class="button-crud button-danger" title="Supprimer définitivement" onclick="return confirm('Do you really want to delete ? This cant be undone');">
+                                    <i class="fa-solid fa-trash-alt"></i>
+                                </a>
+                            </td>
+                            <td></td>
+                        {% endif %}
                     </tr>
 
-                    {% if (
-                        strain.drugResistanceOnStrain is not empty or
-                        strain.publication is not empty or
-                        strain.phenotype is not empty or
-                        strain.methodSequencing is not empty or
-                        strain.project is not empty or
-                        strain.collec is not empty or 
-                        strain.storage is not empty or
-                        strain.plasmyd is not empty
-                    )%}
+                {# Gestion des entrées multiples pour les champs relationnels #}
+
+                {% if (
+                    strain.drugResistanceOnStrain is not empty or
+                    strain.publication is not empty or
+                    strain.phenotype is not empty or
+                    strain.methodSequencing is not empty or
+                    strain.project is not empty or
+                    strain.collec is not empty or 
+                    strain.storage is not empty or
+                    strain.plasmyd is not empty
+                )%}
 
                         {% set maxLength = max(
                         strain.drugResistanceOnStrain|length,
-                        strain.publication|length, 
-                        strain.phenotype|length, 
+                        strain.publication|length,
+                        strain.phenotype|length,
                         strain.methodSequencing|length,
                         strain.project|length,
                         strain.collec|length,
@@ -355,7 +366,7 @@
                         strain.plasmyd|length
                         ) %}
 
-                        {% if maxLength > 1 %} 
+                        {% if maxLength > 1 %}
                             {% for i in 1..(maxLength - 1) %}
                                 <tr>
                                     {# Empty cells for ID, Name, Date, Specie, Gender, Sample in subsequent rows of a group #}
@@ -369,7 +380,7 @@
                                     <td>--</td> {# Gender #}
                                     <td>--</td> {# Sample #}
                                     <td>--</td> {# Genotype #}
-                                    <td class="plasmyd" 
+                                    <td class="plasmyd"
                                         data-info='
                                                 name: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.plasmyd[i].namePlasmyd : '--'}}
                                                 type: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.plasmyd[i].type : "--" }}
@@ -377,7 +388,7 @@
                                                 comment: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.plasmyd[i].comment : "--" }}'
                                     >
                                     {{ strain.plasmyd[i] is defined ? strain.plasmyd[i].namePlasmyd : '--' }}</td>
-                                    <td class="storage" 
+                                    <td class="storage"
                                         data-info='
                                                 room: {{ strain.storage[i] is defined and strain.storage[i] ? strain.storage[i].room: '--'}}
                                                 fridge: {{ strain.storage[i] is defined and strain.storage[i] ? strain.storage[i].fridge : "--" }}
@@ -388,11 +399,11 @@
                                                 container position : {{ strain.storage[i] is defined and strain.storage[i] ? strain.storage[i].containerPosition : "--" }}'
                                     >
                                     {% if strain.storage[i] is defined %}
-                                        room : {{strain.storage[i].room}} 
-                                        fridge:  {{strain.storage[i].fridge}} 
+                                        room : {{strain.storage[i].room}}
+                                        fridge:  {{strain.storage[i].fridge}}
                                         shelf:  {{strain.storage[i].shelf}} <br>
-                                        rack: {{strain.storage[i].rack}} 
-                                        volume: {{strain.storage[i].volume}} 
+                                        rack: {{strain.storage[i].rack}}
+                                        volume: {{strain.storage[i].volume}}
                                         type: {{ strain.storage[i].containerType }}<br>
                                         position: {{ strain.storage[i].containerPosition }}
                                     {% else %}
@@ -402,7 +413,7 @@
                                     <td>--</td> {# Parent #}
                                     <td>{{ strain.project[i] is defined ? strain.project[i].name : '--' }}</td>
                                     <td>{{ strain.collec[i] is defined ? strain.collec[i].name : '--' }}</td>
-                                    <td class="drugResistanceOnStrain" 
+                                    <td class="drugResistanceOnStrain"
                                         data-info='
                                             name: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].drugResistance.name  : '--'}}
                                             concentration: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].concentration : '--'}}
@@ -410,8 +421,8 @@
                                             comment: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].comment  : '--'}}
                                             description: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].description  : '--'}}
                                             file: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i].nameFile is defined ? strain.drugResistanceOnStrain[i].nameFile : '--' }}'
-                                        
-                                        data-file='{{ (strain.drugResistanceOnStrain|length > i and strain.drugResistanceOnStrain[i].nameFile) ? strain.drugResistanceOnStrain[i].nameFile : "--" }}'> 
+
+                                        data-file='{{ (strain.drugResistanceOnStrain|length > i and strain.drugResistanceOnStrain[i].nameFile) ? strain.drugResistanceOnStrain[i].nameFile : "--" }}'>
                                     {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].drugResistance.name : '' }} <br>
                                     {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].concentration : '' }}
                                     {% if strain.drugResistanceOnStrain[i] is defined %}
@@ -434,7 +445,7 @@
                                         data-file='{{ (strain.phenotype|length > i and strain.phenotype[i].fileName) ? strain.phenotype[i].fileName : "--" }}'>
                                         {% if strain.phenotype|length > i %}
                                             {{ strain.phenotype[i].phenotypeType.type }} <br>
-                                            {{strain.phenotype[i].mesure}}                           
+                                            {{strain.phenotype[i].mesure}}
                                         {% else %}
                                             --
                                         {% endif %}
@@ -460,14 +471,14 @@
                                         --
                                     {% endif %}
                                     </td>
-                                    <td class="publication" 
+                                    <td class="publication"
                                         data-info='
                                             id: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].id  : '--'}}
                                             URL: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].articleURL  : "--" }}
                                             DOI: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].DOI  : "--" }}
                                             title: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].title  : "--" }}
                                             autor: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].autor : "--" }}
-                                            year: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].year  : "--" }}'> 
+                                            year: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].year  : "--" }}'>
                                         {% if strain.publication[i] is defined %}
                                             {{ strain.publication[i].title }} <br>
                                             {{ strain.publication[i].autor }} <br>

@@ -39,7 +39,7 @@ class PhenotypeTypeController extends AbstractController
         // traitement du submit via addForm()
         $phenotypeTypeAdd = $this->addForm($request, $em);
 
-        $allTypes = $this->phenotypetypeRepository->findAll();
+        $allTypes = $this->phenotypetypeRepository->findBy([], ['id' => 'DESC'], 10000);
 
         return $this->render('phenotypeType/main.html.twig', [
             // IMPORTANT : clé attendue par tes templates + FormView

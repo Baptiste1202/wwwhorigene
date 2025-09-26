@@ -44,15 +44,14 @@
                         <td style="background:none !important; background-color:transparent !important;">
                             {{ type.type }}
                         </td>
-                         <td><a href="{{ path('duplicate_phenotypetype', {id: type.id}) }}">Duplicate</a></td>
-                        <td><a href="{{ path('edit_phenotypetype', {id: type.id}) }}">Modifie</a></td>
-                        <td>
-                            <a href="{{ path('delete_phenotypetype', {id: type.id}) }}"
-                               title="Supprimer"
-                               onclick="return confirm('Voulez-vous vraiment supprimer ?')">
-                                Delete
-                            </a>
-                        </td>
+                        <td><a href="{{ path('duplicate_phenotypetype', {id: type.id}) }}" class="button-crud" title="Copy"><i class="fa-solid fa-copy"></i></a></td>
+                            <td><a href="{{ path('edit_phenotypetype', {id: type.id}) }}" class="button-crud" title="Modifie"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                            <td>
+                                <a href="{{ path('delete_phenotypetype', {id: type.id}) }}"
+                                    class="delete-link button-crud"
+                                    title="Delete"
+                                    onclick="return confirm('Do you really want to delete ?');"><i class="fa-solid fa-trash"></i></a>
+                            </td>
                     </tr>
                 {% endfor %}
             </tbody>

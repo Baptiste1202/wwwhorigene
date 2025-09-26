@@ -43,7 +43,7 @@ class PlasmydController extends AbstractController
         } 
 
         // Récupérer tous les plasmyds (sans pagination)
-        $plasmyds = $this->plasmydRepository->findAll(10000); // S'assurer que cette méthode accepte un limit
+        $plasmyds = $this->plasmydRepository->findBy([], ['id' => 'DESC'], 10000);
 
         return $this->render('plasmyd/main.html.twig', [
             'plasmydForm' => $plasmydAdd, 

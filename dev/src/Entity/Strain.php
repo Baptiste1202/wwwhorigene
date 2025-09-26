@@ -123,6 +123,9 @@ class Strain
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date = null;
 
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $dateArchive = null;
+
     public function __construct()
     {
         $this->drugResistanceOnStrain = new ArrayCollection();
@@ -587,6 +590,18 @@ class Strain
     public function setDate(?\DateTimeInterface $date): static
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getDateArchive(): ?\DateTimeInterface
+    {
+        return $this->dateArchive;
+    }
+
+    public function setDateArchive(?\DateTimeInterface $date): static
+    {
+        $this->dateArchive = $date;
 
         return $this;
     }

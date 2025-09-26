@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Elastica\Query\BoolQuery;
 use Elastica\Query\MatchQuery;
 use Elastica\Query;
+use Elastica\Query\Exists;
 use Elastica\Query\MatchAll;
 use Elastica\Query\Nested;
 use Elastica\Query\Wildcard;
@@ -27,6 +28,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Validator\Constraints\DateTime as ConstraintsDateTime;
 
 class StrainController extends AbstractController
 {
@@ -62,9 +64,11 @@ class StrainController extends AbstractController
 
         if (!$strains) {
             $query = new Query();
-            $matchAll = new MatchAll();
 
-            $query->setQuery($matchAll);
+            $boolQuery = new BoolQuery();
+            $boolQuery->addMustNot(new Exists('dateArchive'));
+
+            $query->setQuery($boolQuery);
             $query->setSort(['id' => ['order' => 'desc']]);
 
             $strains = $this->finder->find($query, 10000);
@@ -74,7 +78,8 @@ class StrainController extends AbstractController
             'strainForm' => $strainFormView, 
             'form' => $formElastic->createView(),
             'user' => $user,
-            'strains' => $strains
+            'strains' => $strains,
+            'is_bin' => false
         ]);
 
     }
@@ -84,10 +89,6 @@ class StrainController extends AbstractController
     public function add(Request $request, EntityManagerInterface $em, Security $security, StrainIndexer $indexer): Response
     {
         try {
-
-            
-            // $this->denyAccessUnlessGranted('ROLE_RENTER');
-
             //Create a new vehicule
             $strain = new Strain();
 
@@ -275,16 +276,87 @@ class StrainController extends AbstractController
             $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' delete with success !');
             sleep(1);
 
+            return $this->redirectToRoute('page_strains_bin');
+        } catch (AccessDeniedException $e) {
+            $this->addFlash('error', 'You do not have permission to delete this strain.');
+            return $this->redirectToRoute('page_strains_bin');
+        } catch (\Throwable $e) {
+            dump($e); // n'affiche que si mode debug activé
+            $this->addFlash('error', 'An error occurred while deleting the strain. Please try again.');
+
+            return $this->redirectToRoute('page_strains_bin');
+        }
+    }
+
+     #[Route('strain/archive/{id}', name: 'archive_strain')]
+    #[IsGranted('ROLE_SEARCH')]
+    public function archive(?Strain $strain, EntityManagerInterface $em, StrainIndexer $indexer): Response
+    {
+        try {
+            if (!$strain) {
+            $this->addFlash('error', 'Souche introuvable.');
+            return $this->redirectToRoute('page_strains');
+            }
+
+            if ($strain) {
+                if (!$this->isGranted('strain.is_creator', $strain)) {
+                    throw new AccessDeniedException('');
+                }
+            }
+
+            $strain->setDateArchive(new \DateTime());
+
+        // Flush les changements des relations avant de supprimer l'entité
+            $em->flush();
+
+            $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' delete with success !');
+            sleep(1);
+
             return $this->redirectToRoute('page_strains');
         } catch (AccessDeniedException $e) {
             $this->addFlash('error', 'You do not have permission to delete this strain.');
             return $this->redirectToRoute('page_strains');
         } catch (\Throwable $e) {
-            dump($e); // n'affiche que si mode debug activé
             $this->addFlash('error', 'An error occurred while deleting the strain. Please try again.');
 
             return $this->redirectToRoute('page_strains');
         }
+
+    }
+
+    #[Route('strain/restore/{id}', name: 'restore_strain')]
+    #[IsGranted('ROLE_SEARCH')]
+    public function restore(?Strain $strain, EntityManagerInterface $em, StrainIndexer $indexer): Response
+    {
+        try {
+            if (!$strain) {
+            $this->addFlash('error', 'Souche introuvable.');
+            return $this->redirectToRoute('page_strains');
+            }
+
+            if ($strain) {
+                if (!$this->isGranted('strain.is_creator', $strain)) {
+                    throw new AccessDeniedException('');
+                }
+            }
+
+            $strain->setDateArchive(null);
+
+            $em->flush();
+
+            $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' restore with success !');
+            sleep(1);
+
+            return $this->redirectToRoute('page_bin_strains');
+        } catch (AccessDeniedException $e) {
+            $this->addFlash('error', 'You do not have permission to restore this strain.');
+            return $this->redirectToRoute('page_strains_bin');
+        } catch (\Throwable $e) {
+            $this->addFlash('error', 'An error occurred while restoring the strain. Please try again.');
+
+            return $this->redirectToRoute('page_strains_bin');
+        }
+
     }
 
     #[Route('strains/duplicate/{id}', name: 'duplicate_strain')]
@@ -439,10 +511,8 @@ class StrainController extends AbstractController
 
             $boolQuery = new BoolQuery();
 
-            if ($data->query){
-                $this->logger->info('Add query', ['query' => $data->query]);
-                $boolQuery->addMust(new Wildcard('nameStrain', '*'.$data->query.'*')); 
-            }
+            // ADD THIS: Exclude archived strains (those with dateArchive set)
+            $boolQuery->addMustNot(new Exists('dateArchive'));
 
             if ($data->plasmyd){
                 $this->logger->info('Add plasmyd', ['plasmyd_id' => $data->plasmyd->getId()]);
@@ -674,7 +744,7 @@ class StrainController extends AbstractController
             'comment' => $strain->getComment() ?: null,
             'description' => $strain->getDescription() ?: null,
             'genotype' => $strain->getGenotype() ? $strain->getGenotype()->getId() : null,
-            // 'sample' => $strain->getPrelevement() ? $strain->getPrelevement()->getId() : null,
+            'sample' => $strain->getPrelevement() ? $strain->getPrelevement()->getId() : null,
         ]);
     }
 
