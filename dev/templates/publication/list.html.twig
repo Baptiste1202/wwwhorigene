@@ -46,7 +46,7 @@
                     </tr>
                 {% else %}
                     {% for publication in publications %}
-                        <tr class="list-collec">
+                        <tr class="list-publication">
                             <td>
                                 <input type="checkbox" name="selected_publications[]" value="{{ publication.id }}" class="select-checkbox" />
                             </td>
@@ -63,14 +63,13 @@
                             <td data-info="{{ publication.description is not null ? publication.description : '--' }}">
                                 {{ publication.description is not null ? publication.description : '--' }}
                             </td>
-                            <td><a href="{{ path('duplicate_publication', {id: publication.id}) }}">Duplicate</a></td>
-                            <td><a href="{{ path('edit_publication', {id: publication.id}) }}">Modifie</a></td>
+                            <td><a href="{{ path('duplicate_publication', {id: publication.id}) }}" class="button-crud" title="Copy"><i class="fa-solid fa-copy"></i></a></td>
+                            <td><a href="{{ path('edit_publication', {id: publication.id}) }}" class="button-crud" title="Modifie"><i class="fa-solid fa-pen-to-square"></i></a></td>
                             <td>
                                 <a href="{{ path('delete_publication', {id: publication.id}) }}"
-                                    title="Supprimer"
-                                    onclick="return confirm('Voulez-vous vraiment supprimer ?')">
-                                    Delete 
-                                </a>
+                                    class="delete-link button-crud"
+                                    title="Delete"
+                                    onclick="return confirm('Do you really want to delete ?');"><i class="fa-solid fa-trash"></i></a>
                             </td>
                         </tr>
                     {% endfor %}

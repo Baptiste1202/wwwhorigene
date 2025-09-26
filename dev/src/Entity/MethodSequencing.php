@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\MethodSequencingRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
@@ -22,6 +23,9 @@ class MethodSequencing
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?DateTime $date = null;
 
     #[Vich\UploadableField(mapping: 'sequencing_docs', fileNameProperty: 'nameFile')]
     private ?File $file = null;
@@ -122,6 +126,18 @@ class MethodSequencing
     public function setStrain(?Strain $strain): self
     {
         $this->strain = $strain;
+        return $this;
+    }
+
+    public function getDate(): ?\DateTime
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTime $date): self
+    {
+        $this->date = $date;
+
         return $this;
     }
 

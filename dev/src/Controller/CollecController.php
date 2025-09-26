@@ -41,7 +41,7 @@ class CollecController extends AbstractController
             $collecAdd = $this->addForm($request, $em);  
         }
 
-        $allCollec = $this->collecRepository->findAll(10000);
+        $allCollec = $this->collecRepository->findBy([], ['id' => 'DESC'], 10000);
 
         return $this->render('collec/main.html.twig', [
             'collecForm' => $collecAdd, 

@@ -84,14 +84,13 @@
                                     --
                                 {% endif %}
                             </td>
-                            <td><a href="{{ path('duplicate_collec', {id: collec.id}) }}">Duplicate</a></td>
-                            <td><a href="{{ path('edit_collec', {id: collec.id}) }}">Modifie</a></td>
+                            <td><a href="{{ path('duplicate_collec', {id: collec.id}) }}" class="button-crud" title="Copy"><i class="fa-solid fa-copy"></i></a></td>
+                            <td><a href="{{ path('edit_collec', {id: collec.id}) }}" class="button-crud" title="Modifie"><i class="fa-solid fa-pen-to-square"></i></a></td>
                             <td>
                                 <a href="{{ path('delete_collec', {id: collec.id}) }}"
-                                    class="delete-link"
-                                    onclick="return confirm('Voulez-vous vraiment supprimer cette collection ?');">
-                                    Delete
-                                </a>
+                                    class="delete-link button-crud"
+                                    title="Delete"
+                                    onclick="return confirm('Do you really want to delete ?');"><i class="fa-solid fa-trash"></i></a>
                             </td>
                         </tr>
                     {% endfor %}

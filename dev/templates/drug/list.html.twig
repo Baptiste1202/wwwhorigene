@@ -53,19 +53,13 @@
                     <td data-info="{{ drug.comment is not null ? drug.comment : '--' }}">
                         {{ drug.comment is not null ? drug.comment : '--' }}
                     </td>
-                    <td>
-                        <a href="{{ path('duplicate_drug', {id: drug.id}) }}">Duplicate</a>
-                    </td>
-                    <td>
-                        <a href="{{ path('edit_drug', {id: drug.id}) }}">Modifie</a>
-                    </td>
+                    <td><a href="{{ path('duplicate_drug', {id: drug.id}) }}" class="button-crud" title="Copy"><i class="fa-solid fa-copy"></i></a></td>
+                    <td><a href="{{ path('edit_drug', {id: drug.id}) }}" class="button-crud" title="Modifie"><i class="fa-solid fa-pen-to-square"></i></a></td>
                     <td>
                         <a href="{{ path('delete_drug', {id: drug.id}) }}"
-                            class="delete-link"
-                            title="Supprimer"
-                            onclick="return confirm('Voulez-vous vraiment supprimer ?')">
-                            Delete
-                        </a>
+                            class="delete-link button-crud"
+                            title="Delete"
+                            onclick="return confirm('Do you really want to delete ?');"><i class="fa-solid fa-trash"></i></a>
                     </td>
                 </tr>
                 {% endfor %}

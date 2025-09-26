@@ -36,7 +36,7 @@ class PublicationController extends AbstractController
             $publicationAdd = $this->addForm($request, $em); 
         } 
 
-        $publications = $this->publicationRepository->findAll();
+        $publications = $this->publicationRepository->findBy([], ['id' => 'DESC'], 10000);
 
         return $this->render('publication/main.html.twig', [
             'publicationForm' => $publicationAdd, 
