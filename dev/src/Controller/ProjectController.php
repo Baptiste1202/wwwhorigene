@@ -45,7 +45,7 @@ class ProjectController extends AbstractController
             $projectAdd = $this->addForm($request, $em);
         }
 
-        $allProjects = $this->projectRepository->findAll(10000);
+       $allProjects = $this->projectRepository->findBy([], ['id' => 'DESC'], 10000);
 
         return $this->render('project/main.html.twig', [
             'projectForm' => $projectAdd,

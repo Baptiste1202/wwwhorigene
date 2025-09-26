@@ -49,15 +49,14 @@
                         <td data-info="{{ project.comment is not null ? project.comment : '--' }}">
                             {{ project.comment is not null ? project.comment : '--' }}
                         </td>
-                        <td><a href="{{ path('duplicate_project', {id: project.id}) }}">Duplicate</a></td>
-                        <td><a href="{{ path('edit_project', {id: project.id}) }}">Modifie</a></td>
-                        <td>
-                            <a href="{{ path('delete_project', {id: project.id}) }}"
-                                title="Supprimer"
-                                onclick="return confirm('Voulez-vous vraiment supprimer ?')">
-                                Delete 
-                            </a>
-                        </td>
+                        <td><a href="{{ path('duplicate_project', {id: project.id}) }}" class="button-crud" title="Copy"><i class="fa-solid fa-copy"></i></a></td>
+                            <td><a href="{{ path('edit_project', {id: project.id}) }}" class="button-crud" title="Modifie"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                            <td>
+                                <a href="{{ path('delete_project', {id: project.id}) }}"
+                                    class="delete-link button-crud"
+                                    title="Delete"
+                                    onclick="return confirm('Do you really want to delete ?');"><i class="fa-solid fa-trash"></i></a>
+                            </td>
                     </tr>
                 {% endfor %}
             </tbody>

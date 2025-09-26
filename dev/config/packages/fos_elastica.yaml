@@ -57,6 +57,8 @@ fos_elastica:
         gender:
         date:
           type: date
+        dateArchive:
+          type: date
 
         # 👇 AJOUT ICI (note bien: property_path = phenotype, pas de “s”)
         phenotype:

@@ -42,7 +42,7 @@ class DrugController extends AbstractController
         } 
 
         // Récupérer tous les drugs (sans pagination)
-        $drugs = $this->drugRepository->findAll(10000); // S'assurer que cette méthode accepte un limit
+        $drugs = $this->drugRepository->findBy([], ['id' => 'DESC'], 10000);
 
         return $this->render('drug/main.html.twig', [
             'drugForm' => $drugAdd, 
