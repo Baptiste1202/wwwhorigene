@@ -111,6 +111,15 @@ class StrainFormType extends AbstractType
                     'placeholder' => 'Description Genotype...'
                 ]
             ])
+            ->add('infoGenotype', options:[
+                'label' => ' ',
+                'required' => false, 
+                'attr' => [
+                    'maxlength' => 250, 
+                    'placeholder' => 'Accession number, type...'
+                ]
+            ])
+
             ->add('phenotype', type:CollectionType::class, options:[
                 'entry_type' => PhenotypeFormType::class,
                 'entry_options' => ['label' => false],

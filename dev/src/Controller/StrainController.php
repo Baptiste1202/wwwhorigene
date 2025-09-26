@@ -381,7 +381,7 @@ class StrainController extends AbstractController
             $clone->setDescription($strain->getDescription());
             $clone->setGenotype($strain->getGenotype());
             $clone->setDescriptionGenotype($strain->getDescriptionGenotype());
-            //$clone->setDepot($$strain->getDepot());
+            $clone->setInfoGenotype($strain->getInfoGenotype());
             $clone->setPrelevement($strain->getPrelevement());
             $clone->setCreatedBy($user);
             $clone->setDate($strain->getDate());
@@ -408,13 +408,6 @@ class StrainController extends AbstractController
                 $newMethod = clone $method;
                 $newMethod->setStrain($clone);
                 $clone->addMethodSequencing($newMethod);
-            }
-
-            // Storage (OneToMany)
-            foreach ($strain->getStorage() as $storage) {
-                $newStorage = clone $storage;
-                $newStorage->setStrain($clone);
-                $clone->getStorage()->add($newStorage);
             }
 
             // Plasmyd (ManyToMany) – liaison seulement, pas de clonage
@@ -744,6 +737,8 @@ class StrainController extends AbstractController
             'comment' => $strain->getComment() ?: null,
             'description' => $strain->getDescription() ?: null,
             'genotype' => $strain->getGenotype() ? $strain->getGenotype()->getId() : null,
+            'descGenotype' => $strain->getDescriptionGenotype() ?: null,
+            'infoGenotype' => $strain->getInfoGenotype() ?: null,
             'sample' => $strain->getPrelevement() ? $strain->getPrelevement()->getId() : null,
         ]);
     }
