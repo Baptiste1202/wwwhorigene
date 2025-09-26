@@ -113,7 +113,8 @@
 
                         <td class="genotype" data-info='
                                     genotype: {{ strain.genotype ? strain.genotype.type : '--'}}
-                                    description: {{ strain.descriptionGenotype ? strain.descriptionGenotype : "--" }}'>
+                                    description: {{ strain.descriptionGenotype ? strain.descriptionGenotype : "--" }}
+                                    info: {{ strain.infoGenotype ? strain.infoGenotype : "--" }}'>
                         {% if strain.genotype is not null %}
                             {{strain.genotype.type}} <br>
                             {% if strain.descriptionGenotype is not empty %}
@@ -126,7 +127,8 @@
                                 {% else %}
                                     {{ desc }}
                                 {% endif %} 
-                            {% endif %}
+                            {% endif %}<br>
+                            {{ strain.infoGenotype ?: strain.infoGenotype }}
                         {% else %}
                             --
                         {% endif %}
@@ -231,6 +233,7 @@
                         </td>
                         
                         <td class="sequencing" data-info='
+                                    date : {{ strain.methodSequencing|first ? strain.methodSequencing|first.date|date('d/m/Y')  : '--'}}
                                     method : {{ strain.methodSequencing|first ? strain.methodSequencing|first.name  : '--'}}
                                     file : {{ strain.methodSequencing|first ? strain.methodSequencing|first.nameFile  : '--'}}'
                                     data-file='{{ strain.methodSequencing|first ? strain.methodSequencing|first.nameFile : '--'}}'>
@@ -452,6 +455,7 @@
                                 </td>
 
                                 <td class="sequencing" data-info='
+                                        date : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing[i].date|date('d/m/Y')  : '--'}}
                                         method : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing[i].name  : '--'}}
                                         file : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing[i].nameFile  : '--'}}'
                                         data-file='{{ (strain.methodSequencing|length > i and strain.methodSequencing[i].nameFile) ? strain.methodSequencing[i].nameFile : "--" }}'>

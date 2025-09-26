@@ -50,6 +50,9 @@ class Strain
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $descriptionGenotype = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $infoGenotype = null;
+
     /**
      * @var Collection<int, phenotype>
      */
@@ -246,6 +249,18 @@ class Strain
     public function setDescriptionGenotype(?string $comment): static
     {
         $this->descriptionGenotype = $comment;
+
+        return $this;
+    }
+
+    public function getInfoGenotype(): ?string
+    {
+        return $this->infoGenotype;
+    }
+
+    public function setInfoGenotype(?string $comment): static
+    {
+        $this->infoGenotype = $comment;
 
         return $this;
     }
