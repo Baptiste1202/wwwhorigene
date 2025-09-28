@@ -680,69 +680,6 @@ div.download-error {
     color: #c00 !important;
 }
 
-.table-header-toolbar {
-    margin: 10px 0 20px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 !important;
-    margin-bottom: 5px;
-    line-height: 1.0;
-    font-size: 0.8rem; /* optionnel, si tu veux réduire légèrement la taille du texte */
-}
-
-.table-header-toolbar .table-header-search input#customSearch {
-    width: 150px;
-    padding: 7px 11px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.table-header-toolbar .table-header-search input#customSearch:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
-    outline: none;
-}
-
-.table-header-toolbar .table-header-filters {
-    margin-left: 20px;
-}
-
-#table-controls-header .table-action-bar #btn-delete-multiple {
-  float: right;
-}
-#table-controls-header .table-action-bar::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-/* #table-controls header */
-#table-controls-header {
-  display: flex;               
-  align-items: center;         
-  justify-content: flex-start; /* tous collés à gauche */
-  gap: 1rem;                   
-  margin-bottom: 1rem; 
-  padding: 0 !important;
-  margin-bottom: 0 !important;  /* on remet aussi la marge à zéro si besoin */
-  line-height: 1.0;
-  font-size: 0.8rem; /* optionnel, si tu veux réduire légèrement la taille du texte */
-}   
-
-/* si tu veux forcer une taille minimale / éviter le wrapping : */
-#table-controls-header > * {
-  flex: 1 1 auto;
-}
-
-#table-controls-header .dt-buttons {
-  display: flex;
-  justify-content: center;
-  margin-left: -120px; /* décale vers la gauche */
-}
-
 
 /* Colonne 1 sticky à gauche (toujours la toute 1ère) */
 thead th:nth-child(1),
@@ -816,6 +753,123 @@ thead th, tbody td {
 .resistant-display-red {
   color: red;
 }
+
+/* Grille 2 lignes / 3 colonnes */
+#table-header-toolbar{
+  position: sticky; top: 0; z-index: 5;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-areas:
+    "action  download  filters"
+    "length  buttons   search";
+  align-items: center;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+/* -- Placements (cibler le conteneur toolbar, pas #data-table_wrapper) -- */
+#table-header-toolbar .table-action-bar{ grid-area: action;  justify-self: start; }
+#table-header-toolbar #multiple-download{ grid-area: download; justify-self: center; }
+#table-header-toolbar .table-header-filters{ grid-area: filters; justify-self: end; }
+
+/* 2e ligne : length gauche / buttons centre / search droite */
+#table-header-toolbar .dataTables_length{
+  grid-area: length; justify-self: start;
+  float: none !important; text-align: initial;
+}
+#table-header-toolbar .dt-buttons{
+  grid-area: buttons; justify-self: center;
+  display: flex; gap: 8px;
+}
+#table-header-toolbar .dataTables_filter,
+#table-header-toolbar .table-header-search{ /* <- ton search custom */
+  grid-area: search; justify-self: end;
+}
+#table-header-toolbar .dataTables_filter input,
+#table-header-toolbar .table-header-search input{
+  width: 220px;
+}
+
+/* Responsive */
+@media (max-width: 900px){
+  #table-header-toolbar{
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "action"
+      "download"
+      "filters"
+      "length"
+      "buttons"
+      "search";
+    gap: 10px;
+  }
+  #table-header-toolbar .dataTables_filter,
+  #table-header-toolbar .table-header_search,
+  #table-header-toolbar .table-header-search input{
+    width: 100%;
+  }
+  #table-header-toolbar #multiple-download,
+  #table-header-toolbar .table-header-filters{ justify-self: stretch; }
+  #table-header-toolbar .dt-buttons{ justify-self: start; }
+}
+
+/* Boutons extra-compacts */
+#table-header-toolbar .btn,
+#table-header-toolbar .dt-button {
+  padding: 2px 6px;     /* très peu de padding */
+  font-size: 0.75rem;   /* police réduite */
+  line-height: 1;       /* pas d’espace vertical inutile */
+  border-radius: 3px;
+  height: 24px;         /* hauteur minimale fixe */
+  min-height: 24px;
+}
+
+/* Boutons export groupés serrés */
+#table-header-toolbar .dt-buttons {
+  gap: 2px;
+}
+
+/* Select "Show entries" compact */
+#table-header-toolbar .dataTables_length select {
+  padding: 1px 2px;
+  font-size: 0.75rem;
+  height: 22px;
+  min-height: 22px;
+}
+
+/* Input recherche compact */
+#table-header-toolbar .dataTables_filter input,
+#table-header-toolbar .table-header-search input {
+  width: 140px;
+  padding: 2px 4px;
+  font-size: 0.75rem;
+  height: 22px;
+  min-height: 22px;
+}
+
+/* Bouton Multiple Download */
+#table-header-toolbar #multi-download-btn {
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  height: 24px;
+  min-height: 24px;
+}
+
+/* Show entries : texte et select mini */
+#table-header-toolbar .dataTables_length label {
+  font-size: 0.7rem;      /* encore plus petit */
+  line-height: 1.1;
+  margin: 0;
+}
+
+#table-header-toolbar .dataTables_length select {
+  font-size: 0.7rem;
+  padding: 0 2px;         /* quasi rien */
+  height: 20px;           /* plus bas que les boutons */
+  min-height: 20px;
+}
+
+
 
 /* ===========================================================
    CSS pour les DATATABLE des composants

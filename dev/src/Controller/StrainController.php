@@ -714,6 +714,8 @@ class StrainController extends AbstractController
                 implode(', ', array_slice($blocked, 0, 10)) . (count($blocked) > 10 ? '…' : '')
             ));
         }
+        
+        usleep(800000); // 0.5s
 
         return $this->redirectToRoute('page_strains');
     }
