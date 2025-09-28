@@ -53,16 +53,14 @@
                         <td data-info="{{ plasmyd.comment is not null ? plasmyd.comment : '--' }}">
                             {{ plasmyd.comment is not null ? plasmyd.comment : '--' }}
                         </td>
-                        <td><a href="{{ path('duplicate_plasmyd', {id: plasmyd.id}) }}">Duplicate</a></td>
-                        <td><a href="{{ path('edit_plasmyd', {id: plasmyd.id}) }}">Modifie</a></td>
-                        <td>
-                            <a href="{{ path('delete_plasmyd', {id: plasmyd.id}) }}"
-                               class="delete-link"
-                               title="Supprimer"
-                               onclick="return confirm('Voulez-vous vraiment supprimer ?')">
-                            Delete
-                            </a>
-                        </td>
+                        <td><a href="{{ path('duplicate_plasmyd', {id: plasmyd.id}) }}" class="button-crud" title="Copy"><i class="fa-solid fa-copy"></i></a></td>
+                            <td><a href="{{ path('edit_plasmyd', {id: plasmyd.id}) }}" class="button-crud" title="Modifie"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                            <td>
+                                <a href="{{ path('delete_plasmyd', {id: plasmyd.id}) }}"
+                                    class="delete-link button-crud"
+                                    title="Delete"
+                                    onclick="return confirm('Do you really want to delete ?');"><i class="fa-solid fa-trash"></i></a>
+                            </td>
                     </tr>
                 {% endfor %}
             </tbody>

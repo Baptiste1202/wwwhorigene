@@ -1,0 +1,25 @@
+{% extends 'layout.html.twig' %}
+{% block body %}
+        <div id="global">
+            <div id="list">
+                <div id="filter" style="margin-bottom:10px;">
+                    {% include 'strain/_filter_form_datatable.html.twig' %}
+                </div>
+                <div id="message">
+                    {% include './message.html.twig' %}
+                </div>
+                <div id="table-header-toolbar" class="table-header-toolbar">
+                    <div class="table-header-search">
+                        {% include 'strain/_datatable_search.html.twig' %}
+                    </div>
+                </div>
+
+                {% include 'strain/datatable_header_control.html.twig' %}
+                
+                <div id="table">
+                    {% include "strain/list.html.twig" %}
+                </div>
+            </div>
+        <br></br>        
+        </div>  
+{% endblock %}

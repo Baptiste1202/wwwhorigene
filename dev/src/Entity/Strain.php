@@ -50,6 +50,9 @@ class Strain
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $descriptionGenotype = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $infoGenotype = null;
+
     /**
      * @var Collection<int, phenotype>
      */
@@ -122,6 +125,9 @@ class Strain
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $dateArchive = null;
 
     public function __construct()
     {
@@ -243,6 +249,18 @@ class Strain
     public function setDescriptionGenotype(?string $comment): static
     {
         $this->descriptionGenotype = $comment;
+
+        return $this;
+    }
+
+    public function getInfoGenotype(): ?string
+    {
+        return $this->infoGenotype;
+    }
+
+    public function setInfoGenotype(?string $comment): static
+    {
+        $this->infoGenotype = $comment;
 
         return $this;
     }
@@ -587,6 +605,18 @@ class Strain
     public function setDate(?\DateTimeInterface $date): static
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getDateArchive(): ?\DateTimeInterface
+    {
+        return $this->dateArchive;
+    }
+
+    public function setDateArchive(?\DateTimeInterface $date): static
+    {
+        $this->dateArchive = $date;
 
         return $this;
     }

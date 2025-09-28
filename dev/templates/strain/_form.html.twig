@@ -19,7 +19,10 @@
             {{ form_row(strainForm.gender) }}
             {{ form_row(strainForm.prelevement) }}  
             {{ form_row(strainForm.genotype) }}
-            {{ form_row(strainForm.descriptionGenotype) }}
+            <div id="genotypeFields" style="display: none;">
+                {{ form_row(strainForm.descriptionGenotype) }}
+                {{ form_row(strainForm.infoGenotype) }}
+            </div>
     {% if is_update %}
         </div>
     {% endif %}
@@ -256,6 +259,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('strain_form_comment').value = data.comment;
             document.getElementById('strain_form_description').value = data.description;
             selectOptionByValue('strain_form_genotype', data.genotype);
+            document.getElementById('strain_form_descriptionGenotype').value = data.descGenotype;
+            document.getElementById('strain_form_infoGenotype').value = data.infoGenotype;
             
             } catch (error) {
                 alert('Erreur lors de la recherche de la souche : ' + error.message);
@@ -447,6 +452,26 @@ function ensureCreatePlasmidButton(collectionHolder) {
         collectionHolder.appendChild(specialLi); // le replacer toujours en bas
     }
 }
+
+// script pour les infos du GMO
+document.addEventListener('DOMContentLoaded', function() {
+        const select = document.getElementById('strain_form_genotype');
+        const genotypeFields = document.getElementById('genotypeFields');
+
+        function toggleFields() {
+            if (select.value === '2') { // 2 = GMO
+                genotypeFields.style.display = 'block';
+            } else {
+                genotypeFields.style.display = 'none';
+            }
+        }
+
+        // Initial check au chargement
+        toggleFields();
+
+        // Écoute des changements
+        select.addEventListener('change', toggleFields);
+    });
 
 
 // Gestion de la modal pour la création de plasmide

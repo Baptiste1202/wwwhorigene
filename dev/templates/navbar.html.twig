@@ -9,29 +9,50 @@
 
     </head>
 
+{% import 'macros/navbar.html.twig' as nav %}
+
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% set componentsRoutes = [
+    'page_projects',
+    'page_collecs',
+    'page_plasmyds',
+    'page_drugs',
+    'page_publications',
+    'page_phenotypetypes'
+] %}
+
 <body>
     <div class="vertical-menu">
         <ul>
             {% if 'ROLE_ADMIN' in app.user.roles %}
-                <li><a href="{{ absolute_url(path('page_users')) }}"> <i class="fa-solid fa-user"></i> User</a></li>
+                {{ nav.navItem(currentRoute, 'page_users', 'User', 'fa-solid fa-user', true) }}
             {% endif %}
-            <li><a href="{{ absolute_url(path('page_strains')) }}"><i class="fa-solid fa-bacterium"></i> Strain</a></li>
-            <li><a href="{{ absolute_url(path('page_samples')) }}"><i class="fa-solid fa-location-dot"></i> Prelevement</a></li>
-            <li class="dropdown">
+
+            {{ nav.navItem(currentRoute, 'page_strains', 'Strain', 'fa-solid fa-bacterium', true) }}
+            {{ nav.navItem(currentRoute, 'page_samples', 'Prelevement', 'fa-solid fa-location-dot', true) }}
+
+            <li class="dropdown {{ currentRoute in componentsRoutes ? 'active' }}">
                 <a class="dropdown-toggle"><i class="fa-solid fa-file"></i> Components</a>
                 <ul class="dropdown-content">
-                    <li><a href="{{ path('page_projects') }}">Project</a></li>
-                    <li><a href="{{ path('page_collecs') }}">Collection</a></li>
-                    <li><a href="{{ path('page_plasmyds') }}">Plasmid</a></li>
-                    <li><a href="{{ path('page_drugs') }}">Drug Resistance</a></li>
-                    <li><a href="{{ path('page_publications') }}">Publication</a></li>
+                    {{ nav.navItem(currentRoute, 'page_projects', 'Project', '', false) }}
+                    {{ nav.navItem(currentRoute, 'page_collecs', 'Collection', '', false) }}
+                    {{ nav.navItem(currentRoute, 'page_plasmyds', 'Plasmid', '', false) }}
+                    {{ nav.navItem(currentRoute, 'page_drugs', 'Drug Resistance', '', false) }}
+                    {{ nav.navItem(currentRoute, 'page_publications', 'Publication', '', false) }}
                     {% if 'ROLE_ADMIN' in app.user.roles %}
-                        <li><a href="{{ absolute_url(path('page_phenotypetypes')) }}"> <i class="fa-solid"></i>Phenotype</a></li>
+                        {{ nav.navItem(currentRoute, 'page_phenotypetypes', 'Phenotype', '', true) }}
                     {% endif %}
                 </ul>
             </li>
-            <li><a href="{{ absolute_url(path('strain_search')) }}"><i class="fa-solid fa-magnifying-glass"></i> Check Parents</a></li>
-            <li><a href="{{ path('app_logout') }}">Log Out</a></li>
+
+            {{ nav.navItem(currentRoute, 'strain_search', 'Check Parents', 'fa-solid fa-magnifying-glass', true) }}
+            {{ nav.navItem(currentRoute, 'page_strains_bin', 'Bin', 'fa-solid fa-trash', true) }}
+
+            <li>
+                <a href="{{ path('app_logout') }}">Log Out</a>
+            </li>
+
             <li class="user-info">
                 user: {{ app.user.firstname }} <br>
                 {% if app.user.roles|length > 0 %}

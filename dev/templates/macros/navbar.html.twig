@@ -1,0 +1,11 @@
+{% macro navItem(currentRoute, route, label, icon, absolute=false) %}
+    {% set url = absolute ? absolute_url(path(route)) : path(route) %}
+    <li class="{{ currentRoute == route ? 'active' }}">
+        <a href="{{ url }}">
+            {% if icon is not empty %}
+                <i class="{{ icon }}"></i>
+            {% endif %}
+            {{ label }}
+        </a>
+    </li>
+{% endmacro %}

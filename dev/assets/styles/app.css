@@ -85,8 +85,10 @@
 }
 
 .vertical-menu li a:hover {
-    background-color: #34495e; /* Surlignage subtil */
+    background-color: #f5f5f5 !important;
     transform: scale(1.05); /* Effet de zoom léger */
+    font-weight: 600;
+    color: #333;
 }
 
 .vertical-menu li a:before {
@@ -105,6 +107,11 @@
 
 .vertical-menu li a:hover:before {
     transform: scaleX(1);
+}
+
+.vertical-menu ul li.active > a {
+  text-decoration: underline;
+    
 }
 
 .dropdown-content {
@@ -166,6 +173,8 @@
     border-radius: 5px;
     background-color: #f9f9f9;
 
+    font-family: "Roboto", sans-serif;
+
     display: flex;
     flex-direction: column;
     height: 92vh;
@@ -197,7 +206,8 @@ button.btn-form {
     cursor: pointer;
 }
 
-button.btn-form:hover {
+button.btn-form:hover, 
+#strain_form_searchParent:hover {
     background-color: #357ABD;
 }
 
@@ -395,7 +405,7 @@ button.btn-form:hover {
 #global #list #filter #floatingForm{
     position: relative; /* Nécessaire pour que le z-index fonctionne */
     z-index: 1000; 
-    width : 15%;
+    width : 20%;
     font-family: 'Roboto', sans-serif;
 }
 #global #list #filter #floatingForm #btn-search {
@@ -491,6 +501,10 @@ button.btn-form:hover {
     background-color: #f9f9f9; /* Couleur de fond */
 }
 
+input[type="checkbox"] {
+  accent-color: #4A90E2; /* couleur du toggle */
+}
+
 /* ===========================================================
    CSS general des tables 
 =========================================================== */
@@ -524,7 +538,7 @@ button.btn-form:hover {
 }
 
 #global #list #table td.supp  a:hover {
-    background-color: red; /* Gris clair au survol */
+    background-color: #EB5757; /* Gris clair au survol */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Accentuation de l'ombre */
     text-decoration: none; /* Évite le soulignement au survol */
 }
@@ -927,7 +941,7 @@ thead th, tbody td {
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 .pagination li a:hover {
-    background-color: #007bff;
+    background-color: #56CCF2;
     color: white;
 }
 
