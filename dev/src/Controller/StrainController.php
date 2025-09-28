@@ -567,6 +567,102 @@ class StrainController extends AbstractController
         ];
     }
 
+    #[Route('/strains/delete-multiple', name: 'delete_multiple_strains', methods: ['POST'])]
+    #[IsGranted('ROLE_SEARCH')]
+    public function deleteMultipleStrains(
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
+        // 0) Action attendue depuis ton bouton
+        $action = strtolower((string) $request->request->get('action', ''));
+        if ($action !== 'delete') {
+            $this->addFlash('error', 'Invalid bulk action.');
+            return $this->redirectToRoute('page_strains');
+        }
+
+        // 1) IDs depuis name="selected_strain[]"
+        $ids = $request->request->all('selected_strain');
+        if (!is_array($ids) || empty($ids)) {
+            $this->addFlash('error', 'No strain selected.');
+            return $this->redirectToRoute('page_strains');
+        }
+
+        /** @var Strain[] $strains */
+        $strains = $em->getRepository(Strain::class)->findBy(['id' => $ids]);
+        if (!$strains) {
+            $this->addFlash('error', 'No strains found for deletion.');
+            return $this->redirectToRoute('page_strains');
+        }
+
+        $deleted = [];
+        $blocked = [];
+
+        // IDs demandés mais introuvables
+        $foundIds = array_map(fn(Strain $s) => (int) $s->getId(), $strains);
+        $missing  = array_diff(array_map('intval', $ids), $foundIds);
+        foreach ($missing as $miss) {
+            $blocked[] = sprintf('ID: %d (not found)', $miss);
+        }
+
+        // 2) TRAITER CHAQUE SOUCHE COMME TON DELETE UNITAIRE
+        foreach ($strains as $strain) {
+            // Sauvegarder l'info AVANT suppression
+            $id   = (int) $strain->getId();
+            $name = (string) ($strain->getNameStrain() ?? '');
+
+            try {
+                // droit auteur
+                if (!$this->isGranted('strain.is_creator', $strain)) {
+                    $blocked[] = sprintf('ID: %d - Name: "%s" (insufficient rights)', $id, $name !== '' ? $name : '--');
+                    continue;
+                }
+
+                // a) supprimer relations
+                foreach ($strain->getMethodSequencing() as $sequencing) { $em->remove($sequencing); }
+                foreach ($strain->getPhenotype() as $transfo)           { $em->remove($transfo); }
+                foreach ($strain->getDrugResistanceOnStrain() as $drug) { $em->remove($drug); }
+
+                foreach ($strain->getCollec()->toArray() as $collec)    { $strain->removeCollec($collec); }
+                foreach ($strain->getPlasmyd()->toArray() as $plasmyd)  { $strain->removePlasmyd($plasmyd); }
+                foreach ($strain->getPublication()->toArray() as $publi){ $strain->removePublication($publi); }
+                foreach ($strain->getProject()->toArray() as $project)  { $strain->removeProject($project); }
+
+                // b) flush des ruptures
+                $em->flush();
+
+                // c) suppression de la souche
+                $em->remove($strain);
+
+                // d) flush final pour CETTE souche
+                $em->flush();
+
+                $deleted[] = sprintf('ID: %d - Name: "%s"', $id, $name !== '' ? $name : '--');
+
+            } catch (\Throwable $e) {
+                $blocked[] = sprintf(
+                    'ID: %d - Name: "%s" (error: %s)',
+                    $id,
+                    $name !== '' ? $name : '--',
+                    $e->getMessage()
+                );
+            }
+        }
+
+        // 3) petite pause comme ton delete unitaire
+        sleep(1);
+
+        // 4) messages
+        if (!empty($deleted)) {
+            $this->addFlash('success', sprintf('%d strain(s) successfully deleted: %s', count($deleted), implode(', ', $deleted)));
+        }
+        if (!empty($blocked)) {
+            $this->addFlash('error', 'Some strains could not be deleted: ' . implode(', ', $blocked));
+        }
+
+        return $this->redirectToRoute('page_strains');
+    }
+
+
     #[Route('/api/strain/{id}', name: 'api_strain_get', methods: ['GET'])]
     #[IsGranted('ROLE_SEARCH')]
     public function getStrain(Strain $strain): JsonResponse

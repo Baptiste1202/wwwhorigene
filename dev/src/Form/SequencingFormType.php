@@ -23,6 +23,7 @@ class SequencingFormType extends AbstractType
             ])
             ->add('description', TextareaType::class, options:[
                 'label' => 'Description',
+                'required' => false,
                 'attr' => [
                     'rows' => 1, 
                     'maxlength' => 245, 
@@ -31,6 +32,7 @@ class SequencingFormType extends AbstractType
             ])
             ->add('comment', TextareaType::class, options:[
                 'label' => 'Comments',
+                'required' => false,
                 'attr' => [
                     'rows' => 1, 
                     'maxlength' => 245, 

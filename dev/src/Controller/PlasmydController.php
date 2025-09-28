@@ -95,13 +95,9 @@ class PlasmydController extends AbstractController
     }
 
     #[Route(path: 'strains/plasmyds/ajout/response', name: 'add_plasmyd_reponse')]
+    #[IsGranted('ROLE_SEARCH')]
     public function addResponse(Request $request, EntityManagerInterface $em, Security $security): Response
     {
-
-        if (!$security->isGranted('ROLE_SEARCH')) {
-            $this->addFlash('error', 'You do not have permission to add a plasmyd.');
-            return $this->redirectToRoute('page_plasmyds');
-        }
 
         //Create a new vehicule
         $plasmyd = new Plasmyd();
@@ -139,9 +135,10 @@ class PlasmydController extends AbstractController
     ): Response {
 
         if (!$security->isGranted('ROLE_SEARCH')) {
-            $this->addFlash('error', 'You do not have permission to edit a plasmyd.');
+            $this->addFlash('error', 'You do not have permission to edit a plasmid.');
             return $this->redirectToRoute('page_plasmyds');
         }
+
         //Create the form
         $plasmydForm = $this->createForm(PlasmydFormType::class, $plasmyd);
 
@@ -205,7 +202,6 @@ class PlasmydController extends AbstractController
 
 
     #[Route('plasmyds/duplicate/{id}', name: 'duplicate_plasmyd')]
-    #[IsGranted('ROLE_INTERN')]
     public function duplicatePlasmyd(Plasmyd $plasmyd, EntityManagerInterface $em, Security $security): Response
     {
         if (!$security->isGranted('ROLE_SEARCH')) {
@@ -243,9 +239,13 @@ class PlasmydController extends AbstractController
 
 
     #[Route('/plasmyds/delete-multiple', name: 'delete_multiple_plasmyds', methods: ['POST'])]
-    #[IsGranted('ROLE_SEARCH')]
     public function deleteMultiplePlasmyds(Request $request, EntityManagerInterface $em): Response
     {
+        if (!$this->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to perform this action.');
+            return $this->redirectToRoute('page_plasmyds'); // ou vers le referer
+        }
+
         // Récupérer les IDs sélectionnés depuis la requête POST
         $ids = $request->request->all('selected_plasmyds');
 

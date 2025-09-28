@@ -1,0 +1,6 @@
+/vendor
+/var
+/node_modules
+.git
+.env.local
+# surtout: ne PAS exclure le dossier docker/

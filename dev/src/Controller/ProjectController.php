@@ -51,7 +51,7 @@ class ProjectController extends AbstractController
             'projectForm' => $projectAdd,
             'projects' => $allProjects
         ]);
-}
+    }
 
     #[Route(path: 'strains/projects/ajout', name: 'add_project')]
     #[IsGranted('ROLE_SEARCH')]
@@ -121,7 +121,6 @@ class ProjectController extends AbstractController
     }
 
     #[Route('strains/project/edit/{id}', name: 'edit_project')]
-    #[IsGranted('ROLE_SEARCH')]
     public function edit(
         Project $project,
         Request $request,
@@ -131,7 +130,7 @@ class ProjectController extends AbstractController
     {
         if (!$security->isGranted('ROLE_SEARCH')) {
             $this->addFlash('error', 'You do not have permission to edit a project.');
-            return $this->redirectToRoute('page_collecs');
+            return $this->redirectToRoute('page_projects');
         }
 
         //Create the form
@@ -160,7 +159,7 @@ class ProjectController extends AbstractController
         try {
             if (!$security->isGranted('ROLE_SEARCH')) {
                 $this->addFlash('error', 'You do not have permission to duplicate a project.');
-                return $this->redirectToRoute('page_collecs');
+                return $this->redirectToRoute('page_projects');
             }
 
             // Créer une nouvelle instance de Project (la copie)
@@ -191,7 +190,7 @@ class ProjectController extends AbstractController
     {
         if (!$security->isGranted('ROLE_SEARCH')) {
             $this->addFlash('error', 'You do not have permission to delete a project.');
-            return $this->redirectToRoute('page_collecs');
+            return $this->redirectToRoute('page_projects');
         }
 
         // Get IDs of strains associated with the project
@@ -226,9 +225,12 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/projects/delete-multiple', name: 'delete_multiple_projects', methods: ['POST'])]
-    #[IsGranted('ROLE_SEARCH')]
     public function deleteMultiple(Request $request, EntityManagerInterface $em): Response
     {
+        if (!$this->isGranted('ROLE_SEARCH')) {
+            $this->addFlash('error', 'You do not have permission to perform this action.');
+            return $this->redirectToRoute('page_projects'); // ou vers le referer
+        }
         // Récupérer les ids sélectionnés via la requête POST
         $ids = $request->request->all('selected_projects');
 
