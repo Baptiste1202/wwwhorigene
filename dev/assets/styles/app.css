@@ -888,6 +888,12 @@ thead th, tbody td {
   z-index: 5;
 }
 
+thead,
+thead th,
+tbody td{
+  z-index: 0 !important;
+}
+
 /* ===========================================================
    CSS des bouttons crud
 =========================================================== */
