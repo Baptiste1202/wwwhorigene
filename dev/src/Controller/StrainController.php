@@ -288,7 +288,7 @@ class StrainController extends AbstractController
         }
     }
 
-     #[Route('strain/archive/{id}', name: 'archive_strain')]
+    #[Route('strain/archive/{id}', name: 'archive_strain')]
     #[IsGranted('ROLE_SEARCH')]
     public function archive(?Strain $strain, EntityManagerInterface $em, StrainIndexer $indexer): Response
     {
@@ -347,7 +347,7 @@ class StrainController extends AbstractController
             $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' restore with success !');
             sleep(1);
 
-            return $this->redirectToRoute('page_bin_strains');
+            return $this->redirectToRoute('page_strains_bin');
         } catch (AccessDeniedException $e) {
             $this->addFlash('error', 'You do not have permission to restore this strain.');
             return $this->redirectToRoute('page_strains_bin');
@@ -630,15 +630,15 @@ class StrainController extends AbstractController
         ];
     }
 
-    #[Route('/strains/delete-multiple', name: 'delete_multiple_strains', methods: ['POST'])]
+    #[Route('/strains/archive-multiple', name: 'archive_multiple_strains', methods: ['POST'])]
     #[IsGranted('ROLE_SEARCH')]
-    public function deleteMultipleStrains(
+    public function archiveMultipleStrains(
         Request $request,
         EntityManagerInterface $em
     ): Response {
-        // 0) Action attendue depuis ton bouton
+        // 0) Action attendue depuis le bouton
         $action = strtolower((string) $request->request->get('action', ''));
-        if ($action !== 'delete') {
+        if ($action !== 'archive') {
             $this->addFlash('error', 'Invalid bulk action.');
             return $this->redirectToRoute('page_strains');
         }
@@ -653,12 +653,12 @@ class StrainController extends AbstractController
         /** @var Strain[] $strains */
         $strains = $em->getRepository(Strain::class)->findBy(['id' => $ids]);
         if (!$strains) {
-            $this->addFlash('error', 'No strains found for deletion.');
+            $this->addFlash('error', 'No strains found for archiving.');
             return $this->redirectToRoute('page_strains');
         }
 
-        $deleted = [];
-        $blocked = [];
+        $archived = [];
+        $blocked  = [];
 
         // IDs demandés mais introuvables
         $foundIds = array_map(fn(Strain $s) => (int) $s->getId(), $strains);
@@ -667,9 +667,8 @@ class StrainController extends AbstractController
             $blocked[] = sprintf('ID: %d (not found)', $miss);
         }
 
-        // 2) TRAITER CHAQUE SOUCHE COMME TON DELETE UNITAIRE
+        // 2) Traiter chaque souche comme ton delete unitaire, mais en "archive"
         foreach ($strains as $strain) {
-            // Sauvegarder l'info AVANT suppression
             $id   = (int) $strain->getId();
             $name = (string) ($strain->getNameStrain() ?? '');
 
@@ -680,26 +679,13 @@ class StrainController extends AbstractController
                     continue;
                 }
 
-                // a) supprimer relations
-                foreach ($strain->getMethodSequencing() as $sequencing) { $em->remove($sequencing); }
-                foreach ($strain->getPhenotype() as $transfo)           { $em->remove($transfo); }
-                foreach ($strain->getDrugResistanceOnStrain() as $drug) { $em->remove($drug); }
+                // Poser la date d’archive
+                $strain->setDateArchive(new \DateTime());
 
-                foreach ($strain->getCollec()->toArray() as $collec)    { $strain->removeCollec($collec); }
-                foreach ($strain->getPlasmyd()->toArray() as $plasmyd)  { $strain->removePlasmyd($plasmyd); }
-                foreach ($strain->getPublication()->toArray() as $publi){ $strain->removePublication($publi); }
-                foreach ($strain->getProject()->toArray() as $project)  { $strain->removeProject($project); }
-
-                // b) flush des ruptures
+                // Flush par entité pour isoler les erreurs
                 $em->flush();
 
-                // c) suppression de la souche
-                $em->remove($strain);
-
-                // d) flush final pour CETTE souche
-                $em->flush();
-
-                $deleted[] = sprintf('ID: %d - Name: "%s"', $id, $name !== '' ? $name : '--');
+                $archived[] = sprintf('ID: %d - Name: "%s"', $id, $name !== '' ? $name : '--');
 
             } catch (\Throwable $e) {
                 $blocked[] = sprintf(
@@ -708,19 +694,28 @@ class StrainController extends AbstractController
                     $name !== '' ? $name : '--',
                     $e->getMessage()
                 );
+                // Annuler les changements en erreur pour cette entité
+                $em->clear(); // optionnel si tu préfères isoler, sinon commente-le
             }
         }
 
-        // 3) petite pause comme ton delete unitaire
-        sleep(1);
-
-        // 4) messages
-        if (!empty($deleted)) {
-            $this->addFlash('success', sprintf('%d strain(s) successfully deleted: %s', count($deleted), implode(', ', $deleted)));
+        // Résumés
+        if (!empty($archived)) {
+            $this->addFlash('success', sprintf(
+                'Archived %d strain(s): %s',
+                count($archived),
+                implode(', ', array_slice($archived, 0, 10)) . (count($archived) > 10 ? '…' : '')
+            ));
         }
         if (!empty($blocked)) {
-            $this->addFlash('error', 'Some strains could not be deleted: ' . implode(', ', $blocked));
+            $this->addFlash('error', sprintf(
+                'Skipped %d strain(s): %s',
+                count($blocked),
+                implode(', ', array_slice($blocked, 0, 10)) . (count($blocked) > 10 ? '…' : '')
+            ));
         }
+        
+        usleep(800000); // 0.5s
 
         return $this->redirectToRoute('page_strains');
     }

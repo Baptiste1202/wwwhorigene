@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Partie 2 : On deplace length, filter et buttons dans une div au dessus de la table pour la fixer
     $('#data-table_wrapper .dataTables_length, #data-table_wrapper .dataTables_filter, #data-table_wrapper .dt-buttons, .table-action-bar')
-    .appendTo('#table-controls-header');
+    .appendTo('#table-header-toolbar');
 
     // --- Partie 3 : Select All Checkbox ---
     const selectAllCheckbox = document.getElementById('select-all');
