@@ -869,13 +869,6 @@ thead th, tbody td {
   min-height: 20px;
 }
 
-thead,
-thead th,
-tbody td{
-  z-index: 0 !important;
-}
-
-
 /* ===========================================================
    CSS pour les DATATABLE des composants
 =========================================================== */
