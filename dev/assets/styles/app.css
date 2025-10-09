@@ -739,6 +739,12 @@ tbody td:nth-last-child(3) {
   width: 20px !important;
 }
 
+.button-ghost {
+  opacity: 0;              /* invisible */
+  pointer-events: none;    /* pas cliquable */
+}
+
+
 /* coupe le texte au besoin */
 thead th, tbody td {
   overflow: hidden;
@@ -763,7 +769,7 @@ thead th, tbody td {
     "action  download  filters"
     "length  buttons   search";
   align-items: center;
-  background: #fff;
+  background: #f9f9f9;
   border-bottom: 1px solid #eee;
 }
 
