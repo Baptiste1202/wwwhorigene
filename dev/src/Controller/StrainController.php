@@ -46,8 +46,8 @@ class StrainController extends AbstractController
     #[IsGranted('ROLE_INTERN')]
     public function showPage(Request $request, EntityManagerInterface $em, Security $security): Response
     {
-        $cmd = 'docker exec -it claranet2-app-1 bash bin/console fos:elastica:populate';
-        exec($cmd, $output, $returnCode);
+        //$cmd = 'docker exec -it claranet2-app-1 bash bin/console fos:elastica:populate';
+        //exec($cmd, $output, $returnCode);
 
         $user = $security->getUser(); 
 
@@ -226,7 +226,7 @@ class StrainController extends AbstractController
     {
         try {
             if (!$strain) {
-            $this->addFlash('error', 'Souche introuvable.');
+            $this->addFlash('error', 'Strain not found.');
             return $this->redirectToRoute('page_strains');
             }
 
@@ -294,7 +294,7 @@ class StrainController extends AbstractController
     {
         try {
             if (!$strain) {
-            $this->addFlash('error', 'Souche introuvable.');
+            $this->addFlash('error', 'Strain not found.');
             return $this->redirectToRoute('page_strains');
             }
 
@@ -330,7 +330,7 @@ class StrainController extends AbstractController
     {
         try {
             if (!$strain) {
-            $this->addFlash('error', 'Souche introuvable.');
+            $this->addFlash('error', 'Strain not found.');
             return $this->redirectToRoute('page_strains');
             }
 
@@ -499,6 +499,7 @@ class StrainController extends AbstractController
             /** @var SearchModel $data */
             $data = $form->getData(); 
             $this->logger->info('Form submitted', ['data' => (array) $data]);
+            //if ($this->getParameter('kernel.debug')) dump($form->getData());
             $page = $request->query->getInt('page',1);
             $this->logger->info('Page requested', ['page' => $page]);
 
@@ -506,6 +507,17 @@ class StrainController extends AbstractController
 
             // ADD THIS: Exclude archived strains (those with dateArchive set)
             $boolQuery->addMustNot(new Exists('dateArchive'));
+
+            if (!empty($data->query)) {
+                $term = trim($data->query);
+
+                $qs = new \Elastica\Query\QueryString();
+                $qs->setQuery('*' . $term . '*');    // contient
+                $qs->setFields(['nameStrain']);      // champ visé
+                $qs->setAnalyzeWildcard(true);       // insensible à la casse via analyzer
+                $boolQuery->addFilter($qs);
+            }
+
 
             if ($data->plasmyd){
                 $this->logger->info('Add plasmyd', ['plasmyd_id' => $data->plasmyd->getId()]);
@@ -592,14 +604,24 @@ class StrainController extends AbstractController
                 $boolQuery->addFilter(new MatchQuery('createdBy.id', $data->user->getId()));
             }
 
-            if ($data->specie) {
-                $this->logger->info('Add specie', ['specie' => $data->specie]);
-                $boolQuery->addFilter(new Wildcard('specie', '*'.$data->specie.'*'));
+            if (!empty($data->specie)) {
+                $term = trim($data->specie);
+
+                $qs = new \Elastica\Query\QueryString();
+                $qs->setQuery('*' . $term . '*');   // contient
+                $qs->setFields(['specie']);         // champ visé
+                $qs->setAnalyzeWildcard(true);      // => insensible à la casse via analyzer
+                $boolQuery->addFilter($qs);
             }
 
-            if ($data->gender) {
-                $this->logger->info('Add gender', ['gender' => $data->gender]);
-                $boolQuery->addFilter(new Wildcard('gender', '*'.$data->gender.'*'));
+            if (!empty($data->gender)) {
+                $term = trim($data->gender);
+
+                $qs = new \Elastica\Query\QueryString();
+                $qs->setQuery('*' . $term . '*');   // contient
+                $qs->setFields(['gender']);         // champ ciblé
+                $qs->setAnalyzeWildcard(true);      // ignore la casse via l'analyzer
+                $boolQuery->addFilter($qs);
             }
 
             $query = new Query($boolQuery);
