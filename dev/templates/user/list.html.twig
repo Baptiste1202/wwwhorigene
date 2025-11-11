@@ -48,19 +48,29 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.lastname }}</td>
-                        <td>{{ user.roles|first }}</td>
+                        <td>{{ user.roles|first }}</td>                       
                         <td>
-                            <a href="{{ path('duplicate_user', {id: user.id}) }}">Duplicate</a>
+                            <a href="{{ path('duplicate_user', {id: user.id}) }}"
+                                class="button-crud"
+                                title="Copy">
+                                <i class="fa-solid fa-copy" aria-hidden="true"></i>
+                            </a>
                         </td>
+
                         <td>
-                            <a href="{{ path('edit_user', {id: user.id}) }}">Modify</a>
+                            <a href="{{ path('edit_user', {id: user.id}) }}"
+                                class="button-crud"
+                                title="Modify">
+                                <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                            </a>
                         </td>
+
                         <td>
                             <a href="{{ path('delete_user', {id: user.id}) }}"
-                               class="delete-link"
-                               title="Delete"
-                               onclick="return confirm('Do you really want to delete this user?')">
-                                Delete
+                                class="delete-link button-crud"
+                                title="Delete"
+                                onclick="return confirm('Do you really want to delete this user?');">
+                                <i class="fa-solid fa-trash" aria-hidden="true"></i>
                             </a>
                         </td>
                     </tr>

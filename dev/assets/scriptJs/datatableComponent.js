@@ -69,6 +69,7 @@ function initDataTableWithFilters(tableId) {
         columnDefs: [
             { orderable: false, targets: 'no-sort' }
         ],
+        orderClasses: false,
         initComplete: function () {
             table.css('visibility', 'visible');
             $('#btn-delete-multiple').show(); // Si bouton présent
