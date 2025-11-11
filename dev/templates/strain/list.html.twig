@@ -383,7 +383,15 @@
                                     </td>
                                     <td class="id">{{strain.id}}</td>
                                     <td class="name">{{ strain.nameStrain is not null ? strain.nameStrain : '--' }}</td>
-                                    <td>--</td> {# Date #}
+                                    
+                                    <td class="date hidden-cell">
+                                        {% if strain.date is not null %}
+                                            {{strain.date|date("d/m/Y")}}
+                                        {% else %}
+                                            --
+                                        {% endif %}
+                                    </td>
+
                                     <td>--</td> {# Specie #}
                                     <td>--</td> {# Gender #}
                                     <td>--</td> {# Sample #}

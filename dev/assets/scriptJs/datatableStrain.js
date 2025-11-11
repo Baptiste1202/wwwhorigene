@@ -42,8 +42,29 @@ document.addEventListener('DOMContentLoaded', function () {
         ],
         order: [],
         columnDefs: [
-            { orderable: false, targets: [0,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20, 21, 22] }
+            { orderable: false, targets: [0,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22] },
+        {
+        targets: 3,  // convertion pour le trie sur date
+            render: function (data, type) {
+                if (type !== 'sort' && type !== 'type') return data;
+
+                const s = (data == null ? '' : String(data)).trim();
+                // vides / "--" => tout en bas
+                if (!s || s === '--') return Number.POSITIVE_INFINITY;
+
+                // parse dd/mm/yyyy (ou dd-mm-yyyy / dd.mm.yyyy)
+                const m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/);
+                if (!m) return Number.POSITIVE_INFINITY;
+
+                const d  = parseInt(m[1], 10);
+                const mo = parseInt(m[2], 10) - 1; // JS: mois 0..11
+                const y  = parseInt(m[3], 10);
+
+                return new Date(y, mo, d).getTime(); // clé numérique triable
+            }
+        }
         ],
+        orderClasses: false,
         rowGroup: {
             dataSrc: 1,
             startRender(rows) {
@@ -54,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         initComplete: function () {
             const api = this.api();
+            api.order([[1,'desc']]).draw();   // ⬅ impose le tri à chaque chargement sur ID de souche en DESC
 
             // 1a. On récupère la pagination actuelle choisie par l'utilisateur
             const lengthSelect = document.querySelector('.dataTables_length select');
@@ -78,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             });
 
-            // 2c. Surligner la souche ciblée : centrer la ligne + flash même avec filtre actif
+            // 2c. Aprés modification d'une souche → trouve la ligne, la rend visible, centre le scroll, flash 3s. */
             const highlightId = new URLSearchParams(location.search).get('highlight');
 
             if (highlightId) {
@@ -121,15 +143,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     setTimeout(tryHighlight, 250); // ⬅ délai ajouté
                 }
 
-                // 1) essayer tout de suite avec un petit délai
+                // essayer tout de suite avec un petit délai
                 setTimeout(tryHighlight, 250);
 
-                // 2) sinon, attendre les prochains redraws
+                // sinon, attendre les prochains redraws
                 if (!done) {
                     $('#data-table').on('draw.dt', onDraw);
                 }
 
-                // 3) garantir qu'on affiche 10000 lignes
+                // garantir qu'on affiche 10000 lignes
                 if ($lengthSelect.length) {
                     if (parseInt($lengthSelect.val(), 10) !== wantLen) {
                         $lengthSelect.val(String(wantLen)).trigger('change'); // provoque un draw
@@ -143,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         api.draw(false);
                     }
                 }
-            }   
+            }         
         }
     });
 

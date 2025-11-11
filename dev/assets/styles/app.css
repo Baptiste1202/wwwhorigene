@@ -575,8 +575,10 @@ input[type="checkbox"] {
     color: #555;
 }
 
+/* Remplace visuellement le contenu par “--” */
 .hidden-cell {
-    color: transparent;
+  position: relative;
+  color: transparent;     /* cache la vraie valeur */
 }
 
 /* ===========================================================
