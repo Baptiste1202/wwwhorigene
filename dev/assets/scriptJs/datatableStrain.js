@@ -283,35 +283,36 @@ document.addEventListener('DOMContentLoaded', function () {
         drugResistanceOnStrain: 'drugs'
     };
 
+    let lastTriggerCell = null; // mémorise la cellule qui a ouvert le popup
+
     document.querySelectorAll('td[data-info]').forEach(cell => {
         cell.addEventListener('click', event => {
             const info = cell.dataset.info;
             const fileName = cell.dataset.file;
             const popup = document.getElementById('infoPopup');
             const downloadLink = document.getElementById('popupDownload');
-
-            // AJOUTE cette ligne pour éviter l’erreur
             if (!popup || !downloadLink) return;
+
+            // toggle si on reclique la même cellule
+            const isSameCell = lastTriggerCell === cell;
+            const isVisible = popup.style.display !== 'none' && popup.style.display !== '';
+            if (isSameCell && isVisible) {
+                popup.style.display = 'none';
+                lastTriggerCell = null;
+                return;
+            }
 
             let fileType = null;
             for (const cls in typeMap) {
-                if (cell.classList.contains(cls)) {
-                    fileType = typeMap[cls];
-                    break;
-                }
+                if (cell.classList.contains(cls)) { fileType = typeMap[cls]; break; }
             }
 
-            // Remplir les détails dans le popup
             document.getElementById('popupTitle').innerText = 'Détails';
             document.getElementById('popupDetails').innerText = info;
 
             if (fileName && fileName !== '--' && fileType) {
                 downloadLink.href = `/documents/download/${fileType}/${fileName}`;
                 downloadLink.style.display = 'inline-block';
-                //test MR
-                //test MR2
-
-                // Forcer le téléchargement du fichier
                 downloadLink.setAttribute('download', fileName);
             } else {
                 downloadLink.style.display = 'none';
@@ -321,15 +322,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
             popup.style.display = 'block';
             popup.style.left = `${event.pageX + 10}px`;
-            popup.style.top = `${event.pageY + 10}px`;
+            popup.style.top  = `${event.pageY + 10}px`;
+
+            lastTriggerCell = cell;
         });
     });
 
+    // clic ailleurs -> ferme
     document.addEventListener('click', event => {
         const popup = document.getElementById('infoPopup');
-        if (!popup.contains(event.target) && !event.target.closest('[data-info]')) {
+        if (!popup) return;
+        if (!popup.contains(event.target) && !event.target.closest('td[data-info]')) {
             popup.style.display = 'none';
+            lastTriggerCell = null;
         }
     });
+
+    // ⬇️ NOUVEAU : clic sur le POPUP lui-même -> ferme (2e clic sur la fenêtre)
+    (function(){
+        const popup = document.getElementById('infoPopup');
+        if (!popup) return;
+        popup.addEventListener('click', () => {
+            popup.style.display = 'none';
+            lastTriggerCell = null;
+        });
+    })();
+
 });
 
