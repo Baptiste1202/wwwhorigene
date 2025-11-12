@@ -119,28 +119,27 @@ document.addEventListener('DOMContentLoaded', function () {
                 let done = false;
 
                 function tryHighlight() {
-                    if (done || !$box.length) return;
+                if (done || !$box.length) return;
+                const $tr = $(selector);
+                if (!$tr.length || !$tr.is(':visible')) return;
 
-                    const $tr = $(selector);
+                    // ⬇️ On cible le header de groupe qui précède la ligne (sinon fallback sur la ligne)
+                    const $group = $tr.prevAll('tr.dtrg-group').first();
+                    const $el = $group.length ? $group : $tr;
 
-                    // ligne présente ET visible ?
-                    if (!$tr.length || !$tr.is(':visible')) return;
-
-                    const boxH   = $box.height();
-                    const trH    = $tr.outerHeight(true);
-
-                    // position relative au conteneur, + fiable que offset() avec des rows masquées
-                    const relTop = $tr.position().top; 
-                    const target = $box.scrollTop() + relTop - (boxH / 2 - trH / 2);
+                    const boxH = $box.height();
+                    const elH  = $el.outerHeight(true);
+                    const relTop = $el.position().top; // position relative au conteneur scrollable
+                    const target = $box.scrollTop() + relTop - (boxH / 2 - elH / 2);
 
                     const maxScroll = $box[0].scrollHeight - boxH;
-                    const clamped   = Math.max(0, Math.min(target, maxScroll));
+                    const clamped = Math.max(0, Math.min(target, maxScroll));
 
                     $box.stop(true).animate({ scrollTop: clamped }, 300);
 
-                    // flash de surbrillance
-                    $tr.addClass('dt-highlight');
-                    setTimeout(() => $tr.removeClass('dt-highlight'), 3000);
+                    // highlight sur le header de groupe (ou la ligne en fallback)
+                    $el.addClass('dt-highlight');
+                    setTimeout(() => $el.removeClass('dt-highlight'), 3000);
 
                     done = true;
                     $('#data-table').off('draw.dt', onDraw);

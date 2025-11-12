@@ -524,7 +524,7 @@ input[type="checkbox"] {
     height: 100%;
 }
 
-.dt-highlight { outline: 2px solid #ff9800; background:#fff3cd; }
+.dt-highlight { outline: 4px solid #00ff22; background:#ffcdd4; }
 
 /* Style pour des colonnes spécifiques */
 #global #list #table td.id, 
@@ -558,12 +558,12 @@ input[type="checkbox"] {
 }
 
 #global #list table th {
-    background-color: #2c3e50;         /* Bleu foncé élégant */
+    background-color: #3c546d;         /* Bleu foncé élégant */
     color: #ecf0f1;                    /* Blanc cassé pour le contraste */
     border: 1px solid #34495e;         /* Bordure subtile ton sur ton */
     padding: 12px 16px;                /* Espacement confortable */
-    font-weight: bold;        /* Texte bien gras */
-    font-size: 0.80rem;                /* Taille lisible et moderne */
+    font-weight: bold;                 /* Texte bien gras */
+    font-size: 0.90rem;                /* Taille lisible et moderne */
     text-align: left;                  /* Alignement classique */
     text-transform: uppercase;         /* Style moderne */
     letter-spacing: 0.5px;             /* Espacement pour l’élégance */
