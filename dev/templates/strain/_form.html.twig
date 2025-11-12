@@ -1,4 +1,5 @@
 <script src="{{ asset('scriptJs/preventStrainForm.js') }}"></script>
+<script src="{{ asset('scriptJs/gridfixModifieStrainOverflowOnce.js') }}"></script>
 
 {{ form_start(strainForm, {
     'action': is_update 
@@ -639,81 +640,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-</script>
-
-<!--
-  TITRE : Auto-fix overflow (Phenotype / Sequencing / Storage / Plasmid) — version robuste
-  OBJET : Au premier rendu, certains blocs débordent tant que la liste (ul) est cachée (.hidden-tags).
-          On mime 1 clic sur “+” pour dévoiler et recalculer le layout, puis on supprime l’item ajouté
-          et on restaure l’index. Exécution unique + suppression fiable (ignore create-plasmid-li).
-  PLACEMENT : juste après {{ form_end(strainForm) }}
--->
-
-<script>
-(function () {
-  // Empêche toute exécution multiple
-  if (window.__GRIDFIX_ONCE__) return;
-  window.__GRIDFIX_ONCE__ = true;
-
-  // bouton "add" -> bloc contenant la <ul>
-  const MAP = {
-    '#phenotype-add-btn':  '#phenotype-add',
-    '#sequencing-add-btn': '#sequencing-add',
-    '#storage-add-btn':    '#storage-add',
-    '#publication-add-btn': '#publication-add',
-    '#project-add-btn':     '#project-add',
-    '#plasmyd-add-btn':    '#plasmyd-add'
-  };
-
-  function removeLastRealItem(ul) {
-    // Récupère le dernier <li> qui n'est PAS .create-plasmid-li
-    const items = ul.querySelectorAll('li:not(.create-plasmid-li)');
-    if (!items.length) return;
-    const lastReal = items[items.length - 1];
-    lastReal.remove();
-  }
-
-  function mimicOne(btnWrapSel, blockSel) {
-    const btn   = document.querySelector(`${btnWrapSel} .add_item_link`);
-    const block = document.querySelector(blockSel);
-    const ul    = block && block.querySelector('ul');
-    if (!btn || !ul) return;
-
-    // On ne “mimique” que si la liste est encore masquée par .hidden-tags
-    const hiddenWrapper = ul.closest('.hidden-tags');
-    if (!hiddenWrapper) return;
-
-    // Évite de traiter 2 fois ce même UL
-    if (ul.dataset.gridfixApplied === '1') return;
-    ul.dataset.gridfixApplied = '1';
-
-    const beforeIndex = parseInt(ul.dataset.index || ul.children.length, 10) || 0;
-
-    // 1) Ajout via ton handler (retire .hidden-tags + recalcule la grille)
-    btn.click();
-
-    // 2) Retirer l’élément ajouté + remettre l’index, puis mini reflow
-    setTimeout(() => {
-      removeLastRealItem(ul);
-      ul.dataset.index = String(beforeIndex);
-
-      const prevDisplay = block.style.display;
-      block.style.display = 'none';
-      // force reflow
-      void block.offsetHeight;
-      block.style.display = prevDisplay || '';
-    }, 0);
-  }
-
-  function runAllOnce() {
-    Object.entries(MAP).forEach(([btnSel, blockSel]) => mimicOne(btnSel, blockSel));
-  }
-
-  // Une seule exécution suffit
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', runAllOnce, { once: true });
-  } else {
-    runAllOnce();
-  }
-})();
 </script>
