@@ -72,7 +72,7 @@
                                 <input type="checkbox" name="selected_strain[]" value="{{ strain.id }}" class="select-checkbox" />
                             </td>
                             <td class="id">{{strain.id}}</td>
-                            <td class="name">{{ strain.nameStrain is not null ? strain.nameStrain : '--' }}</td>
+                            <td class="name">{{ strain.nameStrain is not null ? strain.nameStrain : '' }}</td>
                             <td class="date">
                             {% if strain.date is not null %}
                                 {{strain.date|date("d/m/Y")}}
@@ -175,7 +175,7 @@
                                     {{ strain.parentStrain.nameStrain }}<br>
                                     {{ strain.parentStrain.id }}
                                 {% else %}
-                                    --
+                                  --  
                                 {% endif %}
                             </td>
                             
@@ -391,11 +391,18 @@
                                             --
                                         {% endif %}
                                     </td>
-
-                                    <td>--</td> {# Specie #}
-                                    <td>--</td> {# Gender #}
-                                    <td>--</td> {# Sample #}
+                                                                        
+                                    <td class="specie hidden-cell">
+                                        {{ strain.specie is not empty ? strain.specie : '--' }}
+                                    </td>
+                                    <td class="gender hidden-cell">
+                                        {{ strain.gender is not empty ? strain.gender : '--' }}
+                                    </td>
+                                    <td class="sample hidden-cell">
+                                        {{ strain.prelevement is not null and strain.prelevement.name is not empty ? strain.prelevement.name : '--' }}
+                                    </td>
                                     <td>--</td> {# Genotype #}
+
                                     <td class="plasmyd" 
                                         data-info='
                                                 name: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.plasmyd[i].namePlasmyd : '--'}}

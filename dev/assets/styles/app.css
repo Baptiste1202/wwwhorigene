@@ -518,7 +518,7 @@ input[type="checkbox"] {
     font-family: 'Arial', sans-serif;
     font-size: 14px;
     color: #333;
-    background-color: #f9f9f9;
+    background-color: #ffffff !important; /* Fond blanc forcé */
     margin-bottom: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     height: 100%;
@@ -530,11 +530,10 @@ input[type="checkbox"] {
 #global #list #table td.id, 
 #global #list #table td.name{
     text-align: center;
-    color:white;
+    color:black;
     min-width: 25px; 
     font-weight: bold;
     background-color: #bdbdbd;
-
 }
 
 #global #list #table td.supp  a:hover {
@@ -558,13 +557,16 @@ input[type="checkbox"] {
     box-sizing: border-box; /* Inclut la bordure et le padding dans la largeur */
 }
 
-#global #list #table th{
-    background-color: #e5e5e5;
-    color: #000;
-    text-align: left;
-    font-weight: bold;
-    border: 1px solid #ddd;
-    width: 150px;  /* Fixe la largeur des cellules */
+#global #list table th {
+    background-color: #2c3e50;         /* Bleu foncé élégant */
+    color: #ecf0f1;                    /* Blanc cassé pour le contraste */
+    border: 1px solid #34495e;         /* Bordure subtile ton sur ton */
+    padding: 12px 16px;                /* Espacement confortable */
+    font-weight: bold;        /* Texte bien gras */
+    font-size: 0.80rem;                /* Taille lisible et moderne */
+    text-align: left;                  /* Alignement classique */
+    text-transform: uppercase;         /* Style moderne */
+    letter-spacing: 0.5px;             /* Espacement pour l’élégance */
 }
 
 #global #list #table td.comment, 
@@ -580,6 +582,16 @@ input[type="checkbox"] {
   position: relative;
   color: transparent;     /* cache la vraie valeur */
 }
+
+/* centre tout le 1er tr du thead (y compris états de tri) */
+#data-table-wrapper thead tr:first-child th,
+#data-table-wrapper thead tr:first-child th.sorting,
+#data-table-wrapper thead tr:first-child th.sorting_asc,
+#data-table-wrapper thead tr:first-child th.sorting_desc {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
 
 /* ===========================================================
    Scroll et position de la table
@@ -607,6 +619,12 @@ thead {
 /* ===========================================================
    CSS specifique pour la DATATABLE de strain
 =========================================================== */
+
+/* enlève les bordures de lignes */
+table.dataTable.display    > tbody > tr > td {
+  border-top: none !important;
+}
+
 #searchFormContainer {
     display: flex;
     align-items: center;   /* Aligne verticalement */
@@ -772,7 +790,7 @@ thead th, tbody td {
     "length  buttons   search";
   align-items: center;
   background: #f9f9f9;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 8px; /* Petit espace en bas */
 }
 
 /* -- Placements (cibler le conteneur toolbar, pas #data-table_wrapper) -- */
