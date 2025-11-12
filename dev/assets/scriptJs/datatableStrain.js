@@ -37,7 +37,15 @@ document.addEventListener('DOMContentLoaded', function () {
             { extend: 'copy',  exportOptions: { columns: ':visible', rows: (i,d,n) => n.style.display!=='none' } },
             { extend: 'csv',   exportOptions: { columns: ':visible', rows: (i,d,n) => n.style.display!=='none' } },
             { extend: 'excel', exportOptions: { columns: ':visible', rows: (i,d,n) => n.style.display!=='none' } },
-            { extend: 'pdf',   exportOptions: { columns: ':visible', rows: (i,d,n) => n.style.display!=='none' } },
+            {
+            extend: 'pdf',
+            orientation: 'landscape',
+            pageSize: 'A3',
+                exportOptions: { 
+                    columns: ':visible',
+                    rows: (i, d, n) => n.style.display !== 'none'
+                }
+            },
             { extend: 'print', exportOptions: { columns: ':visible', rows: (i,d,n) => n.style.display!=='none' } }
         ],
         order: [],

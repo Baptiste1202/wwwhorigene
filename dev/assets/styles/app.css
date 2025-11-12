@@ -569,6 +569,17 @@ input[type="checkbox"] {
     letter-spacing: 0.5px;             /* Espacement pour l’élégance */
 }
 
+/*
+#global #list #table th{
+    background-color: #e5e5e5;
+    color: #000;
+    text-align: left;
+    font-weight: bold;
+    border: 1px solid #ddd;
+    width: 150px;  
+}
+*/
+
 #global #list #table td.comment, 
 #global #list #table th.comment, 
 #global #list #table td.description, 
