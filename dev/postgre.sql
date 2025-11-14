@@ -1,6 +1,6 @@
 -- PostgreSQL Database Dump
 -- Converted from MySQL
--- Database: vivacadb
+-- Database: wwwhorigene_db
 
 -- Set client encoding
 SET client_encoding = 'UTF8';
