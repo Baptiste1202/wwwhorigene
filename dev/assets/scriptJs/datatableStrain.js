@@ -37,13 +37,42 @@ document.addEventListener('DOMContentLoaded', function () {
             { extend: 'copy',  exportOptions: { columns: ':visible', rows: (i,d,n) => n.style.display!=='none' } },
             { extend: 'csv',   exportOptions: { columns: ':visible', rows: (i,d,n) => n.style.display!=='none' } },
             { extend: 'excel', exportOptions: { columns: ':visible', rows: (i,d,n) => n.style.display!=='none' } },
-            { extend: 'pdf',   exportOptions: { columns: ':visible', rows: (i,d,n) => n.style.display!=='none' } },
+            {
+            extend: 'pdf',
+            orientation: 'landscape',
+            pageSize: 'A3',
+                exportOptions: { 
+                    columns: ':visible',
+                    rows: (i, d, n) => n.style.display !== 'none'
+                }
+            },
             { extend: 'print', exportOptions: { columns: ':visible', rows: (i,d,n) => n.style.display!=='none' } }
         ],
         order: [],
         columnDefs: [
-            { orderable: false, targets: [0,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20, 21, 22] }
+            { orderable: false, targets: [0,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22] },
+        {
+        targets: 3,  // convertion pour le trie sur date
+            render: function (data, type) {
+                if (type !== 'sort' && type !== 'type') return data;
+
+                const s = (data == null ? '' : String(data)).trim();
+                // vides / "--" => tout en bas
+                if (!s || s === '--') return Number.POSITIVE_INFINITY;
+
+                // parse dd/mm/yyyy (ou dd-mm-yyyy / dd.mm.yyyy)
+                const m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/);
+                if (!m) return Number.POSITIVE_INFINITY;
+
+                const d  = parseInt(m[1], 10);
+                const mo = parseInt(m[2], 10) - 1; // JS: mois 0..11
+                const y  = parseInt(m[3], 10);
+
+                return new Date(y, mo, d).getTime(); // clé numérique triable
+            }
+        }
         ],
+        orderClasses: false,
         rowGroup: {
             dataSrc: 1,
             startRender(rows) {
@@ -54,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         initComplete: function () {
             const api = this.api();
+            api.order([[1,'desc']]).draw();   // ⬅ impose le tri à chaque chargement sur ID de souche en DESC
 
             // 1a. On récupère la pagination actuelle choisie par l'utilisateur
             const lengthSelect = document.querySelector('.dataTables_length select');
@@ -78,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             });
 
-            // 2c. Surligner la souche ciblée : centrer la ligne + flash même avec filtre actif
+            // 2c. Aprés modification d'une souche → trouve la ligne, la rend visible, centre le scroll, flash 3s. */
             const highlightId = new URLSearchParams(location.search).get('highlight');
 
             if (highlightId) {
@@ -89,28 +119,27 @@ document.addEventListener('DOMContentLoaded', function () {
                 let done = false;
 
                 function tryHighlight() {
-                    if (done || !$box.length) return;
+                if (done || !$box.length) return;
+                const $tr = $(selector);
+                if (!$tr.length || !$tr.is(':visible')) return;
 
-                    const $tr = $(selector);
+                    // ⬇️ On cible le header de groupe qui précède la ligne (sinon fallback sur la ligne)
+                    const $group = $tr.prevAll('tr.dtrg-group').first();
+                    const $el = $group.length ? $group : $tr;
 
-                    // ligne présente ET visible ?
-                    if (!$tr.length || !$tr.is(':visible')) return;
-
-                    const boxH   = $box.height();
-                    const trH    = $tr.outerHeight(true);
-
-                    // position relative au conteneur, + fiable que offset() avec des rows masquées
-                    const relTop = $tr.position().top; 
-                    const target = $box.scrollTop() + relTop - (boxH / 2 - trH / 2);
+                    const boxH = $box.height();
+                    const elH  = $el.outerHeight(true);
+                    const relTop = $el.position().top; // position relative au conteneur scrollable
+                    const target = $box.scrollTop() + relTop - (boxH / 2 - elH / 2);
 
                     const maxScroll = $box[0].scrollHeight - boxH;
-                    const clamped   = Math.max(0, Math.min(target, maxScroll));
+                    const clamped = Math.max(0, Math.min(target, maxScroll));
 
                     $box.stop(true).animate({ scrollTop: clamped }, 300);
 
-                    // flash de surbrillance
-                    $tr.addClass('dt-highlight');
-                    setTimeout(() => $tr.removeClass('dt-highlight'), 3000);
+                    // highlight sur le header de groupe (ou la ligne en fallback)
+                    $el.addClass('dt-highlight');
+                    setTimeout(() => $el.removeClass('dt-highlight'), 3000);
 
                     done = true;
                     $('#data-table').off('draw.dt', onDraw);
@@ -121,15 +150,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     setTimeout(tryHighlight, 250); // ⬅ délai ajouté
                 }
 
-                // 1) essayer tout de suite avec un petit délai
+                // essayer tout de suite avec un petit délai
                 setTimeout(tryHighlight, 250);
 
-                // 2) sinon, attendre les prochains redraws
+                // sinon, attendre les prochains redraws
                 if (!done) {
                     $('#data-table').on('draw.dt', onDraw);
                 }
 
-                // 3) garantir qu'on affiche 10000 lignes
+                // garantir qu'on affiche 10000 lignes
                 if ($lengthSelect.length) {
                     if (parseInt($lengthSelect.val(), 10) !== wantLen) {
                         $lengthSelect.val(String(wantLen)).trigger('change'); // provoque un draw
@@ -143,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         api.draw(false);
                     }
                 }
-            }   
+            }         
         }
     });
 
@@ -253,35 +282,36 @@ document.addEventListener('DOMContentLoaded', function () {
         drugResistanceOnStrain: 'drugs'
     };
 
+    let lastTriggerCell = null; // mémorise la cellule qui a ouvert le popup
+
     document.querySelectorAll('td[data-info]').forEach(cell => {
         cell.addEventListener('click', event => {
             const info = cell.dataset.info;
             const fileName = cell.dataset.file;
             const popup = document.getElementById('infoPopup');
             const downloadLink = document.getElementById('popupDownload');
-
-            // AJOUTE cette ligne pour éviter l’erreur
             if (!popup || !downloadLink) return;
+
+            // toggle si on reclique la même cellule
+            const isSameCell = lastTriggerCell === cell;
+            const isVisible = popup.style.display !== 'none' && popup.style.display !== '';
+            if (isSameCell && isVisible) {
+                popup.style.display = 'none';
+                lastTriggerCell = null;
+                return;
+            }
 
             let fileType = null;
             for (const cls in typeMap) {
-                if (cell.classList.contains(cls)) {
-                    fileType = typeMap[cls];
-                    break;
-                }
+                if (cell.classList.contains(cls)) { fileType = typeMap[cls]; break; }
             }
 
-            // Remplir les détails dans le popup
             document.getElementById('popupTitle').innerText = 'Détails';
             document.getElementById('popupDetails').innerText = info;
 
             if (fileName && fileName !== '--' && fileType) {
                 downloadLink.href = `/documents/download/${fileType}/${fileName}`;
                 downloadLink.style.display = 'inline-block';
-                //test MR
-                //test MR2
-
-                // Forcer le téléchargement du fichier
                 downloadLink.setAttribute('download', fileName);
             } else {
                 downloadLink.style.display = 'none';
@@ -291,15 +321,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
             popup.style.display = 'block';
             popup.style.left = `${event.pageX + 10}px`;
-            popup.style.top = `${event.pageY + 10}px`;
+            popup.style.top  = `${event.pageY + 10}px`;
+
+            lastTriggerCell = cell;
         });
     });
 
+    // clic ailleurs -> ferme
     document.addEventListener('click', event => {
         const popup = document.getElementById('infoPopup');
-        if (!popup.contains(event.target) && !event.target.closest('[data-info]')) {
+        if (!popup) return;
+        if (!popup.contains(event.target) && !event.target.closest('td[data-info]')) {
             popup.style.display = 'none';
+            lastTriggerCell = null;
         }
     });
+
+    // ⬇️ NOUVEAU : clic sur le POPUP lui-même -> ferme (2e clic sur la fenêtre)
+    (function(){
+        const popup = document.getElementById('infoPopup');
+        if (!popup) return;
+        popup.addEventListener('click', () => {
+            popup.style.display = 'none';
+            lastTriggerCell = null;
+        });
+    })();
+
 });
 

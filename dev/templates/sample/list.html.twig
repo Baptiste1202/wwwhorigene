@@ -64,20 +64,32 @@
                         <td>{{ sample.description }}</td>
                         <td>{{ sample.comment }}</td>
                         <td>{{ sample.user }}</td> <!-- 🟢 Nouvelle colonne -->
+                        
                         <td>
-                            <a href="{{ path('duplicate_sample', {id: sample.id}) }}">Duplicate</a>
-                        </td>
-                        <td>
-                            <a href="{{ path('edit_sample', {id: sample.id}) }}">Modifie</a>
-                        </td>
-                        <td>
-                            <a href="{{ path('delete_sample', {id: sample.id}) }}"
-                               class="delete-link"
-                               title="Delete"
-                               onclick="return confirm('Do you really want to delete?')">
-                                Delete
+                            <a href="{{ path('duplicate_sample', { id: sample.id }) }}"
+                                class="button-crud"
+                                title="Copy">
+                                <i class="fa-solid fa-copy" aria-hidden="true"></i>
                             </a>
                         </td>
+
+                        <td>
+                            <a href="{{ path('edit_sample', { id: sample.id }) }}"
+                                class="button-crud"
+                                title="Modifie">
+                                <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                            </a>
+                        </td>
+
+                        <td>
+                            <a href="{{ path('delete_sample', { id: sample.id }) }}"
+                                class="delete-link button-crud"
+                                title="Delete"
+                                onclick="return confirm('Do you really want to delete?');">
+                                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                            </a>
+                        </td>
+
                     </tr>
                 {% endfor %}
             </tbody>
