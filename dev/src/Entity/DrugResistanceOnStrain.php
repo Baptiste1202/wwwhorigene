@@ -16,7 +16,7 @@ class DrugResistanceOnStrain
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: DrugResistance::class)]
+    #[ORM\ManyToOne(targetEntity: DrugResistance::class, inversedBy: 'drugResistanceOnStrains')]
     private ?DrugResistance $drugResistance;
 
     #[ORM\Column]
