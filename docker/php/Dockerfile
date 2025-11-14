@@ -4,10 +4,10 @@ FROM php:8.3-apache
 # --------------------------
 # 1) Installer outils nécessaires
 # --------------------------
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git \
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
     unzip \
-    zip \
+    git \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
