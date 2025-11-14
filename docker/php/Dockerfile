@@ -33,6 +33,7 @@ COPY dev/ /var/www/html/
 
 # Définir le dossier de travail
 WORKDIR /var/www/html
+RUN composer install --no-dev --optimize-autoloader
 
 # Exposer le port
 EXPOSE 80
