@@ -40,7 +40,7 @@ class Storage
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $volume = null;
 
-    #[ORM\ManyToOne(targetEntity: Strain::class, inversedBy: 'MethodSequencing')]
+    #[ORM\ManyToOne(targetEntity: Strain::class, inversedBy: 'storage')]
     private Strain $strain;
 
     public function getId(): ?int
@@ -167,3 +167,4 @@ class Storage
         return $this;
     }   
 }
+
