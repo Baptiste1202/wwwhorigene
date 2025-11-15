@@ -36,7 +36,6 @@
 
 #context-menu ul li {
     padding: 5px 10px;
-    cursor: pointer;
 }
 
 #context-menu ul li:hover {
@@ -85,10 +84,9 @@
 }
 
 .vertical-menu li a:hover {
-    background-color: #f5f5f5 !important;
+    background-color: #444; /* Couleur légèrement plus claire au survol */
     transform: scale(1.05); /* Effet de zoom léger */
     font-weight: 600;
-    color: #333;
 }
 
 .vertical-menu li a:before {
@@ -110,7 +108,7 @@
 }
 
 .vertical-menu ul li.active > a {
-  text-decoration: underline;
+  background-color: #3c546d;
     
 }
 
@@ -159,6 +157,70 @@
     font-family: 'Roboto', sans-serif;
     overflow-x: auto; /* Barre horizontale si besoin */
     height: auto;
+    transition: all 0.3s ease;
+}
+
+/* Form ouvert */
+#form.show {
+    max-height: 1000px; /* ou une valeur assez grande */
+    opacity: 1;
+    
+}
+
+#form.hidden {
+            display: none;
+            opacity: 0;
+}
+
+#toggleForm {
+    width: 30px;
+    font-size: 20px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border: 1px solid;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-family: "Roboto", sans-serif;
+}
+
+#toggleForm:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    background-color: #444;
+    color: #f5f3f3;
+}
+
+#closeForm {
+    width: 20px;
+    height: 20px;
+    font-size: 24px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    float: right;
+    margin-top: -5px;
+}
+
+#closeForm:hover {
+    background-color: #555;
+    transform: (1.02);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    background-color: #f9f9f9;
+    color: #333
+}
+
+/* Quand le formulaire est ouvert, on cache le bouton */
+#form.show + #toggleForm {
+    display: none;
 }
 
 /* Liste qui prend tout l’espace restant */
@@ -190,20 +252,19 @@ button.btn-form {
     padding: 0.5rem 1rem;
     margin-top : 0.5rem;
     border: none;
-    background-color: #4A90E2;
+    background-color: #3c546d;;
     color: white;
     border-radius: 4px;
-    cursor: pointer;
+    font-weight: bold;
 }
 
 #strain_form_searchParent{
     padding: 0.5rem 1rem;
     margin-top : 0.5rem;
     border: none;
-    background-color: #4A90E2;
+    background-color: #3c546d;;
     color: white;
     border-radius: 4px;
-    cursor: pointer;
 }
 
 button.btn-form:hover, 
@@ -290,7 +351,6 @@ button.btn-form:hover,
     color: #000; /* Couleur du texte (icône ou texte) */
     border: 1px solid #ccc;
     border-radius: 4px; /* Coins légèrement arrondis */
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -303,7 +363,6 @@ button.btn-form:hover,
     color: #000; /* Couleur du texte (icône ou texte) */
     border: 1px solid #ccc;
     border-radius: 4px; /* Coins légèrement arrondis */
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -412,11 +471,11 @@ button.btn-form:hover,
     padding: 0.5rem 1rem;
     margin-top : 0.5rem;
     border: none;
-    background-color: #4A90E2;
+    background-color: #3c546d;;
     color: white;
     border-radius: 4px;
-    cursor: pointer;
     position: relative; /* Nécessaire pour que le z-index fonctionne */
+    font-weight: bold;
     z-index: 3; 
 }
 
@@ -437,7 +496,6 @@ button.btn-form:hover,
     width : 100%; 
     padding: 10px 10px;
     border: none;
-    cursor: pointer;
     font-size: 16px;
     border-radius: 4px;
     transition: background-color 0.3s ease;
@@ -461,7 +519,6 @@ button.btn-form:hover,
     left: 0;
     padding: 10px 10px;
     border: none;
-    cursor: pointer;
     font-size: 16px;
     border-radius: 4px;
     transition: background-color 0.3s ease;
@@ -502,7 +559,7 @@ button.btn-form:hover,
 }
 
 input[type="checkbox"] {
-  accent-color: #4A90E2; /* couleur du toggle */
+  accent-color: #3c546d;; /* couleur du togunderlinegle */
 }
 
 /* ===========================================================
@@ -524,7 +581,16 @@ input[type="checkbox"] {
     height: 100%;
 }
 
-.dt-highlight { outline: 4px solid #00ff22; background:#ffcdd4; }
+.sub-cell {
+    margin-bottom: 4px;   /* espace entre les sous-cellules */
+}
+.sub-cell:last-child {
+    margin-bottom: 0;     /* évite l’espace inutile à la fin */
+}
+
+.clicable:hover {
+    cursor: pointer;
+}
 
 /* Style pour des colonnes spécifiques */
 #global #list #table td.id, 
@@ -567,6 +633,7 @@ input[type="checkbox"] {
     text-align: left;                  /* Alignement classique */
     text-transform: uppercase;         /* Style moderne */
     letter-spacing: 0.5px;             /* Espacement pour l’élégance */
+    user-select: none;
 }
 
 /*
@@ -590,8 +657,7 @@ input[type="checkbox"] {
 
 /* Remplace visuellement le contenu par “--” */
 .hidden-cell {
-  position: relative;
-  color: transparent;     /* cache la vraie valeur */
+  display: none;
 }
 
 /* centre tout le 1er tr du thead (y compris états de tri) */
@@ -704,7 +770,6 @@ table.dataTable.display    > tbody > tr > td {
     background: none;
     border: none;
     font-size: 1.2rem;
-    cursor: pointer;
 }
 
 div.download-error {
@@ -1568,7 +1633,6 @@ footer ul{
 }
 footer ul li{ 
     margin: .25rem 0;
-    cursor: pointer;
     color: #d4d4d4;
     width: fit-content;
 }

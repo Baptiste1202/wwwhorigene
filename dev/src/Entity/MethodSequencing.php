@@ -65,6 +65,10 @@ class MethodSequencing
     public function setFile(?File $file = null): void
     {
         $this->file = $file;
+
+        if ($file) {
+            $this->date = new \DateTime();
+        }
     }
 
     public function getFile(): ?File

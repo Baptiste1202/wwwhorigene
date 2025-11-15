@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichFileType;
@@ -35,8 +36,17 @@ class DrugOnFormType extends AbstractType
             ->add('file', VichFileType::class, options:[
                 'required' => false,
                 'label' => 'Upload File'
-            ])
-            ->add('description', TextareaType::class, options:[
+            ]);
+
+            if ($options['is_update']) {
+                $builder->add('nameFile', TextType::class, [
+                    'label' => 'File Name',
+                    'required' => false,
+                    'disabled' => true,
+                ]);
+            }
+
+            $builder->add('description', TextareaType::class, options:[
                 'label' => 'Description',
                 'required' => false,
                 'attr' => [
@@ -60,6 +70,9 @@ class DrugOnFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => DrugResistanceOnStrain::class,
+            'is_update' => false,
         ]);
+
+        $resolver->setDefined('is_update');
     }
 }

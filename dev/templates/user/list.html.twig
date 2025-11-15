@@ -33,6 +33,7 @@
                     <th>Firstname</th>
                     <th>Lastname</th>
                     <th>Roles</th>
+                    <th>Access</th>
                     <th data-column="duplicate" class="no-sort"></th>
                     <th data-column="edit" class="no-sort"></th>
                     <th data-column="delete" class="no-sort"></th>
@@ -48,13 +49,22 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.lastname }}</td>
-                        <td>{{ user.roles|first }}</td>                       
+                        <td>{{ user.roles|first }}</td>
+                        <td>{{ user.isAccess ? 'Yes' : 'No' }}</td>                       
                         <td>
-                            <a href="{{ path('duplicate_user', {id: user.id}) }}"
-                                class="button-crud"
-                                title="Copy">
-                                <i class="fa-solid fa-copy" aria-hidden="true"></i>
-                            </a>
+                            {% if user.isAccess %}
+                                <a href="{{ path('access_user', {id: user.id}) }}"
+                                    class="button-crud" 
+                                    title="Remove acces">
+                                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                                </a>
+                            {% else %}
+                                <a href="{{ path('access_user', {id: user.id}) }}"
+                                    class="button-crud"
+                                    title="Give access">
+                                    <i class="fa-solid fa-check" aria-hidden="true"></i>
+                                </a>
+                            {% endif %}
                         </td>
 
                         <td>

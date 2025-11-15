@@ -40,17 +40,19 @@ class UserFormType extends AbstractType
                 'multiple' => true,
                 'expanded' => false,
                 'label'    => 'Role',
-            ])
-            ->add('plainPassword', PasswordType::class, [
-                'label'    => 'Password',
-                'mapped'   => false,
-                'required' => $passwordRequired,
-                'attr'     => ['autocomplete' => 'new-password'],
-                'constraints' => $passwordRequired
-                    ? [new Assert\NotBlank()]
-                    : [], // plus de contrainte de longueur
-            ])
-        ;
+            ]);
+
+            if (!$options['is_update']) {
+                $builder->add('plainPassword', PasswordType::class, [
+                    'label'    => 'Password',
+                    'mapped'   => false,
+                    'required' => $passwordRequired,
+                    'attr'     => ['autocomplete' => 'new-password'],
+                    'constraints' => $passwordRequired
+                        ? [new Assert\NotBlank()]
+                        : [], // plus de contrainte de longueur
+                ]);
+            }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -58,6 +60,7 @@ class UserFormType extends AbstractType
         $resolver->setDefaults([
             'data_class'        => User::class,
             'password_required' => true,
+            'is_update'         => false,
         ]);
     }
 }

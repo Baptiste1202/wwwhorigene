@@ -13,7 +13,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-#[ORM\Table(name: '"user"', schema: 'public')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -43,7 +42,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column]
-    private ?bool $isVerified = false;
+    private ?bool $isAccess = false;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?DateTimeImmutable $createdAt = null;
@@ -163,14 +162,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     }
 
-    public function isVerified(): ?bool
+    public function isAccess(): ?bool
     {
-        return $this->isVerified;
+        return $this->isAccess;
     }
 
-    public function setVerified(bool $isVerified): static
+    public function setAccess(bool $isVerified): static
     {
-        $this->isVerified = $isVerified;
+        $this->isAccess = $isVerified;
 
         return $this;
     }

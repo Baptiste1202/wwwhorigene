@@ -1,17 +1,19 @@
-
-###> symfony/framework-bundle ###
-
+# Symfony Framework Bundle
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
 /vendor/
-###< symfony/framework-bundle ###
 
-###> symfony/asset-mapper ###
+# Symfony Asset Mapper
 /public/assets/
 /assets/vendor/
 /public/docs/
-/docker/
-###< symfony/asset-mapper ###
-/docker-compose.yml
+
+# Node / JS / assets
+/assets/vendor/
+
+# Environment
 /.env
+
+# Miscellaneous
+/.history/

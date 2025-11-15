@@ -78,6 +78,10 @@ class Phenotype
     public function setFile(?File $file = null): void
     {
         $this->file = $file;
+
+        if ($file) {
+            $this->date = new \DateTime();
+        }
     }
 
     public function getFile(): ?File
@@ -132,7 +136,7 @@ class Phenotype
         return $this;
     }
 
-        public function getFileName(): ?string
+    public function getFileName(): ?string
     {
         return $this->fileName;
     }

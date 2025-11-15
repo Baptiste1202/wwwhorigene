@@ -2,7 +2,9 @@
 {% block body %}
         <div id="global">
             {% if 'ROLE_SEARCH' in app.user.roles or 'ROLE_ADMIN' in app.user.roles %}
-                <div id="form">
+                <button id="toggleForm">+</button>
+                <div id="form" class="hidden">
+                    <button id="closeForm">-</button>
                     {% include "strain/create.html.twig" %}
                 </div>
             {% endif %}
@@ -36,4 +38,25 @@
             </div>
         <br></br>        
         </div>  
+
+
+ <script>
+        const toggleBtn = document.getElementById('toggleForm');
+        const formDiv = document.getElementById('form');
+        const closeBtn = document.getElementById('closeForm');
+
+        // Ouvrir le formulaire avec le bouton +
+        toggleBtn.addEventListener('click', () => {
+            formDiv.classList.remove('hidden');
+            formDiv.classList.add('show');
+            toggleBtn.style.display = 'none';
+        });
+
+        // Fermer le formulaire avec le bouton -
+        closeBtn.addEventListener('click', () => {
+            formDiv.classList.remove('show');
+            formDiv.classList.add('hidden');
+            toggleBtn.style.display = 'inline-block';
+        });
+</script>
 {% endblock %}
