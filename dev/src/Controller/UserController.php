@@ -109,9 +109,28 @@ class UserController extends AbstractController
     public function access(User $user, EntityManagerInterface $em): Response
     {
         if ($user->isAccess()) {
+
+            if ($user === $this->getUser()) {
+                $this->addFlash('error', 'You cannot remove your own access!');
+                return $this->redirectToRoute('page_users');
+            }
+
+            if (in_array('ROLE_ADMIN', $user->getRoles(), true) && $user->isAccess()) {
+                if ($this->countOtherActiveAdmins($em, $user) === 0) {
+                    $this->addFlash('error', 'Cannot remove access from the last admin user!');
+                    return $this->redirectToRoute('page_users');
+                }
+            }
+
             $user->setAccess(false);
             $em->flush();
-            $this->addFlash('success', 'User "' . $user->getFirstname() . ' ' . $user->getLastname() . '" dont have access anymore!');
+
+            $this->addFlash('success', sprintf(
+                'User "%s %s" no longer has access!',
+                $user->getFirstname(),
+                $user->getLastname()
+            ));
+
             return $this->redirectToRoute('page_users');
         }
 
@@ -119,6 +138,20 @@ class UserController extends AbstractController
         $em->flush();   
         $this->addFlash('success', 'User "' . $user->getFirstname() . ' ' . $user->getLastname() . '" have access!');
         return $this->redirectToRoute('page_users');
+    }
+
+    public function countOtherActiveAdmins(EntityManagerInterface $em, User $currentUser): int
+    {
+        $users = $em->getRepository(User::class)->findAll();
+
+        $admins = array_filter($users, function (User $u) use ($currentUser) {
+            return 
+                $u !== $currentUser &&
+                in_array('ROLE_ADMIN', $u->getRoles(), true) &&
+                $u->isAccess();
+        });
+
+        return count($admins);
     }
 
     #[Route('/users/delete-multiple', name: 'delete_multiple_users', methods: ['POST'])]

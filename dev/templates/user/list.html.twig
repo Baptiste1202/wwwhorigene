@@ -55,13 +55,13 @@
                             {% if user.isAccess %}
                                 <a href="{{ path('access_user', {id: user.id}) }}"
                                     class="button-crud" 
-                                    title="Give acces">
+                                    title="Remove acces">
                                     <i class="fa-solid fa-xmark" aria-hidden="true"></i>
                                 </a>
                             {% else %}
                                 <a href="{{ path('access_user', {id: user.id}) }}"
                                     class="button-crud"
-                                    title="Remove access">
+                                    title="Give access">
                                     <i class="fa-solid fa-check" aria-hidden="true"></i>
                                 </a>
                             {% endif %}
