@@ -510,3 +510,39 @@ CREATE INDEX idx_phenotype_type ON phenotype(phenotype_type_id);
 CREATE INDEX idx_storage_strain ON storage(strain_id);
 CREATE INDEX idx_user_email ON "user"(email);
 
+-- --------------------------------------------------------
+-- Mise à jour de la table drug_resistance_on_strain
+-- --------------------------------------------------------
+
+-- Ajout de la colonne date (si elle n'existe pas déjà)
+ALTER TABLE drug_resistance_on_strain 
+ADD COLUMN IF NOT EXISTS date TIMESTAMP DEFAULT NULL;
+
+-- --------------------------------------------------------
+-- Mise à jour de la table user
+-- --------------------------------------------------------
+
+-- Renommer la colonne is_verified en is_access
+ALTER TABLE "user" 
+RENAME COLUMN is_verified TO is_access;
+
+-- Si vous voulez que is_access accepte NULL (optionnel)
+-- ALTER TABLE "user" ALTER COLUMN is_access DROP NOT NULL;
+
+-- --------------------------------------------------------
+-- Schéma complet mis à jour
+-- --------------------------------------------------------
+
+
+-- Mise à jour des données existantes
+UPDATE "user" SET is_access = is_verified WHERE is_access IS NULL;
+
+-- Données de la table "user" (mises à jour)
+INSERT INTO "user" (id, email, firstname, lastname, roles, password, is_access, created_at) VALUES
+(1, 'admin@test.fr', 'Baptiste', 'BERTRAND', '["ROLE_ADMIN"]', '$2y$13$KcrqG0c.6TXur02GyCfxdet4TKPvES/mMYmSJd7bbj3nF0bblD5LO', false, '2025-02-21 11:01:51'),
+(2, 'intern@test.fr', 'nicolas', 'GAUDIN', '[]', '$2y$13$NSkc8NeSiCzahAnqq3b3fuc6oS6mnXBJCQ3ZlU1Oa95IvoQndQGHe', false, '2025-06-03 17:10:59'),
+(3, 'search@test.fr', 'kelly', 'GOLDLUST', '["ROLE_SEARCH"]', '$2y$13$IhSEXtg4oVLcjSa57DQXEu./JVIRa.qw0YfB.lXIIYk1Pk0Itv0N.', false, '2025-07-23 23:00:18'),
+(6, 'jerem@test.fr', 'Jeremy', 'Gony', '["ROLE_ADMIN"]', '$2y$13$INvr8a5HDeBifjWWzHi7gu.x5udhdh75CqcJ.1ZbT/qjJ8vv4kle2', false, '2025-11-07 06:26:05')
+ON CONFLICT (id) DO NOTHING;
+
+SELECT setval('user_id_seq', (SELECT MAX(id) FROM "user"));
