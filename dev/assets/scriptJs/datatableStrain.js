@@ -73,13 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         ],
         orderClasses: false,
-        rowGroup: {
-            dataSrc: 1,
-            startRender(rows) {
-                const [ checkbox, id, name ] = rows.data()[0];
-                return 'ID : ' + id + ' – Souche : ' + name;
-            }
-        },
+        rowGroup: false,
         
         initComplete: function () {
             const api = this.api();
@@ -275,41 +269,50 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Partie 5. Popups (info/fichier) pour le téléchargement et les bonnes directions
+    // Popups (info/fichier)
     const typeMap = {
         sequencing: 'sequencing',
         phenotype: 'phenotype',
         drugResistanceOnStrain: 'drugs'
     };
 
-    let lastTriggerCell = null; // mémorise la cellule qui a ouvert le popup
+    let lastTriggerCell = null;
 
-    document.querySelectorAll('td[data-info]').forEach(cell => {
+    document.querySelectorAll('td div[data-info]').forEach(cell => {
+
         cell.addEventListener('click', event => {
+            event.stopPropagation();
+
             const info = cell.dataset.info;
             const fileName = cell.dataset.file;
             const popup = document.getElementById('infoPopup');
             const downloadLink = document.getElementById('popupDownload');
             if (!popup || !downloadLink) return;
 
-            // toggle si on reclique la même cellule
+            // toggle fermeture / ouverture
             const isSameCell = lastTriggerCell === cell;
             const isVisible = popup.style.display !== 'none' && popup.style.display !== '';
+
             if (isSameCell && isVisible) {
                 popup.style.display = 'none';
                 lastTriggerCell = null;
                 return;
             }
 
+            // détecte le type du fichier selon la classe du DIV
             let fileType = null;
             for (const cls in typeMap) {
-                if (cell.classList.contains(cls)) { fileType = typeMap[cls]; break; }
+                if (cell.classList.contains(cls)) {
+                    fileType = typeMap[cls];
+                    break;
+                }
             }
 
+            // Remplit le popup
             document.getElementById('popupTitle').innerText = 'Détails';
             document.getElementById('popupDetails').innerText = info;
 
-            if (fileName && fileName !== '--' && fileType) {
+            if (fileName && fileName !== '--' && fileType && !cell.classList.contains('description') && !cell.classList.contains('comment')) {
                 downloadLink.href = `/documents/download/${fileType}/${fileName}`;
                 downloadLink.style.display = 'inline-block';
                 downloadLink.setAttribute('download', fileName);
@@ -319,33 +322,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 downloadLink.removeAttribute('href');
             }
 
+
+            // Positionnement du popup
             popup.style.display = 'block';
             popup.style.left = `${event.pageX + 10}px`;
-            popup.style.top  = `${event.pageY + 10}px`;
+            popup.style.top = `${event.pageY + 10}px`;
 
             lastTriggerCell = cell;
         });
+
     });
 
     // clic ailleurs -> ferme
     document.addEventListener('click', event => {
         const popup = document.getElementById('infoPopup');
         if (!popup) return;
-        if (!popup.contains(event.target) && !event.target.closest('td[data-info]')) {
+        if (!popup.contains(event.target) && !event.target.closest('td div[data-info]')) {
             popup.style.display = 'none';
             lastTriggerCell = null;
         }
     });
-
-    // ⬇️ NOUVEAU : clic sur le POPUP lui-même -> ferme (2e clic sur la fenêtre)
-    (function(){
-        const popup = document.getElementById('infoPopup');
-        if (!popup) return;
-        popup.addEventListener('click', () => {
-            popup.style.display = 'none';
-            lastTriggerCell = null;
-        });
-    })();
 
 });
 

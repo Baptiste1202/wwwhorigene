@@ -1,21 +1,5 @@
-# Ignorer le dossier docker à la racine
-# /docker/
-/public/
-/.history/
-
-# Ignorer le fichier docker-compose.yml à la racine
-/dev/.env
-
-###> symfony/framework-bundle ###
-/config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
-/var/
-/vendor/
-###< symfony/framework-bundle ###
-
-###> symfony/asset-mapper ###
-/public/assets/
-/assets/vendor/
-/public/docs/
+# Docker
+/docker/
+/docker-compose.yml
 
 

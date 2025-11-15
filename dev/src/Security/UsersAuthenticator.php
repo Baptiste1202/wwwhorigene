@@ -44,15 +44,34 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-            
+        $user = $token->getUser();
+
+        // Vérifie si l'utilisateur a accès
+        if (!$user->isAccess()) {
+            // Déconnexion immédiate si accès interdit
+            $this->logoutUser($request);
+
+            // Redirection avec message d'erreur (tu peux gérer le flash ou query param)
+            return new RedirectResponse($this->urlGenerator->generate(self::LOGIN_ROUTE, [
+                'error' => 'Votre compte n’a pas l’autorisation d’accéder au site.'
+            ]));
+        }
+
+        // Redirection vers la page cible si existante
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
 
-        // For example:
         return new RedirectResponse($this->urlGenerator->generate('page_strains'));
-        // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
-        
+    }
+
+    /**
+     * Déconnecte l'utilisateur en supprimant le token et invalidant la session
+     */
+    private function logoutUser(Request $request): void
+    {
+        $request->getSession()->invalidate();
+        $request->getSession()->getBag('flashes')->clear(); // si tu utilises des flashes
     }
 
     protected function getLoginUrl(Request $request): string

@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\MethodSequencing;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichFileType;
@@ -17,9 +18,20 @@ class SequencingFormType extends AbstractType
         $builder
             ->add('file', VichFileType::class, options:[
                 'required' => false,
-                'label' => 'Upload File'
-            ])
-            ->add('name', options:[
+                'label' => 'Upload File',
+                'allow_delete' => true,
+                'download_uri' => false,
+            ]); 
+
+            if ($options['is_update']) {
+                $builder->add('nameFile', TextType::class, [
+                    'label' => 'File Name',
+                    'required' => false,
+                    'disabled' => true,
+                ]);
+            }
+
+            $builder->add('name', options:[
                 'label' => 'Method'
             ])
             ->add('date', DateType::class, [
@@ -52,6 +64,9 @@ class SequencingFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => MethodSequencing::class,
+            'is_update' => false,
         ]);
+
+        $resolver->setDefined('is_update');
     }
 }

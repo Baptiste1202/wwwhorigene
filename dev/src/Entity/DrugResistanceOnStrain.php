@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\DrugOnStrainRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -29,7 +30,7 @@ class DrugResistanceOnStrain
     private ?string $comment = null;
 
     #[ORM\ManyToOne(targetEntity: Strain::class, inversedBy: 'drugResistanceOnStrain')]
-    private Strain $strain;
+    private ?Strain $strain = null;
 
     #[ORM\Column(nullable: true)]
     private ?bool $resistant = null;
@@ -39,6 +40,9 @@ class DrugResistanceOnStrain
 
     #[ORM\Column(nullable: true)]
     private ?string $nameFile = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?DateTime $date = null;
 
     public function getId(): ?int
     {
@@ -118,6 +122,10 @@ class DrugResistanceOnStrain
     public function setFile(?File $file = null): void
     {
         $this->file = $file;
+
+        if ($file) {
+            $this->date = new \DateTime();
+        }
     }
 
     public function getFile(): ?File
@@ -134,6 +142,18 @@ class DrugResistanceOnStrain
     {
         $this->nameFile = $nom;
 
+    }
+
+    public function getDate(): ?\DateTime
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTime $date): self
+    {
+        $this->date = $date;
+
+        return $this;
     }
 
 

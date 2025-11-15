@@ -274,51 +274,43 @@ $(document).ready(function () {
 
             $rows.each(function (idx) {
                 const $row = $(this);
-                // //console.log(`[Download] row[${idx}] ->`, $row.get(0));
 
                 // sequencing
                 if (types.includes('sequencing')) {
-                    const $cellS = $row.find('td.sequencing');
-                    const fnS = $cellS.data('file');
-                    // //console.log(`[Download] strain ${strainId} sequencing cell data-file =`, fnS);
-                    if (fnS && fnS !== '--') {
-                        const key = `${strainId}|sequencing|${fnS}`;
-                        if (!dedup.has(key)) {
-                            dedup.add(key);
-                            fileEntries.push({ id: strainId, type: 'sequencing', name: fnS, downloadName: fnS });
-                            // //console.log(`[Download] +ADD sequencing ->`, { id: strainId, name: fnS });
-                        } else {
-                            // //console.log(`[Download] sequencing duplicate skipped ->`, key);
+                    const $cellsS = $row.find('td.sequencing [data-file]');
+                    $cellsS.each(function () {
+                        const fnS = $(this).data('file');
+                        if (fnS && fnS !== '--') {
+                            const key = `${strainId}|sequencing|${fnS}`;
+                            if (!dedup.has(key)) {
+                                dedup.add(key);
+                                fileEntries.push({
+                                    id: strainId,
+                                    type: 'sequencing',
+                                    name: fnS,
+                                    downloadName: fnS
+                                });
+                            }
                         }
-                    } else {
-                        // //console.warn(`[Download] sequencing: missing data-file for strain ${strainId} on this row`, $cellS.get(0));
-                    }
+                    });
                 }
 
-                // drugs (ex "drugResistance" normalized above)
                 if (types.includes('drugs')) {
-                    const $cellD = $row.find('td.drugResistanceOnStrain');
-                    const fnD = $cellD.data('file');
-                    // //console.log(`[Download] strain ${strainId} drugs cell data-file =`, fnD);
-                    if (fnD && fnD !== '--') {
-                        const key = `${strainId}|drugs|${fnD}`;
-                        if (!dedup.has(key)) {
-                            dedup.add(key);
-                            fileEntries.push({ id: strainId, type: 'drugs', name: fnD, downloadName: fnD });
-                            // //console.log(`[Download] +ADD drugs ->`, { id: strainId, name: fnD });
-                        } else {
-                            // //console.log(`[Download] drugs duplicate skipped ->`, key);
+                    $row.find('td.drugResistanceOnStrain [data-file]').each(function() {
+                        const fnD = $(this).data('file');
+                        if (fnD && fnD !== '--') {
+                            const key = `${strainId}|drugs|${fnD}`;
+                            if (!dedup.has(key)) {
+                                dedup.add(key);
+                                fileEntries.push({ id: strainId, type: 'drugs', name: fnD, downloadName: fnD });
+                            }
                         }
-                    } else {
-                        // //console.warn(`[Download] drugs: missing data-file for strain ${strainId} on this row`, $cellD.get(0));
-                    }
+                    });
                 }
-
-                // phenotype -> NOTHING to do on front-end (server will filter via phenotypeTypeIds)
             });
-        });
+        }
+        );
 
-        // //console.log('[Download] fileEntries (sequencing/drugs only) =', fileEntries);
 
         if (!fileEntries.length && !types.includes('phenotype')) {
             showError('No file available for your selection.');

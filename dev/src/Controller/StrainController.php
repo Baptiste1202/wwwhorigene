@@ -184,7 +184,9 @@ class StrainController extends AbstractController
                 $filter = 'all';
             }
 
-            $strainForm = $this->createForm(StrainFormType::class, $strain);
+            $strainForm = $this->createForm(StrainFormType::class, $strain, [
+                'is_update' => true,
+            ]);
             $strainForm->handleRequest($request);
 
             if ($strainForm->isSubmitted() && $strainForm->isValid()) {
@@ -384,7 +386,7 @@ class StrainController extends AbstractController
             $clone->setInfoGenotype($strain->getInfoGenotype());
             $clone->setPrelevement($strain->getPrelevement());
             $clone->setCreatedBy($user);
-            $clone->setDate($strain->getDate());
+            $clone->setDate(new \DateTime());
             
             // Relation vers le parent (on ne copie pas l'arbre entier)
             $clone->setParentStrain($strain->getParentStrain());

@@ -56,8 +56,17 @@ class PhenotypeFormType extends AbstractType
             ->add('file', VichFileType::class, options:[
                 'required' => false,
                 'label' => 'Upload File'
-            ])
-            ->add('description', TextareaType::class, options:[
+            ]);
+
+            if ($options['is_update']) {
+                $builder->add('fileName', TextType::class, [
+                    'label' => 'File Name',
+                    'required' => false,
+                    'disabled' => true,
+                ]);
+            }
+
+            $builder->add('description', TextareaType::class, options:[
                 'label' => 'Description',
                 'required' => false,
                 'attr' => [
@@ -81,6 +90,9 @@ class PhenotypeFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Phenotype::class,
-        ]);
+            'is_update' => false,
+            ]);
+
+            $resolver->setDefined('is_update');
     }
 }

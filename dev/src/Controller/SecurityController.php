@@ -12,17 +12,28 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        if ($this->getUser()) {
-             return $this->redirectToRoute('page_strains');
+        $user = $this->getUser();
+    
+        if ($user) {
+            if (!$user->isAccess()) {
+                // Déconnexion automatique si l'accès est interdit
+                dd($container);
+                $this->container->get('security.token_storage')->setToken(null);
+                $this->container->getSession()->invalidate();
+
+                return $this->redirectToRoute('app_login', [
+                    'error' => 'Votre compte n’a pas l’autorisation d’accéder au site.'
+                ]);
+            }
+
+            return $this->redirectToRoute('page_strains');
         }
 
-        // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', [
-            'last_username' => $lastUsername, 
+            'last_username' => $lastUsername,
             'error' => $error
         ]);
     }

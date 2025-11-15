@@ -29,6 +29,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StrainFormType extends AbstractType
 {
@@ -115,7 +116,10 @@ class StrainFormType extends AbstractType
 
             ->add('phenotype', type:CollectionType::class, options:[
                 'entry_type' => PhenotypeFormType::class,
-                'entry_options' => ['label' => false],
+                'entry_options' => [
+                    'label' => false,
+                    'is_update' => $options['is_update'],
+                ],
                 'allow_add' => true,  // Permet d'ajouter dynamiquement des entrées
                 'allow_delete' => true, // Permet de supprimer dynamiquement
                 'by_reference' => false, // Important pour la persistance
@@ -132,7 +136,10 @@ class StrainFormType extends AbstractType
             ])
             ->add('drugResistanceOnStrain', type:CollectionType::class, options:[
                 'entry_type' => DrugOnFormType::class,
-                'entry_options' => ['label' => false],
+                'entry_options' => [
+                    'label' => false,
+                    'is_update' => $options['is_update'],
+                ],
                 'allow_add' => true,  // Permet d'ajouter dynamiquement des entrées
                 'allow_delete' => true, // Permet de supprimer dynamiquement
                 'by_reference' => false, // Important pour la persistance
@@ -149,7 +156,10 @@ class StrainFormType extends AbstractType
             ])
             ->add('methodSequencing', type:CollectionType::class, options:[
                 'entry_type' => SequencingFormType::class,
-                'entry_options' => ['label' => false],
+                'entry_options' => [
+                    'label' => false,
+                    'is_update' => $options['is_update'],
+                ],
                 'allow_add' => true,  // Permet d'ajouter dynamiquement des entrées
                 'allow_delete' => true, // Permet de supprimer dynamiquement
                 'by_reference' => false, // Important pour la persistance
@@ -183,5 +193,16 @@ class StrainFormType extends AbstractType
             ])
             ->add('prelevement', SampleAutocompleteField::class);
             
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Strain::class,
+            'is_update' => false, // valeur par défaut
+        ]);
+
+        // Déclare explicitement l'option personnalisée
+        $resolver->setDefined('is_update');
     }
 }
