@@ -129,6 +129,9 @@ class StrainFormType extends AbstractType
             ])
             ->add('plasmyd', type:CollectionType::class, options:[
                 'entry_type' => PlasmydAutocompleteField::class,
+                'entry_options' => [
+                    'label' => false,
+                ],
                 'allow_add' => true,   // Permet d'ajouter des entrées dynamiquement
                 'allow_delete' => true, // Permet de supprimer des entrées
                 'by_reference' => false, // Nécessaire pour éviter les problèmes avec les relations bidirectionnelles
@@ -149,6 +152,9 @@ class StrainFormType extends AbstractType
             ])
             ->add('publication', type:CollectionType::class, options:[
                 'entry_type' => PublicationAutocompleteField::class,
+                'entry_options' => [
+                    'label' => false,
+                ],
                 'allow_add' => true,   // Permet d'ajouter des entrées dynamiquement
                 'allow_delete' => true, // Permet de supprimer des entrées
                 'by_reference' => false, // Nécessaire pour éviter les problèmes avec les relations bidirectionnelles
@@ -179,6 +185,9 @@ class StrainFormType extends AbstractType
             ])
             ->add('project', type:CollectionType::class, options:[
                 'entry_type' => ProjectAutocompleteField::class,
+                'entry_options' => [
+                    'label' => false,
+                ],
                 'allow_add' => true,   // Permet d'ajouter des entrées dynamiquement
                 'allow_delete' => true, // Permet de supprimer des entrées
                 'by_reference' => false, // Nécessaire pour éviter les problèmes avec les relations bidirectionnelles
@@ -186,6 +195,9 @@ class StrainFormType extends AbstractType
             ])
             ->add('collec', type:CollectionType::class, options:[
                 'entry_type' => CollecAutocompleteField::class,
+                'entry_options' => [
+                    'label' => false,
+                ],
                 'allow_add' => true,   // Permet d'ajouter des entrées dynamiquement
                 'allow_delete' => true, // Permet de supprimer des entrées
                 'by_reference' => false, // Nécessaire pour éviter les problèmes avec les relations bidirectionnelles

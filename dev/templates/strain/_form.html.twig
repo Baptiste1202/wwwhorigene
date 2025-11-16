@@ -41,7 +41,7 @@
             </ul>
         </div>
 
-        <div class="add-btn">
+        <div id="project-add-btn" class="add-btn">
             <label>Project</label>
             <button type="button" class="add_item_link" data-collection-holder-class="project">+</button>
         </div>
@@ -50,7 +50,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="collec-add" class="group">
+    <div id="collec-add" class="group">
     {% endif %}
         <div id="collec-add-info" class="hidden-tags">
             <ul class="collec"
@@ -71,7 +71,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="plasmyd-add" class="group">
+    <div id="plasmyd-add" class="group">
     {% endif %}
         <div id="plasmyd-add-info" class="hidden-tags">
             <ul class="plasmyd"
@@ -211,6 +211,13 @@
 
 <script>
 
+document.addEventListener('DOMContentLoaded', () => {
+    const drugItems = document.querySelectorAll('#drug-add-info li');
+    drugItems.forEach(item => {
+        item.style.minHeight = '50px'; // ou la hauteur adaptée à ton input
+    });
+});
+
 function toggleStorage() {
     event.preventDefault();
     var storageDiv = document.getElementById("storage");
@@ -312,21 +319,33 @@ function addFormToCollection(e) {
     if (!collectionHolder.classList.contains('drugResistanceOnStrain')) {
         const existingItems = collectionHolder.querySelectorAll('li');
         if (existingItems.length > 1) {
-            const lastItem = existingItems[existingItems.length - 2]; // Avant-dernier (le dernier est celui qu'on vient d'ajouter)
+            const lastItem = existingItems[existingItems.length - 2]; // Avant-dernier
 
             const lastInputs = lastItem.querySelectorAll('input, select, textarea');
             const newInputs = item.querySelectorAll('input, select, textarea');
+
             lastInputs.forEach((input, i) => {
-                if (newInputs[i]) {
-                    if (input.tagName === 'SELECT') {
-                        newInputs[i].value = input.value;
-                    } else if (input.type === 'checkbox' || input.type === 'radio') {
-                        newInputs[i].checked = input.checked;
-                    } else if (input.type === 'file') {
-                        newInputs[i].value = ''; 
-                    } else {
-                        newInputs[i].value = input.value;
+                if (!newInputs[i]) return;
+
+                // Ne pas copier les champs contenant fileName ou NameFile dans l'ID
+                const id = input.id || "";
+                if (/filename|namefile/i.test(id)) {
+                    newInputs[i].value = "";      // On force à vide
+                    if (newInputs[i].type === "checkbox" || newInputs[i].type === "radio") {
+                        newInputs[i].checked = false;
                     }
+                    return;
+                }
+
+                // Comportement normal
+                if (input.tagName === 'SELECT') {
+                    newInputs[i].value = input.value;
+                } else if (input.type === 'checkbox' || input.type === 'radio') {
+                    newInputs[i].checked = input.checked;
+                } else if (input.type === 'file') {
+                    newInputs[i].value = ''; 
+                } else {
+                    newInputs[i].value = input.value;
                 }
             });
         }
@@ -337,7 +356,7 @@ function addFormToCollection(e) {
     const labelType = e.currentTarget.closest('div')?.querySelector('label')?.textContent.trim();
     const label = item.querySelector('label');
     if (label && labelType) {
-        label.textContent = `${labelType} ${parseInt(index) + 1}`;
+        label.textContent = `${labelType}`;
     }
 
     // Ajouter le bouton de suppression

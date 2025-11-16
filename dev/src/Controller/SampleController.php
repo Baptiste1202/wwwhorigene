@@ -65,10 +65,11 @@ class SampleController extends AbstractController
         $sampleForm->handleRequest($request);
 
         if ($sampleForm->isSubmitted() && $sampleForm->isValid()) {
+
+            $sample->setUser($this->getUser());
             $em->persist($sample);
             $em->flush();
 
-            // Tu peux ajouter un flash ici si tu veux
             return $sampleForm;
         }
 
@@ -158,6 +159,8 @@ class SampleController extends AbstractController
         try {
             $user = $security->getUser();
 
+            dd($user);
+
             $clone = new Sample();
             $clone->setName($sample->getName());
             $clone->setType($sample->getType());
@@ -171,7 +174,7 @@ class SampleController extends AbstractController
             $clone->setOther($sample->getOther());
             $clone->setDescription($sample->getDescription());
             $clone->setComment($sample->getComment());
-            $clone->setUser($user->getId());
+            $clone->setUser($user);
 
             $em->persist($clone);
             $em->flush();

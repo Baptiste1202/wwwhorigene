@@ -144,10 +144,13 @@
 
 /* Formulaire avec largeur fixe */
 #global #form {
-    width: 20vw;
-    max-width: 20vw; /* Ne dépasse pas */
+    width: 22vw;
+    max-width: 22vw; /* Ne dépasse pas */
     flex-shrink: 0; /* Ne se réduit pas */
     box-sizing: border-box; /* Inclut padding dans la largeur */
+    max-height: 92vh;        /* ou la hauteur que tu veux */
+    overflow-y: auto;     /* scroll vertical si le contenu dépasse */
+    overflow-x: hidden; 
     
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -388,6 +391,7 @@ button.btn-form:hover,
 
 .col-12 form ul {
     width: 100%;
+    margin-right: 4%;
 }
 
 
@@ -1109,7 +1113,6 @@ thead th, tbody td {
     display: none;
     padding: 0 !important;
     height: 0;
-    width: 0;
 }
 
 .hidden {
@@ -1199,32 +1202,28 @@ thead th, tbody td {
 }
 
 /* ===========================================================
-   Modifie a strain
+   Modifie a strain - CSS Harmonisé
 =========================================================== */
 
-
-.group{
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ajoute une légère ombre pour l'esthétique */
-    padding: 20px; /* Espace intérieur pour le contenu */
-    margin-right : 20px;
-    border : 1px solid;
-    border-radius: 5px; /* Coins arrondis */
-    background-color: #f9f9f9; /* Couleur de fond */
-    font-family: 'Roboto', sans-serif;  
-    position: relative;
+/* ========== STYLES DE BASE ========== */
+ul {
+    list-style: none;
 }
 
-.group.long{
-    max-width: 3fr;
-    width: 3fr;
-    box-sizing: border-box;
+.group {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border : 1px solid;
+    border-radius: 5px;
+    margin-right: 20px;
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;  
+    position: relative;
 }
 
 .group.long input,
 .group.long label {
     max-width: 250px;
     box-sizing: border-box;
-    
 }
 
 ul.drugResistanceOnStrain > li {
@@ -1232,276 +1231,94 @@ ul.drugResistanceOnStrain > li {
     width: 100%;
 }
 
-.update-form .prime{
-    display: flex;
-    flex-direction: column;
-    grid-column: 1;
-    grid-row: 1/3;
+/* ========== LARGEUR COMPLÈTE POUR ÉLÉMENTS DE FORMULAIRE ========== */
+#drug-add div,
+#storage-add div,
+#storage-add input,
+#project-add-info div,
+#collec-add-info div,
+#phenotype-add-info div,
+#sequencing-add-info div {
+    width: 100% !important;
+    min-width: 0;
 }
 
-.update-form .prime2{
-    display: flex;
-    flex-direction: column;
-    grid-column: 1;
-    grid-row: 3/5;
+.ts-control,
+.ts-wrapper {
+    width: 100% !important;
+    min-width: 0;
 }
 
-.update-form #project-add{
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 1;
+.vich-file input {
+    width: 100% !important;
+    min-width: 200px;
 }
 
-.update-form #collec-add{
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 2;
+#collec-add-info select,
+#project-add-info select {
+    width: 100% !important;
+    min-width: 0;
 }
 
-.update-form div[id*="strain_form_collec_"] {
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 2;
+.update-form select[id^="strain_form_collec_"] + .ts-wrapper,
+.update-form select[id^="strain_form_project_"] + .ts-wrapper {
+    width: 100% !important;
 }
 
-.update-form #plasmyd-add{
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 3;
+div[id*="strain_form_drugResistanceOnStrain_"],
+div[id*="strain_form_storage_"] {
+    width: 100%;
 }
 
-.update-form div[id*="strain_form_plasmyd_"] {
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 3;
-}
-
-.update-form #publication-add{
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 4;
-}
-
-.update-form div[id*="strain_form_publication_"] {
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 4;
-}
-
-.update-form #drug-add,
-.update-form #strain_form_drugResistanceOnStrain{
-    display: flex;
-    flex-direction: column;
-    grid-column: 3;
-    grid-row: 1/5;
-}
-
-.update-form div[id*="strain_form_drugResistanceOnStrain_"] {
-    display: flex;
-    flex-direction: column;
-    grid-column: 3;
-    grid-row: 1/5;
-}
-
-.update-form #phenotype-add,
-.update-form #strain_form_phenotype{
-    display: flex;
-    flex-direction: column;
-    grid-column: 1;
-    grid-row: 5/8;
-}
-
-.update-form div[id*="strain_form_phenotype_"] {
-    display: flex;
-    flex-direction: column;
-    grid-column: 1;
-    grid-row: 5/8;
-}
-
-.update-form #sequencing-add,
-.update-form #strain_form_sequencing{
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 5/8;
-}
-
-.update-form div[id*="strain_form_sequencing_"] {
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 5/8;
-}
-
-.update-form #storage-add,
-.update-form #strain_form_storage{
-    display: flex;
-    flex-direction: column;
-    grid-column: 3;
-    grid-row: 5/8;
-}
-
-.update-form div[id*="strain_form_storage_"] {
-    display: flex;
-    flex-direction: column;
-    grid-column: 3;
-    grid-row: 5/8;
-}
-
-.update-form{
+/* ========== CONFIGURATION GRID PRINCIPALE ========== */
+.update-form {
     display: grid !important;
-    grid-template-columns: repeat(1, 33%);
-    grid-template-rows: repeat(8, auto);
+    grid-template-columns: repeat(2, 50%);
+    grid-template-rows: repeat(12, auto);
+    grid-auto-rows: auto;
+    padding-right: 30px;
+    padding-left: 15%;
+    padding-right: 15%;
 }
 
-/* Les input s’adaptent à la longueur du contenu */
+/* ========== INPUTS ADAPTATIFS ========== */
 .update-form input[type="text"],
 .update-form input[type="number"],
 .update-form input[type="date"],
 .update-form input[type="email"],
 .update-form input[type="password"] {
-    width: auto;         /* largeur auto, selon contenu */
-    min-width: 50px;     /* largeur minimale pour rester lisible */
-    max-width: 100%;     /* ne déborde pas du conteneur */
-    box-sizing: content-box; /* largeur calculée seulement sur le texte */
+    width: auto;
+    min-width: 50px;
+    max-width: 100%;
+    box-sizing: content-box;
 }
 
-/* Afficher le texte sélectionné au complet pour Collection et Project (TomSelect) */
-.update-form select[id^="strain_form_collec_"] + .ts-wrapper .ts-control,
-.update-form select[id^="strain_form_project_"] + .ts-wrapper .ts-control {
-  overflow: visible; /* laisse déborder si le texte est long */
+/* ========== DISPOSITION EN COLONNE ========== */
+.update-form #project-add,
+.update-form #collec-add,
+.update-form #plasmyd-add,
+.update-form #publication-add {
+    display: flex;
+    flex-direction: column;
 }
 
-.update-form select[id^="strain_form_collec_"] + .ts-wrapper .ts-control .item,
-.update-form select[id^="strain_form_project_"] + .ts-wrapper .ts-control .item {
-  white-space: nowrap;   /* reste sur une seule ligne */
-  width: max-content;    /* prend la largeur du texte (ex: "project 1") */
-  overflow: visible;     /* pas de masquage à droite */
-  text-overflow: clip;   /* pas de "..." */
-}
-
-.group{
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ajoute une légère ombre pour l'esthétique */
-    padding: 20px; /* Espace intérieur pour le contenu */
-    margin-right : 20px;
-    border : 1px solid;
-    border-radius: 5px; /* Coins arrondis */
-    background-color: #f9f9f9; /* Couleur de fond */
-    font-family: 'Roboto', sans-serif;  
-    position: relative;
-}
-
-.group.long{
-    max-width: 3fr;
-    width: 3fr;
-    box-sizing: border-box;
-}
-
-.group.long input,
-.group.long label {
-    max-width: 250px;
-    box-sizing: border-box;
-    
-}
-
-ul.drugResistanceOnStrain > li {
-    display: block;
-    width: 100%;
-}
-
-.update-form .prime{
+/* ========== POSITIONNEMENT GRID - COLONNE 1 ========== */
+.update-form .prime {
     display: flex;
     flex-direction: column;
     grid-column: 1;
     grid-row: 1/3;
 }
 
-.update-form .prime2{
+.update-form .prime2 {
     display: flex;
     flex-direction: column;
     grid-column: 1;
     grid-row: 3/5;
 }
 
-.update-form #project-add{
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.update-form #collec-add{
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 2;
-}
-
-.update-form div[id*="strain_form_collec_"] {
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 2;
-}
-
-.update-form #plasmyd-add{
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 3;
-}
-
-.update-form div[id*="strain_form_plasmyd_"] {
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 3;
-}
-
-.update-form #publication-add{
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 4;
-}
-
-.update-form div[id*="strain_form_publication_"] {
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 4;
-}
-
-.update-form #drug-add,
-.update-form #strain_form_drugResistanceOnStrain{
-    display: flex;
-    flex-direction: column;
-    grid-column: 3;
-    grid-row: 1/5;
-}
-
-.update-form div[id*="strain_form_drugResistanceOnStrain_"] {
-    display: flex;
-    flex-direction: column;
-    grid-column: 3;
-    grid-row: 1/5;
-}
-
 .update-form #phenotype-add,
-.update-form #strain_form_phenotype{
-    display: flex;
-    flex-direction: column;
-    grid-column: 1;
-    grid-row: 5/8;
-}
-
+.update-form #strain_form_phenotype,
 .update-form div[id*="strain_form_phenotype_"] {
     display: flex;
     flex-direction: column;
@@ -1509,14 +1326,74 @@ ul.drugResistanceOnStrain > li {
     grid-row: 5/8;
 }
 
-.update-form #sequencing-add,
-.update-form #strain_form_sequencing{
+.update-form #drug-add {
+    display: flex;
+    flex-direction: column;
+    grid-column: 1;
+    grid-row-start: 8;
+}
+
+.update-form div[id*="strain_form_drugResistanceOnStrain_"] {
+    display: flex;
+    flex-direction: column;
+    grid-column: 1;
+    grid-row: 8/12;
+}
+
+/* ========== POSITIONNEMENT GRID - COLONNE 2 ========== */
+
+/* Conteneurs principaux */
+.update-form #project-add {
     display: flex;
     flex-direction: column;
     grid-column: 2;
-    grid-row: 5/8;
+    grid-row: 1;
 }
 
+.update-form #collec-add {
+    display: flex;
+    flex-direction: column;
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.update-form #plasmyd-add {
+    display: flex;
+    flex-direction: column;
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.update-form #publication-add {
+    display: flex;
+    flex-direction: column;
+    grid-column: 2;
+    grid-row: 4;
+}
+
+/* Divs générés par Symfony (pour compatibilité) */
+.update-form div[id*="strain_form_project_"] {
+    display: flex;
+    flex-direction: column;
+}
+
+.update-form div[id*="strain_form_collec_"] {
+    display: flex;
+    flex-direction: column;
+}
+
+.update-form div[id*="strain_form_plasmyd_"] {
+    display: flex;
+    flex-direction: column;
+}
+
+.update-form div[id*="strain_form_publication_"] {
+    display: flex;
+    flex-direction: column;
+}
+
+.update-form #sequencing-add,
+.update-form #strain_form_sequencing,
 .update-form div[id*="strain_form_sequencing_"] {
     display: flex;
     flex-direction: column;
@@ -1525,18 +1402,24 @@ ul.drugResistanceOnStrain > li {
 }
 
 .update-form #storage-add,
-.update-form #strain_form_storage{
+.update-form #strain_form_storage {
     display: flex;
     flex-direction: column;
-    grid-column: 3;
-    grid-row: 5/8;
+    grid-column: 2;
+    grid-row: 8/12;
 }
 
 .update-form div[id*="strain_form_storage_"] {
     display: flex;
     flex-direction: column;
-    grid-column: 3;
-    grid-row: 5/8;
+}
+
+/* ========== OVERFLOW SPÉCIFIQUE ========== */
+#drug-add-info,
+#drug-add-info ul {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
 }
 
 /* ===========================================================

@@ -63,7 +63,7 @@
                         <td>{{ sample.other }}</td>
                         <td>{{ sample.description }}</td>
                         <td>{{ sample.comment }}</td>
-                        <td>{{ sample.user }}</td> <!-- 🟢 Nouvelle colonne -->
+                        <td>{{ sample.user.firstname }} {{ sample.user.lastname }}</td>
                         
                         <td>
                             <a href="{{ path('duplicate_sample', { id: sample.id }) }}"

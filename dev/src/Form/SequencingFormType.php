@@ -15,13 +15,14 @@ class SequencingFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
-            ->add('file', VichFileType::class, options:[
+            $builder->add('name', options:[
+                'label' => 'Sequencing'
+            ])
+
+            ->add('date', DateType::class, [
+                'widget' => 'single_text', 
                 'required' => false,
-                'label' => 'Upload File',
-                'allow_delete' => true,
-                'download_uri' => false,
-            ]); 
+            ]);
 
             if ($options['is_update']) {
                 $builder->add('nameFile', TextType::class, [
@@ -31,14 +32,7 @@ class SequencingFormType extends AbstractType
                 ]);
             }
 
-            $builder->add('name', options:[
-                'label' => 'Method'
-            ])
-            ->add('date', DateType::class, [
-                'widget' => 'single_text', 
-                'required' => false,
-            ])
-            ->add('description', TextareaType::class, options:[
+            $builder->add('description', TextareaType::class, options:[
                 'label' => 'Description',
                 'required' => false,
                 'attr' => [
@@ -47,6 +41,7 @@ class SequencingFormType extends AbstractType
                     'placeholder' => 'Enter your description here...'
                 ]
             ])
+            
             ->add('comment', TextareaType::class, options:[
                 'label' => 'Comments',
                 'required' => false,
@@ -55,7 +50,13 @@ class SequencingFormType extends AbstractType
                     'maxlength' => 245, 
                     'placeholder' => 'Enter your comment here...'
                 ]
-            ]);           
+            ])
+            ->add('file', VichFileType::class, options:[
+                'required' => false,
+                'label' => 'Upload File',
+                'download_uri' => false,
+                'allow_delete' => false,
+            ]); ;           
 
             
     }
