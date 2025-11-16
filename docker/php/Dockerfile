@@ -37,14 +37,7 @@ WORKDIR /var/www/html
 # --------------------------
 # 5) Installer les dépendances et préparer le dossier public/docs
 # --------------------------
-RUN composer install --no-interaction --optimize-autoloader \
-    && mkdir -p /var/www/html/public/docs/phenotype \
-    && chown -R www-data:www-data /var/www/html/public/docs/phenotype \
-    && chmod 755 /var/www/html/public/docs/phenotype \
-    && chown -R www-data:www-data /var/www/html/public/docs/drugs \
-    && chmod 755 /var/www/html/public/docs/drugs \
-    && chown -R www-data:www-data /var/www/html/public/docs/sequencing \
-    && chmod 755 /var/www/html/public/docs/sequencing \
+RUN composer install --no-interaction --optimize-autoloader
     
 
 # Exposer le port
