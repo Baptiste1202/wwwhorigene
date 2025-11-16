@@ -19,17 +19,26 @@ final class Version20251116124955 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE sample ADD user_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE sample ADD CONSTRAINT FK_F10B76C3A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
-        $this->addSql('CREATE INDEX IDX_F10B76C3A76ED395 ON sample (user_id)');
+        // Ajouter la colonne
+        $this->addSql('ALTER TABLE sample ADD COLUMN user_id INT');
+
+        // Ajouter la contrainte de clé étrangère
+        $this->addSql('ALTER TABLE sample ADD CONSTRAINT fk_sample_user FOREIGN KEY (user_id) REFERENCES "user"(id)');
+
+        // Créer l’index
+        $this->addSql('CREATE INDEX idx_sample_user_id ON sample (user_id)');
     }
 
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE sample DROP FOREIGN KEY FK_F10B76C3A76ED395');
-        $this->addSql('DROP INDEX IDX_F10B76C3A76ED395 ON sample');
-        $this->addSql('ALTER TABLE sample DROP user_id');
+        // Supprimer la clé étrangère
+        $this->addSql('ALTER TABLE sample DROP CONSTRAINT fk_sample_user');
+
+        // Supprimer l’index
+        $this->addSql('DROP INDEX idx_sample_user_id');
+
+        // Supprimer la colonne
+        $this->addSql('ALTER TABLE sample DROP COLUMN user_id');
     }
 }
+
