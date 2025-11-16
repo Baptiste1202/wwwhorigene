@@ -268,16 +268,17 @@ $(document).ready(function () {
 
         strainIds.forEach(strainId => {
             const $rows = $('#data-table tbody tr').filter(function () {
-                return $(this).find('td.id').text().trim() === strainId && $(this).is(':visible');
+                const rowId = $(this).find('td.id').text().trim();
+                const visible = $(this).is(':visible');
+                return rowId === strainId && visible;
             });
-            // //console.log(`[Download] rows for strain ${strainId} =`, $rows.length);
 
-            $rows.each(function (idx) {
+            $rows.each(function () {
                 const $row = $(this);
 
                 // sequencing
                 if (types.includes('sequencing')) {
-                    const $cellsS = $row.find('td.sequencing [data-file]');
+                    const $cellsS = $row.find('.sequencing[data-file]');
                     $cellsS.each(function () {
                         const fnS = $(this).data('file');
                         if (fnS && fnS !== '--') {
@@ -295,26 +296,30 @@ $(document).ready(function () {
                     });
                 }
 
+                // drugs
                 if (types.includes('drugs')) {
-                    $row.find('td.drugResistanceOnStrain [data-file]').each(function() {
+                    const $cellsD = $row.find('.drugResistanceOnStrain[data-file]');
+                    $cellsD.each(function () {
                         const fnD = $(this).data('file');
                         if (fnD && fnD !== '--') {
                             const key = `${strainId}|drugs|${fnD}`;
                             if (!dedup.has(key)) {
                                 dedup.add(key);
-                                fileEntries.push({ id: strainId, type: 'drugs', name: fnD, downloadName: fnD });
+                                fileEntries.push({
+                                    id: strainId,
+                                    type: 'drugs',
+                                    name: fnD,
+                                    downloadName: fnD
+                                });
                             }
                         }
                     });
                 }
             });
-        }
-        );
-
+        });
 
         if (!fileEntries.length && !types.includes('phenotype')) {
             showError('No file available for your selection.');
-            // //console.log('================= [Download] ABORT: no entries and no phenotype =================');
             return;
         }
 

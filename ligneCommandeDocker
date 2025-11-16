@@ -1,16 +1,31 @@
+############################ Nouveau protocole ##################### 
+
+http://localhost:8093/login
+
+.env
+DATABASE_URL="mysql://uvivacar:nopassword@claranet2-db-1:3306/vivacadb?serverVersion=8.0.39&charset=utf8mb4"
+
+http://localhost:8898/index.php?route=/table/change&db=vivacadb&table=user&where_clause=%60user%60.%60id%60+%3D+1&where_clause_signature=d2c0f01723e8fcacdabe0398e79bea45388fab6b2a5299e8dc6e0c6099575eac&clause_is_unique=1&sql_query=SELECT+%2A+FROM+%60user%60&sql_signature=77b51f85a2842491dba48e325c0245dc648d6cbeb9cf3ebc581284c8aee144cd&goto=index.php%3Froute%3D%2Fsql&default_action=update
+---- mettre sur admin : is_access a 1
+
+Dans entity User.php annoté  la ligne 17
+//#[ORM\Table(name: '"user"', schema: 'public')] : note 
+
+docker compose down
+docker compose up -d
+
+docker exec -it claranet2-app-1 bash
+bin/console doctrine:migration:migrate
+php bin/console fos:elastica:populate
+
 ############### lien utile ############### 
 
-http://localhost:8092/public/login
-http://localhost:8899
+http://localhost:8093/login
+http://localhost:8898
 
 ############### Protocole instalation de l'application  en docker ############### 
 
-sudo docker compose up --build -d
-
-sudo docker compose down
-sudo docker compose up -d
-
-http://localhost:8899/
+http://localhost:8093/login
 import de vivacadb.sql
 
 .env

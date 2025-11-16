@@ -82,36 +82,34 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        const groups = [];
-        let currentGroup = null;
-        table.querySelectorAll('tbody tr').forEach(row => {
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            // Si jamais il reste des lignes de groupement (RowGroup)
             if (row.classList.contains('dtrg-group')) {
-                currentGroup = { header: row, items: [] };
-                groups.push(currentGroup);
-            } else if (currentGroup) {
-                currentGroup.items.push(row);
+                return;
             }
-        });
 
-        groups.forEach(group => {
-            const keepGroup = group.items.some(row => {
-                let match = true;
-                if (filterActive) {
-                    const txt = row.children[creatorIndex]?.textContent.trim() || '';
-                    match = (txt === swappedName);
-                }
-                if (match && searchTerm !== '') {
-                    const limit = Math.max(0, row.cells.length - 3);
-                    const cells = Array.from(row.cells).slice(0, limit);
-                    match = cells.some(cell => cell.textContent.toLowerCase().includes(searchTerm));
-                }
-                return match;
-            });
+            let match = true;
 
-            group.header.style.display = keepGroup ? '' : 'none';
-            group.items.forEach(row => {
-                row.style.display = keepGroup ? '' : 'none';
-            });
+            // 1) Filtre par utilisateur (colonne creatorIndex)
+            if (filterActive && creatorIndex !== -1) {
+                const txt = row.children[creatorIndex]?.textContent.trim() || '';
+                match = (txt === swappedName);
+            }
+
+            // 2) Filtre texte (#customSearch)
+            if (match && searchTerm !== '') {
+                // On ignore les 3 dernières colonnes (actions)
+                const limit = Math.max(0, row.cells.length - 3);
+                const cells = Array.from(row.cells).slice(0, limit);
+
+                match = cells.some(cell =>
+                    cell.textContent.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // 3) Afficher / cacher la ligne
+            row.style.display = match ? '' : 'none';
         });
 
         // 2) pousser la valeur du filtre dans TOUS les liens "Modifier"
