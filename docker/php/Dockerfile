@@ -4,19 +4,18 @@ FROM php:8.3-apache
 # --------------------------
 # 1) Extensions PHP nécessaires
 # --------------------------
-RUN apt-get update && apt-get install -y libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql pdo_mysql
+RUN apt-get update && apt-get install -y libpq-dev zip unzip git \
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql \
+    && rm -rf /var/lib/apt/lists/*
 
 # --------------------------
 # 2) Outils utiles
 # --------------------------
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-RUN curl -sS https://get.symfony.com/cli/installer | bash && mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
-RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
-
-# Installer zip
-RUN apt-get update && apt-get install -y --no-install-recommends zip \
-    && rm -rf /var/lib/apt/lists/*
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
+    && curl -sS https://get.symfony.com/cli/installer | bash \
+    && mv /root/.symfony5/bin/symfony /usr/local/bin/symfony \
+    && curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer
 
 # --------------------------
 # 3) Apache
@@ -34,6 +33,19 @@ COPY dev/ /var/www/html/
 
 # Définir le dossier de travail
 WORKDIR /var/www/html
+
+# --------------------------
+# 5) Installer les dépendances et préparer le dossier public/docs
+# --------------------------
+RUN composer install --no-interaction --optimize-autoloader \
+    && mkdir -p /var/www/html/public/docs/phenotype \
+    && chown -R www-data:www-data /var/www/html/public/docs/phenotype \
+    && chmod 755 /var/www/html/public/docs/phenotype \
+    && chown -R www-data:www-data /var/www/html/public/docs/drugs \
+    && chmod 755 /var/www/html/public/docs/drugs \
+    && chown -R www-data:www-data /var/www/html/public/docs/sequencing \
+    && chmod 755 /var/www/html/public/docs/sequencing \
+    
 
 # Exposer le port
 EXPOSE 80
