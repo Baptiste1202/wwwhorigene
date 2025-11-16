@@ -172,7 +172,7 @@ $(document).ready(function () {
         hideError();
         const selectedCount = $('input[name="selected_strain[]"]:checked')
             .filter(function(){ return $(this).is(':visible'); }).length;
-        console.log('[OpenModal] selected visible strains count =', selectedCount);
+        // //console.log('[OpenModal] selected visible strains count =', selectedCount);
         if (selectedCount === 0) {
             alert('Please select at least one strain first.');
             return;
@@ -180,7 +180,7 @@ $(document).ready(function () {
         ensurePtBlockReadyIfNeeded();
         ensureExtensionUI();
         $modal.css('display', 'flex');
-        console.log('[OpenModal] modal opened');
+        // //console.log('[OpenModal] modal opened');
     });
 
     // 2) Close modal
@@ -252,7 +252,7 @@ $(document).ready(function () {
         if (types.includes('all')) {
             types = ['sequencing','phenotype','drugs'];
         }
-        console.log('[Download] file types after normalize/expand =', types);
+        // //console.log('[Download] file types after normalize/expand =', types);
 
         // 4.3) If phenotype requested → IDs of checked phenotype types (for the server)
         let phenotypeTypeIds = [];
@@ -320,7 +320,6 @@ $(document).ready(function () {
 
         if (!fileEntries.length && !types.includes('phenotype')) {
             showError('No file available for your selection.');
-            console.log('================= [Download] ABORT: no entries and no phenotype =================');
             return;
         }
 
