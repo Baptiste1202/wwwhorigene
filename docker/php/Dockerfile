@@ -4,7 +4,6 @@ FROM php:8.3-apache
 # --------------------------
 # 1) Extensions PHP nécessaires
 # --------------------------
-RUN docker-php-ext-install pdo pdo_mysql
 RUN apt-get update && apt-get install -y libpq-dev \
     && docker-php-ext-install pdo pdo_pgsql pdo_mysql
 
