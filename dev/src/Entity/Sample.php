@@ -5,8 +5,6 @@ namespace App\Entity;
 use App\Repository\SampleRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: SampleRepository::class)]
@@ -53,9 +51,9 @@ class Sample
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $comment = null;
 
-    // A MODIFIER par une entité User
-    #[ORM\Column(length: 255)]
-    private ?string $user = null;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $user = null;
 
     /**
      * @var Collection<int, Strain>
@@ -206,12 +204,12 @@ class Sample
         return $this;
     }
 
-    public function getUser(): ?string
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(string $user): static
+    public function setUser(User $user): static
     {
         $this->user = $user;
 

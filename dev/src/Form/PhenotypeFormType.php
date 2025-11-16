@@ -22,7 +22,7 @@ class PhenotypeFormType extends AbstractType
     {
         $builder
             ->add('phenotypeType',type:EntityType::class, options:[
-                'label' => 'Type',
+                'label' => 'Phenotype',
                 'class' => PhenotypeType::class,
                 'choice_label' => function (PhenotypeType $phenotypetype) {
                     return $phenotypetype->getType(); 
@@ -52,10 +52,6 @@ class PhenotypeFormType extends AbstractType
             ->add('date', DateType::class, [
                 'widget' => 'single_text', 
                 'required' => false,
-            ])
-            ->add('file', VichFileType::class, options:[
-                'required' => false,
-                'label' => 'Upload File'
             ]);
 
             if ($options['is_update']) {
@@ -83,6 +79,13 @@ class PhenotypeFormType extends AbstractType
                     'maxlength' => 245, 
                     'placeholder' => 'Enter your comment here...'
                 ]
+            ])
+
+            ->add('file', VichFileType::class, options:[
+                'required' => false,
+                'label' => 'Upload File',
+                'download_uri' => false,
+                'allow_delete' => false,
             ]);  
     }
 

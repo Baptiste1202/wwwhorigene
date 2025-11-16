@@ -22,6 +22,7 @@ class DrugOnFormType extends AbstractType
             ->add('drugResistance', type:DrugAutocompleteField::class, options:[ 
                 'placeholder' => 'Select a drug',  
                 'required' => true,
+                'label' => 'Drug',
             ])
             ->add('concentration', options:[
                 'label' => 'Concentration',
@@ -32,10 +33,6 @@ class DrugOnFormType extends AbstractType
             ->add('resistant', CheckboxType::class, options:[
                 'label' => 'Resistant',
                 'required' => false
-            ])
-            ->add('file', VichFileType::class, options:[
-                'required' => false,
-                'label' => 'Upload File'
             ]);
 
             if ($options['is_update']) {
@@ -63,7 +60,13 @@ class DrugOnFormType extends AbstractType
                     'maxlength' => 245, 
                     'placeholder' => 'Enter your comment here...'
                 ]
-            ]);  
+            ])
+            ->add('file', VichFileType::class, options:[
+                'required' => false,
+                'label' => 'Upload File',
+                'download_uri' => false,
+                'allow_delete' => false,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

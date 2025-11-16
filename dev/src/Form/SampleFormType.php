@@ -46,10 +46,6 @@ class SampleFormType extends AbstractType
             ])
             ->add('comment', options:[
                 'label' => 'Comments'
-            ])
-            ->add('user', options:[
-                'label' => 'User'
             ]);
-            
     }
 }

@@ -401,37 +401,39 @@
                                     {% endif %}
                                 </div>
 
-                                 {% if (strain.methodSequencing is not empty)%}
-                                    {% set maxLength = strain.methodSequencing|length %}
-                                    {% if maxLength > 1 %} 
-                                        {% for i in 1..(maxLength - 1) %}
-                                            <div id="sub-cell-sequencing_{{i}}"
+                                 {% if strain.methodSequencing is not empty %}
+                                    {% set seqLength = strain.methodSequencing|length %}
+                                    {% if seqLength > 1 %}
+                                        {% for i in 1..(seqLength - 1) %}
+                                            {% set seqItem = strain.methodSequencing[i] %}
+                                            <div id="sub-cell-sequencing_{{ i }}"
                                                 class="sub-cell sequencing clicable"
                                                 data-info='
-                                                    date : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing[i].date|date('d/m/Y')  : '--'}}
-                                                    method : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing[i].name  : '--'}}
-                                                    file : {{ strain.methodSequencing[i] is defined and strain.methodSequencing[i] ? strain.methodSequencing[i].nameFile  : '--'}}'
-                                                    data-file='{{ (strain.methodSequencing|length > i and strain.methodSequencing[i].nameFile) ? strain.methodSequencing[i].nameFile : "--" }}'
-                                                >
-                                                    {{ strain.methodSequencing[i] is defined ? strain.methodSequencing[i].name : '' }} <br>
-                                                    {% if strain.methodSequencing[i] is defined  %}
-                                                        {% set name = strain.methodSequencing[i].nameFile ?: strain.methodSequencing[i].nameFile %}
-                                                        {% set maxLength = 10 %}
-
-                                                        {% if name|length > maxLength %}
-                                                            {% set prefix = name|slice(0, 12) %}
-                                                            {% set suffix = nameFile|slice(-10) %}
-                                                            {{ prefix ~ '...' ~ suffix }}
-                                                        {% else %}
-                                                            {{ name }}
-                                                        {% endif %} <br>
+                                                    date : {{ seqItem.date is defined and seqItem.date ? seqItem.date|date('d/m/Y') : '--' }}
+                                                    method : {{ seqItem.name is defined and seqItem.name ? seqItem.name : '--' }}
+                                                    file : {{ seqItem.nameFile is defined and seqItem.nameFile ? seqItem.nameFile : '--' }}'
+                                                data-file='{{ seqItem.nameFile is defined ? seqItem.nameFile : "--" }}'>
+                                                
+                                                {{ seqItem.name is defined ? seqItem.name : '' }} <br>
+                                                
+                                                {% if seqItem.nameFile is defined %}
+                                                    {% set fileName = seqItem.nameFile %}
+                                                    {% set displayMax = 10 %}
+                                                    {% if fileName|length > displayMax %}
+                                                        {% set prefix = fileName|slice(0, 12) %}
+                                                        {% set suffix = fileName|slice(-10) %}
+                                                        {{ prefix ~ '...' ~ suffix }}
                                                     {% else %}
-                                                        --
+                                                        {{ fileName }}
                                                     {% endif %}
+                                                    <br>
+                                                {% else %}
+                                                    --
+                                                {% endif %}
                                             </div>
                                         {% endfor %}
                                     {% endif %}
-                                {% endif %}                          
+                                {% endif %}                        
                             </td>
 
                             <td>
