@@ -531,19 +531,27 @@ class StrainController extends AbstractController
                 $boolQuery->addFilter(new MatchQuery('methodSequencing.typeFile', $data->sequencing));
             }
 
-            if ($data->drug ){
-                $this->logger->info('Add drug', ['drug_id' => $data->drug->getId()]);
+            // On entre ici si on a soit un drug, soit un état résistant/sensible
+            if ($data->drug || $data->resistant !== null) {
                 $nestedBool = new BoolQuery();
-                
+
+                // 1) Filtre par antibiotique (optionnel)
                 if ($data->drug) {
-                    $nestedBool->addFilter(new MatchQuery('drugResistanceOnStrain.drugResistance.id', $data->drug->getId()));
-                }
-            
-                if ($data->resistant !== null) {
-                    $this->logger->info('Add resistant', ['resistant' => $data->resistant]);
-                    $nestedBool->addFilter(new MatchQuery('drugResistanceOnStrain.resistant', $data->resistant));
+                    $this->logger->info('Add drug', ['drug_id' => $data->drug->getId()]);
+                    $nestedBool->addFilter(
+                        new MatchQuery('drugResistanceOnStrain.drugResistance.id', $data->drug->getId())
+                    );
                 }
 
+                // 2) Filtre par état résistant / sensible (optionnel)
+                if ($data->resistant !== null) {
+                    $this->logger->info('Add resistant', ['resistant' => $data->resistant]);
+                    $nestedBool->addFilter(
+                        new MatchQuery('drugResistanceOnStrain.resistant', $data->resistant)
+                    );
+                }
+
+                // 3) Nested query sur drugResistanceOnStrain
                 $nested = new Nested();
                 $nested->setPath('drugResistanceOnStrain');
                 $nested->setQuery($nestedBool);
