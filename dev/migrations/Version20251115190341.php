@@ -19,15 +19,25 @@ final class Version20251115190341 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE drug_resistance_on_strain CHANGE date date DATETIME DEFAULT NULL');
-        $this->addSql('ALTER TABLE user CHANGE is_verified is_access TINYINT(1) NOT NULL');
+        // Modifier la colonne 'date' de drug_resistance_on_strain
+        $this->addSql('ALTER TABLE drug_resistance_on_strain ALTER COLUMN date TYPE TIMESTAMP');
+        $this->addSql('ALTER TABLE drug_resistance_on_strain ALTER COLUMN date DROP DEFAULT');
+
+        // Modifier la colonne 'is_verified' de user en 'is_access' de type BOOLEAN
+        $this->addSql('ALTER TABLE "user" ALTER COLUMN is_verified TYPE BOOLEAN USING is_verified::boolean');
+        $this->addSql('ALTER TABLE "user" RENAME COLUMN is_verified TO is_access');
+        $this->addSql('ALTER TABLE "user" ALTER COLUMN is_access SET NOT NULL');
     }
 
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE drug_resistance_on_strain CHANGE date date VARCHAR(255) DEFAULT NULL');
-        $this->addSql('ALTER TABLE user CHANGE is_access is_verified TINYINT(1) NOT NULL');
+        // Revenir sur la colonne 'date'
+        $this->addSql('ALTER TABLE drug_resistance_on_strain ALTER COLUMN date TYPE VARCHAR(255)');
+        $this->addSql('ALTER TABLE drug_resistance_on_strain ALTER COLUMN date DROP DEFAULT');
+
+        // Revenir sur la colonne 'is_access' vers 'is_verified' de type BOOLEAN
+        $this->addSql('ALTER TABLE "user" ALTER COLUMN is_access TYPE BOOLEAN USING is_access::boolean');
+        $this->addSql('ALTER TABLE "user" RENAME COLUMN is_access TO is_verified');
+        $this->addSql('ALTER TABLE "user" ALTER COLUMN is_verified SET NOT NULL');
     }
 }
