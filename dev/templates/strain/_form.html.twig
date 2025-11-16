@@ -276,6 +276,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// PATCH : avant, certains blocs (comme "Collection") restaient cachés (hidden-tags)
+// même s'ils avaient déjà des éléments en mode édition. On corrige en les affichant
+// automatiquement au chargement dès qu'un <ul> contient au moins un <li>.
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.hidden-tags').forEach(div => {
+        const ul = div.querySelector('ul');
+        if (ul && ul.querySelectorAll('li').length > 0) {
+            // Il y a déjà des items → on affiche
+            div.classList.remove('hidden-tags');
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.hidden-tags').forEach(div => {
+        const ul = div.querySelector('ul');
+        if (ul && ul.querySelectorAll('li').length > 0) {
+            // Il y a déjà des items → on affiche
+            div.classList.remove('hidden-tags');
+        }
+    });
+});
+
+
 document.querySelectorAll('.add_item_link').forEach(btn => {
     btn.addEventListener("click", (e) => {
         const collectionClass = e.currentTarget.dataset.collectionHolderClass;
