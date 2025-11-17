@@ -41,4 +41,14 @@ services:
         arguments:
             $persister: '@fos_elastica.object_persister.strain'
 
-            
+    # Adaptateur de stockage S3 pour Vich
+    app.vich_storage.s3:
+        class: App\Storage\S3VichStorage
+        arguments:
+            - '@vich_uploader.property_mapping_factory'
+            - '%env(AWS_ACCESS_KEY_ID)%'
+            - '%env(AWS_SECRET_ACCESS_KEY)%'
+            - '%env(AWS_REGION)%'
+            - '%env(AWS_BUCKET)%'
+            - '@logger'
+        public: true

@@ -1,5 +1,6 @@
 vich_uploader:
     db_driver: orm
+    storage: '@app.vich_storage.s3'
     metadata: 
         type: attribute
 
