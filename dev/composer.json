@@ -44,6 +44,9 @@
         "sort-packages": true,
         "platform": {
             "php": "8.3.27"
+        },
+        "audit": {
+            "block-insecure": false
         }
     },
     "autoload": {
