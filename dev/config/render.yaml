@@ -1,8 +1,0 @@
-services:
-  - type: web
-    name: wwwhorigene
-    runtime: docker
-    disk:
-          name: public-docs
-          mountPath: /opt/render/project/src/public/docs
-          sizeGB: 1
