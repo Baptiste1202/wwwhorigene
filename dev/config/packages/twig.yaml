@@ -1,9 +1,0 @@
-twig:
-    file_name_pattern: '*.twig'
-    globals:
-        pagerfanta_view: 'twitter_bootstrap5'
-    paths: ['%kernel.project_dir%/templates']
-
-when@test:
-    twig:
-        strict_variables: true
