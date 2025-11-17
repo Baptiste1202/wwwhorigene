@@ -1,4 +1,8 @@
 #!/bin/bash
+set -e
 
-# Lancer la commande fos:elastica:populate
-php bin/console fos:elastica:populate
+echo "Démarrage de l'application..."
+
+# Vérifier si Elasticsearch est accessible
+echo "Vérification d'Elasticsearch..."
+php bin/console fos:elastica:populate --quiet || echo "Erreur lors de la population Elasticsearch"
