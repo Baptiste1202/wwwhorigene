@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: wwwhorigene
+    runtime: docker
+    disk:
+          name: public-docs
+          mountPath: /opt/render/project/src/public/docs
+          sizeGB: 1
+    # ✅ S'exécute UNIQUEMENT lors d'un nouveau build/déploiement
+    buildCommand: |
+      apt update
+      apt install zip unzip git
+      composer install
+
+      chown -R www-data:www-data /var/www/html/public/docs/phenotype
+      chmod 755 /var/www/html/public/docs/phenotype
+
+      chown -R www-data:www-data /var/www/html/public/docs/drugs
+      chmod 755 /var/www/html/public/docs/drugs
+
+      chown -R www-data:www-data /var/www/html/public/docs/sequencing
+      chmod 755 /var/www/html/public/docs/sequencing
+    
+    # ✅ S'exécute à CHAQUE démarrage (déploiement + réveil après inactivité)
+    startCommand: |
+      bin/console fos:elastica:populate --quiet

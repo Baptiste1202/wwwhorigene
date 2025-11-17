@@ -159,8 +159,6 @@ class SampleController extends AbstractController
         try {
             $user = $security->getUser();
 
-            dd($user);
-
             $clone = new Sample();
             $clone->setName($sample->getName());
             $clone->setType($sample->getType());
