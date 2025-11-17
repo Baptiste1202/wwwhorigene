@@ -6,7 +6,6 @@
 
 # Symfony Asset Mapper
 /public/assets/
-/assets/vendor/
 
 # Node / JS / assets
 /assets/vendor/
