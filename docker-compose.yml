@@ -1,18 +1,32 @@
 services:
+
   app:
     build:
       context: docker/php
+      args:
+        USER_ID: 1000
+        GROUP_ID: 1000
     volumes:
-      - ./dev:/var/www/html
-      - es-data:/usr/share/elasticsearch/data
+      - "./dev:/var/www/html:rw"
     ports:
-      - "80:80"
-      - "9200:9200"
+      - 8093:80
     networks:
       - vivacar
 
-volumes:
-  es-data:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.16
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
+    volumes:
+      - /usr/share/elasticsearch/data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - vivacar
 
 networks:
   vivacar:
+  

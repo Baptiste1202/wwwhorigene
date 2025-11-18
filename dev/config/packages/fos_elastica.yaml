@@ -1,7 +1,7 @@
 fos_elastica:
   clients:
     default:
-      host: localhost
+      host: elasticsearch
       port: 9200
 
   indexes:
