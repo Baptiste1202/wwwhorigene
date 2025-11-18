@@ -3,7 +3,7 @@ fos_elastica:
     default:
       host: elasticsearch
       port: 9200
-
+      url: https://5a6a2fb0a9:c6b0a74e6c9ebf434e44@harmonious-larch-1j8k8415.us-east-1.bonsaisearch.net
   indexes:
     strain:
       persistence:
