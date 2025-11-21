@@ -52,3 +52,7 @@ services:
             - '%env(AWS_BUCKET)%'
             - '@logger'
         public: true
+
+    App\Service\S3FileCloner:
+        arguments:
+            $s3Storage: '@app.vich_storage.s3'

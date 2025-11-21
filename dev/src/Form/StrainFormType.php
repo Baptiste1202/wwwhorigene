@@ -41,9 +41,8 @@ class StrainFormType extends AbstractType
                 'label' => 'Parent Strain',
             ])
         */
-            ->add('parentStrain', type:StrainAutocompleteField::class, options:[
-
-            ])
+            ->add('parentStrain', type:StrainAutocompleteField::class, options:[])
+            
             ->add('nameStrain', options:[
                 'label' => 'Name Strain',
                 'required' => false, 

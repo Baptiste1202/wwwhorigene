@@ -3,6 +3,7 @@
 namespace App\Form\Autocomplete;
 
 use App\Entity\Strain;
+use App\Repository\StrainRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
@@ -24,20 +25,16 @@ class StrainAutocompleteField extends AbstractType
                 'specie',
                 'gender'
             ],
-            // Affiche "NomDeSouche – ID" dans la liste
-            'choice_label'     => function (Strain $strain) {
-                return sprintf(
-                    '%s – %d',
-                    $strain->getNameStrain(),
-                    $strain->getId()
-                );
+
+            'choice_label' => function (Strain $strain) {
+                return sprintf('%s – %d', $strain->getNameStrain(), $strain->getId());
             },
 
-            // if the autocomplete endpoint needs to be secured
-            //'security' => 'ROLE_FOOD_ADMIN',
+            'query_builder' => function (StrainRepository $er) {
+                return $er->createQueryBuilder('s')
+                    ->where('s.dateArchive IS NULL');
+            },
 
-            // ... any other normal EntityType options
-            // e.g. query_builder, choice_label
         ]);
     }
 

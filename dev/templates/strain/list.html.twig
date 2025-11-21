@@ -124,7 +124,7 @@
                                     {% set maxLength = 25 %}
 
                                     {% if desc|length > maxLength %}
-                                        {% set prefix = desc|slice(0, 10) %}
+                                        {% set prefix = desc|slice(0, 20) %}
                                         {{ prefix ~ '...'}}
                                     {% else %}
                                         {{ desc }}
@@ -289,7 +289,7 @@
                                 >
                                     {% if strain.drugResistanceOnStrain is not empty %}
                                         {{strain.drugResistanceOnStrain[0].drugResistance.name}} <br>
-                                        {{strain.drugResistanceOnStrain[0].concentration}} <br> 
+                                        {{strain.drugResistanceOnStrain[0].concentration}}
                                         {% if strain.drugResistanceOnStrain[0].resistant == 1 %}
                                             <a class="resistant-display-red"> resistante : &#9888; </a>
                                         {% else %}

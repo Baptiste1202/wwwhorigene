@@ -264,52 +264,59 @@ $(document).ready(function () {
 
         // 4.3 bis) Build fileEntries for sequencing/drugs ONLY
         const fileEntries = [];
-        const dedup = new Set(); // dedup by "id|type|name"
+        const dedup = new Set(); // id|type|filename
 
         strainIds.forEach(strainId => {
             const $rows = $('#data-table tbody tr').filter(function () {
                 const rowId = $(this).find('td.id').text().trim();
-                const visible = $(this).is(':visible');
-                return rowId === strainId && visible;
+                return rowId === strainId && $(this).is(':visible');
             });
 
             $rows.each(function () {
                 const $row = $(this);
 
-                // sequencing
+                // SEQUENCING
                 if (types.includes('sequencing')) {
-                    const $cellsS = $row.find('.sequencing[data-file]');
-                    $cellsS.each(function () {
-                        const fnS = $(this).data('file');
-                        if (fnS && fnS !== '--') {
-                            const key = `${strainId}|sequencing|${fnS}`;
+                    const $seqCell = $row.find('td').has('.sequencing').first();
+                    const $allSeq = $seqCell.find('.sequencing[data-file], .sub-cell.sequencing[data-file]');
+
+                    $allSeq.each(function () {
+                        const fn = $(this).data('file');
+
+                        if (fn && fn !== '--') {
+                            const key = `${strainId}|sequencing|${fn}`;
                             if (!dedup.has(key)) {
                                 dedup.add(key);
+
                                 fileEntries.push({
                                     id: strainId,
                                     type: 'sequencing',
-                                    name: fnS,
-                                    downloadName: fnS
+                                    name: fn,
+                                    downloadName: fn
                                 });
                             }
                         }
                     });
                 }
 
-                // drugs
+                // DRUGS
                 if (types.includes('drugs')) {
-                    const $cellsD = $row.find('.drugResistanceOnStrain[data-file]');
-                    $cellsD.each(function () {
-                        const fnD = $(this).data('file');
-                        if (fnD && fnD !== '--') {
-                            const key = `${strainId}|drugs|${fnD}`;
+                    const $drugCell = $row.find('td').has('.drugResistanceOnStrain').first();
+                    const $allDrugs = $drugCell.find('.drugResistanceOnStrain[data-file], .sub-cell.drugResistanceOnStrain[data-file]');
+
+                    $allDrugs.each(function () {
+                        const fn = $(this).data('file');
+
+                        if (fn && fn !== '--') {
+                            const key = `${strainId}|drugs|${fn}`;
                             if (!dedup.has(key)) {
                                 dedup.add(key);
+
                                 fileEntries.push({
                                     id: strainId,
                                     type: 'drugs',
-                                    name: fnD,
-                                    downloadName: fnD
+                                    name: fn,
+                                    downloadName: fn
                                 });
                             }
                         }

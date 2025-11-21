@@ -14,6 +14,7 @@ use App\Entity\Phenotype;
 class SearchModel
 {
     public function __construct(
+        public ?int $id = null, 
         public ?string $query = null,
         public ?Plasmyd $plasmyd = new Plasmyd(),
         public ?DrugResistance $drug = new DrugResistance(),

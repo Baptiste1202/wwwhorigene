@@ -28,6 +28,7 @@
                 <tr>
                     <th><input type="checkbox" id="select-all" /></th>
                     <th>ID</th>
+                    <th>Name</th>
                     <th>Date</th>
                     <th>Type</th>
                     <th>Country</th>
@@ -52,6 +53,7 @@
                             <input type="checkbox" name="selected_samples[]" value="{{ sample.id }}" class="select-checkbox" />
                         </td>
                         <td>{{ sample.id }}</td>
+                        <td>{{ sample.name }}</td>
                         <td>{{ sample.date|date("d/m/Y") }}</td>
                         <td>{{ sample.type }}</td>
                         <td>{{ sample.country }}</td>

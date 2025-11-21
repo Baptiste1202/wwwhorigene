@@ -30,6 +30,10 @@ class SearchFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         $builder
+        ->add('id', SearchType::class, [
+            'required' => false,
+            'label' => 'ID'
+        ])
         ->add('query', SearchType::class, [
             'required' => false,
             'label' => 'Name'

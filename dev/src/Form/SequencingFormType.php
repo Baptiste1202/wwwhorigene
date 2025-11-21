@@ -16,7 +16,11 @@ class SequencingFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
             $builder->add('name', options:[
-                'label' => 'Sequencing'
+                'label' => 'Sequencing',
+                'attr' => [
+                    'placeholder' => 'Enter a method'
+                ]
+                
             ])
 
             ->add('date', DateType::class, [

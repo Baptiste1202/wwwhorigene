@@ -2,12 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\DrugResistanceOnStrain;
+use App\Entity\MethodSequencing;
+use App\Entity\Phenotype;
 use Psr\Log\LoggerInterface;
 use App\Entity\Strain;
 use App\Form\ParentFormType;
 use App\Form\SearchFormType;
 use App\Repository\StrainRepositoryInterface;
 use App\Form\StrainFormType;
+use App\Service\FileCloner;
+use App\Service\S3FileCloner;
 use App\Service\StrainIndexer;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -222,70 +227,45 @@ class StrainController extends AbstractController
     }
 
 
-    #[Route('strain/delete/{id}', name: 'delete_strain')]
+   #[Route('strain/delete/{id}', name: 'delete_strain')]
     #[IsGranted('ROLE_SEARCH')]
-    public function delete(?Strain $strain, EntityManagerInterface $em, StrainIndexer $indexer): Response
+    public function delete(?Strain $strain, EntityManagerInterface $em): Response
     {
         try {
+            // Arrêter ici volontairement
+
             if (!$strain) {
-            $this->addFlash('error', 'Strain not found.');
-            return $this->redirectToRoute('page_strains');
+                $this->addFlash('error', 'Strain not found.');
+                return $this->redirectToRoute('page_strains');
+            }
+            
+            if (!$this->isGranted('strain.is_creator', $strain)) {
+                throw new AccessDeniedException('');
             }
 
-            if ($strain) {
-                if (!$this->isGranted('strain.is_creator', $strain)) {
-                    throw new AccessDeniedException('');
-                }
+            // Suppression des relations ManyToMany
+            $strain->getCollec()->clear();
+            $strain->getPlasmyd()->clear();
+            $strain->getPublication()->clear();
+            $strain->getProject()->clear();
+
+            foreach ($strain->getPhenotype() as $phenotype) {
+                dd($phenotype->getDocName()); 
             }
 
-            foreach ($strain->getMethodSequencing() as $sequencing){
-                $em->remove($sequencing);
-            }
-            foreach ($strain->getPhenotype() as $transfo){
-                $em->remove($transfo);
-            }
-            foreach($strain->getDrugResistanceOnStrain() as $drug){
-                $em->remove($drug);
-            }
-
-            $collecs = $strain->getCollec()->toArray();
-            foreach($collecs as $collec) {
-                $strain->removeCollec($collec);
-            }
-
-            $plasmyds = $strain->getPlasmyd()->toArray();
-            foreach($plasmyds as $plasmyd) {
-                $strain->removePlasmyd($plasmyd);
-            }
-
-            $publis = $strain->getPublication()->toArray();
-            foreach($publis as $publi) {
-                $strain->removePublication($publi);
-            }
-
-            $projects = $strain->getProject()->toArray();
-            foreach($projects as $project) {
-                $strain->removeProject($project);
-            }
-
-            // Flush les changements des relations avant de supprimer l'entité
-            $em->flush();
-
+            // La suppression des OneToMany se fera automatiquement avec cascade
             $em->remove($strain);
-
             $em->flush();
 
-            $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' delete with success !');
+            $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' deleted with success!');
             sleep(1);
-
             return $this->redirectToRoute('page_strains_bin');
+            
         } catch (AccessDeniedException $e) {
             $this->addFlash('error', 'You do not have permission to delete this strain.');
             return $this->redirectToRoute('page_strains_bin');
         } catch (\Throwable $e) {
-            dump($e); // n'affiche que si mode debug activé
             $this->addFlash('error', 'An error occurred while deleting the strain. Please try again.');
-
             return $this->redirectToRoute('page_strains_bin');
         }
     }
@@ -308,13 +288,13 @@ class StrainController extends AbstractController
 
             $strain->setDateArchive(new \DateTime());
 
-        // Flush les changements des relations avant de supprimer l'entité
             $em->flush();
 
             $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' delete with success !');
             sleep(1);
 
             return $this->redirectToRoute('page_strains');
+
         } catch (AccessDeniedException $e) {
             $this->addFlash('error', 'You do not have permission to delete this strain.');
             return $this->redirectToRoute('page_strains');
@@ -367,14 +347,13 @@ class StrainController extends AbstractController
         Strain $strain,
         EntityManagerInterface $em,
         Security $security,
-        StrainIndexer $indexer
+        StrainIndexer $indexer,
+        S3FileCloner $fileCloner
     ): Response {
-
         try {
             $user = $security->getUser(); 
-
             $clone = new Strain();
-
+            
             // Champs simples
             $clone->setNameStrain($strain->getNameStrain());
             $clone->setSpecie($strain->getSpecie());
@@ -388,45 +367,98 @@ class StrainController extends AbstractController
             $clone->setCreatedBy($user);
             $clone->setDate(new \DateTime());
             
-            // Relation vers le parent (on ne copie pas l'arbre entier)
+            // Relation vers le parent
             $clone->setParentStrain($strain->getParentStrain());
-
-            // Phenotype (OneToMany)
-            foreach ($strain->getPhenotype() as $transfo) {
-                $newTransfo = clone $transfo;
-                $newTransfo->setStrain($clone);
-                $clone->addPhenotype($newTransfo);
+            
+            // Phenotype (OneToMany) avec duplication des fichiers S3
+            foreach ($strain->getPhenotype() as $phenotype) {
+                $newPhenotype = new Phenotype();
+                $newPhenotype->setTechnique($phenotype->getTechnique());
+                $newPhenotype->setDate($phenotype->getDate());
+                $newPhenotype->setPhenotypeType($phenotype->getPhenotypeType());
+                $newPhenotype->setMesure($phenotype->getMesure());
+                $newPhenotype->setDescription($phenotype->getDescription());
+                $newPhenotype->setComment($phenotype->getComment());
+                $newPhenotype->setStrain($clone);
+                
+                // Dupliquer le fichier sur S3
+                if ($phenotype->getFileName()) {
+                    $newFileName = $fileCloner->cloneFile(
+                        $phenotype->getFileName(),
+                        '/docs/phenotype'
+                    );
+                    if ($newFileName) {
+                        $newPhenotype->setFileName($newFileName);
+                    }
+                }
+                
+                $clone->addPhenotype($newPhenotype);
             }
-
-            // DrugResistanceOnStrain (OneToMany)
+            
+            // DrugResistanceOnStrain (OneToMany) avec duplication des fichiers S3
             foreach ($strain->getDrugResistanceOnStrain() as $drug) {
-                $newDrug = clone $drug;
+                $newDrug = new DrugResistanceOnStrain();
+                $newDrug->setDrugResistance($drug->getDrugResistance());
+                $newDrug->setConcentration($drug->getConcentration());
+                $newDrug->setDescription($drug->getDescription());
+                $newDrug->setComment($drug->getComment());
+                $newDrug->setResistant($drug->isResistant());
+                $newDrug->setDate($drug->getDate());
                 $newDrug->setStrain($clone);
+                
+                // Dupliquer le fichier sur S3
+                if ($drug->getNameFile()) {
+                    $newFileName = $fileCloner->cloneFile(
+                        $drug->getNameFile(),
+                        '/docs/drugs' // URI prefix du mapping
+                    );
+                    if ($newFileName) {
+                        $newDrug->setNameFile($newFileName);
+                    }
+                }
+                
                 $clone->addDrugResistanceOnStrain($newDrug);
             }
-
-            // MethodSequencing (OneToMany)
+            
+            // MethodSequencing (OneToMany) avec duplication des fichiers S3
             foreach ($strain->getMethodSequencing() as $method) {
-                $newMethod = clone $method;
+                $newMethod = new MethodSequencing();
+                $newMethod->setName($method->getName());
+                $newMethod->setDate($method->getDate());
+                $newMethod->setTypeFile($method->getTypeFile());
+                $newMethod->setDescription($method->getDescription());
+                $newMethod->setComment($method->getComment());
                 $newMethod->setStrain($clone);
+                
+                // Dupliquer le fichier sur S3
+                if ($method->getNameFile()) {
+                    $newFileName = $fileCloner->cloneFile(
+                        $method->getNameFile(),
+                        '/docs/sequencing' // URI prefix du mapping
+                    );
+                    if ($newFileName) {
+                        $newMethod->setNameFile($newFileName);
+                    }
+                }
+                
                 $clone->addMethodSequencing($newMethod);
             }
-
-            // Plasmyd (ManyToMany) – liaison seulement, pas de clonage
+            
+            // Plasmyd (ManyToMany)
             foreach ($strain->getPlasmyd() as $plasmyd) {
                 $clone->addPlasmyd($plasmyd);
             }
-
+            
             // Publication (ManyToMany)
             foreach ($strain->getPublication() as $pub) {
                 $clone->addPublication($pub);
             }
-
+            
             // Project (ManyToMany)
             foreach ($strain->getProject() as $proj) {
                 $clone->addProject($proj);
             }
-
+            
             // Collec (ManyToMany)
             foreach ($strain->getCollec() as $collec) {
                 $clone->addCollec($collec);
@@ -434,21 +466,28 @@ class StrainController extends AbstractController
             
             $em->persist($clone);
             $em->flush();
-
-            $indexer->index($strain);
-
-            $this->addFlash('success', 'Strain ' . $clone->getNameStrain() . ' duplicate with succes !');
-
+            $indexer->index($clone);
+            
+            $this->addFlash('success', 'Strain ' . $clone->getNameStrain() . ' duplicated with success!');
             sleep(1);
-
-            return $this->redirectToRoute('page_strains');
+            
+            return $this->redirectToRoute('page_strains', [
+                'highlight' => $clone->getId()
+            ]);
+            
         } catch (\Throwable $e) {
+            if ($this->getParameter('kernel.debug')) {
+                throw $e;
+            }
+            $this->logger?->error('Erreur lors de la duplication de la souche', [
+                'strain_id' => $strain->getId(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             $this->addFlash('error', 'An error occurred while duplicating the strain. Please try again.');
-
-            return $this->redirectToRoute('edit_strain');
+            return $this->redirectToRoute('page_strains');
         }
     }
-
     #[Route('/strains/search', name: 'strain_search')]
     public function search(Request $request, EntityManagerInterface $em): Response
     {
@@ -509,6 +548,11 @@ class StrainController extends AbstractController
 
             // ADD THIS: Exclude archived strains (those with dateArchive set)
             $boolQuery->addMustNot(new Exists('dateArchive'));
+            
+            if (!empty($data->id)) {
+                $this->logger->info('Add ID filter', ['id' => $data->id]);
+                $boolQuery->addFilter(new \Elastica\Query\Term(['id' => (int) $data->id]));
+            }
 
             if (!empty($data->query)) {
                 $term = trim($data->query);
