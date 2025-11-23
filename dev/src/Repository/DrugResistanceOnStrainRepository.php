@@ -9,7 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<DrugResistanceOnStrain>
  */
-class DrugOnStrainRepository extends ServiceEntityRepository implements DrugOnStrainRepositoryInterface
+class DrugResistanceOnStrainRepository extends ServiceEntityRepository implements DrugResistanceOnStrainRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

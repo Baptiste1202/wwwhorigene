@@ -24,8 +24,8 @@ class MethodSequencing
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?DateTime $date = null;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $date = null;
 
     #[Vich\UploadableField(mapping: 'sequencing_docs', fileNameProperty: 'nameFile')]
     private ?File $file = null;

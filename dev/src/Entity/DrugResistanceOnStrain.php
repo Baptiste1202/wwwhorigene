@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\DrugOnStrainRepository;
+use App\Repository\DrugResistanceOnStrainRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-#[ORM\Entity(repositoryClass: DrugOnStrainRepository::class)]
+#[ORM\Entity(repositoryClass: DrugResistanceOnStrainRepository::class)]
 #[Vich\Uploadable]
 class DrugResistanceOnStrain
 {
@@ -41,8 +41,8 @@ class DrugResistanceOnStrain
     #[ORM\Column(nullable: true)]
     private ?string $nameFile = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?DateTime $date = null;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $date = null;
 
     public function getId(): ?int
     {
@@ -108,7 +108,7 @@ class DrugResistanceOnStrain
         return $this;
     }
 
-    public function isResistant(): bool
+    public function isResistant(): ?bool
     {
         return $this->resistant;
     }

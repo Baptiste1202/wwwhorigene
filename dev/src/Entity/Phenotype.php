@@ -6,6 +6,7 @@ use App\Repository\PhenotypeRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -27,8 +28,8 @@ class Phenotype
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $fileName = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?DateTime $date = null;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne(targetEntity: PhenotypeType::class)]
     private ?PhenotypeType $phenotypeType = null;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exception;
+namespace App\Exceptions;
 
 /**
  * Exception spécifique levée lorsqu'une erreur survient

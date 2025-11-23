@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use Doctrine\Persistence\ObjectRepository;
 
-interface DrugOnStrainRepositoryInterface extends ObjectRepository
+interface DrugResistanceOnStrainRepositoryInterface extends ObjectRepository
 {
 
 }
