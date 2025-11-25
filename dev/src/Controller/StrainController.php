@@ -249,10 +249,6 @@ class StrainController extends AbstractController
             $strain->getPublication()->clear();
             $strain->getProject()->clear();
 
-            foreach ($strain->getPhenotype() as $phenotype) {
-                dd($phenotype->getDocName()); 
-            }
-
             // La suppression des OneToMany se fera automatiquement avec cascade
             $em->remove($strain);
             $em->flush();
