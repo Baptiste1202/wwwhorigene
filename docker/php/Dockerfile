@@ -1,4 +1,4 @@
-# Dockerfile pour Render — Symfony + Apache + PHP 8.3
+# Dockerfile pour Docker Compose — Symfony + Apache + PHP 8.3
 FROM php:8.3-apache
 
 # --------------------------
@@ -23,14 +23,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends zip \
 # --------------------------
 RUN a2enmod rewrite
 
-# Copier le VHost
-COPY docker/php/000-default.conf /etc/apache2/sites-available/000-default.conf
+# Copier le VHost (fichier présent dans docker/php/)
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN a2dissite 000-default || true && a2ensite 000-default
-
-# --------------------------
-# 4) Copier le code Symfony
-# --------------------------
-COPY dev/ /var/www/html/
 
 # Définir le dossier de travail
 WORKDIR /var/www/html
