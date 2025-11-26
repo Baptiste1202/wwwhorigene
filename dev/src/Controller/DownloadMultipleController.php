@@ -342,15 +342,8 @@ class DownloadMultipleController extends AbstractController
 
                     $zipPath = $this->buildZipPath('phenotype', $filename);
 
-                    if (!in_array($zipPath, $addedFiles, true)) {
-                        $zip->addFileFromStream($zipPath, $stream);
-                        $addedFiles[] = $zipPath;
+                    if ($this->addEntityFileToZip($zip, $phenotype, 'phenotype', $addedFiles)) {
                         $count++;
-                        $this->logger->info('[DEBUG] Phenotype file added to ZIP', ['path' => $zipPath]);
-                    }
-
-                    if (is_resource($stream)) {
-                        fclose($stream);
                     }
 
                 } catch (\Exception $e) {
@@ -384,12 +377,7 @@ class DownloadMultipleController extends AbstractController
         array &$addedFiles
     ): bool {
         try {
-            $this->logger->info('[DEBUG] Attempting to add entity file', [
-                'type' => $type,
-                'entityId' => method_exists($entity, 'getId') ? $entity->getId() : 'unknown'
-            ]);
-
-            // 1️⃣ Récupérer le nom ORIGINAL dans l'entité (pour aller sur S3)
+            // 1️⃣ Récupération du nom original
             $originalFilename = null;
             if (method_exists($entity, 'getNameFile')) {
                 $originalFilename = $entity->getNameFile();
@@ -398,19 +386,11 @@ class DownloadMultipleController extends AbstractController
             }
 
             if (!$originalFilename) {
-                $this->logger->warning('[DEBUG] No filename found', ['type' => $type]);
                 return false;
             }
 
-            $this->logger->info('[DEBUG] Original filename (S3)', [
-                'filename' => $originalFilename,
-                'type' => $type
-            ]);
-
-            // 2️⃣ Récupérer le fichier depuis S3 avec le nom ORIGINAL
+            // 2️⃣ Récupérer le fichier S3
             $s3Key = sprintf('docs/%s/%s', $type, $originalFilename);
-
-            $this->logger->info('[DEBUG] Attempting to get S3 object', ['s3Key' => $s3Key]);
 
             try {
                 $result = $this->s3Storage->getS3Client()->getObject([
@@ -420,76 +400,60 @@ class DownloadMultipleController extends AbstractController
 
                 $stream = $result['Body']->detach();
 
-                if (!$stream || !is_resource($stream)) {
-                    $this->logger->error('[DEBUG] Stream is not valid', [
-                        'stream_is_null' => $stream === null,
-                        'is_resource' => is_resource($stream)
-                    ]);
-                    return false;
-                }
-
-                $this->logger->info('[DEBUG] S3 stream resolved successfully', ['s3Key' => $s3Key]);
-
-            } catch (\Aws\S3\Exception\S3Exception $e) {
-                $this->logger->error('[DEBUG] S3 Exception', [
-                    's3Key' => $s3Key,
-                    'error' => $e->getMessage(),
-                    'code' => $e->getStatusCode()
-                ]);
+            } catch (\Exception $e) {
                 return false;
             }
 
-            // 3️⃣ Récupérer l'ID de la souche pour renommer dans le ZIP seulement
+            // 3️⃣ ID de souche (si dispo)
             $strainId = null;
             if (method_exists($entity, 'getStrain') && $entity->getStrain()) {
                 $strainId = $entity->getStrain()->getId();
             }
 
-            // Nouveau nom dans le ZIP (différent du nom S3)
-            $finalFilename = $originalFilename;
-
-            if ($strainId) {
-                $finalFilename = 'ID_' . $strainId . '_' . $originalFilename;
-
-                $this->logger->info('[DEBUG] Filename updated with strain ID', [
-                    'old' => $originalFilename,
-                    'new' => $finalFilename,
-                    'strainId' => $strainId
-                ]);
-            } else {
-                $this->logger->warning('[DEBUG] No strain ID available → filename NOT modified', [
-                    'filename' => $originalFilename
-                ]);
+            // 4️⃣ TYPE DU PHENOTYPE pour ajout dans le nom de fichier
+            $phenotypeTypeText = null;
+            if ($type === 'phenotype' && method_exists($entity, 'getPhenotypeType')) {
+                $pt = $entity->getPhenotypeType();
+                if ($pt && method_exists($pt, 'getType')) {
+                    $phenotypeTypeText = $pt->getType();  // ex: transformability
+                }
             }
 
-            // 4️⃣ Chemin final dans le ZIP
+            // 5️⃣ Construction du nom final
+            $prefixParts = [];
+
+            if ($strainId) {
+                $prefixParts[] = 'ID_' . $strainId;
+            }
+
+            if ($type === 'phenotype' && $phenotypeTypeText) {
+                // Nettoyage nom (sécurité)
+                $safeType = preg_replace('/[^a-zA-Z0-9_-]/', '_', $phenotypeTypeText);
+                $prefixParts[] = 'TYPE_' . $safeType;
+            }
+
+            $finalFilename = !empty($prefixParts)
+                ? implode('_', $prefixParts) . '_' . $originalFilename
+                : $originalFilename;
+
+            // 6️⃣ Chemin dans le ZIP
             $zipPath = $this->buildZipPath($type, $finalFilename);
 
             // Éviter doublons
-            if (in_array($zipPath, $addedFiles, true)) {
-                $this->logger->debug('[DEBUG] File already added, skipping', ['path' => $zipPath]);
+            if (in_array($zipPath, $addedFiles)) {
                 if (is_resource($stream)) fclose($stream);
                 return false;
             }
 
-            $this->logger->info('[DEBUG] Adding file to ZIP', ['path' => $zipPath]);
-
-            // 5️⃣ Ajout dans le ZIP
+            // 7️⃣ Ajout ZIP
             $zip->addFileFromStream($zipPath, $stream);
             $addedFiles[] = $zipPath;
-
-            $this->logger->info('[DEBUG] File successfully added to ZIP', ['path' => $zipPath]);
 
             if (is_resource($stream)) fclose($stream);
 
             return true;
 
         } catch (\Exception $e) {
-            $this->logger->error('[DEBUG] Error adding entity file to zip', [
-                'type' => $type,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
             return false;
         }
     }
