@@ -389,35 +389,37 @@ class DownloadMultipleController extends AbstractController
                 'entityId' => method_exists($entity, 'getId') ? $entity->getId() : 'unknown'
             ]);
 
-            // Récupérer le nom du fichier depuis l'entité
-            $filename = null;
+            // 1️⃣ Récupérer le nom ORIGINAL dans l'entité (pour aller sur S3)
+            $originalFilename = null;
             if (method_exists($entity, 'getNameFile')) {
-                $filename = $entity->getNameFile();
+                $originalFilename = $entity->getNameFile();
             } elseif (method_exists($entity, 'getFileName')) {
-                $filename = $entity->getFileName();
+                $originalFilename = $entity->getFileName();
             }
 
-            if (!$filename) {
+            if (!$originalFilename) {
                 $this->logger->warning('[DEBUG] No filename found', ['type' => $type]);
                 return false;
             }
 
-            $this->logger->info('[DEBUG] Filename found', ['filename' => $filename, 'type' => $type]);
+            $this->logger->info('[DEBUG] Original filename (S3)', [
+                'filename' => $originalFilename,
+                'type' => $type
+            ]);
 
-            // Construire la clé S3 directement
-            $s3Key = sprintf('docs/%s/%s', $type, $filename);
-            
+            // 2️⃣ Récupérer le fichier depuis S3 avec le nom ORIGINAL
+            $s3Key = sprintf('docs/%s/%s', $type, $originalFilename);
+
             $this->logger->info('[DEBUG] Attempting to get S3 object', ['s3Key' => $s3Key]);
 
-            // Récupérer le stream depuis S3 directement
             try {
                 $result = $this->s3Storage->getS3Client()->getObject([
                     'Bucket' => $this->s3Storage->getBucket(),
                     'Key'    => $s3Key,
                 ]);
-                
+
                 $stream = $result['Body']->detach();
-                
+
                 if (!$stream || !is_resource($stream)) {
                     $this->logger->error('[DEBUG] Stream is not valid', [
                         'stream_is_null' => $stream === null,
@@ -437,25 +439,48 @@ class DownloadMultipleController extends AbstractController
                 return false;
             }
 
-            $zipPath = $this->buildZipPath($type, $filename);
-            
-            // Éviter les doublons
+            // 3️⃣ Récupérer l'ID de la souche pour renommer dans le ZIP seulement
+            $strainId = null;
+            if (method_exists($entity, 'getStrain') && $entity->getStrain()) {
+                $strainId = $entity->getStrain()->getId();
+            }
+
+            // Nouveau nom dans le ZIP (différent du nom S3)
+            $finalFilename = $originalFilename;
+
+            if ($strainId) {
+                $finalFilename = 'ID_' . $strainId . '_' . $originalFilename;
+
+                $this->logger->info('[DEBUG] Filename updated with strain ID', [
+                    'old' => $originalFilename,
+                    'new' => $finalFilename,
+                    'strainId' => $strainId
+                ]);
+            } else {
+                $this->logger->warning('[DEBUG] No strain ID available → filename NOT modified', [
+                    'filename' => $originalFilename
+                ]);
+            }
+
+            // 4️⃣ Chemin final dans le ZIP
+            $zipPath = $this->buildZipPath($type, $finalFilename);
+
+            // Éviter doublons
             if (in_array($zipPath, $addedFiles, true)) {
                 $this->logger->debug('[DEBUG] File already added, skipping', ['path' => $zipPath]);
-                if (is_resource($stream)) {
-                    fclose($stream);
-                }
+                if (is_resource($stream)) fclose($stream);
                 return false;
             }
 
             $this->logger->info('[DEBUG] Adding file to ZIP', ['path' => $zipPath]);
+
+            // 5️⃣ Ajout dans le ZIP
             $zip->addFileFromStream($zipPath, $stream);
             $addedFiles[] = $zipPath;
-            $this->logger->info('[DEBUG] File successfully added to zip', ['path' => $zipPath]);
 
-            if (is_resource($stream)) {
-                fclose($stream);
-            }
+            $this->logger->info('[DEBUG] File successfully added to ZIP', ['path' => $zipPath]);
+
+            if (is_resource($stream)) fclose($stream);
 
             return true;
 

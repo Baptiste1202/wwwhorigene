@@ -286,16 +286,16 @@ class StrainController extends AbstractController
 
             $em->flush();
 
-            $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' delete with success !');
+            $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' archive with success !');
             sleep(1);
 
             return $this->redirectToRoute('page_strains');
 
         } catch (AccessDeniedException $e) {
-            $this->addFlash('error', 'You do not have permission to delete this strain.');
+            $this->addFlash('error', 'You do not have permission to archive this strain.');
             return $this->redirectToRoute('page_strains');
         } catch (\Throwable $e) {
-            $this->addFlash('error', 'An error occurred while deleting the strain. Please try again.');
+            $this->addFlash('error', 'An error occurred while archiving the strain. Please try again.');
 
             return $this->redirectToRoute('page_strains');
         }
