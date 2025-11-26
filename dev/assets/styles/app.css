@@ -701,6 +701,10 @@ thead {
    CSS specifique pour la DATATABLE de strain
 =========================================================== */
 
+.dt-highlight {
+    background-color: #ffeeba !important;
+}
+
 /* enlève les bordures de lignes */
 table.dataTable.display    > tbody > tr > td {
   border-top: none !important;

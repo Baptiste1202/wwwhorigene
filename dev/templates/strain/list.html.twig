@@ -541,7 +541,10 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a href="{{ path('archive_strain', {id: strain.id}) }}" class="button-crud" title="Delete" onclick="return confirm('Do you really want to delete ?');">
+                                    <a href="{{ path('archive_strain', {id: strain.id}) }}"
+                                    class="button-crud"
+                                    title="Archive"
+                                    onclick="return confirm('Do you really want to archive strain {{ strain.id }} — {{ strain.nameStrain }} ?');">
                                         <i class="fa-solid fa-trash"></i>
                                     </a>
                                 </td>
@@ -552,7 +555,10 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a href="{{ path('delete_strain', {id: strain.id}) }}" class="button-crud button-danger" title="Supprimer définitivement" onclick="return confirm('Do you really want to delete ? This cant be undone');">
+                                    <a href="{{ path('delete_strain', {id: strain.id}) }}"
+                                    class="button-crud button-danger"
+                                    title="Supprimer définitivement"
+                                    onclick="return confirm('Do you really want to delete strain {{ strain.id }} — {{ strain.nameStrain }} ? This can\'t be undone');">
                                         <i class="fa-solid fa-trash-alt"></i>
                                     </a>
                                 </td>
@@ -568,14 +574,24 @@
         </table>
         <input type="hidden" name="action" value="" />
         <div class="table-action-bar">
-            <button id="btn-delete-multiple"
-                    type="submit"
-                    form="multi-action-form"
-                    formaction="{{ path('archive_multiple_strains') }}"
-                    onclick="document.getElementById('multi-action-form').elements['action'].value='archive'"
-                    class="btn btn-danger">
-            Delete selected
-            </button>
+            {% if not is_bin %}
+                <button id="btn-archive-multiple"
+                        type="submit"
+                        form="multi-action-form"
+                        formaction="{{ path('archive_multiple_strains') }}"
+                        onclick="document.getElementById('multi-action-form').elements['action'].value='archive'"
+                        class="btn btn-warning">
+                    Archive selected
+                </button>
+            {% else %}
+                <button id="btn-delete-multiple"
+                        type="submit"
+                        form="multi-action-form"
+                        formaction="{{ path('bin_delete_multiple_strains') }}"
+                        class="btn btn-danger">
+                    Delete selected
+                </button>
+            {% endif %}
         </div>
     </form>
 </div>

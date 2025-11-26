@@ -225,7 +225,7 @@ class StrainController extends AbstractController
             return $this->redirectToRoute('page_strains', ['filter' => $filter]);
         }
     }
-
+     
 
    #[Route('strain/delete/{id}', name: 'delete_strain')]
     #[IsGranted('ROLE_SEARCH')]
@@ -467,9 +467,7 @@ class StrainController extends AbstractController
             $this->addFlash('success', 'Strain ' . $clone->getNameStrain() . ' duplicated with success!');
             sleep(1);
             
-            return $this->redirectToRoute('page_strains', [
-                'highlight' => $clone->getId()
-            ]);
+            return $this->redirectToRoute('page_strains');
             
         } catch (\Throwable $e) {
             if ($this->getParameter('kernel.debug')) {
