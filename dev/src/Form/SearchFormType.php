@@ -98,7 +98,7 @@ class SearchFormType extends AbstractType
         ])
         ->add('sequencing', SearchType::class, [ 
             'required' => false,
-            'label' => 'Type file',
+            'label' => 'Sequencing Type file',
             'attr' => [
                 'placeholder' => 'png, fastq...'
             ]
