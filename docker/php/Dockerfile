@@ -16,11 +16,7 @@ RUN a2enmod rewrite
 COPY docker/php/000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN a2dissite 000-default || true && a2ensite 000-default
 
-# --------------------------
-# 3.5) Configuration PHP (AJOUTEZ CECI)
-# --------------------------
-# On copie votre fichier local vers le dossier de config scandé par PHP
-COPY docker/php/php.ini /usr/local/etc/php/conf.d/custom-limits.ini
+COPY docker/php/config/php.ini /usr/local/etc/php/conf.d/custom-limits.ini
 
 # 4) Copier le code Symfony
 COPY dev/ /var/www/html/
