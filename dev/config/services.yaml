@@ -56,3 +56,6 @@ services:
     App\Service\S3FileCloner:
         arguments:
             $s3Storage: '@app.vich_storage.s3'
+
+    App\Service\PreserveExtensionNamer:
+        public: true

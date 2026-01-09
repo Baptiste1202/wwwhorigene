@@ -60,6 +60,9 @@ class SequencingFormType extends AbstractType
                 'label' => 'Upload File',
                 'download_uri' => false,
                 'allow_delete' => false,
+                'attr' => [
+                    'accept' => '*/*', // Accepte tous les types de fichiers
+                ],
             ]); ;           
 
             

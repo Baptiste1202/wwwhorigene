@@ -18,7 +18,7 @@ vich_uploader:
         sequencing_docs:
             uri_prefix: /docs/sequencing
             upload_destination: '%kernel.project_dir%/public/docs/sequencing'
-            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+            namer: 'App\Service\PreserveExtensionNamer'
 
 
             inject_on_load: false

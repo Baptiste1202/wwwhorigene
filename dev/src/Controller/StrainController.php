@@ -113,18 +113,34 @@ class StrainController extends AbstractController
 
                 $strain->setDate(new \DateTime());
 
+                // Met à jour la date pour chaque MethodSequencing avec un fichier
+                // pour que VichUploader détecte correctement les nouveaux fichiers
                 foreach($strain->getMethodSequencing() as $sequencing){
-                    $file = $sequencing->getFile();
-                    if ($file !== null) {
-                        $filename = $file->getClientOriginalName();
-                        $extension = pathinfo($filename, PATHINFO_EXTENSION);
-                        $sequencing->setTypeFile($extension);
+                    if ($sequencing->getFile() !== null) {
+                        $sequencing->setDate(new \DateTime());
                     }
                 }
 
                 //stock data
                 $em->persist($strain);
                 $em->flush();
+                
+                // Recalcule le type de fichier après que VichUploader ait mis à jour nameFile
+                $needsSecondFlush = false;
+                foreach($strain->getMethodSequencing() as $sequencing){
+                    if ($sequencing->getNameFile() !== null) {
+                        $extension = pathinfo($sequencing->getNameFile(), PATHINFO_EXTENSION);
+                        $currentType = $sequencing->getTypeFile();
+                        if ($currentType !== $extension) {
+                            $sequencing->setTypeFile($extension);
+                            $needsSecondFlush = true;
+                        }
+                    }
+                }
+                
+                if ($needsSecondFlush) {
+                    $em->flush();
+                }
 
                 $indexer->index($strain);
                 sleep(1);
@@ -163,6 +179,7 @@ class StrainController extends AbstractController
         Strain $strain,
         Request $request,
         EntityManagerInterface $em,
+        StrainIndexer $indexer,
     ): Response {
         try {
             if ($strain && !$this->isGranted('strain.is_creator', $strain)) {
@@ -195,7 +212,42 @@ class StrainController extends AbstractController
             $strainForm->handleRequest($request);
 
             if ($strainForm->isSubmitted() && $strainForm->isValid()) {
+                // Force Doctrine à persister les MethodSequencing qui ont un nouveau fichier
+                // et met à jour explicitement la date pour que VichUploader détecte le changement
+                foreach($strain->getMethodSequencing() as $sequencing){
+                    if ($sequencing->getFile() !== null) {
+                        // Un nouveau fichier a été uploadé
+                        // IMPORTANT : Mise à jour de la date pour forcer VichUploader à détecter le changement
+                        $sequencing->setDate(new \DateTime());
+                        // Force la persistence
+                        $em->persist($sequencing);
+                    }
+                }
+                
+                // Premier flush pour que VichUploader traite les fichiers et mette à jour nameFile
                 $em->flush();
+                
+                // Maintenant recalcule le type de fichier à partir du nameFile mis à jour
+                $needsSecondFlush = false;
+                foreach($strain->getMethodSequencing() as $sequencing){
+                    if ($sequencing->getNameFile() !== null) {
+                        $extension = pathinfo($sequencing->getNameFile(), PATHINFO_EXTENSION);
+                        $currentType = $sequencing->getTypeFile();
+                        
+                        if ($currentType !== $extension) {
+                            $sequencing->setTypeFile($extension);
+                            $needsSecondFlush = true;
+                        }
+                    }
+                }
+                
+                // Second flush si nécessaire pour persister les types de fichiers mis à jour
+                if ($needsSecondFlush) {
+                    $em->flush();
+                }
+
+                // Réindexe la strain modifiée dans Elasticsearch
+                $indexer->index($strain);
 
                 $this->addFlash('success', 'Strain ' . $strain->getNameStrain() . ' modified with succes !');
 
