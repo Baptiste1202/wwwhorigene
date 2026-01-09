@@ -125,14 +125,14 @@ class DownloadMultipleController extends AbstractController
         try {
             // 1. Traiter les fichiers de séquençage
             if (in_array('sequencing', $types, true)) {
-                $count = $this->addSequencingFiles($zip, $strainIds, $addedFiles);
+                $count = $this->addSequencingFiles($zip, $strainIds, $addedFiles,$extension);
                 $totalFiles += $count;
                 $this->logger->info("Added $count sequencing files");
             }
 
             // 2. Traiter les fichiers de résistance aux drogues
             if (in_array('drugs', $types, true)) {
-                $count = $this->addDrugFiles($zip, $strainIds, $addedFiles);
+                $count = $this->addDrugFiles($zip, $strainIds, $addedFiles,$extension);
                 $totalFiles += $count;
                 $this->logger->info("Added $count drug resistance files");
             }
@@ -166,7 +166,8 @@ class DownloadMultipleController extends AbstractController
     private function addSequencingFiles(
         ZipStream $zip,
         array $strainIds,
-        array &$addedFiles
+        array &$addedFiles,
+        string $extension
     ): int {
         $count = 0;
         
@@ -198,7 +199,7 @@ class DownloadMultipleController extends AbstractController
                     'strainId' => $sequencing->getStrain() ? $sequencing->getStrain()->getId() : null
                 ]);
                 
-                if ($this->addEntityFileToZip($zip, $sequencing, 'sequencing', $addedFiles)) {
+                if ($this->addEntityFileToZip($zip, $sequencing, 'sequencing', $addedFiles,$extension)) {
                     $count++;
                 }
             }
@@ -216,7 +217,8 @@ class DownloadMultipleController extends AbstractController
     private function addDrugFiles(
         ZipStream $zip,
         array $strainIds,
-        array &$addedFiles
+        array &$addedFiles,
+        string $extension
     ): int {
         $count = 0;
         
@@ -235,7 +237,7 @@ class DownloadMultipleController extends AbstractController
             $this->logger->info('Drug resistance files found', ['count' => count($drugs)]);
 
             foreach ($drugs as $drug) {
-                if ($this->addEntityFileToZip($zip, $drug, 'drugs', $addedFiles)) {
+                if ($this->addEntityFileToZip($zip, $drug, 'drugs', $addedFiles,$extension)) {
                     $count++;
                 }
             }
@@ -342,7 +344,7 @@ class DownloadMultipleController extends AbstractController
 
                     $zipPath = $this->buildZipPath('phenotype', $filename);
 
-                    if ($this->addEntityFileToZip($zip, $phenotype, 'phenotype', $addedFiles)) {
+                    if ($this->addEntityFileToZip($zip, $phenotype, 'phenotype', $addedFiles,$extension)) {
                         $count++;
                     }
 
@@ -374,7 +376,8 @@ class DownloadMultipleController extends AbstractController
         ZipStream $zip,
         object $entity,
         string $type,
-        array &$addedFiles
+        array &$addedFiles,
+        string $extension
     ): bool {
         try {
             // 1️⃣ Récupération du nom original
@@ -387,6 +390,17 @@ class DownloadMultipleController extends AbstractController
 
             if (!$originalFilename) {
                 return false;
+            }
+
+            // 🔍 FILTRE PAR EXTENSION (si demandée)
+            if ($extension) {
+                $lowerName = strtolower($originalFilename);
+                $lowerExt  = strtolower($extension);
+
+                if (!str_ends_with($lowerName, $lowerExt)) {
+                    // Le fichier ne correspond pas à l’extension demandée
+                    return false;
+                }
             }
 
             // 2️⃣ Récupérer le fichier S3
