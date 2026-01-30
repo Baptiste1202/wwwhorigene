@@ -4,9 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Repository\UserRepository;
-use App\Service\JWTService;
-use App\Service\SendEmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,11 +17,9 @@ class RegistrationController extends AbstractController
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
-        EntityManagerInterface $entityManager,
-        JWTService $jwt,
-        SendEmailService $mail 
-        ): Response
-        {
+        EntityManagerInterface $entityManager
+    ): Response
+    {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -33,68 +28,21 @@ class RegistrationController extends AbstractController
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
-            // encode the plain password
+            // Encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+            
+            // By default, new users don't have access until approved by admin
+            $user->setAccess(false);
 
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // do anything else you need here, like send an email
-
-            //generate the token
-            $header = [
-                'typ' => 'JWT',
-                'alg' => 'HS256'
-            ];
-
-            $payload = [
-                'user_id' => $user->getId(),
-                'iat' => '',
-                'exp' => ''
-            ];
-
-            $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
-
-            // send the email
-            $mail->send(
-                'noreply@test.fr',
-                $user->getEmail(),
-                'Activation du compte',
-                'register',
-                compact('user', 'token')
-            );
-
+            $this->addFlash('success', 'Votre compte a été créé. Un administrateur doit l\'activer avant que vous puissiez vous connecter.');
             return $this->redirectToRoute('app_login');
         }
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
         ]);
-    }
-
-    #[Route('verif/{token}', name: 'verify_user')]
-    public function verifUser($token, JWTService $jwt, UserRepository $userRepository, EntityManagerInterface $em) :Response
-    {
-        // check if token is valid
-        if ($jwt->isValid($token) && !$jwt->isExpired($token) && $jwt->check($token, '0hLa83ll3Broue11e')){
-            // token is valid
-            // get data (payload)
-            $payload = $jwt->getPayload($token);
-            
-            // get the user
-            $user = $userRepository->find($payload['user_id']);
-
-            // check if we have the user and he's not already verify
-            if ($user && !$user->isVerified()){
-                $user->setVerified(true);
-                $em->flush();
-
-                $this->addFlash('success', 'Utilisateur activé');
-                return $this->redirectToRoute('app_login'); 
-            }
-        }
-
-        $this->addFlash('danger', 'Token invalide ou a expiré');
-        return $this->redirectToRoute('app_login'); 
     }
 }
