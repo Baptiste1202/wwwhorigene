@@ -19,13 +19,13 @@ final class Version20260109184642 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // PostgreSQL syntax: Using BIGINT for file sizes > 2GB
+        // MySQL syntax: Using BIGINT for file sizes > 2GB
         $this->addSql('ALTER TABLE method_sequencing ADD COLUMN size_file BIGINT DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
     {
-        // PostgreSQL syntax: Clean drop
+        // MySQL syntax: Clean drop
         $this->addSql('ALTER TABLE method_sequencing DROP COLUMN size_file');
     }
 }

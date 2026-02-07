@@ -101,10 +101,6 @@ class Strain
     #[ORM\ManyToMany(targetEntity: Collec::class, inversedBy: 'strain', orphanRemoval:false)]
     private ?Collection $collec = null;
 
-    #[ORM\ManyToOne(targetEntity: Depot::class, inversedBy: 'strain')]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Depot $depot = null;
-
     #[ORM\ManyToOne(targetEntity: Sample::class, inversedBy: 'strain')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Sample $prelevement = null;
@@ -502,18 +498,6 @@ class Strain
         if ($collec && $this->getCollec()->removeElement($collec)) {
             $collec->removeStrain($this);
         }
-        return $this;
-    }
-
-    public function getDepot(): ?Depot
-    {
-        return $this->depot;
-    }
-
-    public function setDepot(?Depot $depot): static
-    {
-        $this->depot = $depot;
-
         return $this;
     }
 

@@ -51,7 +51,7 @@ class Sample
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $comment = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'samples')]
     #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
 
@@ -209,7 +209,7 @@ class Sample
         return $this->user;
     }
 
-    public function setUser(User $user): static
+    public function setUser(?User $user): static
     {
         $this->user = $user;
 

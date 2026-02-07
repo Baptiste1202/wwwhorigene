@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\MethodSequencing;
+use App\Entity\MethodSequencingType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -15,12 +17,16 @@ class SequencingFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-            $builder->add('name', options:[
-                'label' => 'Sequencing',
-                'attr' => [
-                    'placeholder' => 'Enter a method'
-                ]
-                
+            $builder
+            ->add('name', type: EntityType::class, options:[
+                'label' => 'Sequencing Method',
+                'class' => MethodSequencingType::class,
+                'choice_label' => function (MethodSequencingType $methodSequencingType) {
+                    return $methodSequencingType->getName(); 
+                },
+                'required' => true,   
+                'placeholder' => '',  
+                'empty_data' => null,
             ])
 
             ->add('date', DateType::class, [

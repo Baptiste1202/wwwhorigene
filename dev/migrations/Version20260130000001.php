@@ -19,46 +19,20 @@ final class Version20260130000001 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // PostgreSQL: Check if column exists before adding (idempotent)
+        // MySQL: Add is_access column if it doesn't exist (idempotent)
         $this->addSql('
-            DO $$ 
-            BEGIN
-                IF NOT EXISTS (
-                    SELECT 1 
-                    FROM information_schema.columns 
-                    WHERE table_schema = \'public\'
-                      AND table_name = \'user\' 
-                      AND column_name = \'is_access\'
-                ) THEN
-                    ALTER TABLE "user" ADD COLUMN is_access BOOLEAN DEFAULT false NOT NULL;
-                END IF;
-            END $$;
+            ALTER TABLE `user` 
+            ADD COLUMN is_access TINYINT(1) DEFAULT 0 NOT NULL
         ');
         
-        // PostgreSQL: Ensure default value is false for security (idempotent)
-        $this->addSql('
-            DO $$ 
-            BEGIN
-                IF EXISTS (
-                    SELECT 1 
-                    FROM information_schema.columns 
-                    WHERE table_schema = \'public\'
-                      AND table_name = \'user\' 
-                      AND column_name = \'is_access\'
-                ) THEN
-                    ALTER TABLE "user" ALTER COLUMN is_access SET DEFAULT false;
-                END IF;
-            END $$;
-        ');
-        
-        // PostgreSQL: Update existing NULL values to false (safety measure)
-        $this->addSql('UPDATE "user" SET is_access = false WHERE is_access IS NULL');
+        // MySQL: Update existing NULL values to false (safety measure)
+        $this->addSql('UPDATE `user` SET is_access = 0 WHERE is_access IS NULL');
     }
 
     public function down(Schema $schema): void
     {
-        // PostgreSQL: We don't remove the column for safety - it's security critical
+        // MySQL: We don't remove the column for safety - it's security critical
         // If you really need to remove it, uncomment the line below:
-        // $this->addSql('ALTER TABLE "user" DROP COLUMN IF EXISTS is_access');
+        // $this->addSql('ALTER TABLE `user` DROP COLUMN is_access');
     }
 }

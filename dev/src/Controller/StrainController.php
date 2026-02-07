@@ -471,7 +471,7 @@ class StrainController extends AbstractController
             // MethodSequencing (OneToMany) avec duplication des fichiers S3
             foreach ($strain->getMethodSequencing() as $method) {
                 $newMethod = new MethodSequencing();
-                $newMethod->setName($method->getName());
+                $newMethod->setMethodSequencingType($method->getMethodSequencingType());
                 $newMethod->setDate($method->getDate());
                 $newMethod->setTypeFile($method->getTypeFile());
                 $newMethod->setDescription($method->getDescription());

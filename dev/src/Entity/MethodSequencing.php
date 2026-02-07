@@ -5,15 +5,12 @@ namespace App\Entity;
 use App\Repository\MethodSequencingRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use DateTimeImmutable;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: MethodSequencingRepository::class)]
+#[ORM\Table(name: "sequencing")]
 #[ORM\HasLifecycleCallbacks]
 #[Vich\Uploadable]
 class MethodSequencing
@@ -23,8 +20,10 @@ class MethodSequencing
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $name = null;
+    #[ORM\ManyToOne(targetEntity: MethodSequencingType::class, cascade: ['persist'])]
+    private ?MethodSequencingType $name = null;
+    
+    private ?string $pendingNameString = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $date = null;
@@ -57,12 +56,37 @@ class MethodSequencing
 
     public function getName(): ?string
     {
+        return $this->name?->getName();
+    }
+
+    public function setName(string|MethodSequencingType|null $name): static
+    {
+        if (is_string($name)) {
+            // Stocker temporairement le string, sera résolu dans prePersist/preUpdate
+            $this->pendingNameString = $name;
+            // Si on a déjà un objet MethodSequencingType avec ce nom, on le garde
+            if ($this->name === null || $this->name->getName() !== $name) {
+                $methodSequencingType = new MethodSequencingType();
+                $methodSequencingType->setName($name);
+                $this->name = $methodSequencingType;
+            }
+        } else {
+            $this->name = $name;
+            $this->pendingNameString = null;
+        }
+
+        return $this;
+    }
+
+    public function getMethodSequencingType(): ?MethodSequencingType
+    {
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setMethodSequencingType(?MethodSequencingType $name): static
     {
         $this->name = $name;
+        $this->pendingNameString = null;
 
         return $this;
     }
