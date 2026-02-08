@@ -23,10 +23,10 @@ final class Version20260206143149 extends AbstractMigration
         // PostgreSQL utilise SERIAL pour l'auto-incrément
         $this->addSql('CREATE TABLE IF NOT EXISTS method_sequencing_type (id SERIAL NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY (id))');
         
-        // Création de la table sequencing (sans les INDEX inline qui sont spécifiques à MySQL)
+        // Création de la table sequencing
         $this->addSql('CREATE TABLE IF NOT EXISTS sequencing (id SERIAL NOT NULL, date TIMESTAMP DEFAULT NULL, name_file VARCHAR(255) DEFAULT NULL, size_file BIGINT DEFAULT NULL, type_file VARCHAR(255) DEFAULT NULL, description VARCHAR(255) DEFAULT NULL, comment VARCHAR(255) DEFAULT NULL, name_id INT DEFAULT NULL, strain_id INT DEFAULT NULL, PRIMARY KEY (id))');
         
-        // Création des index séparément pour PostgreSQL
+        // Création des index
         $this->addSql('CREATE INDEX IDX_EACB1D171179CD6 ON sequencing (name_id)');
         $this->addSql('CREATE INDEX IDX_EACB1D169B9E007 ON sequencing (strain_id)');
         
@@ -56,10 +56,8 @@ final class Version20260206143149 extends AbstractMigration
             WHERE ms.id NOT IN (SELECT id FROM sequencing)
         ');
         
-        // IMPORTANT POUR POSTGRESQL : 
-        // Comme on a inséré manuellement des ID, il faut mettre à jour la séquence interne 
-        // pour que le prochain INSERT automatique ne plante pas.
-        $this->addSql("SELECT setval(pg_get_serial_sequence('sequencing', 'id'), (SELECT MAX(id) FROM sequencing))");
+        // Mise à jour de la séquence PostgreSQL pour éviter les erreurs de clés dupliquées futures
+        $this->addSql('SELECT setval(pg_get_serial_sequence(\'sequencing\', \'id\'), (SELECT MAX(id) FROM sequencing))');
 
         // Step 4: Add foreign keys
         $this->addSql('ALTER TABLE sequencing ADD CONSTRAINT FK_EACB1D171179CD6 FOREIGN KEY (name_id) REFERENCES method_sequencing_type (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
@@ -69,7 +67,6 @@ final class Version20260206143149 extends AbstractMigration
         $this->addSql('DROP TABLE IF EXISTS method_sequencing');
         
         // Step 6: Drop depot table and related foreign key from strain
-        // PostgreSQL utilise DROP CONSTRAINT
         $this->addSql('ALTER TABLE strain DROP CONSTRAINT IF EXISTS FK_A630CD728510D4DE');
         $this->addSql('DROP INDEX IF EXISTS IDX_A630CD728510D4DE');
         $this->addSql('ALTER TABLE strain DROP COLUMN IF EXISTS depot_id');
@@ -78,8 +75,7 @@ final class Version20260206143149 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        // Recreate depot table
-        // "user" est un mot réservé en Postgres, il faut le mettre entre guillemets
+        // Recreate depot table ("user" est entre quotes car mot réservé)
         $this->addSql('CREATE TABLE depot (id SERIAL NOT NULL, date_depot DATE NOT NULL, type VARCHAR(255) DEFAULT NULL, description VARCHAR(255) DEFAULT NULL, comment VARCHAR(255) DEFAULT NULL, "user" VARCHAR(255) NOT NULL, sample VARCHAR(255) NOT NULL, PRIMARY KEY (id))');
         
         // Recreate method_sequencing table
@@ -104,6 +100,19 @@ final class Version20260206143149 extends AbstractMigration
         ');
 
         // Reset sequence for method_sequencing rollback
-        $this->addSql("SELECT setval(pg_get_serial_sequence('method_sequencing', 'id'), (SELECT MAX(id) FROM method_sequencing))");
+        $this->addSql('SELECT setval(pg_get_serial_sequence(\'method_sequencing\', \'id\'), (SELECT MAX(id) FROM method_sequencing))');
         
-        $this->addSql('ALTER TABLE method_sequencing ADD CONSTRAINT FK_DCBFD3B969B9E007
+        $this->addSql('ALTER TABLE method_sequencing ADD CONSTRAINT FK_DCBFD3B969B9E007 FOREIGN KEY (strain_id) REFERENCES strain (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        
+        // Drop new tables
+        $this->addSql('ALTER TABLE sequencing DROP CONSTRAINT FK_EACB1D171179CD6');
+        $this->addSql('ALTER TABLE sequencing DROP CONSTRAINT FK_EACB1D169B9E007');
+        $this->addSql('DROP TABLE sequencing');
+        $this->addSql('DROP TABLE method_sequencing_type');
+        
+        // Restore depot_id column in strain
+        $this->addSql('ALTER TABLE strain ADD depot_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE strain ADD CONSTRAINT FK_A630CD728510D4DE FOREIGN KEY (depot_id) REFERENCES depot (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('CREATE INDEX IDX_A630CD728510D4DE ON strain (depot_id)');
+    }
+}
