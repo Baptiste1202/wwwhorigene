@@ -18,12 +18,10 @@ class SequencingFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
             $builder
-            ->add('name', type: EntityType::class, options:[
+            ->add('methodSequencingType', type: EntityType::class, options:[
                 'label' => 'Sequencing Method',
                 'class' => MethodSequencingType::class,
-                'choice_label' => function (MethodSequencingType $methodSequencingType) {
-                    return $methodSequencingType->getName(); 
-                },
+                'choice_label' => 'name',
                 'required' => true,   
                 'placeholder' => '',  
                 'empty_data' => null,
