@@ -1,0 +1,106 @@
+{# Font Awesome (optionnel) #}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+{# DataTables CSS #}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
+
+{# jQuery #}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+{# DataTables core #}
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+{# DataTables Buttons #}
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+{# Dépendances export Excel/PDF #}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<form id="multi-action-form" method="post">
+    <div id="data-table-wrapper" class="sticky-wrapper">
+        <table id="data-table-method-sequencing-types" class="display datatableComponent nowrap" style="visibility: hidden;">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all" /></th>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th data-column="duplicate" class="no-sort"></th>
+                    <th data-column="edit" class="no-sort"></th>
+                    <th data-column="delete" class="no-sort"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {# variable attendue: methodSequencingTypes (ou adapte si tu passes "types") #}
+                {% for type in methodSequencingTypes %}
+                    <tr>
+                        <td>
+                            <input type="checkbox"
+                                   name="selected_method_sequencing_types[]"
+                                   value="{{ type.id }}"
+                                   class="select-checkbox" />
+                        </td>
+                        <td>{{ type.id }}</td>
+                        <td style="background:none !important; background-color:transparent !important;">
+                            {{ type.name }}
+                        </td>
+
+                        <td>
+                            <a href="{{ path('duplicate_method_sequencing_type', {id: type.id}) }}"
+                               class="button-crud"
+                               title="Copy">
+                                <i class="fa-solid fa-copy"></i>
+                            </a>
+                        </td>
+
+                        <td>
+                            <a href="{{ path('edit_method_sequencing_type', {id: type.id}) }}"
+                               class="button-crud"
+                               title="Modifie">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                        </td>
+
+                        <td>
+                            <a href="{{ path('delete_method_sequencing_type', {id: type.id}) }}"
+                               class="delete-link button-crud"
+                               title="Delete"
+                               onclick="return confirm('Do you really want to delete ?');">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <input type="hidden" name="action" value="" />
+
+    <button id="btn-delete-multiple"
+            type="submit"
+            formaction="{{ path('delete_multiple_method_sequencing_types') }}"
+            onclick="this.form.action.value='delete'"
+            class="btn btn-danger"
+            style="margin-top: 10px; display: none;">
+        Delete selected
+    </button>
+</form>
+
+{% if app.session.flashbag.has('warning') %}
+<script>
+    document.querySelectorAll('.delete-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var confirmDelete = confirm("{{ app.session.flashbag.get('warning')[0] }}");
+            if (confirmDelete) {
+                window.location.href = this.href + '?confirm=yes';
+            }
+        });
+    });
+</script>
+{% endif %}
