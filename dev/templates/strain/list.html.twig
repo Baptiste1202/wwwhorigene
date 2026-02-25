@@ -72,7 +72,19 @@
                                 <input type="checkbox" name="selected_strain[]" value="{{ strain.id }}" class="select-checkbox" />
                             </td>
                             <td class="id">{{strain.id}}</td>
-                            <td class="name">{{ strain.nameStrain is not null ? strain.nameStrain : '' }}</td>
+                            <td class="name">
+                                {{ strain.nameStrain ?? '' }}
+
+                                {% if strain.createdBy.id == app.user.id %}
+                                    <button 
+                                        class="favorite-btn"
+                                        data-id="{{ strain.id }}"
+                                    >
+                                        <span class="star {{ strain.isFavorite ? 'active' : '' }}">★</span>
+                                    </button>
+                                {% endif %}
+                            </td>
+
                             <td class="date">
                             {% if strain.date is not null %}
                                 {{strain.date|date("d/m/Y")}}
@@ -281,6 +293,8 @@
                                     data-info='
                                         name: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.name  : '--'}}
                                         concentration: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.concentration : '--'}}
+                                        concentration_unit: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.concentrationUnit : '--' }}
+                                        date: {{ strain.drugResistanceOnStrain|first and strain.drugResistanceOnStrain|first.date ? strain.drugResistanceOnStrain|first.date|date("Y-m-d") : "--" }}
                                         resistant: {{ strain.drugResistanceOnStrain|first ? (strain.drugResistanceOnStrain|first.resistant ? 'yes' : 'no') : '--' }}
                                         comment: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.comment   : '--'}}
                                         description: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.description  : '--'}}
@@ -290,6 +304,9 @@
                                     {% if strain.drugResistanceOnStrain is not empty %}
                                         {{strain.drugResistanceOnStrain[0].drugResistance.name}} <br>
                                         {{strain.drugResistanceOnStrain[0].concentration}}
+                                        {% if strain.drugResistanceOnStrain[0].concentrationUnit %}
+                                            {{ strain.drugResistanceOnStrain[0].concentrationUnit }}
+                                        {% endif %}
                                         {% if strain.drugResistanceOnStrain[0].resistant == 1 %}
                                             <a class="resistant-display-red"> resistante : &#9888; </a>
                                         {% else %}
@@ -618,3 +635,33 @@
 </script>
 {% endif %}
 
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('.favorite-btn').forEach(button => {
+
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const strainId = this.dataset.id;
+            const star = this.querySelector('.star');
+
+            fetch(`/strain/${strainId}/favorite`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    star.classList.toggle('active', data.isFavorite);
+                }
+            });
+        });
+
+    });
+
+});
+</script>

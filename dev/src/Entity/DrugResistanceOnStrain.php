@@ -44,6 +44,9 @@ class DrugResistanceOnStrain
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $date = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $concentrationUnit = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -156,6 +159,15 @@ class DrugResistanceOnStrain
         return $this;
     }
 
+    public function getConcentrationUnit(): ?string
+    {
+        return $this->concentrationUnit;
+    }
 
+    public function setConcentrationUnit(?string $unit): self
+    {
+        $this->concentrationUnit = $unit;
+        return $this;
+    }
 
 }
