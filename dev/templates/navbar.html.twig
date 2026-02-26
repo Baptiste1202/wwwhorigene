@@ -19,7 +19,8 @@
     'page_plasmyds',
     'page_drugs',
     'page_publications',
-    'page_phenotypetypes'
+    'page_phenotypetypes',
+    'page_methodsequencingtypes'
 ] %}
 
 <body>
@@ -42,6 +43,7 @@
                     {{ nav.navItem(currentRoute, 'page_publications', 'Publication', '', false) }}
                     {% if 'ROLE_ADMIN' in app.user.roles %}
                         {{ nav.navItem(currentRoute, 'page_phenotypetypes', 'Phenotype', '', true) }}
+                        {{ nav.navItem(currentRoute, 'page_methodsequencingtypes', 'Sequencing method', '', true) }}
                     {% endif %}
                 </ul>
             </li>

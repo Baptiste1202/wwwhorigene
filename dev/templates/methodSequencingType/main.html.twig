@@ -1,0 +1,28 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+  <div id="global">
+
+    {% if 'ROLE_ADMIN' in app.user.roles %}
+      <div id="form">
+        {% include 'methodSequencingType/create.html.twig' %}
+      </div>
+    {% endif %}
+
+    <div id="list">
+      <div id="filter">
+        {% include 'methodSequencingType/_filter_form_datatable_methodsequencingtype.html.twig' %}
+      </div>
+
+      <div id="message">
+        {% include './message.html.twig' %}
+      </div>
+
+      <div id="table">
+        {% include 'methodSequencingType/list.html.twig' %}
+      </div>
+    </div>
+
+    <br />
+  </div>
+{% endblock %}
