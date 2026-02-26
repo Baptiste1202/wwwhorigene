@@ -54,7 +54,8 @@ class StrainController extends AbstractController
         //$cmd = 'docker exec -it claranet2-app-1 bash bin/console fos:elastica:populate';
         //exec($cmd, $output, $returnCode);
 
-        $user = $security->getUser(); 
+        $user = $security->getUser();
+        $favoritesOnly = $request->query->get('favorites'); 
 
         $strainFormView = null;
 
@@ -63,20 +64,37 @@ class StrainController extends AbstractController
             $strainFormView = $form->createView();
         }
 
-        $elasticResponse = $this->elasticForm($request);
-        $formElastic = $elasticResponse['form'];
-        $strains = $elasticResponse['pagination'];
+        $favoritesOnly = $request->query->get('favorites');
+        if ($favoritesOnly) {
 
-        if (!$strains) {
-            $query = new Query();
+            // MODE FAVORIS
+            $elasticResponse = $this->elasticForm($request);
+            $formElastic = $elasticResponse['form'];
 
-            $boolQuery = new BoolQuery();
-            $boolQuery->addMustNot(new Exists('dateArchive'));
+            $strains = $this->strainRepository->findBy([
+                'createdBy'   => $user,
+                'isFavorite'  => true,
+                'dateArchive' => null
+            ], ['id' => 'desc']);
 
-            $query->setQuery($boolQuery);
-            $query->setSort(['id' => ['order' => 'desc']]);
+        } else {
 
-            $strains = $this->finder->find($query, 10000);
+            // MODE NORMAL
+            $elasticResponse = $this->elasticForm($request);
+            $formElastic = $elasticResponse['form'];
+            $strains = $elasticResponse['pagination'];
+
+            if (!$strains) {
+                $query = new Query();
+
+                $boolQuery = new BoolQuery();
+                $boolQuery->addMustNot(new Exists('dateArchive'));
+
+                $query->setQuery($boolQuery);
+                $query->setSort(['id' => ['order' => 'desc']]);
+
+                $strains = $this->finder->find($query, 10000);
+            }
         }
 
         return $this->render('strain/main.html.twig', [
@@ -84,7 +102,8 @@ class StrainController extends AbstractController
             'form' => $formElastic->createView(),
             'user' => $user,
             'strains' => $strains,
-            'is_bin' => false
+            'is_bin' => false,
+            'is_favorites' => $favoritesOnly ? true : false
         ]);
 
     }
@@ -842,6 +861,27 @@ class StrainController extends AbstractController
         return $this->redirectToRoute('page_strains');
     }
 
+    #[Route('/strain/{id}/favorite', name: 'toggle_favorite_strain', methods: ['POST'])]
+    #[IsGranted('ROLE_SEARCH')]
+    public function toggleFavorite(
+        Strain $strain,
+        EntityManagerInterface $em,
+        StrainIndexer $indexer
+    ): JsonResponse {
+
+        if (!$this->isGranted('strain.is_creator', $strain)) {
+            return new JsonResponse(['error' => 'Forbidden'], 403);
+        }
+
+        $strain->setIsFavorite(!$strain->isFavorite());
+        $em->flush();
+        $indexer->index($strain);
+
+        return new JsonResponse([
+            'success' => true,
+            'isFavorite' => $strain->isFavorite()
+        ]);
+    }
 
     #[Route('/api/strain/{id}', name: 'api_strain_get', methods: ['GET'])]
     #[IsGranted('ROLE_SEARCH')]

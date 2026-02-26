@@ -2,6 +2,11 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\Strain;
+use App\Entity\Sample;
+
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
@@ -13,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-#[ORM\Table(name: '"user"', schema: 'public')]
+//#[ORM\Table(name: '"user"', schema: 'public')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -48,10 +53,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?DateTimeImmutable $createdAt = null;
 
+    /**
+     * @var Collection<int, Strain>
+     */
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Strain::class)]
+    private Collection $strain;
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->strain = new ArrayCollection();
+        $this->samples = new ArrayCollection();
     }
+
+    /**
+     * @var Collection<int, Sample>
+     */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Sample::class)]
+    private Collection $samples;
 
     public function getId(): ?int
     {
@@ -173,6 +191,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isAccess = $isVerified;
 
         return $this;
+    }
+
+    public function getStrains(): Collection
+    {
+        return $this->strain;
+    }
+
+    public function getSamples(): Collection
+    {
+        return $this->samples;
     }
 
 

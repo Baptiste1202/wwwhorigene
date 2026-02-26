@@ -13,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichFileType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 class DrugOnFormType extends AbstractType
 {
@@ -30,9 +32,29 @@ class DrugOnFormType extends AbstractType
                     'placeholder' => 'Concentration',
                 ],
             ])
+            ->add('concentration', options:[
+                'label' => 'Concentration',
+                'attr' => ['placeholder' => 'Concentration'],
+            ])
+            ->add('concentrationUnit', ChoiceType::class, [
+                'label' => 'Unit',
+                'required' => true, // ou false si tu veux
+                'placeholder' => 'Select unit',
+                'choices' => [
+                    'µg/mL' => 'ug/mL',
+                    'mg/mL' => 'mg/mL',
+                    'g/mL'  => 'g/mL',
+                    'ng/mL' => 'ng/mL',
+                    // ajoute ce dont tu as besoin
+                ],
+            ])
             ->add('resistant', CheckboxType::class, options:[
                 'label' => 'Resistant',
                 'required' => false
+            ])
+            ->add('date', DateType::class, [
+                'widget' => 'single_text',
+                'required' => false,
             ]);
 
             if ($options['is_update']) {

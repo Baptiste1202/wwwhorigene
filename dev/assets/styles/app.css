@@ -701,6 +701,35 @@ thead {
    CSS specifique pour la DATATABLE de strain
 =========================================================== */
 
+.favorite-form {
+    display: inline;
+}
+
+.favorite-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 6px;
+    cursor: pointer;
+}
+
+.star {
+    font-size: 20px;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.star.active {
+    color: #f5b301; /* jaune propre */
+}
+
+.star.disabled {
+    color: #ccc;
+}
+
+.favorite-btn:hover .star {
+    transform: scale(1.2);
+}
+
 .dt-highlight {
     background-color: #ffeeba !important;
 }

@@ -46,7 +46,7 @@ class MethodSequencing
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $comment = null;
 
-    #[ORM\ManyToOne(targetEntity: Strain::class, inversedBy: 'MethodSequencing')]
+    #[ORM\ManyToOne(targetEntity: Strain::class, inversedBy: 'methodSequencing')]
     private Strain $strain;
 
     public function getId(): ?int

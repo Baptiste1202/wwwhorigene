@@ -125,6 +125,9 @@ class Strain
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateArchive = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isFavorite = false;
+
     public function __construct()
     {
         $this->drugResistanceOnStrain = new ArrayCollection();
@@ -602,6 +605,17 @@ class Strain
     {
         $this->dateArchive = $date;
 
+        return $this;
+    }
+
+    public function isFavorite(): bool
+    {
+        return $this->isFavorite;
+    }
+
+    public function setIsFavorite(bool $isFavorite): self
+    {
+        $this->isFavorite = $isFavorite;
         return $this;
     }
 

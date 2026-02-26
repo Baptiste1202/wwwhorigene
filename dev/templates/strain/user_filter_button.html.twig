@@ -4,3 +4,16 @@
   🔍 Filter by : {{ user.firstname }} {{ user.lastname }}
 </button>
 
+{% if is_favorites %}
+    <button type="button"
+            class="btn btn-warning"
+            onclick="window.location.href='{{ path('page_strains') }}'">
+        ★ Showing Favorites (Click to reset)
+    </button>
+{% else %}
+    <button type="button"
+            class="btn btn-outline-warning"
+            onclick="window.location.href='{{ path('page_strains', { favorites: 1 }) }}'">
+        ★ My Favorites
+    </button>
+{% endif %}
