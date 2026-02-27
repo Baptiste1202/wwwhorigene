@@ -460,18 +460,18 @@
                             <td>
                                 <div class="sequencing clicable" 
                                     data-info='
-                                            date : {{ strain.methodSequencing|first ? strain.methodSequencing|first.date|date('d/m/Y')  : '--'}}
-                                            method : {{ strain.methodSequencing|first ? strain.methodSequencing|first.name  : '--'}}
-                                            file : {{ strain.methodSequencing|first ? strain.methodSequencing|first.nameFile  : '--'}}'
-                                    data-file='{{ strain.methodSequencing|first ? strain.methodSequencing|first.nameFile : '--'}}'
+                                            date : {{ strain.sequencing|first ? strain.sequencing|first.date|date('d/m/Y')  : '--'}}
+                                            method : {{ strain.sequencing|first ? strain.sequencing|first.name  : '--'}}
+                                            file : {{ strain.sequencing|first ? strain.sequencing|first.nameFile  : '--'}}'
+                                    data-file='{{ strain.sequencing|first ? strain.sequencing|first.nameFile : '--'}}'
                                 >
-                                    {% if strain.methodSequencing is not empty %}
-                                        {{ '● ' ~ strain.methodSequencing[0].name }}
-                                        {% if strain.methodSequencing[0].date is defined and strain.methodSequencing[0].date %}
-                                            [{{ strain.methodSequencing[0].date|date("d/m/Y") }}]
+                                    {% if strain.sequencing is not empty %}
+                                        {{ '● ' ~ strain.sequencing[0].name }}
+                                        {% if strain.sequencing[0].date is defined and strain.sequencing[0].date %}
+                                            [{{ strain.sequencing[0].date|date("d/m/Y") }}]
                                         {% endif %}
                                         <br>
-                                        {% set nameFile = strain.methodSequencing[0].nameFile ?: strain.methodSequencing[0].nameFile %}
+                                        {% set nameFile = strain.sequencing[0].nameFile ?: strain.sequencing[0].nameFile %}
                                         {% set maxLength = 15 %}
 
                                         {% if nameFile|length > maxLength %}
@@ -486,11 +486,11 @@
                                     {% endif %}
                                 </div>
 
-                                 {% if strain.methodSequencing is not empty %}
-                                    {% set seqLength = strain.methodSequencing|length %}
+                                 {% if strain.sequencing is not empty %}
+                                    {% set seqLength = strain.sequencing|length %}
                                     {% if seqLength > 1 %}
                                         {% for i in 1..(seqLength - 1) %}
-                                            {% set seqItem = strain.methodSequencing[i] %}
+                                            {% set seqItem = strain.sequencing[i] %}
                                             <div id="sub-cell-sequencing_{{ i }}"
                                                 class="sub-cell sequencing clicable"
                                                 data-info='

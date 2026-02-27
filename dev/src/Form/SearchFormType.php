@@ -4,7 +4,7 @@ namespace App\Form;
 
 use App\Entity\DrugResistance;
 use App\Entity\Genotype;
-use App\Entity\MethodSequencing;
+use App\Entity\Sequencing;
 use App\Entity\Plasmyd;
 use App\Entity\Project;
 use App\Entity\Sample;

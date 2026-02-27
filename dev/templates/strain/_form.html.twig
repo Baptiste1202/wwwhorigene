@@ -160,9 +160,9 @@
     {% endif %}
         <div id="sequencing-add-info" class="hidden-tags">
             <ul class="sequencing"
-                data-index="{{ strainForm.methodSequencing|length > 0 ? strainForm.methodSequencing|last.vars.name + 1 : 0 }}"
-                data-prototype="{{ form_row(strainForm.methodSequencing.vars.prototype)|e('html_attr') }}">
-                {% for subForm in strainForm.methodSequencing %}
+                data-index="{{ strainForm.sequencing|length > 0 ? strainForm.sequencing|last.vars.name + 1 : 0 }}"
+                data-prototype="{{ form_row(strainForm.sequencing.vars.prototype)|e('html_attr') }}">
+                {% for subForm in strainForm.sequencing %}
                     <li>{{ form_row(subForm) }}</li>
                 {% endfor %}
             </ul>
