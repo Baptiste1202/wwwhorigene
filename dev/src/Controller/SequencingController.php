@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\MethodSequencing;
 use App\Form\SequencingFormType;
-use App\Repository\MethodSequencingRepository;
-use App\Repository\MethodSequencingRepositoryInterface;
+use App\Entity\Sequencing;
+use App\Repository\SequencingRepository;
+use App\Repository\SequencingRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class SequencingController extends AbstractController
 {
     public function __construct(
-        #[Autowire(service: MethodSequencingRepository::class)]
+        #[Autowire(service: SequencingRepository::class)]
         private MethodSequencingRepositoryInterface $sequencingRepository,
     ) {
     }

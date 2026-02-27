@@ -2,18 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\MethodSequencingRepository;
+use App\Repository\SequencingRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-#[ORM\Entity(repositoryClass: MethodSequencingRepository::class)]
+#[ORM\Entity(repositoryClass: SequencingRepository::class)]
 #[ORM\Table(name: "sequencing")]
 #[ORM\HasLifecycleCallbacks]
 #[Vich\Uploadable]
-class MethodSequencing
+class Sequencing
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -46,7 +46,7 @@ class MethodSequencing
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $comment = null;
 
-    #[ORM\ManyToOne(targetEntity: Strain::class, inversedBy: 'methodSequencing')]
+    #[ORM\ManyToOne(targetEntity: Strain::class, inversedBy: 'sequencing')]
     private Strain $strain;
 
     public function getId(): ?int
