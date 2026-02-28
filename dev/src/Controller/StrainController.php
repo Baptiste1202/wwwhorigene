@@ -429,7 +429,7 @@ class StrainController extends AbstractController
             $clone->setDescription($strain->getDescription());
             $clone->setGenotype($strain->getGenotype());
             $clone->setDescriptionGenotype($strain->getDescriptionGenotype());
-            $clone->setInfoGenotype($strain->getInfoGenotype());
+            $clone->setAccessionNumber($strain->getAccessionNumber());
             $clone->setPrelevement($strain->getPrelevement());
             $clone->setCreatedBy($user);
             $clone->setDate(new \DateTime());
@@ -895,7 +895,7 @@ class StrainController extends AbstractController
             'description' => $strain->getDescription() ?: null,
             'genotype' => $strain->getGenotype() ? $strain->getGenotype()->getId() : null,
             'descGenotype' => $strain->getDescriptionGenotype() ?: null,
-            'infoGenotype' => $strain->getInfoGenotype() ?: null,
+            'accessionNumber' => $strain->getAccessionNumber() ?: null,
             'sample' => $strain->getPrelevement() ? $strain->getPrelevement()->getId() : null,
         ]);
     }

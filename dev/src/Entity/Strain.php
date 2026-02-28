@@ -50,8 +50,8 @@ class Strain
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $descriptionGenotype = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $infoGenotype = null;
+    #[ORM\Column(name: 'accession_number', type: 'string', length: 255, nullable: true)]
+    private ?string $accessionNumber = null;
 
     /**
      * @var Collection<int, phenotype>
@@ -252,15 +252,14 @@ class Strain
         return $this;
     }
 
-    public function getInfoGenotype(): ?string
+    public function getAccessionNumber(): ?string
     {
-        return $this->infoGenotype;
+        return $this->accessionNumber;
     }
 
-    public function setInfoGenotype(?string $comment): static
+    public function setAccessionNumber(?string $accessionNumber): self
     {
-        $this->infoGenotype = $comment;
-
+        $this->accessionNumber = $accessionNumber;
         return $this;
     }
 

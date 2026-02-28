@@ -131,6 +131,8 @@ class PhenotypeTypeController extends AbstractController
 
             $clone = new PhenotypeType();
             $clone->setType($phenotypetype->getType());
+            $clone->setDescription($phenotypetype->getDescription());
+            $clone->setComment($phenotypetype->getComment());
 
             $em->persist($clone);
             $em->flush();

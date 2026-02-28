@@ -29,6 +29,8 @@
                     <th><input type="checkbox" id="select-all" /></th>
                     <th>ID</th>
                     <th>Type</th>
+                    <th>Description</th>
+                    <th>Comment</th>
                     <th data-column="duplicate" class="no-sort"></th>
                     <th data-column="edit" class="no-sort"></th>
                     <th data-column="delete" class="no-sort"></th>
@@ -47,6 +49,14 @@
                         <td>{{ type.id }}</td>
                         <td style="background:none !important; background-color:transparent !important;">
                             {{ type.name }}
+                        </td>
+
+                        <td data-info="{{ type.description is not null ? type.description : '--' }}">
+                            {{ type.description is not null ? type.description : '--' }}
+                        </td>
+
+                        <td data-info="{{ type.comment is not null ? type.comment : '--' }}">
+                            {{ type.comment is not null ? type.comment : '--' }}
                         </td>
 
                         <td>

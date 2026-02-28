@@ -174,6 +174,10 @@ document.addEventListener('DOMContentLoaded', function () {
     $('#data-table_wrapper .dataTables_length, #data-table_wrapper .dataTables_filter, #data-table_wrapper .dt-buttons, .table-action-bar')
     .appendTo('#table-header-toolbar');
 
+    // 🔽 Ajout : déplacer pagination + info dans le footer
+    $('#data-table_wrapper .dataTables_info, #data-table_wrapper .dataTables_paginate')
+    .appendTo('#table-controls-footer');
+
     // --- Partie 3 : Select All Checkbox ---
     const selectAllCheckbox = document.getElementById('select-all');
     if (selectAllCheckbox) {

@@ -104,7 +104,7 @@ class StrainFormType extends AbstractType
                     'placeholder' => 'Description Genotype...'
                 ]
             ])
-            ->add('infoGenotype', options:[
+            ->add('accessionNumber', options:[
                 'label' => ' ',
                 'required' => false, 
                 'attr' => [
