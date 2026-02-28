@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\DrugResistanceOnStrain;
-use App\Entity\MethodSequencing;
+use App\Entity\Sequencing;
 use App\Entity\Phenotype;
 use Psr\Log\LoggerInterface;
 use App\Entity\Strain;
@@ -132,9 +132,9 @@ class StrainController extends AbstractController
 
                 $strain->setDate(new \DateTime());
 
-                // Met à jour la date pour chaque MethodSequencing avec un fichier
+                // Met à jour la date pour chaque Sequencing avec un fichier
                 // pour que VichUploader détecte correctement les nouveaux fichiers
-                foreach($strain->getMethodSequencing() as $sequencing){
+                foreach($strain->getSequencing() as $sequencing){
                     if ($sequencing->getFile() !== null) {
                         $sequencing->setDate(new \DateTime());
                     }
@@ -146,7 +146,7 @@ class StrainController extends AbstractController
                 
                 // Recalcule le type de fichier après que VichUploader ait mis à jour nameFile
                 $needsSecondFlush = false;
-                foreach($strain->getMethodSequencing() as $sequencing){
+                foreach($strain->getSequencing() as $sequencing){
                     if ($sequencing->getNameFile() !== null) {
                         $extension = pathinfo($sequencing->getNameFile(), PATHINFO_EXTENSION);
                         $currentType = $sequencing->getTypeFile();
@@ -231,9 +231,9 @@ class StrainController extends AbstractController
             $strainForm->handleRequest($request);
 
             if ($strainForm->isSubmitted() && $strainForm->isValid()) {
-                // Force Doctrine à persister les MethodSequencing qui ont un nouveau fichier
+                // Force Doctrine à persister les Sequencing qui ont un nouveau fichier
                 // et met à jour explicitement la date pour que VichUploader détecte le changement
-                foreach($strain->getMethodSequencing() as $sequencing){
+                foreach($strain->getSequencing() as $sequencing){
                     if ($sequencing->getFile() !== null) {
                         // Un nouveau fichier a été uploadé
                         // IMPORTANT : Mise à jour de la date pour forcer VichUploader à détecter le changement
@@ -248,7 +248,7 @@ class StrainController extends AbstractController
                 
                 // Maintenant recalcule le type de fichier à partir du nameFile mis à jour
                 $needsSecondFlush = false;
-                foreach($strain->getMethodSequencing() as $sequencing){
+                foreach($strain->getSequencing() as $sequencing){
                     if ($sequencing->getNameFile() !== null) {
                         $extension = pathinfo($sequencing->getNameFile(), PATHINFO_EXTENSION);
                         $currentType = $sequencing->getTypeFile();
@@ -429,7 +429,7 @@ class StrainController extends AbstractController
             $clone->setDescription($strain->getDescription());
             $clone->setGenotype($strain->getGenotype());
             $clone->setDescriptionGenotype($strain->getDescriptionGenotype());
-            $clone->setInfoGenotype($strain->getInfoGenotype());
+            $clone->setAccessionNumber($strain->getAccessionNumber());
             $clone->setPrelevement($strain->getPrelevement());
             $clone->setCreatedBy($user);
             $clone->setDate(new \DateTime());
@@ -487,9 +487,9 @@ class StrainController extends AbstractController
                 $clone->addDrugResistanceOnStrain($newDrug);
             }
             
-            // MethodSequencing (OneToMany) avec duplication des fichiers S3
-            foreach ($strain->getMethodSequencing() as $method) {
-                $newMethod = new MethodSequencing();
+            // Sequencing (OneToMany) avec duplication des fichiers S3
+            foreach ($strain->getSequencing() as $method) {
+                $newMethod = new Sequencing();
                 $newMethod->setMethodSequencingType($method->getMethodSequencingType());
                 $newMethod->setDate($method->getDate());
                 $newMethod->setTypeFile($method->getTypeFile());
@@ -508,7 +508,7 @@ class StrainController extends AbstractController
                     }
                 }
                 
-                $clone->addMethodSequencing($newMethod);
+                $clone->addSequencing($newMethod);
             }
             
             // Plasmyd (ManyToMany)
@@ -637,7 +637,7 @@ class StrainController extends AbstractController
 
             if ($data->sequencing) {
                 $this->logger->info('Add sequencing', ['sequencing' => $data->sequencing]);
-                $boolQuery->addFilter(new MatchQuery('methodSequencing.typeFile', $data->sequencing));
+                $boolQuery->addFilter(new MatchQuery('sequencing.typeFile', $data->sequencing));
             }
 
             // On entre ici si on a soit un drug, soit un état résistant/sensible
@@ -895,7 +895,7 @@ class StrainController extends AbstractController
             'description' => $strain->getDescription() ?: null,
             'genotype' => $strain->getGenotype() ? $strain->getGenotype()->getId() : null,
             'descGenotype' => $strain->getDescriptionGenotype() ?: null,
-            'infoGenotype' => $strain->getInfoGenotype() ?: null,
+            'accessionNumber' => $strain->getAccessionNumber() ?: null,
             'sample' => $strain->getPrelevement() ? $strain->getPrelevement()->getId() : null,
         ]);
     }

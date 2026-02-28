@@ -23,7 +23,7 @@
             {{ form_row(strainForm.genotype) }}
             <div id="genotypeFields" style="display: none;">
                 {{ form_row(strainForm.descriptionGenotype) }}
-                {{ form_row(strainForm.infoGenotype) }}
+                {{ form_row(strainForm.accessionNumber) }}
             </div>
     {% if is_update %}
         </div>
@@ -160,9 +160,9 @@
     {% endif %}
         <div id="sequencing-add-info" class="hidden-tags">
             <ul class="sequencing"
-                data-index="{{ strainForm.methodSequencing|length > 0 ? strainForm.methodSequencing|last.vars.name + 1 : 0 }}"
-                data-prototype="{{ form_row(strainForm.methodSequencing.vars.prototype)|e('html_attr') }}">
-                {% for subForm in strainForm.methodSequencing %}
+                data-index="{{ strainForm.sequencing|length > 0 ? strainForm.sequencing|last.vars.name + 1 : 0 }}"
+                data-prototype="{{ form_row(strainForm.sequencing.vars.prototype)|e('html_attr') }}">
+                {% for subForm in strainForm.sequencing %}
                     <li>{{ form_row(subForm) }}</li>
                 {% endfor %}
             </ul>
@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('strain_form_description').value = data.description;
             selectOptionByValue('strain_form_genotype', data.genotype);
             document.getElementById('strain_form_descriptionGenotype').value = data.descGenotype;
-            document.getElementById('strain_form_infoGenotype').value = data.infoGenotype;
+            document.getElementById('strain_form_accessionNumber').value = data.accessionNumber;
             
             } catch (error) {
                 alert('Erreur lors de la recherche de la souche : ' + error.message);

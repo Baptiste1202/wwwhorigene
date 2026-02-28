@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\MethodSequencing;
+use App\Entity\Sequencing;
 use App\Entity\MethodSequencingType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -75,7 +75,7 @@ class SequencingFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => MethodSequencing::class,
+            'data_class' => Sequencing::class,
             'is_update' => false,
         ]);
 

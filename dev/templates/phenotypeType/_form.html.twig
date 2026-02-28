@@ -1,5 +1,7 @@
 {{ form_start(phenotypeTypeForm) }}
   {{ form_row(phenotypeTypeForm.type) }}
+  {{ form_row(phenotypeTypeForm.description) }}
+  {{ form_row(phenotypeTypeForm.comment) }}
   <button type="submit" class="btn-form">
     {{ button_label | default('Add phenotype') }}
   </button>

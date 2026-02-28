@@ -128,7 +128,7 @@
                             <td class="genotype clicable" data-info='
                                         genotype: {{ strain.genotype ? strain.genotype.type : '--'}}
                                         description: {{ strain.descriptionGenotype ? strain.descriptionGenotype : "--" }}
-                                        info: {{ strain.infoGenotype ? strain.infoGenotype : "--" }}'>
+                                        accession number: {{ strain.accessionNumber ? strain.accessionNumber : "--" }}'>
                             {% if strain.genotype is not null %}
                                 {{strain.genotype.type}} <br>
                                 {% if strain.descriptionGenotype is not empty %}
@@ -142,7 +142,11 @@
                                         {{ desc }}
                                     {% endif %} 
                                 {% endif %}<br>
-                                {{ strain.infoGenotype ?: strain.infoGenotype }}
+                                {% if strain.accessionNumber is not empty %}
+                                    ACC : {{ strain.accessionNumber }}
+                                {% else %}
+                                    --
+                                {% endif %}
                             {% else %}
                                 --
                             {% endif %}
@@ -302,7 +306,11 @@
                                     data-file='{{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.nameFile : '--'}}'
                                 >
                                     {% if strain.drugResistanceOnStrain is not empty %}
-                                        {{strain.drugResistanceOnStrain[0].drugResistance.name}} <br>
+                                        {{ '● ' ~ strain.drugResistanceOnStrain[0].drugResistance.name }}
+                                        {% if strain.drugResistanceOnStrain[0].date is defined and strain.drugResistanceOnStrain[0].date %}
+                                            [{{ strain.drugResistanceOnStrain[0].date|date("d/m/Y") }}]
+                                        {% endif %}
+                                        <br>
                                         {{strain.drugResistanceOnStrain[0].concentration}}
                                         {% if strain.drugResistanceOnStrain[0].concentrationUnit %}
                                             {{ strain.drugResistanceOnStrain[0].concentrationUnit }}
@@ -311,6 +319,16 @@
                                             <a class="resistant-display-red"> resistante : &#9888; </a>
                                         {% else %}
                                             <a class="resistant-display-green"> sensible : &#x2713; </a>
+                                        {% endif %}<br>
+
+                                        {% if strain.drugResistanceOnStrain[0].nameFile is defined and strain.drugResistanceOnStrain[0].nameFile %}
+                                            {% set nameFile = strain.drugResistanceOnStrain[0].nameFile %}
+                                            {% set maxLength = 20 %}
+                                            {% if nameFile|length > maxLength %}
+                                                {{ nameFile|slice(0,12) ~ '...' ~ nameFile|slice(-8) }}
+                                            {% else %}
+                                                {{ nameFile }}
+                                            {% endif %}
                                         {% endif %}
                                     {% else %}
                                         --
@@ -332,14 +350,33 @@
                                                     file: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i].nameFile is defined ? strain.drugResistanceOnStrain[i].nameFile : '--' }}'
                                                 data-file='{{ (strain.drugResistanceOnStrain|length > i and strain.drugResistanceOnStrain[i].nameFile) ? strain.drugResistanceOnStrain[i].nameFile : "--" }}'
                                             > 
-                                                {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].drugResistance.name : '' }} <br>
+                                                {{ strain.drugResistanceOnStrain[i] is defined ? '● ' ~ strain.drugResistanceOnStrain[i].drugResistance.name : '' }}
+                                                {% if strain.drugResistanceOnStrain[i].date is defined and strain.drugResistanceOnStrain[i].date %}
+                                                    [{{ strain.drugResistanceOnStrain[i].date|date("d/m/Y") }}]
+                                                {% endif %}
+                                                <br>
                                                 {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].concentration : '' }}
+                                                        {% if strain.drugResistanceOnStrain[i].concentrationUnit %}
+                                                    {{ strain.drugResistanceOnStrain[i].concentrationUnit }}
+                                                {% endif %}
                                                 {% if strain.drugResistanceOnStrain[i] is defined %}
                                                     {% if strain.drugResistanceOnStrain[i].resistant == 1 %}
                                                         <a class="resistant-display-red"> resistante : &#9888; </a>
                                                     {% else %}
                                                         <a class="resistant-display-green"> sensible : &#x2713; </a>
-                                                    {% endif %}
+                                                    {% endif %}<br>
+
+                                                    {# FICHIER (affiché seulement si il existe) #}
+                                                    {% if strain.drugResistanceOnStrain[i].nameFile is defined and strain.drugResistanceOnStrain[i].nameFile %}
+                                                        {% set nameFile = strain.drugResistanceOnStrain[i].nameFile %}
+                                                        {% set maxLength = 20 %}
+                                                        {% if nameFile|length > maxLength %}
+                                                            {{ nameFile|slice(0,12) ~ '...' ~ nameFile|slice(-8) }}
+                                                        {% else %}
+                                                            {{ nameFile }}
+                                                        {% endif %}
+                                                    {% endif %}                                        
+                                                
                                                 {% else %}
                                                     --
                                                 {% endif %}
@@ -360,8 +397,24 @@
                                             data-file='{{ strain.phenotype|first ? strain.phenotype|first.fileName : '--'}}'
                                 >
                                     {% if strain.phenotype is not empty %}
-                                        {{ strain.phenotype[0].phenotypeType.type }} <br>
+                                        {{ '● ' ~ strain.phenotype[0].phenotypeType.type }}
+                                        {% if strain.phenotype[0].date is defined and strain.phenotype[0].date %}
+                                            [{{ strain.phenotype[0].date|date("d/m/Y") }}]
+                                        {% endif %}
+                                        <br>
                                         {{strain.phenotype[0].mesure}}
+                                        <br>
+
+                                        {% if strain.phenotype[0].fileName is defined and strain.phenotype[0].fileName %}
+                                            {% set nameFile = strain.phenotype[0].fileName %}
+                                            {% set maxLength = 20 %}
+                                            {% if nameFile|length > maxLength %}
+                                                {{ nameFile|slice(0,12) ~ '...' ~ nameFile|slice(-8) }}
+                                            {% else %}
+                                                {{ nameFile }}
+                                            {% endif %}
+                                        {% endif %}
+                                    
                                     {% else %}
                                         --
                                     {% endif %}
@@ -382,8 +435,23 @@
                                             data-file='{{ (strain.phenotype|length > i and strain.phenotype[i].fileName) ? strain.phenotype[i].fileName : "--" }}'
                                             >
                                                 {% if strain.phenotype|length > i %}
-                                                    {{ strain.phenotype[i].phenotypeType.type }} <br>
-                                                    {{strain.phenotype[i].mesure}}                           
+                                                    {{ '● ' ~ strain.phenotype[i].phenotypeType.type }}
+                                                    {% if strain.phenotype[i].date is defined and strain.phenotype[i].date %}
+                                                        [{{ strain.phenotype[i].date|date("d/m/Y") }}]
+                                                    {% endif %}
+                                                    <br>
+                                                    {{strain.phenotype[i].mesure}}  
+                                                    <br>
+                                                    {% if strain.phenotype[i].fileName is defined and strain.phenotype[i].fileName %}
+                                                        {% set nameFile = strain.phenotype[i].fileName %}
+                                                        {% set maxLength = 20 %}
+                                                        {% if nameFile|length > maxLength %}
+                                                            {{ nameFile|slice(0,12) ~ '...' ~ nameFile|slice(-8) }}
+                                                        {% else %}
+                                                            {{ nameFile }}
+                                                        {% endif %}
+                                                    {% endif %}
+
                                                 {% else %}
                                                     --
                                                 {% endif %}
@@ -396,14 +464,18 @@
                             <td>
                                 <div class="sequencing clicable" 
                                     data-info='
-                                            date : {{ strain.methodSequencing|first ? strain.methodSequencing|first.date|date('d/m/Y')  : '--'}}
-                                            method : {{ strain.methodSequencing|first ? strain.methodSequencing|first.name  : '--'}}
-                                            file : {{ strain.methodSequencing|first ? strain.methodSequencing|first.nameFile  : '--'}}'
-                                    data-file='{{ strain.methodSequencing|first ? strain.methodSequencing|first.nameFile : '--'}}'
+                                            date : {{ strain.sequencing|first ? strain.sequencing|first.date|date('d/m/Y')  : '--'}}
+                                            method : {{ strain.sequencing|first ? strain.sequencing|first.name  : '--'}}
+                                            file : {{ strain.sequencing|first ? strain.sequencing|first.nameFile  : '--'}}'
+                                    data-file='{{ strain.sequencing|first ? strain.sequencing|first.nameFile : '--'}}'
                                 >
-                                    {% if strain.methodSequencing is not empty %}
-                                        {{ strain.methodSequencing[0].name }} <br>
-                                        {% set nameFile = strain.methodSequencing[0].nameFile ?: strain.methodSequencing[0].nameFile %}
+                                    {% if strain.sequencing is not empty %}
+                                        {{ '● ' ~ strain.sequencing[0].name }}
+                                        {% if strain.sequencing[0].date is defined and strain.sequencing[0].date %}
+                                            [{{ strain.sequencing[0].date|date("d/m/Y") }}]
+                                        {% endif %}
+                                        <br>
+                                        {% set nameFile = strain.sequencing[0].nameFile ?: strain.sequencing[0].nameFile %}
                                         {% set maxLength = 15 %}
 
                                         {% if nameFile|length > maxLength %}
@@ -418,11 +490,11 @@
                                     {% endif %}
                                 </div>
 
-                                 {% if strain.methodSequencing is not empty %}
-                                    {% set seqLength = strain.methodSequencing|length %}
+                                 {% if strain.sequencing is not empty %}
+                                    {% set seqLength = strain.sequencing|length %}
                                     {% if seqLength > 1 %}
                                         {% for i in 1..(seqLength - 1) %}
-                                            {% set seqItem = strain.methodSequencing[i] %}
+                                            {% set seqItem = strain.sequencing[i] %}
                                             <div id="sub-cell-sequencing_{{ i }}"
                                                 class="sub-cell sequencing clicable"
                                                 data-info='
@@ -431,7 +503,11 @@
                                                     file : {{ seqItem.nameFile is defined and seqItem.nameFile ? seqItem.nameFile : '--' }}'
                                                 data-file='{{ seqItem.nameFile is defined ? seqItem.nameFile : "--" }}'>
                                                 
-                                                {{ seqItem.name is defined ? seqItem.name : '' }} <br>
+                                                 {{ seqItem.name is defined ? '● ' ~ seqItem.name : '' }}
+                                                    {% if seqItem.date is defined and seqItem.date %}
+                                                        [{{ seqItem.date|date("d/m/Y") }}]
+                                                    {% endif %}
+                                                    <br>
                                                 
                                                 {% if seqItem.nameFile is defined %}
                                                     {% set fileName = seqItem.nameFile %}

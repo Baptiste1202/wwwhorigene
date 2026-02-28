@@ -55,6 +55,27 @@ class Sample
     #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $bioSample = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $farmLocation = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $hospitalSampleType = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $hospitalSite = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $hospitalWard = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $patientContextType = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $source = null;
+
     /**
      * @var Collection<int, Strain>
      */
@@ -235,4 +256,82 @@ class Sample
     {
         return $this->strain;
     }
+
+    public function getBioSample(): ?string
+    {
+        return $this->bioSample;
+    }
+
+    public function setBioSample(?string $bioSample): static
+    {
+        $this->bioSample = $bioSample;
+        return $this;
+    }
+
+    public function getFarmLocation(): ?string
+    {
+        return $this->farmLocation;
+    }
+
+    public function setFarmLocation(?string $farmLocation): static
+    {
+        $this->farmLocation = $farmLocation;
+        return $this;
+    }
+
+    public function getHospitalSampleType(): ?string
+    {
+        return $this->hospitalSampleType;
+    }
+
+    public function setHospitalSampleType(?string $hospitalSampleType): static
+    {
+        $this->hospitalSampleType = $hospitalSampleType;
+        return $this;
+    }
+
+    public function getHospitalSite(): ?string
+    {
+        return $this->hospitalSite;
+    }
+
+    public function setHospitalSite(?string $hospitalSite): static
+    {
+        $this->hospitalSite = $hospitalSite;
+        return $this;
+    }
+
+    public function getHospitalWard(): ?string
+    {
+        return $this->hospitalWard;
+    }
+
+    public function setHospitalWard(?string $hospitalWard): static
+    {
+        $this->hospitalWard = $hospitalWard;
+        return $this;
+    }
+
+    public function getPatientContextType(): ?string
+    {
+        return $this->patientContextType;
+    }
+
+    public function setPatientContextType(?string $patientContextType): static
+    {
+        $this->patientContextType = $patientContextType;
+        return $this;
+    }
+
+    public function getSource(): ?string
+    {
+        return $this->source;
+    }
+
+    public function setSource(?string $source): static
+    {
+        $this->source = $source;
+        return $this;
+    }
+
 }

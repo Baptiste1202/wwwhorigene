@@ -1008,6 +1008,80 @@ thead th, tbody td {
   min-height: 20px;
 }
 
+/* Conteneur footer */
+#table-controls-footer{
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  border-top: 1px solid #ddd;
+
+  padding: 4px 10px;        /* ⬅ réduit la hauteur */
+  z-index: 10;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 12px;          /* ⬅ texte plus compact */
+}
+
+/* Info */
+#table-controls-footer .dataTables_info{
+  padding: 0 !important;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Pagination */
+#table-controls-footer .dataTables_paginate{
+  padding: 0 !important;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Boutons pagination */
+#table-controls-footer .paginate_button{
+  display: inline-block;
+  min-width: 28px;
+
+  padding: 3px 8px !important;   /* ⬅ boutons plus petits */
+  margin-left: 3px !important;
+
+  border: 1px solid #d0d0d0 !important;
+  border-radius: 4px;
+  background: #fff !important;
+  color: #333 !important;
+
+  font-size: 12px;
+  line-height: 1.2;
+
+  cursor: pointer;
+}
+
+/* Hover */
+#table-controls-footer .paginate_button:hover{
+  background: #f2f2f2 !important;
+}
+
+/* Page courante */
+#table-controls-footer .paginate_button.current{
+  background: #333 !important;
+  color: #fff !important;
+  border-color: #333 !important;
+}
+
+/* Disabled */
+#table-controls-footer .paginate_button.disabled{
+  opacity: .45;
+  cursor: default;
+}
+
+/* Espacement interne */
+#table-controls-footer .dataTables_paginate span{
+  margin: 0 2px;
+}
+
 /* ===========================================================
    CSS pour les DATATABLE des composants
 =========================================================== */

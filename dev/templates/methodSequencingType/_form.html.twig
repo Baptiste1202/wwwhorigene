@@ -1,5 +1,7 @@
 {{ form_start(methodSequencingTypeForm) }}
   {{ form_row(methodSequencingTypeForm.name) }}
+  {{ form_row(methodSequencingTypeForm.description) }}
+  {{ form_row(methodSequencingTypeForm.comment) }}
   <button type="submit" class="btn-form">
     {{ button_label|default('Add sequencing method') }}
   </button>
