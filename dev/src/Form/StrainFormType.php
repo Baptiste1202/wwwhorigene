@@ -5,7 +5,7 @@ namespace App\Form;
 use App\Entity\Collec;
 use App\Entity\DrugResistance;
 use App\Entity\Genotype;
-use App\Entity\MethodSequencing;
+use App\Entity\Sequencing;
 use App\Entity\Plasmyd;
 use App\Entity\Project;
 use App\Entity\Publication;
@@ -159,7 +159,7 @@ class StrainFormType extends AbstractType
                 'by_reference' => false, // Nécessaire pour éviter les problèmes avec les relations bidirectionnelles
                 'label' => false,
             ])
-            ->add('methodSequencing', type:CollectionType::class, options:[
+            ->add('sequencing', type:CollectionType::class, options:[
                 'entry_type' => SequencingFormType::class,
                 'entry_options' => [
                     'label' => false,

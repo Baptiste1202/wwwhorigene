@@ -82,11 +82,11 @@ class Strain
     private ?Collection $publication;
 
     /**
-     * @var Collection<int, methodSequencing>
+     * @var Collection<int, Sequencing>
      */
-    #[ORM\OneToMany(targetEntity: MethodSequencing::class, mappedBy: 'strain', cascade:['persist', 'remove'], orphanRemoval:true)]
+    #[ORM\OneToMany(targetEntity: Sequencing::class, mappedBy: 'strain', cascade:['persist', 'remove'], orphanRemoval:true)]
     #[ORM\JoinColumn(nullable: true)]
-    private ?Collection $methodSequencing;
+    private ?Collection $sequencing;
 
     /**
      * @var Collection<int, project>
@@ -134,7 +134,7 @@ class Strain
         $this->publication = new ArrayCollection();
         $this->phenotype = new ArrayCollection();
         $this->plasmyd = new ArrayCollection();
-        $this->methodSequencing = new ArrayCollection();
+        $this->sequencing = new ArrayCollection();
         $this->project = new ArrayCollection();
         $this->collec = new ArrayCollection();
         $this->storage = new ArrayCollection();
@@ -406,32 +406,32 @@ class Strain
         return $this;
     }
 
-    public function getMethodSequencing(): ?Collection
+    public function getSequencing(): ?Collection
     {
-        return $this->methodSequencing;
+        return $this->sequencing;
     }
 
-    public function setMethodSequencing(?MethodSequencing $methodSequencing): static
+    public function setSequencing(?Sequencing $sequencing): static
     {
-        $this->methodSequencing = $methodSequencing;
+        $this->sequencing = $sequencing;
 
         return $this;
     }
 
-    public function addMethodSequencing(?MethodSequencing $methodSequencing): static
+    public function addSequencing(?Sequencing $sequencing): static
     {
-        if (!$this->methodSequencing->contains($methodSequencing)) {
-            $this->methodSequencing->add($methodSequencing);
-            $methodSequencing->setStrain($this);
+        if (!$this->sequencing->contains($sequencing)) {
+            $this->sequencing->add($sequencing);
+            $sequencing->setStrain($this);
         }
 
         return $this;
     }
 
-    public function removeMethodSequencing(?MethodSequencing $methodSequencing): static
+    public function removeSequencing(?Sequencing $sequencing): static
     {
-        if ($this->methodSequencing->removeElement($methodSequencing)) {
-            $methodSequencing->setStrain($this);
+        if ($this->sequencing->removeElement($sequencing)) {
+            $sequencing->setStrain($this);
         }
 
         return $this;
@@ -439,9 +439,9 @@ class Strain
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function updateMethodSequencing(): void
+    public function updateSequencing(): void
     {
-        foreach ($this->methodSequencing as $method) {
+        foreach ($this->sequencing as $method) {
             if ($method->getStrain() !== $this) {
                 $method->setStrain($this); 
             }

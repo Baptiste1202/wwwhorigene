@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use Doctrine\Persistence\ObjectRepository;
 
-interface MethodSequencingRepositoryInterface extends ObjectRepository
+interface SequencingRepositoryInterface extends ObjectRepository
 {
-
 }

@@ -2,7 +2,7 @@
 // src/Controller/DownloadMultipleController.php
 namespace App\Controller;
 
-use App\Entity\MethodSequencing;
+use App\Entity\Sequencing;
 use App\Entity\DrugResistanceOnStrain;
 use App\Entity\Phenotype;
 use App\Storage\S3VichStorage;
@@ -177,7 +177,7 @@ class DownloadMultipleController extends AbstractController
             ]);
 
             // Récupérer tous les fichiers de séquençage pour ces souches
-            $sequencings = $this->em->getRepository(MethodSequencing::class)
+            $sequencings = $this->em->getRepository(sequencing::class)
                 ->createQueryBuilder('s')
                 ->innerJoin('s.strain', 'st')
                 ->where('st.id IN (:strainIds)')
