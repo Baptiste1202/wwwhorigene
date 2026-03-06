@@ -29,6 +29,8 @@
                     <th><input type="checkbox" id="select-all" /></th>
                     <th>ID</th>
                     <th>Type</th>
+                    <th>Description</th>
+                    <th>Comment</th>
                     <th data-column="duplicate" class="no-sort"></th>
                     <th data-column="edit" class="no-sort"></th>
                     <th data-column="delete" class="no-sort"></th>
@@ -44,6 +46,16 @@
                         <td style="background:none !important; background-color:transparent !important;">
                             {{ type.type }}
                         </td>
+
+                        <td data-info="{{ type.description is not null ? type.description : '--' }}">
+                            {{ type.description is not null ? type.description : '--' }}
+                        </td>
+
+                        <td data-info="{{ type.comment is not null ? type.comment : '--' }}">
+                            {{ type.comment is not null ? type.comment : '--' }}
+                        </td>
+                        
+
                         <td><a href="{{ path('duplicate_phenotypetype', {id: type.id}) }}" class="button-crud" title="Copy"><i class="fa-solid fa-copy"></i></a></td>
                             <td><a href="{{ path('edit_phenotypetype', {id: type.id}) }}" class="button-crud" title="Modifie"><i class="fa-solid fa-pen-to-square"></i></a></td>
                             <td>

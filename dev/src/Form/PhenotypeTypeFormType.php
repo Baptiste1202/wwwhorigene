@@ -21,6 +21,12 @@ class PhenotypeTypeFormType extends AbstractType
             ->add('type', TextType::class, [
                 'label' => 'Phenotype',
                 'required' => true,
+            ])
+            ->add('description', options:[
+                'label' => 'Description'
+            ])
+            ->add('comment', options:[
+                'label' => 'Comments'
             ]);
     }
 

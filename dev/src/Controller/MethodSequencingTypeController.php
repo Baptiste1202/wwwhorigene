@@ -125,6 +125,8 @@ class MethodSequencingTypeController extends AbstractController
 
             $clone = new MethodSequencingType();
             $clone->setName($methodSequencingType->getName());
+            $clone->setDescription($methodSequencingType->getDescription());
+            $clone->setComment($methodSequencingType->getComment());
 
             $em->persist($clone);
             $em->flush();
@@ -143,11 +145,11 @@ class MethodSequencingTypeController extends AbstractController
     {
         // Bloqué si au moins un Sequencing utilise ce type (relation sequencing.name -> MethodSequencingType)
         $rows = $em->createQuery(
-            'SELECT ms.id
-            FROM App\Entity\MethodSequencing ms
-            WHERE ms.name = :mst'
+            'SELECT s.id
+            FROM App\Entity\sequencing s
+            WHERE s.name = :st'
         )
-        ->setParameter('mst', $methodSequencingType)
+        ->setParameter('st', $methodSequencingType)
         ->setMaxResults(2000)
         ->getScalarResult();
 
@@ -206,11 +208,11 @@ class MethodSequencingTypeController extends AbstractController
         foreach ($types as $type) {
             // ✅ Bloqué si lié à MethodSequencing (table "sequencing")
             $rows = $em->createQuery(
-                'SELECT ms.id
-                FROM App\Entity\MethodSequencing ms
-                WHERE ms.name = :mst'
+                'SELECT s.id
+                FROM App\Entity\sequencing s
+                WHERE s.name = :st'
             )
-                ->setParameter('mst', $type)
+                ->setParameter('st', $type)
                 ->setMaxResults(2000)
                 ->getScalarResult();
 

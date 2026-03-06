@@ -16,6 +16,12 @@ class MethodSequencingTypeFormType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'MethodSequencingType',
                 'required' => true,
+            ])
+            ->add('description', options:[
+                'label' => 'Description'
+            ])
+            ->add('comment', options:[
+                'label' => 'Comments'
             ]);
     }
 

@@ -128,7 +128,7 @@
                             <td class="genotype clicable" data-info='
                                         genotype: {{ strain.genotype ? strain.genotype.type : '--'}}
                                         description: {{ strain.descriptionGenotype ? strain.descriptionGenotype : "--" }}
-                                        info: {{ strain.infoGenotype ? strain.infoGenotype : "--" }}'>
+                                        accession number: {{ strain.accessionNumber ? strain.accessionNumber : "--" }}'>
                             {% if strain.genotype is not null %}
                                 {{strain.genotype.type}} <br>
                                 {% if strain.descriptionGenotype is not empty %}
@@ -142,7 +142,11 @@
                                         {{ desc }}
                                     {% endif %} 
                                 {% endif %}<br>
-                                {{ strain.infoGenotype ?: strain.infoGenotype }}
+                                {% if strain.accessionNumber is not empty %}
+                                    ACC : {{ strain.accessionNumber }}
+                                {% else %}
+                                    --
+                                {% endif %}
                             {% else %}
                                 --
                             {% endif %}
