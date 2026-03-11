@@ -3,15 +3,17 @@
 {% block body %}
     <div id="global">
         <div id="list">
-            <div id="filter">
+            <div id="filter" class="filterComponent">
                 {% include 'user/_filter_form_datatable_user.html.twig' %}
             </div>
             <div id="message">
                 {% include './message.html.twig' %}
             </div>
+            <div id="table-header-toolbar"></div>
             <div id="table" class="table-user">
                 {% include "user/list.html.twig" %}
             </div>
+            <div id="table-controls-footer"></div>
         </div>
         <br>
     </div>

@@ -9,15 +9,17 @@
             </div>
         {% endif %}
         <div id="list">
-            <div id="filter">
+            <div id="filter" class="filterComponent">
                 {% include 'plasmyd/_filter_form_datatable_plasmyd.html.twig' %}
             </div>
             <div id="message">
                 {% include './message.html.twig' %}
             </div>
+            <div id="table-header-toolbar"></div>
             <div id="table">
                 {% include "plasmyd/list.html.twig" %}
             </div>
+            <div id="table-controls-footer"></div>
         </div>
         <br></br>
     </div>  

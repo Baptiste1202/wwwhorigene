@@ -73,6 +73,14 @@ function initDataTableWithFilters(tableId) {
         initComplete: function () {
             table.css('visibility', 'visible');
             $('#btn-delete-multiple').show(); // Si bouton présent
+            
+            // --- Partie 2 : On deplace length, filter et buttons dans une div au dessus de la table pour la fixer
+            $('#' + tableId + '_wrapper .dataTables_length, #' + tableId + '_wrapper .dataTables_filter, #' + tableId + '_wrapper .dt-buttons, .table-action-bar')
+            .appendTo('#table-header-toolbar');
+
+            // 🔽 Ajout : déplacer pagination + info dans le footer
+            $('#' + tableId + '_wrapper .dataTables_info, #' + tableId + '_wrapper .dataTables_paginate')
+            .appendTo('#table-controls-footer');
         }
     });
 

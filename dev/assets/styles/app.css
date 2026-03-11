@@ -517,7 +517,7 @@ button.btn-form:hover,
 }
 
 #global #list #filter  .filter-menu.visible {
-    display: inline-block; /* Affiche le menu lorsque la classe "visible" est ajoutée */
+    display: block !important; /* Affiche le menu lorsque la classe "visible" est ajoutée */
     top : 100%; 
     background: #f1f1f1;
     left: 0;
@@ -562,6 +562,10 @@ button.btn-form:hover,
     background-color: #f9f9f9; /* Couleur de fond */
 }
 
+.filterComponent {
+    padding: 10px !important;
+}
+
 input[type="checkbox"] {
   accent-color: #3c546d;; /* couleur du togunderlinegle */
 }
@@ -571,18 +575,16 @@ input[type="checkbox"] {
 =========================================================== */
 
 #global #list #table {
-    margin-top : 10px; 
-    table-layout: fixed; /* Fixe la largeur des colonnes */
-    overflow-x: auto; 
-    overflow-y: scroll;
-    border-collapse: collapse;
+    margin-top: 10px;
+    overflow-x: auto;
+    overflow-y: visible;
     font-family: 'Arial', sans-serif;
     font-size: 14px;
     color: #333;
-    background-color: #ffffff !important; /* Fond blanc forcé */
+    background-color: #ffffff !important;
     margin-bottom: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    height: 100%;
+    height: auto;
 }
 
 .sub-cell {

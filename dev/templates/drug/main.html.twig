@@ -8,15 +8,17 @@
             </div>
         {% endif %}
         <div id="list">
-            <div id="filter">
+            <div id="filter" class="filterComponent">
                 {% include 'drug/_filter_form_datatable_drug.html.twig' %}
             </div>
             <div id="message">
                 {% include './message.html.twig' %}
             </div>
+            <div id="table-header-toolbar"></div>
             <div id="table">
                 {% include "drug/list.html.twig" %}
             </div>
+            <div id="table-controls-footer"></div>
         </div>
         <br></br>
     </div>  
