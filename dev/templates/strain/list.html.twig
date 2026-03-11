@@ -121,6 +121,15 @@
                                         localisation : {{ strain.prelevement ? strain.prelevement.localisation : "--" }}
                                         under-localisation : {{ strain.prelevement ? strain.prelevement.underLocalisation : "--" }}
                                         environment : {{ strain.prelevement ? strain.prelevement.environment : "--" }}
+                                        bio-sample : {{ strain.prelevement and strain.prelevement.bioSample ? strain.prelevement.bioSample : "--" }}
+                                        farm-location : {{ strain.prelevement and strain.prelevement.farmLocation ? strain.prelevement.farmLocation : "--" }}
+
+                                        hospital-sample-type : {{ strain.prelevement and strain.prelevement.hospitalSampleType ? strain.prelevement.hospitalSampleType.value : "--" }}
+                                        hospital-site : {{ strain.prelevement and strain.prelevement.hospitalSite ? strain.prelevement.hospitalSite.value : "--" }}
+                                        hospital-ward : {{ strain.prelevement and strain.prelevement.hospitalWard ? strain.prelevement.hospitalWard : "--" }}
+
+                                        patient-context-type : {{ strain.prelevement and strain.prelevement.patientContextType ? strain.prelevement.patientContextType.value : "--" }}
+                                        source : {{ strain.prelevement and strain.prelevement.source ? strain.prelevement.source.value : "--" }}
                                     '>
                                 {{ strain.prelevement ? strain.prelevement.name : '--' }}
                             </td>

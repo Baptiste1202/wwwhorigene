@@ -37,6 +37,13 @@
                     <th>Under Localisation</th>
                     <th>GPS</th>
                     <th>Environnement</th>
+                    <th>Bio Sample</th>
+                    <th>Farm Location</th>
+                    <th>Hospital Sample Type</th>
+                    <th>Hospital Site</th>
+                    <th>Hospital Ward</th>
+                    <th>Patient Context Type</th>
+                    <th>Source</th>
                     <th>Other</th>
                     <th>Description</th>
                     <th>Comment</th>
@@ -62,6 +69,13 @@
                         <td>{{ sample.underLocalisation }}</td>
                         <td>{{ sample.gps }}</td>
                         <td>{{ sample.environment }}</td>
+                        <td>{{ sample.bioSample }}</td>
+                        <td>{{ sample.farmLocation }}</td>
+                        <td>{{ sample.hospitalSampleType ? sample.hospitalSampleType.value : '' }}</td>
+                        <td>{{ sample.hospitalSite ? sample.hospitalSite.value : '' }}</td>
+                        <td>{{ sample.hospitalWard }}</td>
+                        <td>{{ sample.patientContextType ? sample.patientContextType.value : '' }}</td>
+                        <td>{{ sample.source ? sample.source.value : '' }}</td>
                         <td>{{ sample.other }}</td>
                         <td>{{ sample.description }}</td>
                         <td>{{ sample.comment }}</td>

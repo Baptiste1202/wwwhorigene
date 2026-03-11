@@ -169,6 +169,15 @@ class SampleController extends AbstractController
             $clone->setUnderLocalisation($sample->getUnderLocalisation());
             $clone->setGps($sample->getGps());
             $clone->setEnvironment($sample->getEnvironment());
+
+            $clone->setBioSample($sample->getBioSample());
+            $clone->setFarmLocation($sample->getFarmLocation());
+            $clone->setHospitalSampleType($sample->getHospitalSampleType());
+            $clone->setHospitalSite($sample->getHospitalSite());
+            $clone->setHospitalWard($sample->getHospitalWard());
+            $clone->setPatientContextType($sample->getPatientContextType());
+            $clone->setSource($sample->getSource());
+
             $clone->setOther($sample->getOther());
             $clone->setDescription($sample->getDescription());
             $clone->setComment($sample->getComment());
