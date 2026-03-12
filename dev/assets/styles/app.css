@@ -505,6 +505,7 @@ button.btn-form:hover,
     transition: background-color 0.3s ease;
     position: relative; /* Positionne le bouton à l'intérieur du conteneur */
     z-index: 1; /* S'assure que le bouton est au-dessus du menu */
+    margin-top: 10px;
 }
 
 #global #list #filter #menu-button:hover {
@@ -745,6 +746,11 @@ table.dataTable.display    > tbody > tr > td {
     display: flex;
     align-items: center;   /* Aligne verticalement */
     gap: 2em;              /* Espace entre le formulaire et le nombre */
+}
+
+#searchFormContainer h2 {
+    margin: 0px;
+    font-size: 18px;
 }
 
 #floatingForm {
