@@ -1,0 +1,67 @@
+<div class="preview-header">
+    <p><strong>Strain ID :</strong> {{ strain.id }}</p>
+    <p><strong>Type :</strong> {{ type }}</p>
+    <p><strong>Nombre d'éléments :</strong> {{ items|length }}</p>
+</div>
+
+{% if items is empty %}
+    <div class="preview-card">
+        <p>Aucun élément trouvé.</p>
+    </div>
+{% else %}
+    <div class="preview-cards">
+        {% for item in items %}
+            <div class="preview-card">
+
+                {% if type == 'drugResistance' %}
+                    <h4>{{ item.drugResistance ? item.drugResistance.name : '--' }}</h4>
+
+                    <p><strong>Date :</strong> {{ item.date ? item.date|date('d/m/Y') : '--' }}</p>
+                    <p><strong>Concentration :</strong> {{ item.concentration ?: '--' }}</p>
+                    <p><strong>Concentration unit :</strong> {{ item.concentrationUnit ?: '--' }}</p>
+                    <p><strong>Resistant :</strong> {{ item.resistant ? 'yes' : 'no' }}</p>
+                    <p><strong>Comment :</strong> {{ item.comment ?: '--' }}</p>
+                    <p><strong>Description :</strong> {{ item.description ?: '--' }}</p>
+                    <p><strong>File :</strong> {{ item.nameFile ?: '--' }}</p>
+
+                    {% if item.nameFile %}
+                        <a href="/documents/download/drugs/{{ item.nameFile }}" class="preview-download-btn">
+                            Download
+                        </a>
+                    {% endif %}
+
+                {% elseif type == 'phenotype' %}
+                    <h4>{{ item.phenotypeType ? item.phenotypeType.type : '--' }}</h4>
+
+                    <p><strong>Date :</strong> {{ item.date ? item.date|date('d/m/Y') : '--' }}</p>
+                    <p><strong>Technique :</strong> {{ item.technique ?: '--' }}</p>
+                    <p><strong>Mesure :</strong> {{ item.mesure ?: '--' }}</p>
+                    <p><strong>File :</strong> {{ item.fileName ?: '--' }}</p>
+
+                    {% if item.fileName %}
+                        <a href="/documents/download/phenotype/{{ item.fileName }}" class="preview-download-btn">
+                            Download
+                        </a>
+                    {% endif %}
+
+                {% elseif type == 'sequencing' %}
+                    <h4>{{ item.name ?: '--' }}</h4>
+
+                    <p><strong>Date :</strong> {{ item.date ? item.date|date('d/m/Y') : '--' }}</p>
+                    <p><strong>Method :</strong> {{ item.name ?: '--' }}</p>
+                    <p><strong>File :</strong> {{ item.nameFile ?: '--' }}</p>
+
+                    {% if item.nameFile %}
+                        <a href="/documents/download/sequencing/{{ item.nameFile }}" class="preview-download-btn">
+                            Download
+                        </a>
+                    {% endif %}
+
+                {% else %}
+                    <p>Type inconnu</p>
+                {% endif %}
+
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
