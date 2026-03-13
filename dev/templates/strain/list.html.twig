@@ -121,6 +121,15 @@
                                         localisation : {{ strain.prelevement ? strain.prelevement.localisation : "--" }}
                                         under-localisation : {{ strain.prelevement ? strain.prelevement.underLocalisation : "--" }}
                                         environment : {{ strain.prelevement ? strain.prelevement.environment : "--" }}
+                                        bio-sample : {{ strain.prelevement and strain.prelevement.bioSample ? strain.prelevement.bioSample : "--" }}
+                                        farm-location : {{ strain.prelevement and strain.prelevement.farmLocation ? strain.prelevement.farmLocation : "--" }}
+
+                                        hospital-sample-type : {{ strain.prelevement and strain.prelevement.hospitalSampleType ? strain.prelevement.hospitalSampleType.value : "--" }}
+                                        hospital-site : {{ strain.prelevement and strain.prelevement.hospitalSite ? strain.prelevement.hospitalSite.value : "--" }}
+                                        hospital-ward : {{ strain.prelevement and strain.prelevement.hospitalWard ? strain.prelevement.hospitalWard : "--" }}
+
+                                        patient-context-type : {{ strain.prelevement and strain.prelevement.patientContextType ? strain.prelevement.patientContextType.value : "--" }}
+                                        source : {{ strain.prelevement and strain.prelevement.source ? strain.prelevement.source.value : "--" }}
                                     '>
                                 {{ strain.prelevement ? strain.prelevement.name : '--' }}
                             </td>
@@ -293,240 +302,186 @@
                             </td>
 
                             <td>
-                                <div class="sub-cell drugResistanceOnStrain clicable" 
-                                    data-info='
-                                        name: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.drugResistance.name  : '--'}}
-                                        concentration: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.concentration : '--'}}
-                                        concentration_unit: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.concentrationUnit : '--' }}
-                                        date: {{ strain.drugResistanceOnStrain|first and strain.drugResistanceOnStrain|first.date ? strain.drugResistanceOnStrain|first.date|date("Y-m-d") : "--" }}
-                                        resistant: {{ strain.drugResistanceOnStrain|first ? (strain.drugResistanceOnStrain|first.resistant ? 'yes' : 'no') : '--' }}
-                                        comment: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.comment   : '--'}}
-                                        description: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.description  : '--'}}
-                                        file: {{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.nameFile : '--'}}'                       
-                                    data-file='{{ strain.drugResistanceOnStrain|first ? strain.drugResistanceOnStrain|first.nameFile : '--'}}'
-                                >
-                                    {% if strain.drugResistanceOnStrain is not empty %}
-                                        {{ '● ' ~ strain.drugResistanceOnStrain[0].drugResistance.name }}
-                                        {% if strain.drugResistanceOnStrain[0].date is defined and strain.drugResistanceOnStrain[0].date %}
-                                            [{{ strain.drugResistanceOnStrain[0].date|date("d/m/Y") }}]
-                                        {% endif %}
-                                        <br>
-                                        {{strain.drugResistanceOnStrain[0].concentration}}
-                                        {% if strain.drugResistanceOnStrain[0].concentrationUnit %}
-                                            {{ strain.drugResistanceOnStrain[0].concentrationUnit }}
-                                        {% endif %}
-                                        {% if strain.drugResistanceOnStrain[0].resistant == 1 %}
-                                            <a class="resistant-display-red"> resistante : &#9888; </a>
-                                        {% else %}
-                                            <a class="resistant-display-green"> sensible : &#x2713; </a>
-                                        {% endif %}<br>
+                                {% if strain.drugResistanceOnStrain is not empty %}
+                                    <div class="cell-header">
+                                        <button class="open-file-modal"
+                                                data-strain-id="{{ strain.id }}"
+                                                data-type="drugResistance"
+                                                title="See all drug resistance files">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                    </div>
 
-                                        {% if strain.drugResistanceOnStrain[0].nameFile is defined and strain.drugResistanceOnStrain[0].nameFile %}
-                                            {% set nameFile = strain.drugResistanceOnStrain[0].nameFile %}
-                                            {% set maxLength = 20 %}
-                                            {% if nameFile|length > maxLength %}
-                                                {{ nameFile|slice(0,12) ~ '...' ~ nameFile|slice(-8) }}
-                                            {% else %}
-                                                {{ nameFile }}
-                                            {% endif %}
-                                        {% endif %}
-                                    {% else %}
-                                        --
-                                    {% endif %}
-                                </div>  
+                                    <div class="cell-content">
+                                         {% set maxLength = strain.drugResistanceOnStrain|length %}
+                                            {% for i in 0..(maxLength - 1) %}
+                                            {% set item = strain.drugResistanceOnStrain[i] %}
 
-                                {% if (strain.drugResistanceOnStrain is not empty)%}
-                                    {% set maxLength = strain.drugResistanceOnStrain|length %}
-                                    {% if maxLength > 1 %} 
-                                        {% for i in 1..(maxLength - 1) %}
-                                            <div id="sub-cell-drugResistanceOnStrain_{{i}}"
+                                            <div id="sub-cell-drugResistanceOnStrain_{{ i }}"
                                                 class="sub-cell drugResistanceOnStrain clicable"
                                                 data-info='
-                                                    name: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].drugResistance.name  : '--'}}
-                                                    concentration: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].concentration : '--'}}
-                                                    resistant: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? (strain.drugResistanceOnStrain[i].resistant  ? 'yes' : 'no') : '--' }}
-                                                    comment: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].comment  : '--'}}
-                                                    description: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i] ? strain.drugResistanceOnStrain[i].description  : '--'}}
-                                                    file: {{ strain.drugResistanceOnStrain[i] is defined and strain.drugResistanceOnStrain[i].nameFile is defined ? strain.drugResistanceOnStrain[i].nameFile : '--' }}'
-                                                data-file='{{ (strain.drugResistanceOnStrain|length > i and strain.drugResistanceOnStrain[i].nameFile) ? strain.drugResistanceOnStrain[i].nameFile : "--" }}'
-                                            > 
-                                                {{ strain.drugResistanceOnStrain[i] is defined ? '● ' ~ strain.drugResistanceOnStrain[i].drugResistance.name : '' }}
-                                                {% if strain.drugResistanceOnStrain[i].date is defined and strain.drugResistanceOnStrain[i].date %}
-                                                    [{{ strain.drugResistanceOnStrain[i].date|date("d/m/Y") }}]
+                                                    name: {{ item.drugResistance.name is defined ? item.drugResistance.name : "--" }}
+                                                    concentration: {{ item.concentration is defined and item.concentration ? item.concentration : "--" }}
+                                                    concentration_unit: {{ item.concentrationUnit is defined and item.concentrationUnit ? item.concentrationUnit : "--" }}
+                                                    date: {{ item.date is defined and item.date ? item.date|date("Y-m-d") : "--" }}
+                                                    resistant: {{ item.resistant is defined ? (item.resistant ? "yes" : "no") : "--" }}
+                                                    comment: {{ item.comment is defined and item.comment ? item.comment : "--" }}
+                                                    description: {{ item.description is defined and item.description ? item.description : "--" }}
+                                                    file: {{ item.nameFile is defined and item.nameFile ? item.nameFile : "--" }}'
+                                                data-file='{{ item.nameFile is defined and item.nameFile ? item.nameFile : "--" }}'>
+
+                                                {{ '● ' ~ item.drugResistance.name }}
+                                                {% if item.date is defined and item.date %}
+                                                    [{{ item.date|date("d/m/Y") }}]
                                                 {% endif %}
                                                 <br>
-                                                {{ strain.drugResistanceOnStrain[i] is defined ? strain.drugResistanceOnStrain[i].concentration : '' }}
-                                                        {% if strain.drugResistanceOnStrain[i].concentrationUnit %}
-                                                    {{ strain.drugResistanceOnStrain[i].concentrationUnit }}
-                                                {% endif %}
-                                                {% if strain.drugResistanceOnStrain[i] is defined %}
-                                                    {% if strain.drugResistanceOnStrain[i].resistant == 1 %}
-                                                        <a class="resistant-display-red"> resistante : &#9888; </a>
-                                                    {% else %}
-                                                        <a class="resistant-display-green"> sensible : &#x2713; </a>
-                                                    {% endif %}<br>
 
-                                                    {# FICHIER (affiché seulement si il existe) #}
-                                                    {% if strain.drugResistanceOnStrain[i].nameFile is defined and strain.drugResistanceOnStrain[i].nameFile %}
-                                                        {% set nameFile = strain.drugResistanceOnStrain[i].nameFile %}
-                                                        {% set maxLength = 20 %}
-                                                        {% if nameFile|length > maxLength %}
-                                                            {{ nameFile|slice(0,12) ~ '...' ~ nameFile|slice(-8) }}
-                                                        {% else %}
-                                                            {{ nameFile }}
-                                                        {% endif %}
-                                                    {% endif %}                                        
-                                                
+                                                {{ item.concentration }}
+                                                {% if item.concentrationUnit %}
+                                                    {{ item.concentrationUnit }}
+                                                {% endif %}
+
+                                                {% if item.resistant == 1 %}
+                                                    <a class="resistant-display-red"> resistante : &#9888; </a>
                                                 {% else %}
-                                                    --
+                                                    <a class="resistant-display-green"> sensible : &#x2713; </a>
+                                                {% endif %}
+                                                <br>
+
+                                                {% if item.nameFile is defined and item.nameFile %}
+                                                    {% set nameFile = item.nameFile %}
+                                                    {% set displayMaxLength = 20 %}
+
+                                                    {% if nameFile|length > displayMaxLength %}
+                                                        {{ nameFile|slice(0, 12) ~ '...' ~ nameFile|slice(-8) }}
+                                                    {% else %}
+                                                        {{ nameFile }}
+                                                    {% endif %}
                                                 {% endif %}
                                             </div>
                                         {% endfor %}
-                                    {% endif %}
+                                    </div>
+                                {% else %}
+                                    --
                                 {% endif %}
                             </td>
 
                             <td>
-                                <div class="sub-cell phenotype clicable" 
-                                    data-info='
-                                            phenotype: {{ strain.phenotype|first ? strain.phenotype|first.phenotypeType.type : '--'}}
-                                            technique: {{ strain.phenotype|first ? strain.phenotype|first.technique : "--" }}
-                                            mesure: {{ strain.phenotype|first ? strain.phenotype|first.mesure : "--" }}
-                                            date: {{ strain.phenotype|first ? strain.phenotype|first.date|date('d/m/Y') : "--" }}
-                                            file: {{ strain.phenotype|first ? strain.phenotype|first.fileName : "--" }}'
-                                            data-file='{{ strain.phenotype|first ? strain.phenotype|first.fileName : '--'}}'
-                                >
-                                    {% if strain.phenotype is not empty %}
-                                        {{ '● ' ~ strain.phenotype[0].phenotypeType.type }}
-                                        {% if strain.phenotype[0].date is defined and strain.phenotype[0].date %}
-                                            [{{ strain.phenotype[0].date|date("d/m/Y") }}]
-                                        {% endif %}
-                                        <br>
-                                        {{strain.phenotype[0].mesure}}
-                                        <br>
+                                {% if strain.phenotype is not empty %}
+                                    <div class="cell-header">
+                                        <button class="open-file-modal"
+                                                data-strain-id="{{ strain.id }}"
+                                                data-type="phenotype"
+                                                title="See all phenotype files">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                    </div>
 
-                                        {% if strain.phenotype[0].fileName is defined and strain.phenotype[0].fileName %}
-                                            {% set nameFile = strain.phenotype[0].fileName %}
-                                            {% set maxLength = 20 %}
-                                            {% if nameFile|length > maxLength %}
-                                                {{ nameFile|slice(0,12) ~ '...' ~ nameFile|slice(-8) }}
-                                            {% else %}
-                                                {{ nameFile }}
-                                            {% endif %}
-                                        {% endif %}
-                                    
-                                    {% else %}
-                                        --
-                                    {% endif %}
-                                </div>
+                                    <div class="cell-content">
+                                        {% set maxLength = strain.phenotype|length %}
+                                        {% set start = maxLength > 3 ? maxLength - 3 : 0 %}
 
-                                {% if (strain.phenotype is not empty)%}
-                                    {% set maxLength = strain.phenotype|length %}
-                                    {% if maxLength > 1 %} 
-                                        {% for i in 1..(maxLength - 1) %}
-                                            <div id="sub-cell-phenotype_{{i}}"
+                                        {% for i in start..(maxLength - 1) %}
+                                            {% set item = strain.phenotype[i] %}
+
+                                            <div id="sub-cell-phenotype_{{ i }}"
                                                 class="sub-cell phenotype clicable"
                                                 data-info='
-                                            phenotype: {{ (strain.phenotype|length > i) ? strain.phenotype[i].phenotypeType.type : "--" }}
-                                            technique: {{ (strain.phenotype|length > i) ? strain.phenotype[i].technique : "--" }}
-                                            mesure: {{ (strain.phenotype|length > i) ? strain.phenotype[i].mesure : "--" }}
-                                            date: {{ (strain.phenotype|length > i) ? strain.phenotype[i].date|date('d/m/Y') : "--" }}
-                                            file: {{ (strain.phenotype|length > i and strain.phenotype[i].fileName) ? strain.phenotype[i].fileName : "--" }}'
-                                            data-file='{{ (strain.phenotype|length > i and strain.phenotype[i].fileName) ? strain.phenotype[i].fileName : "--" }}'
-                                            >
-                                                {% if strain.phenotype|length > i %}
-                                                    {{ '● ' ~ strain.phenotype[i].phenotypeType.type }}
-                                                    {% if strain.phenotype[i].date is defined and strain.phenotype[i].date %}
-                                                        [{{ strain.phenotype[i].date|date("d/m/Y") }}]
-                                                    {% endif %}
-                                                    <br>
-                                                    {{strain.phenotype[i].mesure}}  
-                                                    <br>
-                                                    {% if strain.phenotype[i].fileName is defined and strain.phenotype[i].fileName %}
-                                                        {% set nameFile = strain.phenotype[i].fileName %}
-                                                        {% set maxLength = 20 %}
-                                                        {% if nameFile|length > maxLength %}
-                                                            {{ nameFile|slice(0,12) ~ '...' ~ nameFile|slice(-8) }}
-                                                        {% else %}
-                                                            {{ nameFile }}
-                                                        {% endif %}
-                                                    {% endif %}
+                                                    phenotype: {{ item.phenotypeType.type is defined ? item.phenotypeType.type : "--" }}
+                                                    technique: {{ item.technique is defined and item.technique ? item.technique : "--" }}
+                                                    mesure: {{ item.mesure is defined and item.mesure ? item.mesure : "--" }}
+                                                    date: {{ item.date is defined and item.date ? item.date|date("d/m/Y") : "--" }}
+                                                    file: {{ item.fileName is defined and item.fileName ? item.fileName : "--" }}'
+                                                data-file='{{ item.fileName is defined and item.fileName ? item.fileName : "--" }}'>
 
-                                                {% else %}
-                                                    --
+                                                {{ '● ' ~ item.phenotypeType.type }}
+                                                {% if item.date is defined and item.date %}
+                                                    [{{ item.date|date("d/m/Y") }}]
+                                                {% endif %}
+                                                <br>
+
+                                                {{ item.mesure }}
+                                                <br>
+
+                                                {% if item.fileName is defined and item.fileName %}
+                                                    {% set nameFile = item.fileName %}
+                                                    {% set displayMaxLength = 20 %}
+
+                                                    {% if nameFile|length > displayMaxLength %}
+                                                        {{ nameFile|slice(0, 12) ~ '...' ~ nameFile|slice(-8) }}
+                                                    {% else %}
+                                                        {{ nameFile }}
+                                                    {% endif %}
                                                 {% endif %}
                                             </div>
                                         {% endfor %}
-                                    {% endif %}
+                                        {% if maxLength > 3 %}
+                                            <div class="sub-cell more-files">
+                                                +{{ maxLength - 3 }} more files
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                {% else %}
+                                    --
                                 {% endif %}
                             </td>
-                            
+
                             <td>
-                                <div class="sequencing clicable" 
-                                    data-info='
-                                            date : {{ strain.sequencing|first ? strain.sequencing|first.date|date('d/m/Y')  : '--'}}
-                                            method : {{ strain.sequencing|first ? strain.sequencing|first.name  : '--'}}
-                                            file : {{ strain.sequencing|first ? strain.sequencing|first.nameFile  : '--'}}'
-                                    data-file='{{ strain.sequencing|first ? strain.sequencing|first.nameFile : '--'}}'
-                                >
-                                    {% if strain.sequencing is not empty %}
-                                        {{ '● ' ~ strain.sequencing[0].name }}
-                                        {% if strain.sequencing[0].date is defined and strain.sequencing[0].date %}
-                                            [{{ strain.sequencing[0].date|date("d/m/Y") }}]
-                                        {% endif %}
-                                        <br>
-                                        {% set nameFile = strain.sequencing[0].nameFile ?: strain.sequencing[0].nameFile %}
-                                        {% set maxLength = 15 %}
+                                {% if strain.sequencing is not empty %}
+                                    <div class="cell-header">
+                                        <button class="open-file-modal"
+                                                data-strain-id="{{ strain.id }}"
+                                                data-type="sequencing"
+                                                title="See all sequencing files">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                    </div>
 
-                                        {% if nameFile|length > maxLength %}
-                                            {% set prefix = nameFile|slice(0, 12) %}
-                                            {% set suffix = nameFile|slice(-10) %}
-                                            {{ prefix ~ '...' ~ suffix }}
-                                        {% else %}
-                                            {{ nameFile }}
-                                        {% endif %} <br>
-                                    {% else %}
-                                        --
-                                    {% endif %}
-                                </div>
+                                    <div class="cell-content">
+                                        {% set maxLength = strain.sequencing|length %}
+                                        {% set start = maxLength > 3 ? maxLength - 3 : 0 %}
 
-                                 {% if strain.sequencing is not empty %}
-                                    {% set seqLength = strain.sequencing|length %}
-                                    {% if seqLength > 1 %}
-                                        {% for i in 1..(seqLength - 1) %}
-                                            {% set seqItem = strain.sequencing[i] %}
+                                        {% for i in start..(maxLength - 1) %}
+                                            {% set item = strain.sequencing[i] %}
+
                                             <div id="sub-cell-sequencing_{{ i }}"
                                                 class="sub-cell sequencing clicable"
                                                 data-info='
-                                                    date : {{ seqItem.date is defined and seqItem.date ? seqItem.date|date('d/m/Y') : '--' }}
-                                                    method : {{ seqItem.name is defined and seqItem.name ? seqItem.name : '--' }}
-                                                    file : {{ seqItem.nameFile is defined and seqItem.nameFile ? seqItem.nameFile : '--' }}'
-                                                data-file='{{ seqItem.nameFile is defined ? seqItem.nameFile : "--" }}'>
-                                                
-                                                 {{ seqItem.name is defined ? '● ' ~ seqItem.name : '' }}
-                                                    {% if seqItem.date is defined and seqItem.date %}
-                                                        [{{ seqItem.date|date("d/m/Y") }}]
-                                                    {% endif %}
-                                                    <br>
-                                                
-                                                {% if seqItem.nameFile is defined %}
-                                                    {% set fileName = seqItem.nameFile %}
-                                                    {% set displayMax = 10 %}
-                                                    {% if fileName|length > displayMax %}
-                                                        {% set prefix = fileName|slice(0, 12) %}
-                                                        {% set suffix = fileName|slice(-10) %}
-                                                        {{ prefix ~ '...' ~ suffix }}
+                                                    date: {{ item.date is defined and item.date ? item.date|date("d/m/Y") : "--" }}
+                                                    method: {{ item.name is defined and item.name ? item.name : "--" }}
+                                                    file: {{ item.nameFile is defined and item.nameFile ? item.nameFile : "--" }}'
+                                                data-file='{{ item.nameFile is defined and item.nameFile ? item.nameFile : "--" }}'>
+
+                                                {{ item.name is defined and item.name ? '● ' ~ item.name : '' }}
+                                                {% if item.date is defined and item.date %}
+                                                    [{{ item.date|date("d/m/Y") }}]
+                                                {% endif %}
+                                                <br>
+
+                                                {% if item.nameFile is defined and item.nameFile %}
+                                                    {% set fileName = item.nameFile %}
+                                                    {% set displayMaxLength = 15 %}
+
+                                                    {% if fileName|length > displayMaxLength %}
+                                                        {{ fileName|slice(0, 12) ~ '...' ~ fileName|slice(-10) }}
                                                     {% else %}
                                                         {{ fileName }}
                                                     {% endif %}
-                                                    <br>
                                                 {% else %}
                                                     --
                                                 {% endif %}
                                             </div>
                                         {% endfor %}
-                                    {% endif %}
-                                {% endif %}                        
+                                         {% if maxLength > 3 %}
+                                            <div class="sub-cell more-files">
+                                                +{{ maxLength - 3 }} more files
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    --
+                                {% endif %}
                             </td>
 
                             <td>
@@ -695,6 +650,18 @@
     <a id="popupDownload" href="#" style="display: none; padding: 5px 10px; background: blue; color: white; text-decoration: none; border-radius: 5px;">
         Download
     </a>
+</div>
+
+<div id="filePreviewModal" class="custom-modal" style="display:none;">
+    <div class="custom-modal-overlay"></div>
+
+    <div class="custom-modal-content">
+        <button type="button" id="file-preview-close" class="custom-modal-close">&times;</button>
+        <h3 id="file-preview-title">Files preview</h3>
+        <div id="file-preview-body">
+            <p>Loading...</p>
+        </div>
+    </div>
 </div>
 
 {% if app.session.flashbag.has('warning') %}

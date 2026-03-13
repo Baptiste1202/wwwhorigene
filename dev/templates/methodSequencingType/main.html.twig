@@ -10,7 +10,7 @@
     {% endif %}
 
     <div id="list">
-      <div id="filter">
+      <div id="filter" class="filterComponent">
         {% include 'methodSequencingType/_filter_form_datatable_methodsequencingtype.html.twig' %}
       </div>
 
@@ -18,9 +18,14 @@
         {% include './message.html.twig' %}
       </div>
 
+      <div id="table-header-toolbar"></div>
+
       <div id="table">
         {% include 'methodSequencingType/list.html.twig' %}
       </div>
+
+      <div id="table-controls-footer"></div>
+
     </div>
 
     <br />

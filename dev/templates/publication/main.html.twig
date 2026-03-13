@@ -7,15 +7,17 @@
                 </div>
             {% endif %}
             <div id="list">
-                <div id="filter">
+                <div id="filter" class="filterComponent">
                     {% include 'publication/_filter_form_datatable_publication.html.twig' %}
                 </div>
                 <div id="message">
                     {% include './message.html.twig' %}
                 </div>
+                <div id="table-header-toolbar"></div>
                 <div id="table">
                     {% include "publication/list.html.twig" %}
                 </div>
+                <div id="table-controls-footer"></div>
             </div>
         <br></br>        
         </div>  

@@ -3,21 +3,34 @@
 {% block body %}
     <div id="global">
         {% if 'ROLE_SEARCH' in app.user.roles or 'ROLE_ADMIN' in app.user.roles %}
-            <div id="form">
+            <button id="toggleForm">+</button>
+
+            <div id="form" class="hidden">
+                <button id="closeForm">-</button>
                 {% include "sample/create.html.twig" %}
             </div>
         {% endif %}
+
         <div id="list">
-            <div id="filter">
+            <div id="filter" class="filterComponent">
                 {% include 'sample/_filter_form_datatable_sample.html.twig' %}
             </div>
+
             <div id="message">
                 {% include './message.html.twig' %}
             </div>
+
+            <div id="table-header-toolbar"></div>
+
             <div id="table">
                 {% include "sample/list.html.twig" %}
             </div>
+
+            <div id="table-controls-footer"></div>
+
         </div>
-        <br></br>
-    </div>  
+
+        <br>
+    </div>
+
 {% endblock %}

@@ -900,4 +900,45 @@ class StrainController extends AbstractController
         ]);
     }
 
+    #[Route('/strain/{id}/file-preview/{type}', name: 'strain_file_preview', methods: ['GET'])]
+    public function filePreview(Strain $strain, string $type): Response
+    {
+        $items = [];
+
+        if ($type === 'drugResistance') {
+            $items = $strain->getDrugResistanceOnStrain()->toArray();
+        } elseif ($type === 'phenotype') {
+            $items = $strain->getPhenotype()->toArray();
+        } elseif ($type === 'sequencing') {
+            $items = $strain->getSequencing()->toArray();
+        } else {
+            throw $this->createNotFoundException('Invalid type');
+        }
+
+        usort($items, function ($a, $b) {
+            $dateA = method_exists($a, 'getDate') ? $a->getDate() : null;
+            $dateB = method_exists($b, 'getDate') ? $b->getDate() : null;
+
+            if ($dateA && $dateB) {
+                return $dateB <=> $dateA;
+            }
+
+            if ($dateA && !$dateB) {
+                return -1;
+            }
+
+            if (!$dateA && $dateB) {
+                return 1;
+            }
+
+            return ($b->getId() ?? 0) <=> ($a->getId() ?? 0);
+        });
+
+        return $this->render('strain/_file_preview_cards.html.twig', [
+            'strain' => $strain,
+            'type' => $type,
+            'items' => $items,
+        ]);
+    }
+
 }

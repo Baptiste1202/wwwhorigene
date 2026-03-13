@@ -7,6 +7,11 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 
+use App\Enum\HospitalSampleTypeEnum;
+use App\Enum\HospitalSiteEnum;
+use App\Enum\PatientContextTypeEnum;
+use App\Enum\SourceEnum;
+
 #[ORM\Entity(repositoryClass: SampleRepository::class)]
 class Sample
 {
@@ -55,26 +60,26 @@ class Sample
     #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+   #[ORM\Column(length: 255, nullable: true)]
     private ?string $bioSample = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $farmLocation = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $hospitalSampleType = null;
+    #[ORM\Column(enumType: HospitalSampleTypeEnum::class, nullable: true)]
+    private ?HospitalSampleTypeEnum $hospitalSampleType = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $hospitalSite = null;
+    #[ORM\Column(enumType: HospitalSiteEnum::class, nullable: true)]
+    private ?HospitalSiteEnum $hospitalSite = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $hospitalWard = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $patientContextType = null;
+    #[ORM\Column(enumType: PatientContextTypeEnum::class, nullable: true)]
+    private ?PatientContextTypeEnum $patientContextType = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $source = null;
+    #[ORM\Column(enumType: SourceEnum::class, nullable: true)]
+    private ?SourceEnum $source = null;
 
     /**
      * @var Collection<int, Strain>
@@ -279,23 +284,23 @@ class Sample
         return $this;
     }
 
-    public function getHospitalSampleType(): ?string
+    public function getHospitalSampleType(): ?HospitalSampleTypeEnum
     {
         return $this->hospitalSampleType;
     }
 
-    public function setHospitalSampleType(?string $hospitalSampleType): static
+    public function setHospitalSampleType(?HospitalSampleTypeEnum $hospitalSampleType): static
     {
         $this->hospitalSampleType = $hospitalSampleType;
         return $this;
     }
 
-    public function getHospitalSite(): ?string
+    public function getHospitalSite(): ?HospitalSiteEnum
     {
         return $this->hospitalSite;
     }
 
-    public function setHospitalSite(?string $hospitalSite): static
+    public function setHospitalSite(?HospitalSiteEnum $hospitalSite): static
     {
         $this->hospitalSite = $hospitalSite;
         return $this;
@@ -312,23 +317,23 @@ class Sample
         return $this;
     }
 
-    public function getPatientContextType(): ?string
+    public function getPatientContextType(): ?PatientContextTypeEnum
     {
         return $this->patientContextType;
     }
 
-    public function setPatientContextType(?string $patientContextType): static
+    public function setPatientContextType(?PatientContextTypeEnum $patientContextType): static
     {
         $this->patientContextType = $patientContextType;
         return $this;
     }
 
-    public function getSource(): ?string
+    public function getSource(): ?SourceEnum
     {
         return $this->source;
     }
 
-    public function setSource(?string $source): static
+    public function setSource(?SourceEnum $source): static
     {
         $this->source = $source;
         return $this;
