@@ -691,9 +691,9 @@ button.btn-form:hover,
 #global #list #table td.id {
     text-align: center;
     color: black;
-    width: 60px;
-    min-width: 60px;
-    max-width: 60px;
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
     font-weight: bold;
     background-color: #bdbdbd;
 }
@@ -2094,40 +2094,8 @@ ul.plasmyd li.create-plasmid-li {
     text-overflow: ellipsis;
 }
 
-/* ===========================================================
-   TOGGLES GAUCHE : FORM + TOOLS
-=========================================================== */
-
-#left-toggles {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-self: flex-start;
-}
-
-#toggleTools {
-    min-width: 58px;
-    height: 30px;
-    font-size: 12px;
-    box-sizing: border-box;
-    box-shadow: var(--shadow-soft);
-    border: 1px solid;
-    border-radius: 5px;
-    background-color: var(--bg-panel);
-    font-family: "Roboto", sans-serif;
-    transition: all 0.3s ease;
-}
-
-#toggleTools:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    cursor: pointer;
-    background-color: #444;
-    color: var(--text-light);
-}
-
 #strain-tools.hidden-tools {
-    display: none !important;
+    display: none;
 }
 
 /* ===========================================================
@@ -2136,40 +2104,55 @@ ul.plasmyd li.create-plasmid-li {
 
 #left-toggles {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 8px;
-    align-self: flex-start;
+    align-items: stretch;
+    align-self: stretch;
+    height: 92vh; /* même hauteur que la console */
+    flex-shrink: 0;
+}
+
+#left-toggles button {
+    width: 42px;
+    min-width: 42px;
+    max-width: 42px;
+    height: 100%;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-family: "Roboto", sans-serif;
+    font-size: 18px;
+    border: 1px solid var(--border-light);
+    background: var(--bg-panel);
+    border-radius: 6px;
+    box-shadow: var(--shadow-soft);
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#left-toggles button:hover {
+    background: #444;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+#toggleTools {
+    width: 42px;
+    min-width: 42px;
+    max-width: 42px;
+    height: 100%;
 }
 
 #strain-tools.hidden-tools {
     display: none !important;
-}
-
-/* bouton Tools à gauche : caché tant que tools ouverts */
-#toggleTools {
-    min-width: 58px;
-    height: 30px;
-    font-size: 12px;
-    box-sizing: border-box;
-    box-shadow: var(--shadow-soft);
-    border: 1px solid;
-    border-radius: 5px;
-    background-color: var(--bg-panel);
-    font-family: "Roboto", sans-serif;
-    transition: all 0.3s ease;
-}
-
-#toggleTools:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    cursor: pointer;
-    background-color: #444;
-    color: var(--text-light);
 }
 
 /* cache le bouton Tools quand les tools sont ouverts */
 .hidden-tools-toggle {
-    display: none;
+    display: none !important;
 }
 
 #tools-topbar {
@@ -2188,7 +2171,6 @@ ul.plasmyd li.create-plasmid-li {
     border: none;
     border-radius: 50%;
     transition: all 0.3s ease;
-
     display: flex;
     align-items: center;
     justify-content: center;

@@ -7,7 +7,7 @@
             <button id="toggleForm">+</button>
         {% endif %}
 
-        <button id="toggleTools" class="hidden-tools-toggle" type="button">Tools</button>
+        <button id="toggleTools" type="button">T</button>
     </div>
 
     {% if 'ROLE_SEARCH' in app.user.roles or 'ROLE_ADMIN' in app.user.roles %}
@@ -17,7 +17,8 @@
         </div>
     {% endif %}
 
-    <div id="strain-tools">
+    {# fermé par défaut #}
+    <div id="strain-tools" class="hidden-tools">
         <div id="tools-topbar">
             <button id="closeToolsTop" type="button">-</button>
         </div>
@@ -153,9 +154,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!toggleToolsBtn || !strainTools) return;
 
         if (strainTools.classList.contains('hidden-tools')) {
-            toggleToolsBtn.classList.remove('hidden-tools-toggle');
+            toggleToolsBtn.style.display = 'inline-flex';
         } else {
-            toggleToolsBtn.classList.add('hidden-tools-toggle');
+            toggleToolsBtn.style.display = 'none';
         }
     }
 
