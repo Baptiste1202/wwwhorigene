@@ -16,7 +16,6 @@ import './scriptJs/searchFormFloating.js'
 import './scriptJs/toggleColumns.js'
 import './scriptJs/confirmMultiDelete.js'
 import './scriptJs/patchCssDownloadMultiple.js'
-import './scriptJs/gridfixModifieStrainOverflowOnce.js'
 import './scriptJs/toggleCreateForm.js'
 import './scriptJs/filePreviewModal.js'
 

@@ -1,19 +1,16 @@
-<script src="{{ asset('scriptJs/preventStrainForm.js') }}"></script>
-<script src="{{ asset('scriptJs/gridfixModifieStrainOverflowOnce.js') }}"></script>
-
 {{ form_start(strainForm, {
     'action': is_update 
         ? path('edit_strain', {'id': strain.id}) 
         : path('add_strain'),
     'method': 'POST',
     'attr': {
-        'class': is_update ? 'update-form' : '',
+        'class': is_update ? 'update-form row g-3' : '',
         'enctype': 'multipart/form-data'
     }
 }) }}
 
     {% if is_update %}
-        <div class="prime group">
+        <div class="prime group col-12 col-xl-6">
     {% endif %}
             {{ form_row(strainForm.nameStrain) }}
             {{ form_row(strainForm.parentStrain) }}
@@ -30,7 +27,7 @@
     {% endif %}
 
     {% if is_update %}
-    <div id="project-add" class="group">
+    <div id="project-add" class="group col-12 col-md-6 col-xl-3">
     {% endif %}
         <div id="project-add-info" class="hidden-tags">
             <ul class="project"
@@ -51,7 +48,7 @@
     {% endif %}
 
     {% if is_update %}
-    <div id="collec-add" class="group">
+    <div id="collec-add" class="group col-12 col-md-6 col-xl-3">
     {% endif %}
         <div id="collec-add-info" class="hidden-tags">
             <ul class="collec"
@@ -72,7 +69,7 @@
     {% endif %}
 
     {% if is_update %}
-    <div id="plasmyd-add" class="group">
+    <div id="plasmyd-add" class="group col-12 col-md-6 col-xl-3">
     {% endif %}
         <div id="plasmyd-add-info" class="hidden-tags">
             <ul class="plasmyd"
@@ -93,7 +90,7 @@
     {% endif %}
 
     {% if is_update %}
-    <div id="publication-add" class="group">
+    <div id="publication-add" class="group col-12 col-md-6 col-xl-3">
     {% endif %}
         <div id="publication-add-info" class="hidden-tags">
             <ul class="publication"
@@ -114,7 +111,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="drug-add" class="group long">
+        <div id="drug-add" class="group long col-12 col-xl-6">
     {% endif %}
         <div id="drug-add-info" class="hidden-tags">
             <ul class="drugResistanceOnStrain"
@@ -135,7 +132,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="phenotype-add" class="group long">
+        <div id="phenotype-add" class="group long col-12 col-xl-6">
     {% endif %}
         <div id="phenotype-add-info" class="hidden-tags">
             <ul class="phenotype"
@@ -156,7 +153,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="sequencing-add" class="group long">
+        <div id="sequencing-add" class="group long col-12 col-xl-6">
     {% endif %}
         <div id="sequencing-add-info" class="hidden-tags">
             <ul class="sequencing"
@@ -177,7 +174,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div id="storage-add" class="group long">
+        <div id="storage-add" class="group long col-12 col-xl-6">
     {% endif %}
         <div id="storage-add-info" class="hidden-tags">
             <ul class="storage"
@@ -198,7 +195,7 @@
     {% endif %}
 
     {% if is_update %}
-        <div class="prime2 group">
+        <div class="prime2 group col-12 col-xl-6">
     {% endif %}
         {{ form_row(strainForm.description) }}
         {{ form_row(strainForm.comment) }}
@@ -206,16 +203,17 @@
         </div>
     {% endif %}
 
-    <button class="btn-form" type="submit" id="sendButton">{{ button_label | default('Add strain') }} </button>
+    <div class="col-12">
+        <button class="btn-form" type="submit" id="sendButton">{{ button_label | default('Add strain') }}</button>
+    </div>
 
 {{ form_end(strainForm) }}
 
 <script>
-
 document.addEventListener('DOMContentLoaded', () => {
     const drugItems = document.querySelectorAll('#drug-add-info li');
     drugItems.forEach(item => {
-        item.style.minHeight = '50px'; // ou la hauteur adaptée à ton input
+        item.style.minHeight = '50px';
     });
 });
 
@@ -233,7 +231,7 @@ function selectOptionByValue(selectElementId, value) {
     const selectElement = document.getElementById(selectElementId);
     const optionToSelect = selectElement.querySelector(`option[value="${value}"]`);
     if (optionToSelect) {
-        selectElement.value = value;  // Sélectionne l'option
+        selectElement.value = value;
     } else {
         console.error(`Option with value "${value}" not found in ${selectElementId}`);
     }
@@ -242,7 +240,9 @@ function selectOptionByValue(selectElementId, value) {
 document.addEventListener('DOMContentLoaded', () => {
     const searchButton = document.querySelector('.search-button');
     const parentStrainIdField = document.getElementById('strain_form_parentStrain');
-    
+
+    if (!searchButton || !parentStrainIdField) return;
+
     searchButton.addEventListener('click', async () => {
         const strainId = parentStrainIdField.value;
 
@@ -253,14 +253,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const response = await fetch(`/api/strain/${strainId}`);
-            console.log(response.ok)
             if (!response.ok) {
                 throw new Error('Strain non trouvée.');
             }
 
             const data = await response.json();
-
-            console.log(data);
 
             document.getElementById('strain_form_nameStrain').value = data.name;
             document.getElementById('strain_form_specie').value = data.specie;
@@ -270,22 +267,8 @@ document.addEventListener('DOMContentLoaded', () => {
             selectOptionByValue('strain_form_genotype', data.genotype);
             document.getElementById('strain_form_descriptionGenotype').value = data.descGenotype;
             document.getElementById('strain_form_accessionNumber').value = data.accessionNumber;
-            
-            } catch (error) {
-                alert('Erreur lors de la recherche de la souche : ' + error.message);
-            }
-    });
-});
-
-// PATCH : avant, certains blocs (comme "Collection") restaient cachés (hidden-tags)
-// même s'ils avaient déjà des éléments en mode édition. On corrige en les affichant
-// automatiquement au chargement dès qu'un <ul> contient au moins un <li>.
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.hidden-tags').forEach(div => {
-        const ul = div.querySelector('ul');
-        if (ul && ul.querySelectorAll('li').length > 0) {
-            // Il y a déjà des items → on affiche
-            div.classList.remove('hidden-tags');
+        } catch (error) {
+            alert('Erreur lors de la recherche de la souche : ' + error.message);
         }
     });
 });
@@ -294,28 +277,24 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.hidden-tags').forEach(div => {
         const ul = div.querySelector('ul');
         if (ul && ul.querySelectorAll('li').length > 0) {
-            // Il y a déjà des items → on affiche
             div.classList.remove('hidden-tags');
         }
     });
 });
-
 
 document.querySelectorAll('.add_item_link').forEach(btn => {
     btn.addEventListener("click", (e) => {
         const collectionClass = e.currentTarget.dataset.collectionHolderClass;
         const collectionDiv = document.querySelector('.' + collectionClass).closest('div');
 
-        // Afficher le <div> masqué
         if (collectionDiv.classList.contains('hidden-tags')) {
             collectionDiv.classList.remove('hidden-tags');
         }
 
-        // Ajouter un nouvel élément à la collection
         addFormToCollection(e);
     });
 });
-  
+
 function addFormToCollection(e) {
     const collectionClass = e.currentTarget.dataset.collectionHolderClass;
     const collectionHolder = document.querySelector('.' + collectionClass);
@@ -326,13 +305,9 @@ function addFormToCollection(e) {
 
     const index = collectionHolder.dataset.index;
 
-    // Créer le nouvel élément à partir du prototype
     const item = document.createElement('li');
     item.innerHTML = collectionHolder.dataset.prototype.replace(/__name__/g, index);
 
-    // Ajouter au DOM
-    collectionHolder.appendChild(item);
-       // Ajouter au DOM (avant le bouton spécial 🆕 s’il existe)
     const specialLi = collectionHolder.querySelector('li.create-plasmid-li');
     if (specialLi) {
         collectionHolder.insertBefore(item, specialLi);
@@ -340,35 +315,31 @@ function addFormToCollection(e) {
         collectionHolder.appendChild(item);
     }
 
-    // Copier les valeurs depuis le dernier élément si existant
     if (!collectionHolder.classList.contains('drugResistanceOnStrain')) {
         const existingItems = collectionHolder.querySelectorAll('li');
         if (existingItems.length > 1) {
-            const lastItem = existingItems[existingItems.length - 2]; // Avant-dernier
-
+            const lastItem = existingItems[existingItems.length - 2];
             const lastInputs = lastItem.querySelectorAll('input, select, textarea');
             const newInputs = item.querySelectorAll('input, select, textarea');
 
             lastInputs.forEach((input, i) => {
                 if (!newInputs[i]) return;
 
-                // Ne pas copier les champs contenant fileName ou NameFile dans l'ID
                 const id = input.id || "";
                 if (/filename|namefile/i.test(id)) {
-                    newInputs[i].value = "";      // On force à vide
+                    newInputs[i].value = "";
                     if (newInputs[i].type === "checkbox" || newInputs[i].type === "radio") {
                         newInputs[i].checked = false;
                     }
                     return;
                 }
 
-                // Comportement normal
                 if (input.tagName === 'SELECT') {
                     newInputs[i].value = input.value;
                 } else if (input.type === 'checkbox' || input.type === 'radio') {
                     newInputs[i].checked = input.checked;
                 } else if (input.type === 'file') {
-                    newInputs[i].value = ''; 
+                    newInputs[i].value = '';
                 } else {
                     newInputs[i].value = input.value;
                 }
@@ -376,18 +347,14 @@ function addFormToCollection(e) {
         }
     }
 
-
-    // Mettre à jour le label
     const labelType = e.currentTarget.closest('div')?.querySelector('label')?.textContent.trim();
     const label = item.querySelector('label');
     if (label && labelType) {
         label.textContent = `${labelType}`;
     }
 
-    // Ajouter le bouton de suppression
     addTagFormDeleteLink(item);
 
-    // Incrémenter l'index
     collectionHolder.dataset.index++;
 
     if (collectionHolder.classList.contains('plasmyd')) {
@@ -395,34 +362,32 @@ function addFormToCollection(e) {
     }
 }
 
-  document
+document
     .querySelectorAll('ul.drugResistanceOnStrain li, ul.sequencing li, ul.phenotype li, ul.storage li')
     .forEach((tag) => {
         addTagFormDeleteLink(tag)
-    })
+    });
 
-    function addTagFormDeleteLink(tag) {
-        const removeFormButton = document.createElement('button');
-        removeFormButton.innerText = 'x';
-        removeFormButton.classList.add('remove-tag-btn'); // Ajoute une classe pour le bouton
+function addTagFormDeleteLink(tag) {
+    const removeFormButton = document.createElement('button');
+    removeFormButton.innerText = 'x';
+    removeFormButton.classList.add('remove-tag-btn');
 
-        // Ajoute le bouton après le premier element (ou autre contenu du tag)
-        const firstElement = tag.querySelector('select, input');
+    const firstElement = tag.querySelector('select, input');
+    if (firstElement) {
         firstElement.after(removeFormButton);
+    }
 
-        removeFormButton.addEventListener('click', (e) => {
+    removeFormButton.addEventListener('click', (e) => {
         e.preventDefault();
-        const ul = tag.parentElement; // La liste contenant le tag
-        const containerDiv = ul.closest('div'); // La <div> qui entoure la liste
+        const ul = tag.parentElement;
+        const containerDiv = ul.closest('div');
 
-        // Supprime l'élément complet
         tag.remove();
 
-        // Vérifie si la liste est vide (hors li spécial)
         const realItems = ul.querySelectorAll('li:not(.create-plasmid-li)');
         if (realItems.length === 0) {
-            containerDiv.classList.add('hidden-tags'); // masque la div si tu veux
-            // Supprime le bouton spécial aussi
+            containerDiv.classList.add('hidden-tags');
             const specialLi = ul.querySelector('li.create-plasmid-li');
             if (specialLi) specialLi.remove();
         }
@@ -430,7 +395,6 @@ function addFormToCollection(e) {
 }
 </script>
 
-<!-- Modal pour créer un nouveau plasmide -->
 <div id="plasmid-modal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
     <div class="modal-content" style="background-color: #fefefe; margin: 10% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 5px;">
         <span class="close-modal" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
@@ -464,9 +428,7 @@ function addFormToCollection(e) {
 </div>
 
 <script>
-// Fonction qui garantit qu’il y a un li spécial "Créer un plasmide"
 function ensureCreatePlasmidButton(collectionHolder) {
-    // Compter uniquement les vrais items (exclure le li spécial)
     const items = collectionHolder.querySelectorAll('li:not(.create-plasmid-li)');
     let specialLi = collectionHolder.querySelector('li.create-plasmid-li');
 
@@ -489,76 +451,67 @@ function ensureCreatePlasmidButton(collectionHolder) {
         collectionHolder.appendChild(specialLi);
     }
 
-    // ✅ Masquer si aucun élément, sinon afficher
     if (items.length === 0) {
         specialLi.style.display = 'none';
     } else {
         specialLi.style.display = '';
-        collectionHolder.appendChild(specialLi); // le replacer toujours en bas
+        collectionHolder.appendChild(specialLi);
     }
 }
 
-// script pour les infos du GMO
 document.addEventListener('DOMContentLoaded', function() {
-        const select = document.getElementById('strain_form_genotype');
-        const genotypeFields = document.getElementById('genotypeFields');
+    const select = document.getElementById('strain_form_genotype');
+    const genotypeFields = document.getElementById('genotypeFields');
 
-        function toggleFields() {
-            if (select.value === '2') { // 2 = GMO
-                genotypeFields.style.display = 'block';
-            } else {
-                genotypeFields.style.display = 'none';
-            }
+    if (!select || !genotypeFields) return;
+
+    function toggleFields() {
+        if (select.value === '2') {
+            genotypeFields.style.display = 'block';
+        } else {
+            genotypeFields.style.display = 'none';
         }
+    }
 
-        // Initial check au chargement
-        toggleFields();
+    toggleFields();
+    select.addEventListener('change', toggleFields);
+});
 
-        // Écoute des changements
-        select.addEventListener('change', toggleFields);
-    });
-
-
-// Gestion de la modal pour la création de plasmide
 document.addEventListener('DOMContentLoaded', function() {
     const plasmidUl = document.querySelector('ul.plasmyd');
     if (plasmidUl && typeof ensureCreatePlasmidButton === 'function') {
         ensureCreatePlasmidButton(plasmidUl);
     }
 
-    // Éléments DOM
     const modal     = document.getElementById('plasmid-modal');
     const createBtn = document.getElementById('create-plasmid-btn');
     const closeBtn  = document.querySelector('.close-modal');
     const form      = document.getElementById('plasmid-create-form');
     const resultDiv = document.getElementById('plasmid-form-result');
 
-    // --- Helpers UI ---
     function showMessage(html, color = null) {
         resultDiv.innerHTML = html;
         if (color) resultDiv.style.color = color;
         resultDiv.style.display = 'block';
     }
+
     function clearMessage() {
         resultDiv.innerHTML = '';
         resultDiv.style.display = 'none';
         resultDiv.style.removeProperty('color');
     }
 
-    // Ouvrir la modal
     createBtn?.addEventListener('click', function() {
         clearMessage();
         modal.style.display = 'block';
     });
 
-    // Fermer la modal
     closeBtn?.addEventListener('click', function() {
         modal.style.display = 'none';
         form.reset();
         clearMessage();
     });
 
-    // Fermer la modal si clic en dehors
     window.addEventListener('click', function(event) {
         if (event.target === modal) {
             modal.style.display = 'none';
@@ -567,58 +520,47 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // --- POST API avec fallback / logs / gestion non-JSON ---
     async function postPlasmid(formData) {
-        const urls = ['/public/api/plasmyd/create', '/api/plasmyd/create']; // primary + fallback
+        const urls = ['/public/api/plasmyd/create', '/api/plasmyd/create'];
         let lastErr = null;
 
         for (const url of urls) {
             try {
-                console.log('[Plasmid][POST] ->', url, formData);
                 const res = await fetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
                     },
-                    credentials: 'same-origin', // envoie cookies de session si besoin
+                    credentials: 'same-origin',
                     body: JSON.stringify(formData)
                 });
 
-                const raw = await res.text(); // lire une seule fois
+                const raw = await res.text();
                 let data = null;
                 try { data = raw ? JSON.parse(raw) : null; }
                 catch (e) {
                     console.warn('[Plasmid] Réponse non-JSON. Corps brut:', raw);
                 }
 
-                console.log('[Plasmid][RESP]', res.status, data ?? raw);
-
                 if (!res.ok) {
-                    // Message serveur si fourni, sinon code HTTP
                     const msg = (data && data.message) ? data.message : `HTTP ${res.status}`;
                     throw new Error(msg);
                 }
 
-                // Succès
                 return data || { success: true, message: 'Plasmide créé.', plasmid: null };
 
             } catch (e) {
-                console.warn('[Plasmid] Failed on', url, '→', e.message);
                 lastErr = e;
-                // on tente l’URL suivante
             }
         }
 
-        // Si toutes les URLs ont échoué
         throw lastErr || new Error('Network / server error');
     }
 
-    // Gérer la soumission du formulaire
     form?.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        // Récupérer les données du formulaire
         const formData = {
             namePlasmyd: document.getElementById('plasmid_name')?.value?.trim() || '',
             type:        document.getElementById('plasmid_type')?.value?.trim() || '',
@@ -626,13 +568,11 @@ document.addEventListener('DOMContentLoaded', function() {
             comment:     document.getElementById('plasmid_comment')?.value?.trim() || ''
         };
 
-        // Petites validations côté client
         if (!formData.namePlasmyd || !formData.type) {
             showMessage('Please fill in at least the plasmid name and type.', 'red');
             return;
         }
 
-        // UI: état de chargement
         showMessage('Plasmid creation in progress…');
         const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
         if (submitBtn) submitBtn.disabled = true;
@@ -644,10 +584,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 showMessage((data.message || 'Plasmid created successfully.'), 'green');
                 form.reset();
 
-                // Mettre à jour les sélecteurs si on reçoit l’objet plasmid
                 if (data.plasmid) updatePlasmidSelectors(data.plasmid);
 
-                // Fermer la modal après un court délai
                 setTimeout(() => {
                     modal.style.display = 'none';
                     clearMessage();
@@ -663,14 +601,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Mettre à jour les sélecteurs de plasmide
     function updatePlasmidSelectors(plasmid) {
-        // Trouver tous les <select> ciblant un plasmide (suffixe _plasmyd)
         const plasmidSelectors = document.querySelectorAll('select[id$="_plasmyd"]');
         if (!plasmidSelectors.length) return;
 
         plasmidSelectors.forEach(selector => {
-            // Vérifie si l’option existe déjà (évite doublons)
             const exists = Array.from(selector.options).some(opt => String(opt.value) === String(plasmid.id));
             if (!exists) {
                 const option = document.createElement('option');
@@ -678,10 +613,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 option.text  = `${plasmid.name} - ${plasmid.type}`;
                 selector.appendChild(option);
             }
-            // Sélectionner la nouvelle option
             selector.value = plasmid.id;
         });
     }
 });
-
 </script>
