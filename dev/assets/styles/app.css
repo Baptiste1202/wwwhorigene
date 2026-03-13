@@ -688,13 +688,27 @@ button.btn-form:hover,
     user-select: none;
 }
 
-#global #list #table td.id,
+#global #list #table td.id {
+    text-align: center;
+    color: black;
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    font-weight: bold;
+    background-color: #bdbdbd;
+}
+
 #global #list #table td.name {
     text-align: center;
     color: black;
-    min-width: 25px;
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
     font-weight: bold;
     background-color: #bdbdbd;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #global #list #table td.comment,
@@ -1673,7 +1687,7 @@ ul.plasmyd li.create-plasmid-li {
     position: relative;
     z-index: 2;
     width: 90%;
-    max-width: 900px;
+    max-width: 700px;
     max-height: 85vh;
     overflow-y: auto;
     margin: 40px auto;
