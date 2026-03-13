@@ -26,19 +26,24 @@ class DrugOnFormType extends AbstractType
                 'required' => true,
                 'label' => 'Drug',
             ])
+            ->add('measurementType', ChoiceType::class, [
+                'label' => 'Measurement type',
+                'choices' => [
+                    'Quantitative' => 'quantitative',
+                    'Qualitative' => 'qualitative',
+                ],
+                'placeholder' => 'Select type',
+                'required' => true,
+            ])
             ->add('concentration', options:[
                 'label' => 'Concentration',
                 'attr' => [
                     'placeholder' => 'Concentration',
                 ],
             ])
-            ->add('concentration', options:[
-                'label' => 'Concentration',
-                'attr' => ['placeholder' => 'Concentration'],
-            ])
             ->add('concentrationUnit', ChoiceType::class, [
                 'label' => 'Unit',
-                'required' => true, // ou false si tu veux
+                'required' => false, // ou false si tu veux
                 'placeholder' => 'Select unit',
                 'choices' => [
                     'µg/mL' => 'ug/mL',

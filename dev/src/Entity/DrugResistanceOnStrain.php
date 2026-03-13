@@ -20,7 +20,7 @@ class DrugResistanceOnStrain
     #[ORM\ManyToOne(targetEntity: DrugResistance::class, inversedBy: 'drugResistanceOnStrains')]
     private ?DrugResistance $drugResistance;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $concentration = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -46,6 +46,9 @@ class DrugResistanceOnStrain
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $concentrationUnit = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $measurementType = null;
 
     public function getId(): ?int
     {
@@ -167,6 +170,17 @@ class DrugResistanceOnStrain
     public function setConcentrationUnit(?string $unit): self
     {
         $this->concentrationUnit = $unit;
+        return $this;
+    }
+
+    public function getMeasurementType(): ?string
+    {
+        return $this->measurementType;
+    }
+
+    public function setMeasurementType(?string $measurementType): self
+    {
+        $this->measurementType = $measurementType;
         return $this;
     }
 
