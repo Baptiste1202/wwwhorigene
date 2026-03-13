@@ -2,8 +2,15 @@
 {% block body %}
 <div id="global" class="strain-page">
 
+    <div id="left-toggles">
+        {% if 'ROLE_SEARCH' in app.user.roles or 'ROLE_ADMIN' in app.user.roles %}
+            <button id="toggleForm">+</button>
+        {% endif %}
+
+        <button id="toggleTools" class="hidden-tools-toggle" type="button">Tools</button>
+    </div>
+
     {% if 'ROLE_SEARCH' in app.user.roles or 'ROLE_ADMIN' in app.user.roles %}
-        <button id="toggleForm">+</button>
         <div id="form" class="hidden">
             <button id="closeForm">-</button>
             {% include "strain/create.html.twig" %}
@@ -11,6 +18,10 @@
     {% endif %}
 
     <div id="strain-tools">
+        <div id="tools-topbar">
+            <button id="closeToolsTop" type="button">-</button>
+        </div>
+
         <div class="console-block">
             <div class="console-block-title">Global Search</div>
             <div class="console-block-body">
@@ -133,6 +144,36 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(moveConsoleElements, 300);
     setTimeout(moveConsoleElements, 800);
     setTimeout(moveConsoleElements, 1500);
+
+    const toggleToolsBtn = document.getElementById('toggleTools');
+    const closeToolsTopBtn = document.getElementById('closeToolsTop');
+    const strainTools = document.getElementById('strain-tools');
+
+    function updateToolsState() {
+        if (!toggleToolsBtn || !strainTools) return;
+
+        if (strainTools.classList.contains('hidden-tools')) {
+            toggleToolsBtn.classList.remove('hidden-tools-toggle');
+        } else {
+            toggleToolsBtn.classList.add('hidden-tools-toggle');
+        }
+    }
+
+    if (toggleToolsBtn && strainTools) {
+        toggleToolsBtn.addEventListener('click', function () {
+            strainTools.classList.remove('hidden-tools');
+            updateToolsState();
+        });
+    }
+
+    if (closeToolsTopBtn && strainTools) {
+        closeToolsTopBtn.addEventListener('click', function () {
+            strainTools.classList.add('hidden-tools');
+            updateToolsState();
+        });
+    }
+
+    updateToolsState();
 });
 </script>
 {% endblock %}
