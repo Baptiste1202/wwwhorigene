@@ -1,49 +1,138 @@
 {% extends 'layout.html.twig' %}
 {% block body %}
-        <div id="global">
-            {% if 'ROLE_SEARCH' in app.user.roles or 'ROLE_ADMIN' in app.user.roles %}
-                <button id="toggleForm">+</button>
-                <div id="form" class="hidden">
-                    <button id="closeForm">-</button>
-                    {% include "strain/create.html.twig" %}
-                </div>
-            {% endif %}
-            <div id="list">
+<div id="global" class="strain-page">
+
+    {% if 'ROLE_SEARCH' in app.user.roles or 'ROLE_ADMIN' in app.user.roles %}
+        <button id="toggleForm">+</button>
+        <div id="form" class="hidden">
+            <button id="closeForm">-</button>
+            {% include "strain/create.html.twig" %}
+        </div>
+    {% endif %}
+
+    <div id="strain-tools">
+        <div class="console-block">
+            <div class="console-block-title">Global Search</div>
+            <div class="console-block-body">
                 <div id="filter">
                     {% include 'strain/elastic_main.html.twig' %}
                 </div>
-                <div id="filter" style="margin-bottom:10px;">
-                    {% include 'strain/_filter_form_datatable.html.twig' %}
-                </div>
-                <div id="message">
-                    {% include './message.html.twig' %}
-                </div>
-                <div id="table-header-toolbar" class="table-header-toolbar">
-                    <div class="table-header-search">
-                        {% include 'strain/_datatable_search.html.twig' %}
-                    </div>
-
-                    <div id="multiple-download" class="table-header-download">
-                        {% include "strain/_download_file.html.twig" %}
-                    </div>
-
-                    <div class="table-header-filters">
-                        {% include 'strain/user_filter_button.html.twig' %}
-                    </div>
-                </div>
-                
-                <div id="table">
-                    {% include "strain/list.html.twig" %}
-                </div>
-
-                {# ✅ ICI → juste APRÈS le tableau #}
-                <div id="table-controls-footer"
-                    class="datatable-footer d-flex justify-content-between align-items-center">
-                </div>
-
-
             </div>
-        <br></br>        
-        </div>  
+        </div>
 
+        <div class="console-block">
+            <div class="console-block-title">Table Actions</div>
+            <div class="console-block-body">
+                <div id="table-header-toolbar" class="table-header-toolbar console-toolbar">
+
+                    <div class="console-panel">
+                        <div class="console-panel-title">Search</div>
+                        <div class="console-panel-body">
+                            <div class="table-header-search console-full-width">
+                                {% include 'strain/_datatable_search.html.twig' %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="console-panel">
+                        <div class="console-panel-title">Downloads</div>
+                        <div class="console-panel-body">
+                            <div id="multiple-download" class="table-header-download console-full-width">
+                                {% include "strain/_download_file.html.twig" %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="console-panel">
+                        <div class="console-panel-title">Saved Filters</div>
+                        <div class="console-panel-body">
+                            <div class="table-header-filters console-full-width">
+                                {% include 'strain/user_filter_button.html.twig' %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="console-panel">
+                        <div class="console-panel-title">Utilities</div>
+                        <div class="console-panel-body">
+                            <div id="console-dt-length-slot" class="console-slot"></div>
+                            <div id="console-dt-buttons-slot" class="console-slot"></div>
+                        </div>
+                    </div>
+
+                    <div class="console-panel">
+                        <div class="console-panel-title">Bulk Actions</div>
+                        <div class="console-panel-body">
+                            <div id="console-bulk-actions-slot" class="console-slot"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="list">
+        <div id="filter" style="margin-bottom:10px;">
+            {% include 'strain/_filter_form_datatable.html.twig' %}
+        </div>
+
+        <div id="message">
+            {% include './message.html.twig' %}
+        </div>
+
+        <div id="table">
+            {% include "strain/list.html.twig" %}
+        </div>
+
+        <div id="table-controls-footer"
+             class="datatable-footer d-flex justify-content-between align-items-center">
+        </div>
+    </div>
+    <br>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function moveConsoleElements() {
+        const toolbar = document.querySelector('#table-header-toolbar.console-toolbar');
+        if (!toolbar) return;
+
+        const lengthEl = toolbar.querySelector('.dataTables_length');
+        const buttonsEl = toolbar.querySelector('.dt-buttons');
+        const bulkEl = toolbar.querySelector('.table-action-bar');
+
+        const lengthSlot = document.getElementById('console-dt-length-slot');
+        const buttonsSlot = document.getElementById('console-dt-buttons-slot');
+        const bulkSlot = document.getElementById('console-bulk-actions-slot');
+
+        if (lengthEl && lengthSlot && !lengthSlot.contains(lengthEl)) {
+            lengthSlot.appendChild(lengthEl);
+        }
+
+        if (buttonsEl && buttonsSlot && !buttonsSlot.contains(buttonsEl)) {
+            buttonsSlot.appendChild(buttonsEl);
+        }
+
+        if (bulkEl && bulkSlot && !bulkSlot.contains(bulkEl)) {
+            bulkSlot.appendChild(bulkEl);
+        }
+    }
+
+    moveConsoleElements();
+
+    const observer = new MutationObserver(function () {
+        moveConsoleElements();
+    });
+
+    const toolbar = document.querySelector('#table-header-toolbar.console-toolbar');
+    if (toolbar) {
+        observer.observe(toolbar, { childList: true, subtree: true });
+    }
+
+    setTimeout(moveConsoleElements, 300);
+    setTimeout(moveConsoleElements, 800);
+    setTimeout(moveConsoleElements, 1500);
+});
+</script>
 {% endblock %}

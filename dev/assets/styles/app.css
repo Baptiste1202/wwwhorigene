@@ -1,35 +1,121 @@
+/* ===========================================================
+   VARIABLES
+=========================================================== */
+
+:root {
+    --theme-col: #2d4bf0;
+    --primary-dark: #3c546d;
+    --primary-dark-hover: #34495e;
+    --primary-light: #eef2f6;
+    --bg-panel: #f9f9f9;
+    --bg-white: #ffffff;
+    --border-light: #d4dbe2;
+    --border-mid: #ccd5dd;
+    --border-dark: #31465a;
+    --text-main: #333;
+    --text-soft: #666;
+    --text-light: #f5f3f3;
+    --shadow-soft: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --shadow-mid: 0 3px 8px rgba(0, 0, 0, 0.08);
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-xl: 10px;
+}
+
+/* ===========================================================
+   BASE
+=========================================================== */
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+}
+
+.wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+}
+
+ul {
+    list-style: none;
+}
+
+.hidden {
+    display: none;
+}
+
+input[type="checkbox"] {
+    accent-color: var(--primary-dark);
+}
+
+/* ===========================================================
+   DROPDOWN / CONTEXT MENU
+=========================================================== */
+
 .dropdown {
     position: relative;
     display: inline-block;
 }
+
 .dropdown-child {
     display: none;
     position: absolute;
     background-color: grey;
     min-width: 12%;
-    visibility: hidden; /* Cache le menu pour empêcher les clics */
+    visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .dropdown:hover .dropdown-child {
     display: block;
-    opacity: 1; /* Rend visible */
+    opacity: 1;
     visibility: visible;
+}
+
+.dropdown-content {
+    display: none;
+    padding-left: 20px;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content li a {
+    font-size: 14px;
+    color: var(--text-light);
+    padding: 8px 30px;
+}
+
+.vertical-menu .dropdown-content li a {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: none;
+    padding: 6px 30px;
 }
 
 #context-menu {
     position: absolute;
-    background: white;
+    background: var(--bg-white);
     border: 1px solid #ccc;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     display: none;
     padding: 10px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
 }
 
 #context-menu ul {
-    list-style: none;
     padding: 0;
     margin: 0;
 }
@@ -42,27 +128,26 @@
     background-color: #f0f0f0;
 }
 
-.hidden {
-    display: none;
-}
+/* ===========================================================
+   MENU VERTICAL
+=========================================================== */
 
 .vertical-menu {
-    width: 250px; /* Largeur du menu latéral */
-    background-color: #333; 
+    width: 250px;
+    background-color: #333;
     padding: 10px 0;
     height: 100vh;
     position: fixed;
     top: 0;
     left: 0;
     overflow-y: auto;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Ajout d'une ombre légère */
-    z-index: 20; 
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    z-index: 20;
 }
 
 .vertical-menu ul {
     padding: 0;
     margin: 0;
-    list-style: none;
 }
 
 .vertical-menu li {
@@ -78,25 +163,22 @@
     font-size: 17px;
     font-family: sans-serif;
     font-weight: bold;
-    color: #f5f3f3;
+    color: var(--text-light);
     text-transform: uppercase;
     transition: all 0.3s ease;
 }
 
 .vertical-menu li a:hover {
-    background-color: #444; /* Couleur légèrement plus claire au survol */
-    transform: scale(1.05); /* Effet de zoom léger */
+    background-color: #444;
+    transform: scale(1.05);
     font-weight: 600;
 }
 
 .vertical-menu li a:before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.1); /* Couleur d'arrière-plan légère */
+    inset: 0;
+    background: rgba(0, 0, 0, 0.1);
     transform-origin: left;
     transform: scaleX(0);
     transition: transform 0.3s ease;
@@ -108,23 +190,7 @@
 }
 
 .vertical-menu ul li.active > a {
-  background-color: #3c546d;
-    
-}
-
-.dropdown-content {
-    display: none;
-    padding-left: 20px;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown-content li a {
-    font-size: 14px; /* Taille réduite pour les sous-éléments */
-    color: #f5f3f3;
-    padding: 8px 30px;
+    background-color: var(--primary-dark);
 }
 
 .user-info {
@@ -133,58 +199,33 @@
     font-size: 13px;
 }
 
+/* ===========================================================
+   LAYOUT GLOBAL
+=========================================================== */
 
 #global {
-    margin-left: 250px; /* Pour laisser la place au menu vertical */
+    margin-left: 250px;
     padding: 20px;
     display: flex;
-    gap: 20px; /* Espace entre form et list */
+    gap: 20px;
     box-sizing: border-box;
+    align-items: flex-start;
 }
 
-/* Formulaire avec largeur fixe */
-#global #form {
-    width: 22vw;
-    max-width: 22vw; /* Ne dépasse pas */
-    flex-shrink: 0; /* Ne se réduit pas */
-    box-sizing: border-box; /* Inclut padding dans la largeur */
-    max-height: 92vh;        /* ou la hauteur que tu veux */
-    overflow-y: auto;     /* scroll vertical si le contenu dépasse */
-    overflow-x: hidden; 
-    
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    border: 1px solid;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    font-family: 'Roboto', sans-serif;
-    overflow-x: auto; /* Barre horizontale si besoin */
-    height: auto;
-    transition: all 0.3s ease;
-}
-
-/* Form ouvert */
-#form.show {
-    max-height: 1000px; /* ou une valeur assez grande */
-    opacity: 1;
-    
-}
-
-#form.hidden {
-            display: none;
-            opacity: 0;
-}
+/* ===========================================================
+   BOUTONS FORM
+=========================================================== */
 
 #toggleForm {
     width: 30px;
     font-size: 20px;
-    transition: all 0.3s ease;
     box-sizing: border-box;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-soft);
     border: 1px solid;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: var(--bg-panel);
     font-family: "Roboto", sans-serif;
+    transition: all 0.3s ease;
 }
 
 #toggleForm:hover {
@@ -192,7 +233,7 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     cursor: pointer;
     background-color: #444;
-    color: #f5f3f3;
+    color: var(--text-light);
 }
 
 #closeForm {
@@ -213,103 +254,149 @@
 }
 
 #closeForm:hover {
-    background-color: #555;
-    transform: (1.02);
+    background-color: var(--bg-panel);
+    color: #333;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     cursor: pointer;
-    background-color: #f9f9f9;
-    color: #333
 }
 
-/* Quand le formulaire est ouvert, on cache le bouton */
+/* ===========================================================
+   FORM PANEL
+=========================================================== */
+
+#global #form {
+    width: 21vw;
+    max-width: 21vw;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    max-height: 92vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    box-shadow: var(--shadow-soft);
+    padding: 20px;
+    border: 1px solid;
+    border-radius: 5px;
+    background-color: var(--bg-panel);
+    font-family: 'Roboto', sans-serif;
+    height: auto;
+    transition: all 0.3s ease;
+}
+
+#form.show {
+    max-height: 1000px;
+    opacity: 1;
+}
+
+#form.hidden {
+    display: none;
+    opacity: 0;
+}
+
 #form.show + #toggleForm {
     display: none;
 }
 
-/* Liste qui prend tout l’espace restant */
-#global #list {
-    flex: 1; /* Prend tout l’espace restant */
-    width: auto; /* Laisse flex gérer la largeur */
-    box-sizing: border-box;
+#global #form h1 {
+    font-size: 1.5rem;
+}
 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+button.btn-form,
+#strain_form_searchParent {
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+    border: none;
+    background-color: var(--primary-dark);
+    color: white;
+    border-radius: var(--radius-sm);
+    font-weight: bold;
+}
+
+button.btn-form:hover,
+#strain_form_searchParent:hover {
+    background-color: #357ABD;
+}
+
+/* ===========================================================
+   LIST PANEL
+=========================================================== */
+
+#global #list {
+    flex: 1;
+    width: auto;
+    box-sizing: border-box;
+    box-shadow: var(--shadow-soft);
     padding: 20px;
     border: 1px solid;
     border-radius: 5px;
-    background-color: #f9f9f9;
-
+    background-color: var(--bg-panel);
     font-family: "Roboto", sans-serif;
-
     display: flex;
     flex-direction: column;
     height: 92vh;
     overflow: hidden;
 }
 
-
-#global #form h1 {
-    font-size: 1.5rem;
-}
-
-button.btn-form {
-    padding: 0.5rem 1rem;
-    margin-top : 0.5rem;
-    border: none;
-    background-color: #3c546d;;
-    color: white;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-#strain_form_searchParent{
-    padding: 0.5rem 1rem;
-    margin-top : 0.5rem;
-    border: none;
-    background-color: #3c546d;;
-    color: white;
-    border-radius: 4px;
-}
-
-button.btn-form:hover, 
-#strain_form_searchParent:hover {
-    background-color: #357ABD;
-}
+/* ===========================================================
+   FORMULAIRES GENERIQUES
+=========================================================== */
 
 .col-12 form {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
 }
 
-.col-12 form div{
+.col-12 form div {
     display: flex;
-    flex-direction: row; 
+    flex-direction: row;
     padding-bottom: 0.3rem;
 }
 
-.col-12 form div#storage{
+.col-12 form div#storage {
     font-family: inherit;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
 }
 
 .col-12 form label,
-.col-12 form #add-drug label{
-    flex: 0 0 150px; /* Fixe une largeur pour les labels */
-    margin-right: 0.5rem; /* Ajoute un espacement entre le label et l'input */
-    text-align: left; /* Aligne le texte à droite */
+.col-12 form #add-drug label {
+    flex: 0 0 150px;
+    margin-right: 0.5rem;
+    text-align: left;
 }
 
 .col-12 form input,
 .col-12 form select,
 .col-12 form textarea,
 .col-12 form ul.tags li select {
-    flex: 1; /* Permet à ces éléments de prendre tout l'espace restant */
-    border: 1px solid #ccc; /* Bordure grise par défaut */
-    border-radius: 4px; /* Coins arrondis */
-    box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
 }
 
-.ts-control{
+.col-12 form ul {
+    width: 100%;
+    margin-right: 4%;
+}
+
+.col-12 form ul select {
+    width: 100%;
+}
+
+.col-12 form div#storage label {
+    flex: 0 0 140px;
+    margin-left: 10px;
+    font-size: 0.9rem;
+    font-weight: normal;
+    color: var(--text-soft);
+    font-style: italic;
+}
+
+/* ===========================================================
+   SELECT / TOM SELECT
+=========================================================== */
+
+.ts-control {
     height: 23px;
     min-height: 0 !important;
     padding: 0 !important;
@@ -320,117 +407,110 @@ button.btn-form:hover,
 .ts-wrapper.single.plugin-clear_button.plugin-virtual_scroll {
     font-size: small;
 }
+
 .ts-wrapper.single.plugin-clear_button.plugin-virtual_scroll.preloaded,
-.ts-control{
-    flex: 1; /* Permet à ces éléments de prendre tout l'espace restant */
-    border-radius: 4px; /* Coins arrondis */
-    box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
+.ts-control {
+    flex: 1;
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
     display: flex;
     flex-direction: column !important;
 }
-.ts-dropdown{
+
+.ts-wrapper.single.plugin-clear_button.plugin-virtual_scroll.has-options {
+    flex: 1;
+}
+
+.ts-dropdown {
     top: 80% !important;
     position: relative;
 }
 
-.ts-wrapper.single.plugin-clear_button.plugin-virtual_scroll.has-options{
-    flex: 1;
-    
-}
-
-.clear-button{
-    height: 23px;
-}
-
-.ts-dropdown-content{
+.ts-dropdown-content {
     display: flex;
     flex-direction: column !important;
 }
 
-.add_item_plasmid{
-    width: 100%; /* Taille du carré */
-    height: 20px; /* Taille du carré */
-    background-color: #f9f9f9; /* Couleur du bouton */
-    color: #000; /* Couleur du texte (icône ou texte) */
+.clear-button {
+    height: 23px;
+}
+
+/* ===========================================================
+   BOUTONS AJOUT
+=========================================================== */
+
+.add_item_plasmid,
+.col-12 form div.add-btn button {
+    background-color: var(--bg-panel);
+    color: #000;
     border: 1px solid #ccc;
-    border-radius: 4px; /* Coins légèrement arrondis */
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.col-12 form div.add-btn button{
-    width: 30px; /* Taille du carré */
-    height: 20px; /* Taille du carré */
-    background-color: #f9f9f9; /* Couleur du bouton */
-    color: #000; /* Couleur du texte (icône ou texte) */
-    border: 1px solid #ccc;
-    border-radius: 4px; /* Coins légèrement arrondis */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.add_item_plasmid {
+    width: 100%;
+    height: 20px;
 }
-.col-12 form div.add-btn button:hover{
-    background-color: #e6e6e6; /* Couleur de fond au survol */
-    border-color: #999; /* Couleur de bordure au survol */
+
+.col-12 form div.add-btn button {
+    width: 30px;
+    height: 20px;
 }
-.col-12 form div.add-btn button:focus{
+
+.col-12 form div.add-btn button:hover {
+    background-color: #e6e6e6;
+    border-color: #999;
+}
+
+.col-12 form div.add-btn button:focus {
     outline: none;
-    box-shadow: none; /* Supprime les ombres bleues autour */
+    box-shadow: none;
     border-color: #ddd;
 }
 
-.col-12 form div#storage label{
-    flex: 0 0 140px; /* Un peu plus petit que le principal */
-    margin-left: 10px; /* Décalage pour montrer que c'est une sous-catégorie */
-    font-size: 0.9rem; /* Taille réduite */
-    font-weight: normal;
-    color: #666; /* Couleur plus douce */
-    font-style: italic;
-}
-
-.col-12 form ul {
-    width: 100%;
-    margin-right: 4%;
-}
-
-
-.col-12 form ul select {
-    width: 100%;
-}
+/* ===========================================================
+   BLOCS COMPLEXES FORM
+=========================================================== */
 
 .drugResistanceOnStrain li div div,
 .sequencing li div div,
 .phenotype li div div,
-.storage li div div{
-    display:flex;
+.storage li div div {
+    display: flex;
     flex-direction: column;
 }
 
 .drugResistanceOnStrain li div div div,
 .sequencing li div div div,
 .phenotype li div div div,
-.storage li div div div{
-    display:flex;
+.storage li div div div {
+    display: flex;
     flex-direction: row;
 }
 
 .drugResistanceOnStrain li div div div input,
 .sequencing li div div div input,
 .phenotype li div div div input,
-.storage li div div div input{
+.storage li div div div input {
     width: 100%;
 }
 
 .drugResistanceOnStrain li div div div:not(:first-of-type),
 .sequencing li div div div:not(:first-of-type),
 .phenotype li div div div:not(:first-of-type),
-.storage li div div div:not(:first-of-type){
-    font-size: 0.9rem; /* Taille réduite */
+.storage li div div div:not(:first-of-type) {
+    font-size: 0.9rem;
     font-weight: normal;
-    color: #666; /* Couleur plus douce */
+    color: var(--text-soft);
     font-style: italic;
 }
+
+/* ===========================================================
+   FLASH MESSAGES
+=========================================================== */
 
 #message-container {
     position: fixed;
@@ -440,23 +520,23 @@ button.btn-form:hover,
 }
 
 .flash-message {
-    display: none; /* caché par défaut */
+    display: none;
     padding: 10px 20px;
     margin-bottom: 10px;
     border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-soft);
     color: white;
     animation: fadeOut 5s forwards;
 }
 
 .flash-message.success {
-    background-color: #ddf8d7; /* rouge */
-    color: #1f721c; 
+    background-color: #ddf8d7;
+    color: #1f721c;
 }
 
 .flash-message.error {
-    background-color: #f8d7da; /* rouge */
-    color: #721c24; 
+    background-color: #f8d7da;
+    color: #721c24;
 }
 
 @keyframes fadeOut {
@@ -465,114 +545,112 @@ button.btn-form:hover,
     100% { opacity: 0; display: none; }
 }
 
-#global #list #filter #floatingForm{
-    position: relative; /* Nécessaire pour que le z-index fonctionne */
-    z-index: 1000; 
-    width : 20%;
-    font-family: 'Roboto', sans-serif;
-}
-#global #list #filter #floatingForm #btn-search {
-    padding: 0.5rem 1rem;
-    margin-top : 0.5rem;
-    border: none;
-    background-color: #3c546d;;
-    color: white;
-    border-radius: 4px;
-    position: relative; /* Nécessaire pour que le z-index fonctionne */
-    font-weight: bold;
-    z-index: 3; 
-}
+/* ===========================================================
+   FILTER PANEL DROITE
+=========================================================== */
 
-#global #list #filter  #floatingForm #btn-search:hover {
-    background-color: #357ABD;
-}
-
-#global #list #filter #menu-container {
-    display: inline-block;
-    position: relative;
-    width : 100%; 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    margin-bottom: 10px;
-}
-
-#global #list #filter #menu-button {
-    background: #f1f1f1;
-    width : 100%; 
-    padding: 10px 10px;
-    border: none;
-    font-size: 16px;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-    position: relative; /* Positionne le bouton à l'intérieur du conteneur */
-    z-index: 1; /* S'assure que le bouton est au-dessus du menu */
-    margin-top: 10px;
-}
-
-#global #list #filter #menu-button:hover {
-    background-color: #444; /* Couleur légèrement plus claire au survol */
-    color: #f5f3f3;
-}
-
-#global #list #filter  .filter-menu {
-    display: none; /* Menu caché par défaut */
-}
-
-#global #list #filter  .filter-menu.visible {
-    display: block !important; /* Affiche le menu lorsque la classe "visible" est ajoutée */
-    top : 100%; 
-    background: #f1f1f1;
-    left: 0;
-    padding: 10px 10px;
-    border: none;
-    font-size: 16px;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
+#global #list #filter {
+    padding: 1px;
+    background-color: var(--bg-panel);
 }
 
 #global #list #filter #floatingForm {
     position: absolute;
-    flex-direction: row; 
+    z-index: 1000;
+    width: 20%;
+    max-width: 600px;
+    font-family: 'Roboto', sans-serif;
+    flex-direction: row;
     background: #f1f1f1;
     border: 1px solid #ccc;
     padding: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-#global #list #filter #floatingForm div{
+#global #list #filter #floatingForm div {
     display: flex;
-    flex-direction: row; 
+    flex-direction: row;
 }
 
-#global #list #filter #floatingForm label{
-    flex: 0 0 170px; /* Fixe une largeur pour les labels */
-    margin-right: 0.5rem; /* Ajoute un espacement entre le label et l'input */
-    text-align: left; /* Aligne le texte à droite */
+#global #list #filter #floatingForm label {
+    flex: 0 0 170px;
+    margin-right: 0.5rem;
+    text-align: left;
 }
 
 #global #list #filter #floatingForm input,
-#global #list #filter #floatingForm select{
-    flex: 1; /* Permet à ces éléments de prendre tout l'espace restant */
-    border: 1px solid #ccc; /* Bordure grise par défaut */
-    border-radius: 4px; /* Coins arrondis */
-    box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
-    width: 100%; /* Prend toute la largeur disponible */
+#global #list #filter #floatingForm select {
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+    width: 100%;
 }
 
-#global #list #filter {
-    padding : 1px; 
-    background-color: #f9f9f9; /* Couleur de fond */
+#global #list #filter #floatingForm #btn-search {
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+    border: none;
+    background-color: var(--primary-dark);
+    color: white;
+    border-radius: var(--radius-sm);
+    position: relative;
+    font-weight: bold;
+    z-index: 3;
+}
+
+#global #list #filter #floatingForm #btn-search:hover {
+    background-color: #357ABD;
+}
+
+#global #list #filter #menu-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
+}
+
+#global #list #filter #menu-button {
+    background: #f1f1f1;
+    width: 100%;
+    padding: 10px 10px;
+    border: none;
+    font-size: 16px;
+    border-radius: var(--radius-sm);
+    transition: background-color 0.3s ease;
+    position: relative;
+    z-index: 1;
+    margin-top: 10px;
+}
+
+#global #list #filter #menu-button:hover {
+    background-color: #444;
+    color: var(--text-light);
+}
+
+#global #list #filter .filter-menu {
+    display: none;
+}
+
+#global #list #filter .filter-menu.visible {
+    display: block !important;
+    top: 100%;
+    background: #f1f1f1;
+    left: 0;
+    padding: 10px 10px;
+    border: none;
+    font-size: 16px;
+    border-radius: var(--radius-sm);
+    transition: background-color 0.3s ease;
 }
 
 .filterComponent {
     padding: 10px !important;
 }
 
-input[type="checkbox"] {
-  accent-color: #3c546d;; /* couleur du togunderlinegle */
-}
-
 /* ===========================================================
-   CSS general des tables 
+   TABLEAU GENERAL
 =========================================================== */
 
 #global #list #table {
@@ -581,104 +659,83 @@ input[type="checkbox"] {
     overflow-y: visible;
     font-family: 'Arial', sans-serif;
     font-size: 14px;
-    color: #333;
+    color: var(--text-main);
     background-color: #ffffff !important;
     margin-bottom: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-soft);
     height: auto;
 }
 
-.sub-cell {
-    margin-bottom: 4px;   /* espace entre les sous-cellules */
+#global #list #table td {
+    width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-sizing: border-box;
+    padding: 6px 10px;
 }
+
+#global #list table th {
+    background-color: var(--primary-dark);
+    color: #ecf0f1;
+    border: 1px solid #34495e;
+    padding: 10px 12px;
+    font-weight: bold;
+    font-size: 0.90rem;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    user-select: none;
+}
+
+#global #list #table td.id,
+#global #list #table td.name {
+    text-align: center;
+    color: black;
+    min-width: 25px;
+    font-weight: bold;
+    background-color: #bdbdbd;
+}
+
+#global #list #table td.comment,
+#global #list #table th.comment,
+#global #list #table td.description,
+#global #list #table th.description {
+    font-style: italic;
+    color: #555;
+}
+
+#global #list #table td.supp a:hover {
+    background-color: #EB5757;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+}
+
+#global #list #table td a:active {
+    background-color: #dcdcdc;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+    border-color: #bbb;
+    transform: scale(0.98);
+}
+
+.sub-cell {
+    margin-bottom: 4px;
+}
+
 .sub-cell:last-child {
-    margin-bottom: 0;     /* évite l’espace inutile à la fin */
+    margin-bottom: 0;
 }
 
 .clicable:hover {
     cursor: pointer;
 }
 
-/* Style pour des colonnes spécifiques */
-#global #list #table td.id, 
-#global #list #table td.name{
-    text-align: center;
-    color:black;
-    min-width: 25px; 
-    font-weight: bold;
-    background-color: #bdbdbd;
-}
-
-#global #list #table td.supp  a:hover {
-    background-color: #EB5757; /* Gris clair au survol */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Accentuation de l'ombre */
-    text-decoration: none; /* Évite le soulignement au survol */
-}
-
-#global #list #table td  a:active {
-    background-color: #dcdcdc; /* Gris plus foncé au clic */
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2); /* Effet enfoncé */
-    border-color: #bbb; /* Bordure légèrement plus foncée */
-    transform: scale(0.98); /* Effet de clic */
-}
-
-#global #list #table td{
-    width: 150px;  /* Fixe la largeur des cellules */
-    overflow: hidden;    /* Cache le texte qui dépasse */
-    text-overflow: ellipsis; /* Ajoute "..." si le texte est trop long */
-    white-space: nowrap; /* Empêche le retour à la ligne */
-    box-sizing: border-box; /* Inclut la bordure et le padding dans la largeur */
-}
-
-#global #list table th {
-    background-color: #3c546d;         /* Bleu foncé élégant */
-    color: #ecf0f1;                    /* Blanc cassé pour le contraste */
-    border: 1px solid #34495e;         /* Bordure subtile ton sur ton */
-    padding: 12px 16px;                /* Espacement confortable */
-    font-weight: bold;                 /* Texte bien gras */
-    font-size: 0.90rem;                /* Taille lisible et moderne */
-    text-align: left;                  /* Alignement classique */
-    text-transform: uppercase;         /* Style moderne */
-    letter-spacing: 0.5px;             /* Espacement pour l’élégance */
-    user-select: none;
-}
-
-/*
-#global #list #table th{
-    background-color: #e5e5e5;
-    color: #000;
-    text-align: left;
-    font-weight: bold;
-    border: 1px solid #ddd;
-    width: 150px;  
-}
-*/
-
-#global #list #table td.comment, 
-#global #list #table th.comment, 
-#global #list #table td.description, 
-#global #list #table th.description {
-    font-style: italic;
-    color: #555;
-}
-
-/* Remplace visuellement le contenu par “--” */
 .hidden-cell {
-  display: none;
+    display: none;
 }
-
-/* centre tout le 1er tr du thead (y compris états de tri) */
-#data-table-wrapper thead tr:first-child th,
-#data-table-wrapper thead tr:first-child th.sorting,
-#data-table-wrapper thead tr:first-child th.sorting_asc,
-#data-table-wrapper thead tr:first-child th.sorting_desc {
-  text-align: center !important;
-  vertical-align: middle !important;
-}
-
 
 /* ===========================================================
-   Scroll et position de la table
+   SCROLL TABLEAU
 =========================================================== */
 
 .sticky-wrapper {
@@ -688,20 +745,27 @@ input[type="checkbox"] {
 }
 
 #data-table-wrapper {
-    overflow: auto;  
+    overflow: auto;
     position: relative;
-    max-width: 100%;  
+    max-width: 100%;
 }
 
-/* En-tête figé en haut */
 thead {
-  position: sticky;
-  top: 0;
-  z-index: 15;
+    position: sticky;
+    top: 0;
+    z-index: 15;
+}
+
+#data-table-wrapper thead tr:first-child th,
+#data-table-wrapper thead tr:first-child th.sorting,
+#data-table-wrapper thead tr:first-child th.sorting_asc,
+#data-table-wrapper thead tr:first-child th.sorting_desc {
+    text-align: center !important;
+    vertical-align: middle !important;
 }
 
 /* ===========================================================
-   CSS specifique pour la DATATABLE de strain
+   DATATABLE STRAIN
 =========================================================== */
 
 .favorite-form {
@@ -722,7 +786,7 @@ thead {
 }
 
 .star.active {
-    color: #f5b301; /* jaune propre */
+    color: #f5b301;
 }
 
 .star.disabled {
@@ -737,458 +801,341 @@ thead {
     background-color: #ffeeba !important;
 }
 
-/* enlève les bordures de lignes */
-table.dataTable.display    > tbody > tr > td {
-  border-top: none !important;
+table.dataTable.display > tbody > tr > td {
+    border-top: none !important;
 }
 
 #searchFormContainer {
     display: flex;
-    align-items: center;   /* Aligne verticalement */
-    gap: 2em;              /* Espace entre le formulaire et le nombre */
+    align-items: center;
+    gap: 2em;
 }
 
 #searchFormContainer h2 {
-    margin: 0px;
-    font-size: 18px;
-}
-
-#floatingForm {
-    /* Optionnel : largeur maximale */
-    max-width: 600px;
+    margin: 0;
+    font-size: 12px;
 }
 
 #downloadFile {
     text-align: center;
-    flex-grow: 1;  /* fait prendre le max d'espace entre les 2 autres */
+    flex-grow: 1;
 }
 
-/* Overlay couvrant toute la fenêtre */
-#downloadModal.modal {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw;  height: 100vh;
-    background: rgba(0,0,0,0.5);
-    display: none;              /* caché par défaut */
-    align-items: center;
-    justify-content: center;
-    z-index: 1050;
-}
+/* ===========================================================
+   STICKY COLONNES TABLEAU PRINCIPAL
+=========================================================== */
 
-/* Votre boîte de dialogue */
-#downloadModal .modal-dialog {
-    max-width: 400px;
-    width: 90%;
-}
-
-#downloadModal .modal-content {
-    background: #fff;
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-#downloadModal .modal-header,
-#downloadModal .modal-footer {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid #eee;
-}
-
-#downloadModal .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#downloadModal .modal-body {
-    padding: 1rem;
-}
-
-#downloadModal .modal-footer {
-    border-top: none;
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-}
-
-/* Bouton fermer */
-#downloadModal .close {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-}
-
-div.download-error {
-    color: #c00 !important;
-}
-
-
-/* Colonne 1 sticky à gauche (toujours la toute 1ère) */
 thead th:nth-child(1),
 tbody td:nth-child(1) {
-  position: sticky !important;
-  left: 0;
-  z-index: 10;
-  background: #bdbdbd;
-  width: 10px !important;
+    position: sticky !important;
+    left: 0;
+    z-index: 10;
+    background: #bdbdbd;
+    width: 10px !important;
 }
 
-/* Colonne 2 sticky à gauche */
 thead th:nth-child(2),
 tbody td:nth-child(2) {
-  position: sticky !important;
-  left: 40px;
-  z-index: 11;
-  background: #bdbdbd;
-  width: 20px !important;
+    position: sticky !important;
+    left: 40px;
+    z-index: 11;
+    background: #bdbdbd;
+    width: 20px !important;
 }
 
-/* Colonne 3 sticky à gauche */
 thead th:nth-child(3),
 tbody td:nth-child(3) {
-  position: sticky !important;
-  left: 80px;
-  z-index: 12;
-  background: #bdbdbd;
-  width: 40px !important;
+    position: sticky !important;
+    left: 80px;
+    z-index: 12;
+    background: #bdbdbd;
+    width: 40px !important;
 }
 
-/* 3 sticky à droite (dernier, avant-dernier, etc.) */
 thead th:nth-last-child(1),
 tbody td:nth-last-child(1) {
-  position: sticky !important;
-  right: 0;
-  z-index: 12;
-  background: #bdbdbd;
-  width: 20px !important;
+    position: sticky !important;
+    right: 0;
+    z-index: 12;
+    background: #bdbdbd;
+    width: 20px !important;
 }
 
 thead th:nth-last-child(2),
 tbody td:nth-last-child(2) {
-  position: sticky !important;
-  right: 40px;
-  z-index: 11;
-  background: #bdbdbd;
-  width: 20px !important;
+    position: sticky !important;
+    right: 40px;
+    z-index: 11;
+    background: #bdbdbd;
+    width: 20px !important;
 }
 
 thead th:nth-last-child(3),
 tbody td:nth-last-child(3) {
-  position: sticky !important;
-  right: 80px;
-  z-index: 10;
-  background: #bdbdbd;
-  width: 20px !important;
+    position: sticky !important;
+    right: 80px;
+    z-index: 10;
+    background: #bdbdbd;
+    width: 20px !important;
 }
 
-.button-ghost {
-  opacity: 0;              /* invisible */
-  pointer-events: none;    /* pas cliquable */
+button.button-ghost {
+    opacity: 0;
+    pointer-events: none;
 }
 
-
-/* coupe le texte au besoin */
-thead th, tbody td {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+thead th,
+tbody td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-/* Autres règles */
 .resistant-display-green {
-  color: green;
+    color: green;
 }
+
 .resistant-display-red {
-  color: red;
-}
-
-/* Grille 2 lignes / 3 colonnes */
-#table-header-toolbar{
-  position: sticky; top: 0; z-index: 5;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  grid-template-areas:
-    "action  download  filters"
-    "length  buttons   search";
-  align-items: center;
-  background: #f9f9f9;
-  margin-bottom: 8px; /* Petit espace en bas */
-}
-
-/* -- Placements (cibler le conteneur toolbar, pas #data-table_wrapper) -- */
-#table-header-toolbar .table-action-bar{ grid-area: action;  justify-self: start; }
-#table-header-toolbar #multiple-download{ grid-area: download; justify-self: center; }
-#table-header-toolbar .table-header-filters{ grid-area: filters; justify-self: end; }
-
-/* 2e ligne : length gauche / buttons centre / search droite */
-#table-header-toolbar .dataTables_length{
-  grid-area: length; justify-self: start;
-  float: none !important; text-align: initial;
-}
-#table-header-toolbar .dt-buttons{
-  grid-area: buttons; justify-self: center;
-  display: flex; gap: 8px;
-}
-#table-header-toolbar .dataTables_filter,
-#table-header-toolbar .table-header-search{ /* <- ton search custom */
-  grid-area: search; justify-self: end;
-}
-#table-header-toolbar .dataTables_filter input,
-#table-header-toolbar .table-header-search input{
-  width: 220px;
-}
-
-/* Responsive */
-@media (max-width: 900px){
-  #table-header-toolbar{
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "action"
-      "download"
-      "filters"
-      "length"
-      "buttons"
-      "search";
-    gap: 10px;
-  }
-  #table-header-toolbar .dataTables_filter,
-  #table-header-toolbar .table-header_search,
-  #table-header-toolbar .table-header-search input{
-    width: 100%;
-  }
-  #table-header-toolbar #multiple-download,
-  #table-header-toolbar .table-header-filters{ justify-self: stretch; }
-  #table-header-toolbar .dt-buttons{ justify-self: start; }
-}
-
-/* Boutons extra-compacts */
-#table-header-toolbar .btn,
-#table-header-toolbar .dt-button {
-  padding: 2px 6px;     /* très peu de padding */
-  font-size: 0.75rem;   /* police réduite */
-  line-height: 1;       /* pas d’espace vertical inutile */
-  border-radius: 3px;
-  height: 24px;         /* hauteur minimale fixe */
-  min-height: 24px;
-}
-
-/* Boutons export groupés serrés */
-#table-header-toolbar .dt-buttons {
-  gap: 2px;
-}
-
-/* Select "Show entries" compact */
-#table-header-toolbar .dataTables_length select {
-  padding: 1px 2px;
-  font-size: 0.75rem;
-  height: 22px;
-  min-height: 22px;
-}
-
-/* Input recherche compact */
-#table-header-toolbar .dataTables_filter input,
-#table-header-toolbar .table-header-search input {
-  width: 140px;
-  padding: 2px 4px;
-  font-size: 0.75rem;
-  height: 22px;
-  min-height: 22px;
-}
-
-/* Bouton Multiple Download */
-#table-header-toolbar #multi-download-btn {
-  padding: 2px 6px;
-  font-size: 0.75rem;
-  height: 24px;
-  min-height: 24px;
-}
-
-/* Show entries : texte et select mini */
-#table-header-toolbar .dataTables_length label {
-  font-size: 0.7rem;      /* encore plus petit */
-  line-height: 1.1;
-  margin: 0;
-}
-
-#table-header-toolbar .dataTables_length select {
-  font-size: 0.7rem;
-  padding: 0 2px;         /* quasi rien */
-  height: 20px;           /* plus bas que les boutons */
-  min-height: 20px;
-}
-
-/* Conteneur footer */
-#table-controls-footer{
-  position: sticky;
-  bottom: 0;
-  background: #fff;
-  border-top: 1px solid #ddd;
-
-  padding: 4px 10px;        /* ⬅ réduit la hauteur */
-  z-index: 10;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-
-  font-size: 12px;          /* ⬅ texte plus compact */
-}
-
-/* Info */
-#table-controls-footer .dataTables_info{
-  padding: 0 !important;
-  margin: 0;
-  white-space: nowrap;
-}
-
-/* Pagination */
-#table-controls-footer .dataTables_paginate{
-  padding: 0 !important;
-  margin: 0;
-  white-space: nowrap;
-}
-
-/* Boutons pagination */
-#table-controls-footer .paginate_button{
-  display: inline-block;
-  min-width: 28px;
-
-  padding: 3px 8px !important;   /* ⬅ boutons plus petits */
-  margin-left: 3px !important;
-
-  border: 1px solid #d0d0d0 !important;
-  border-radius: 4px;
-  background: #fff !important;
-  color: #333 !important;
-
-  font-size: 12px;
-  line-height: 1.2;
-
-  cursor: pointer;
-}
-
-/* Hover */
-#table-controls-footer .paginate_button:hover{
-  background: #f2f2f2 !important;
-}
-
-/* Page courante */
-#table-controls-footer .paginate_button.current{
-  background: #333 !important;
-  color: #fff !important;
-  border-color: #333 !important;
-}
-
-/* Disabled */
-#table-controls-footer .paginate_button.disabled{
-  opacity: .45;
-  cursor: default;
-}
-
-/* Espacement interne */
-#table-controls-footer .dataTables_paginate span{
-  margin: 0 2px;
+    color: red;
 }
 
 /* ===========================================================
-   CSS pour les DATATABLE des composants
+   TOOLBAR DATATABLE STANDARD
+=========================================================== */
+
+#table-header-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-areas:
+        "action download filters"
+        "length buttons search";
+    align-items: center;
+    background: var(--bg-panel);
+    margin-bottom: 8px;
+}
+
+#table-header-toolbar .table-action-bar {
+    grid-area: action;
+    justify-self: start;
+}
+
+#table-header-toolbar #multiple-download {
+    grid-area: download;
+    justify-self: center;
+}
+
+#table-header-toolbar .table-header-filters {
+    grid-area: filters;
+    justify-self: end;
+}
+
+#table-header-toolbar .dataTables_length {
+    grid-area: length;
+    justify-self: start;
+    float: none !important;
+    text-align: initial;
+}
+
+#table-header-toolbar .dt-buttons {
+    grid-area: buttons;
+    justify-self: center;
+    display: flex;
+    gap: 2px;
+}
+
+#table-header-toolbar .dataTables_filter,
+#table-header-toolbar .table-header-search {
+    grid-area: search;
+    justify-self: end;
+}
+
+#table-header-toolbar .dataTables_filter input,
+#table-header-toolbar .table-header-search input {
+    width: 140px;
+    padding: 2px 4px;
+    font-size: 0.75rem;
+    height: 22px;
+    min-height: 22px;
+}
+
+#table-header-toolbar .btn,
+#table-header-toolbar .dt-button {
+    padding: 2px 6px;
+    font-size: 0.75rem;
+    line-height: 1;
+    border-radius: 3px;
+    height: 24px;
+    min-height: 24px;
+}
+
+#table-header-toolbar #multi-download-btn {
+    padding: 2px 6px;
+    font-size: 0.75rem;
+    height: 24px;
+    min-height: 24px;
+}
+
+#table-header-toolbar .dataTables_length label {
+    font-size: 0.7rem;
+    line-height: 1.1;
+    margin: 0;
+}
+
+#table-header-toolbar .dataTables_length select {
+    padding: 0 2px;
+    font-size: 0.7rem;
+    height: 20px;
+    min-height: 20px;
+}
+
+/* ===========================================================
+   FOOTER DATATABLE
+=========================================================== */
+
+#table-controls-footer {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    border-top: 1px solid #ddd;
+    padding: 4px 10px;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+}
+
+#table-controls-footer .dataTables_info,
+#table-controls-footer .dataTables_paginate {
+    padding: 0 !important;
+    margin: 0;
+    white-space: nowrap;
+}
+
+#table-controls-footer .paginate_button {
+    display: inline-block;
+    min-width: 28px;
+    padding: 3px 8px !important;
+    margin-left: 3px !important;
+    border: 1px solid #d0d0d0 !important;
+    border-radius: 4px;
+    background: #fff !important;
+    color: #333 !important;
+    font-size: 12px;
+    line-height: 1.2;
+    cursor: pointer;
+}
+
+#table-controls-footer .paginate_button:hover {
+    background: #f2f2f2 !important;
+}
+
+#table-controls-footer .paginate_button.current {
+    background: #333 !important;
+    color: #fff !important;
+    border-color: #333 !important;
+}
+
+#table-controls-footer .paginate_button.disabled {
+    opacity: .45;
+    cursor: default;
+}
+
+#table-controls-footer .dataTables_paginate span {
+    margin: 0 2px;
+}
+
+/* ===========================================================
+   DATATABLE COMPONENTS
 =========================================================== */
 
 .datatableComponent th,
 .datatableComponent td {
-  padding: 8px 12px;
-  white-space: nowrap;
-  text-align: left;
+    padding: 8px 12px;
+    white-space: nowrap;
+    text-align: left;
 }
 
-/* Colonnes sticky à gauche */
-
-/* 1ère colonne */
 .datatableComponent th:nth-child(1),
 .datatableComponent td:nth-child(1) {
-  width: 50px;
-  background-color: #bdbdbd;
-  position: sticky;
-  left: 0;
-  z-index: 5;
+    width: 50px;
+    background-color: #bdbdbd;
+    position: sticky;
+    left: 0;
+    z-index: 5;
 }
 
-/* 2ème colonne */
 .datatableComponent th:nth-child(2),
 .datatableComponent td:nth-child(2) {
-  width: 50px;
-  background-color: #bdbdbd;
-  position: sticky;
-  left: 50px; /* largeur de la 1ère colonne */
-  z-index: 5;
+    width: 50px;
+    background-color: #bdbdbd;
+    position: sticky;
+    left: 50px;
+    z-index: 5;
 }
 
-/* 3ème colonne */
 .datatableComponent th:nth-child(3),
 .datatableComponent td:nth-child(3) {
-  width: 50px;
-  background-color: #bdbdbd;
-  position: sticky;
-  left: 100px; /* somme des 2 premières colonnes */
-  z-index: 5;
+    width: 50px;
+    background-color: #bdbdbd;
+    position: sticky;
+    left: 100px;
+    z-index: 5;
 }
 
-/* Dernière colonne */
 .datatableComponent thead th:nth-last-child(1),
 .datatableComponent tbody td:nth-last-child(1) {
-  background-color: #bdbdbd;
-  position: sticky;
-  right: 0;
-  z-index: 5;
+    background-color: #bdbdbd;
+    position: sticky;
+    right: 0;
+    z-index: 5;
 }
 
-/* Avant-dernière colonne */
 .datatableComponent thead th:nth-last-child(2),
 .datatableComponent tbody td:nth-last-child(2) {
-  background-color: #bdbdbd;
-  position: sticky;
-  right: 50px; /* largeur dernière colonne */
-  z-index: 5;
+    background-color: #bdbdbd;
+    position: sticky;
+    right: 50px;
+    z-index: 5;
 }
 
-/* avant avant derniere collone */
 .datatableComponent thead th:nth-last-child(3),
 .datatableComponent tbody td:nth-last-child(3) {
-  background-color: #bdbdbd;
-  position: sticky;
-  right: 100px; /* largeur dernière colonne */
-  z-index: 5;
+    background-color: #bdbdbd;
+    position: sticky;
+    right: 100px;
+    z-index: 5;
 }
 
 /* ===========================================================
-   CSS des bouttons crud
+   BOUTONS CRUD / PAGINATION
 =========================================================== */
 
 .button-crud {
     display: inline-block;
-    padding: 6px 12px; /* Espacement interne */
-    background-color: #f3f3f3; /* Couleur de fond par défaut des boutons natifs */
-    color: #000; /* Texte noir */
-    text-decoration: none; /* Supprime le soulignement */
-    font-size: 13px; /* Taille de police par défaut */
-    text-align: center; /* Centre le texte */
-    border: 1px solid #ccc; /* Bordure légère */
-    border-radius: 3px; /* Coins légèrement arrondis */
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Légère ombre */
+    padding: 6px 12px;
+    background-color: #f3f3f3;
+    color: #000;
+    text-decoration: none;
+    font-size: 13px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .button-crud:hover {
-    background-color: #e6e6e6; /* Gris clair au survol */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Accentuation de l'ombre */
-    text-decoration: none; /* Évite le soulignement au survol */
+    background-color: #e6e6e6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
 }
 
-/* ===========================================================
-   CSS fonctionalites
-=========================================================== */
-     
 .pagination {
     display: flex;
     flex-wrap: wrap;
@@ -1201,38 +1148,40 @@ thead th, tbody td {
     margin: 5px;
 }
 
-.pagination li a, .pagination li span {
+.pagination li a,
+.pagination li span {
     display: inline-block;
     padding: 8px 12px;
-    border: 1px solid #ccc; /* Contour fin */
-    border-radius: 8px; /* Bords arrondis */
+    border: 1px solid #ccc;
+    border-radius: 8px;
     text-decoration: none;
-    background-color: #f9f9f9;
+    background-color: var(--bg-panel);
     color: #333;
     font-size: 14px;
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
+
 .pagination li a:hover {
     background-color: #56CCF2;
     color: white;
 }
 
-.pagination .current, .pagination .current span {
+.pagination .current,
+.pagination .current span {
     background-color: #007bff;
     color: white;
     pointer-events: none;
 }
+
+/* ===========================================================
+   INFOS / TAGS / POPUP
+=========================================================== */
 
 .hidden-tags {
     display: none;
     padding: 0 !important;
     height: 0;
 }
-
-.hidden {
-    display: none;
-}
-
 
 #infoPopup {
     position: absolute;
@@ -1242,20 +1191,23 @@ thead th, tbody td {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 200px;
     z-index: 1000;
-    white-space: normal; /* permet le retour à la ligne */
-    word-wrap: break-word; /* coupe les mots trop longs */
+    white-space: normal;
+    word-wrap: break-word;
 }
 
 #strain_form_phenotype,
 #strain_form_plasmyd,
 #strain_form_drugResistance,
-#strain_form_publication, 
+#strain_form_publication,
 #strain_form_methodSequencing,
-#strain_form_storage{
+#strain_form_storage {
     display: none;
 }
 
-/* Style pour centrer le texte au milieu de l'image */
+/* ===========================================================
+   CAROUSEL
+=========================================================== */
+
 .carousel-caption {
     position: absolute;
     top: 50%;
@@ -1263,74 +1215,63 @@ thead th, tbody td {
     transform: translate(-50%, -50%);
     text-align: center;
     width: 100%;
-    color: white; /* Couleur du texte */
-    background: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
     padding: 20px;
     border-radius: 10px;
 }
 
 #carouselExample {
-    max-height: 50vh; /* Le carrousel prend 60% de la hauteur de l'écran */
-    overflow: hidden; /* Cache le débordement */
+    max-height: 50vh;
+    overflow: hidden;
 }
 
-.carousel-inner{
-    height: 50vh; /* L'image prend 80% de la hauteur de l'écran */
+.carousel-inner {
+    height: 50vh;
 }
 
 .carousel-item img {
     width: 100%;
     height: 50vh;
-    object-fit: cover; /* Ajuste l'image sans la déformer */
-}
-
-.container{
-    display:flex;
-    justify-content: center;  /* Centre horizontalement */
-    align-items: center;      /* Centre verticalement */
-}
-.row_login{
-    font-family: 'Arial', sans-serif;
-    color: #333;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 50vh;
-    padding:20px;
-}
-
-
-:root{
-    --theme-col: #2d4bf0;
-}
-.space-y-2 > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-y-reverse: 0;
-    margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
-    margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
-}
-
-.row-update{
-    padding-left: 300px;
-    width: 100%;
-    height: auto;
-
+    object-fit: cover;
 }
 
 /* ===========================================================
-   Modifie a strain - CSS Harmonisé
+   LOGIN / GENERIQUE
 =========================================================== */
 
-/* ========== STYLES DE BASE ========== */
-ul {
-    list-style: none;
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+.row_login {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color: var(--bg-panel);
+    box-shadow: var(--shadow-soft);
+    width: 50vh;
+    padding: 20px;
+}
+
+.row-update {
+    padding-left: 300px;
+    width: 100%;
+    height: auto;
+}
+
+/* ===========================================================
+   UPDATE FORM HARMONISE
+=========================================================== */
+
 .group {
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    border : 1px solid;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid;
     border-radius: 5px;
     margin-right: 20px;
     padding: 20px;
-    font-family: 'Roboto', sans-serif;  
+    font-family: 'Roboto', sans-serif;
     position: relative;
 }
 
@@ -1345,7 +1286,6 @@ ul.drugResistanceOnStrain > li {
     width: 100%;
 }
 
-/* ========== LARGEUR COMPLÈTE POUR ÉLÉMENTS DE FORMULAIRE ========== */
 #drug-add div,
 #storage-add div,
 #storage-add input,
@@ -1358,7 +1298,11 @@ ul.drugResistanceOnStrain > li {
 }
 
 .ts-control,
-.ts-wrapper {
+.ts-wrapper,
+#collec-add-info select,
+#project-add-info select,
+div[id*="strain_form_drugResistanceOnStrain_"],
+div[id*="strain_form_storage_"] {
     width: 100% !important;
     min-width: 0;
 }
@@ -1368,34 +1312,20 @@ ul.drugResistanceOnStrain > li {
     min-width: 200px;
 }
 
-#collec-add-info select,
-#project-add-info select {
-    width: 100% !important;
-    min-width: 0;
-}
-
 .update-form select[id^="strain_form_collec_"] + .ts-wrapper,
 .update-form select[id^="strain_form_project_"] + .ts-wrapper {
     width: 100% !important;
 }
 
-div[id*="strain_form_drugResistanceOnStrain_"],
-div[id*="strain_form_storage_"] {
-    width: 100%;
-}
-
-/* ========== CONFIGURATION GRID PRINCIPALE ========== */
 .update-form {
     display: grid !important;
     grid-template-columns: repeat(2, 50%);
     grid-template-rows: repeat(12, auto);
     grid-auto-rows: auto;
-    padding-right: 30px;
     padding-left: 15%;
     padding-right: 15%;
 }
 
-/* ========== INPUTS ADAPTATIFS ========== */
 .update-form input[type="text"],
 .update-form input[type="number"],
 .update-form input[type="date"],
@@ -1407,128 +1337,92 @@ div[id*="strain_form_storage_"] {
     box-sizing: content-box;
 }
 
-/* ========== DISPOSITION EN COLONNE ========== */
 .update-form #project-add,
 .update-form #collec-add,
 .update-form #plasmyd-add,
-.update-form #publication-add {
-    display: flex;
-    flex-direction: column;
-}
-
-/* ========== POSITIONNEMENT GRID - COLONNE 1 ========== */
-.update-form .prime {
-    display: flex;
-    flex-direction: column;
-    grid-column: 1;
-    grid-row: 1/3;
-}
-
-.update-form .prime2 {
-    display: flex;
-    flex-direction: column;
-    grid-column: 1;
-    grid-row: 3/5;
-}
-
+.update-form #publication-add,
+.update-form .prime,
+.update-form .prime2,
 .update-form #phenotype-add,
 .update-form #strain_form_phenotype,
-.update-form div[id*="strain_form_phenotype_"] {
-    display: flex;
-    flex-direction: column;
-    grid-column: 1;
-    grid-row: 5/8;
-}
-
-.update-form #drug-add {
-    display: flex;
-    flex-direction: column;
-    grid-column: 1;
-    grid-row-start: 8;
-}
-
-.update-form div[id*="strain_form_drugResistanceOnStrain_"] {
-    display: flex;
-    flex-direction: column;
-    grid-column: 1;
-    grid-row: 8/12;
-}
-
-/* ========== POSITIONNEMENT GRID - COLONNE 2 ========== */
-
-/* Conteneurs principaux */
-.update-form #project-add {
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.update-form #collec-add {
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 2;
-}
-
-.update-form #plasmyd-add {
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 3;
-}
-
-.update-form #publication-add {
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 4;
-}
-
-/* Divs générés par Symfony (pour compatibilité) */
-.update-form div[id*="strain_form_project_"] {
-    display: flex;
-    flex-direction: column;
-}
-
-.update-form div[id*="strain_form_collec_"] {
-    display: flex;
-    flex-direction: column;
-}
-
-.update-form div[id*="strain_form_plasmyd_"] {
-    display: flex;
-    flex-direction: column;
-}
-
-.update-form div[id*="strain_form_publication_"] {
-    display: flex;
-    flex-direction: column;
-}
-
+.update-form div[id*="strain_form_phenotype_"],
+.update-form #drug-add,
+.update-form div[id*="strain_form_drugResistanceOnStrain_"],
+.update-form div[id*="strain_form_project_"],
+.update-form div[id*="strain_form_collec_"],
+.update-form div[id*="strain_form_plasmyd_"],
+.update-form div[id*="strain_form_publication_"],
 .update-form #sequencing-add,
 .update-form #strain_form_sequencing,
-.update-form div[id*="strain_form_sequencing_"] {
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 5/8;
-}
-
+.update-form div[id*="strain_form_sequencing_"],
 .update-form #storage-add,
-.update-form #strain_form_storage {
-    display: flex;
-    flex-direction: column;
-    grid-column: 2;
-    grid-row: 8/12;
-}
-
+.update-form #strain_form_storage,
 .update-form div[id*="strain_form_storage_"] {
     display: flex;
     flex-direction: column;
 }
 
-/* ========== OVERFLOW SPÉCIFIQUE ========== */
+.update-form .prime {
+    grid-column: 1;
+    grid-row: 1 / 3;
+}
+
+.update-form .prime2 {
+    grid-column: 1;
+    grid-row: 3 / 5;
+}
+
+.update-form #phenotype-add,
+.update-form #strain_form_phenotype,
+.update-form div[id*="strain_form_phenotype_"] {
+    grid-column: 1;
+    grid-row: 5 / 8;
+}
+
+.update-form #drug-add {
+    grid-column: 1;
+    grid-row-start: 8;
+}
+
+.update-form div[id*="strain_form_drugResistanceOnStrain_"] {
+    grid-column: 1;
+    grid-row: 8 / 12;
+}
+
+.update-form #project-add {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.update-form #collec-add {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.update-form #plasmyd-add {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.update-form #publication-add {
+    grid-column: 2;
+    grid-row: 4;
+}
+
+.update-form #sequencing-add,
+.update-form #strain_form_sequencing,
+.update-form div[id*="strain_form_sequencing_"] {
+    grid-column: 2;
+    grid-row: 5 / 8;
+}
+
+.update-form #storage-add,
+.update-form #strain_form_storage,
+.update-form div[id*="strain_form_storage_"] {
+    grid-column: 2;
+    grid-row: 8 / 12;
+}
+
 #drug-add-info,
 #drug-add-info ul {
     height: auto !important;
@@ -1537,57 +1431,42 @@ div[id*="strain_form_storage_"] {
 }
 
 /* ===========================================================
-   Modifie a Component
+   COMPONENT TITLE
 =========================================================== */
 
-.container .row .col-12 > h1 { text-decoration: underline !important; }
+.container .row .col-12 > h1 {
+    text-decoration: underline !important;
+}
 
 /* ===========================================================
-   Autre CSS , FOOTER ..
+   FOOTER
 =========================================================== */
-html, body {
-    height: 100%;
+
+footer {
     margin: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-.wrapper {
-    flex: 1; 
-    display: flex;
-    flex-direction: column;
-}
-
-.content {
-    flex: 1;
-}
-
-footer{
-    margin: 0; 
     padding: 0;
-    border: 0; 
+    border: 0;
     outline: 0;
-    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    list-style: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     text-decoration: none;
     background-color: #111010;
     margin-top: 20px;
-    width: 100%; 
-    min-height: 300px; /* Définissez la hauteur souhaitée */
-    overflow: hidden; /* Cache le débordement */
+    width: 100%;
+    min-height: 300px;
+    overflow: hidden;
     position: relative;
-    z-index:10;
+    z-index: 10;
     font-size: 14px;
-    
 }
 
-.f-item-con{
+.f-item-con {
     padding: 1.5rem 4rem;
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
     grid-gap: 2rem;
 }
-footer .app-name{
+
+footer .app-name {
     color: white;
     border-left: 4px solid var(--theme-col);
     padding-left: 1.5rem;
@@ -1595,23 +1474,25 @@ footer .app-name{
     font-weight: 700;
     grid-column-start: 2;
 }
-.app-name .app-initial{
+
+.app-name .app-initial {
     color: var(--theme-col);
 }
-footer .app-info p{
+
+footer .app-info p {
     color: white;
     padding-left: 1.65rem;
 }
 
-.app-info{
-    grid-column: 2/4;
+.app-info {
+    grid-column: 2 / 4;
 }
 
-.useful-links{
-    grid-column: 4/6;
+.useful-links {
+    grid-column: 4 / 6;
 }
 
-footer .footer-title{ 
+footer .footer-title {
     font-size: 1.5rem;
     line-height: 1.75rem;
     color: white;
@@ -1620,46 +1501,49 @@ footer .footer-title{
     height: fit-content;
     text-align: left;
 }
-footer ul{ 
+
+footer ul {
     padding-left: 1.75rem;
     color: white;
-    font-size: 1rem/* 14px */;
+    font-size: 1rem;
     line-height: 1.25rem;
     margin-top: .5rem;
-    list-style: none;
 }
-footer ul li{ 
+
+footer ul li {
     margin: .25rem 0;
     color: #d4d4d4;
     width: fit-content;
 }
-footer ul li:hover{
+
+footer ul li:hover {
     color: white;
 }
 
-.g-i-t{
+.g-i-t {
     display: grid;
-    grid-column: 6/8;
+    grid-column: 6 / 8;
     grid-row-start: 1;
     grid-row-end: 3;
 }
-.g-i-t form{
+
+.g-i-t form {
     display: flex;
     width: 80%;
     flex-direction: column;
     margin-top: 1rem;
-    --tw-space-y-reverse: 0;
-    margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
-    margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
 }
-form .g-inp{
+
+form .g-inp {
     padding: .25rem .5rem;
     font-size: 14px;
 }
-.g-inp textarea{
+
+.g-inp textarea {
     height: 150px;
 }
-.f-btn{
+
+.f-btn {
     padding: .25rem 1rem;
     background-color: var(--theme-col);
     border-radius: .25rem;
@@ -1669,32 +1553,31 @@ form .g-inp{
 }
 
 ul.plasmyd li.create-plasmid-li {
-    list-style-type: none; /* Supprime la puce */
-    margin-left: 0;        /* Supprime le décalage */
-    padding-left: 0;       /* Supprime l'espace de la puce */
+    list-style-type: none;
+    margin-left: 0;
+    padding-left: 0;
 }
-
-
 
 /* ===========================================================
-   CSS specifique pour le modal d'affichage des fichiers de strain
+   MODAL FICHIERS STRAIN
 =========================================================== */
-.cell-header{
-    display:flex;
-    justify-content:flex-start;
-    margin-bottom:4px;
+
+.cell-header {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 4px;
 }
 
-.open-file-modal{
-    border:none;
-    background:none;
-    cursor:pointer;
-    font-size:14px;
-    color:#666;
+.open-file-modal {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
 }
 
-.open-file-modal:hover{
-    color:#000;
+.open-file-modal:hover {
+    color: #000;
 }
 
 .custom-modal {
@@ -1732,58 +1615,677 @@ ul.plasmyd li.create-plasmid-li {
     cursor: pointer;
 }
 
-
-.preview-header{
-    margin-bottom:16px;
-    padding-bottom:10px;
-    border-bottom:1px solid #ddd;
+.preview-header {
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
 }
 
-.preview-header p{
-    margin:4px 0;
+.preview-header p,
+.preview-card p {
+    margin: 4px 0;
 }
 
-.preview-cards{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
+.preview-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.preview-card{
-    border:1px solid #ddd;
-    border-radius:8px;
-    padding:14px;
-    background:#fafafa;
+.preview-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 14px;
+    background: #fafafa;
 }
 
-.preview-card h4{
-    margin:0 0 10px 0;
-    font-size:16px;
+.preview-card h4 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
 }
 
-.preview-card p{
-    margin:4px 0;
+.preview-download-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #0d6efd;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
 }
 
-.preview-download-btn{
-    display:inline-block;
-    margin-top:10px;
-    padding:8px 12px;
-    background:#0d6efd;
-    color:#fff;
-    text-decoration:none;
-    border-radius:6px;
-    font-size:14px;
-}
-
-.preview-download-btn:hover{
-    background:#0b5ed7;
-    color:#fff;
+.preview-download-btn:hover {
+    background: #0b5ed7;
+    color: #fff;
 }
 
 .more-files {
     font-size: 13px;
-    color: #3b82f6; /* bleu doux moderne */
+    color: #3b82f6;
     font-weight: 500;
     margin-top: 4px;
+}
+
+/* ===========================================================
+   CONSOLE GAUCHE POUR STRAIN
+=========================================================== */
+
+#strain-tools {
+    width: 250px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: 92vh;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#strain-tools .console-block {
+    background: var(--bg-panel);
+    border: 2px solid var(--primary-dark);
+    border-radius: 10px;
+    box-shadow: var(--shadow-mid);
+    overflow: hidden;
+    min-height: 0;
+}
+
+#strain-tools .console-block:first-child {
+    flex-shrink: 0;
+}
+
+#strain-tools .console-block:last-child {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+#strain-tools .console-block-title {
+    background: linear-gradient(180deg, var(--primary-dark) 0%, var(--primary-dark-hover) 100%);
+    color: var(--text-light);
+    padding: 10px 14px;
+    font-family: "Roboto", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    border-bottom: 1px solid var(--border-dark);
+}
+
+#strain-tools .console-block-body {
+    padding: 12px;
+    background: var(--bg-panel);
+    font-family: "Roboto", sans-serif;
+}
+
+#strain-tools .console-block:last-child .console-block-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#strain-tools > .console-block #filter {
+    padding: 0;
+    background: transparent;
+}
+
+#strain-tools > .console-block #filter #floatingForm {
+    position: absolute;
+    flex-direction: row;
+    background: #ffffff;
+    border: 1px solid var(--border-light);
+    padding: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    max-width: 520px;
+    border-radius: 8px;
+    z-index: 1000;
+}
+
+#strain-tools > .console-block #filter #floatingForm div {
+    display: flex;
+    flex-direction: row;
+}
+
+#strain-tools > .console-block #filter #floatingForm label {
+    flex: 0 0 170px;
+    margin-right: 0.5rem;
+    text-align: left;
+}
+
+#strain-tools > .console-block #filter #floatingForm input,
+#strain-tools > .console-block #filter #floatingForm select {
+    flex: 1;
+    border: 1px solid var(--border-mid);
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+    width: 100%;
+}
+
+#strain-tools > .console-block #filter #btn-search {
+    padding: 0.55rem 0.9rem;
+    margin-top: 0.5rem;
+    border: none;
+    background-color: var(--primary-dark);
+    color: white;
+    border-radius: var(--radius-md);
+    font-weight: bold;
+    width: 100%;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+#strain-tools > .console-block #filter #btn-search:hover {
+    background-color: #357ABD;
+    transform: translateY(-1px);
+}
+
+#strain-tools > .console-block #filter #menu-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    box-shadow: none;
+    margin-bottom: 10px;
+}
+
+#strain-tools > .console-block #filter #menu-button {
+    background: #ffffff;
+    width: 100%;
+    padding: 10px 10px;
+    border: 1px solid var(--border-light);
+    font-size: 14px;
+    border-radius: var(--radius-md);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    margin-top: 10px;
+    text-align: left;
+    color: #334155;
+}
+
+#strain-tools > .console-block #filter #menu-button:hover {
+    background-color: #eef3f7;
+    border-color: #bfc9d4;
+    color: #1f2937;
+}
+
+#strain-tools > .console-block #filter .filter-menu {
+    display: none;
+}
+
+#strain-tools > .console-block #filter .filter-menu.visible {
+    display: block !important;
+    top: 100%;
+    background: #f8fafc;
+    left: 0;
+    padding: 10px 10px;
+    border: 1px solid var(--border-light);
+    font-size: 14px;
+    border-radius: var(--radius-md);
+}
+
+#strain-tools #table-header-toolbar.console-toolbar {
+    position: static !important;
+    top: auto !important;
+    z-index: auto !important;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    background: transparent !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    scrollbar-width: thin;
+    scrollbar-color: #c7d0d9 transparent;
+}
+
+#strain-tools #table-header-toolbar.console-toolbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+#strain-tools #table-header-toolbar.console-toolbar::-webkit-scrollbar-thumb {
+    background: #c7d0d9;
+    border-radius: 4px;
+}
+
+#strain-tools #table-header-toolbar .table-action-bar,
+#strain-tools #table-header-toolbar #multiple-download,
+#strain-tools #table-header-toolbar .table-header-filters,
+#strain-tools #table-header-toolbar .dataTables_length,
+#strain-tools #table-header-toolbar .dt-buttons,
+#strain-tools #table-header-toolbar .dataTables_filter,
+#strain-tools #table-header-toolbar .table-header-search {
+    grid-area: auto !important;
+    justify-self: stretch !important;
+    width: 100% !important;
+    float: none !important;
+    text-align: left !important;
+    margin: 0 !important;
+    min-width: 0;
+}
+
+#strain-tools .console-panel {
+    border: 1px solid #e1e6eb;
+    border-radius: 8px;
+    background: #ffffff;
+    overflow: hidden;
+    flex-shrink: 0;
+    min-width: 0;
+}
+
+#strain-tools .console-panel-title {
+    padding: 8px 10px;
+    background: var(--primary-light);
+    color: #425466;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    border-bottom: 1px solid #d9e0e6;
+}
+
+#strain-tools .console-panel-body {
+    padding: 5px;
+    overflow: hidden;
+}
+
+#strain-tools .console-full-width,
+#strain-tools .console-slot {
+    width: 100%;
+    min-width: 0;
+}
+
+#strain-tools .console-slot + .console-slot {
+    margin-top: 8px;
+}
+
+#strain-tools #table-header-toolbar .table-header-search input,
+#strain-tools #table-header-toolbar .dataTables_filter input {
+    width: 100% !important;
+    box-sizing: border-box;
+    border: 1px solid #cfd6dd;
+    border-radius: 6px;
+    min-height: 34px;
+    padding: 6px 10px;
+    font-size: 13px;
+    background: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#strain-tools #table-header-toolbar .table-header-search input:focus,
+#strain-tools #table-header-toolbar .dataTables_filter input:focus {
+    outline: none;
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 2px rgba(60, 84, 109, 0.12);
+}
+
+#strain-tools .table-header-filters .btn,
+#strain-tools .table-header-filters button,
+#strain-tools .table-header-filters a,
+#strain-tools #multiple-download .btn,
+#strain-tools #multiple-download button,
+#strain-tools #multiple-download a,
+#strain-tools #multi-download-btn,
+#strain-tools .table-action-bar .btn,
+#strain-tools .table-action-bar button,
+#strain-tools .table-action-bar a {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding: 6px 10px;
+    font-size: 12px;
+    line-height: 1.2;
+    border-radius: 6px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+#strain-tools .table-action-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+#strain-tools #console-dt-length-slot .dataTables_length {
+    width: 100%;
+}
+
+#strain-tools #console-dt-length-slot .dataTables_length label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    flex-wrap: wrap;
+    width: 100%;
+    font-size: 12px;
+    color: #4b5563;
+    margin: 0;
+}
+
+#strain-tools #console-dt-length-slot .dataTables_length select {
+    min-height: 30px;
+    max-width: 70px;
+    min-width: 58px;
+    font-size: 12px;
+    border: 1px solid #cfd6dd;
+    border-radius: 6px;
+    padding: 4px 6px;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+#strain-tools #console-dt-buttons-slot .dt-buttons {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px !important;
+    width: 100%;
+}
+
+#strain-tools #console-dt-buttons-slot .dt-button,
+#strain-tools #console-dt-buttons-slot .btn {
+    width: 100% !important;
+    min-height: 30px !important;
+    padding: 5px 8px !important;
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+    border-radius: 6px !important;
+    margin: 0 !important;
+    box-sizing: border-box;
+    min-width: 0 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ===========================================================
+   MODAL DOWNLOAD
+=========================================================== */
+
+#downloadModal.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+}
+
+#downloadModal .modal-dialog {
+    width: 90%;
+    max-width: 420px;
+}
+
+#downloadModal .modal-content {
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow-mid);
+}
+
+#downloadModal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    background: var(--primary-dark);
+    color: var(--text-light);
+    border-bottom: 1px solid var(--border-dark);
+}
+
+#downloadModal .modal-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* CROIX FERMETURE */
+
+#downloadModal #modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+}
+
+#downloadModal #modal-close span {
+    display: block;
+    color: #e74c3c;
+    font-size: 30px;
+    font-weight: bold;
+    line-height: 0.8;
+}
+
+#downloadModal #modal-close:hover span {
+    color: #c0392b;
+    transform: scale(1.08);
+}
+
+#downloadModal .modal-body {
+    padding: 1rem;
+    background: #fff;
+}
+
+#downloadModal .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: #f8f9fb;
+    border-top: 1px solid #eee;
+}
+
+div.download-error {
+    color: #c00 !important;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+/* ===========================================================
+   RESPONSIVE SIMPLE : ORDI / PETIT ORDI / TABLETTE
+=========================================================== */
+
+@media (max-width: 1450px) {
+    #strain-tools {
+        width: 230px;
+    }
+
+    #strain-tools .console-block-title {
+        font-size: 11px;
+        padding: 9px 11px;
+    }
+
+    #strain-tools .console-panel-title {
+        font-size: 10px;
+        padding: 7px 9px;
+    }
+
+    #strain-tools #console-dt-buttons-slot .dt-button,
+    #strain-tools #console-dt-buttons-slot .btn {
+        font-size: 11px !important;
+        padding: 5px 6px !important;
+    }
+
+    #global #list table th {
+        font-size: 0.78rem;
+        padding: 8px 10px;
+        letter-spacing: 0.3px;
+    }
+
+    #global #list #table td {
+        font-size: 12px;
+        width: 120px;
+    }
+}
+
+@media (max-width: 1280px) {
+    #strain-tools {
+        width: 210px;
+    }
+
+    #strain-tools .console-block-body {
+        padding: 10px;
+    }
+
+    #strain-tools .console-panel-body {
+        padding: 8px;
+    }
+
+    #strain-tools #console-dt-length-slot .dataTables_length label {
+        align-items: flex-start;
+        flex-direction: column;
+        font-size: 11px;
+    }
+
+    #strain-tools #console-dt-length-slot .dataTables_length select {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #strain-tools #console-dt-buttons-slot .dt-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    #global #list table th {
+        font-size: 0.72rem;
+        padding: 7px 8px;
+        letter-spacing: 0.2px;
+    }
+
+    #global #list #table td {
+        font-size: 11px;
+        width: 105px;
+    }
+}
+
+@media (max-width: 1100px) {
+    #global {
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    #toggleForm {
+        order: 1;
+    }
+
+    #global #form {
+        order: 2;
+        width: calc(50% - 8px);
+        max-width: calc(50% - 8px);
+        max-height: 92vh;
+    }
+
+    #strain-tools {
+        order: 3;
+        width: calc(50% - 8px);
+        height: 92vh;
+    }
+
+    #global #list {
+        order: 4;
+        width: 100%;
+        flex: 0 0 100%;
+    }
+}
+
+/* ===========================================================
+   FINITIONS VISUELLES
+=========================================================== */
+
+#global #list #table tbody tr:hover {
+    background-color: #f3f6fa;
+}
+
+.button-crud,
+#strain-tools button,
+#strain-tools .btn {
+    border-radius: 6px;
+    font-size: 12px;
+    padding: 4px 8px;
+    transition: all 0.15s ease;
+}
+
+.button-crud:hover,
+#strain-tools button:hover,
+#strain-tools .btn:hover {
+    background: #e9edf3;
+}
+
+/* ===========================================================
+   SAMPLE / COMPONENT PAGE STRUCTURE
+   même logique visuelle que strain-tools
+=========================================================== */
+
+#global #list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* bloc toolbar */
+#global #list #table-header-toolbar {
+    background: var(--primary-light);
+    border: 1px solid var(--border-mid);
+    border-radius: 4px;
+    box-shadow: var(--shadow-soft);
+    padding: 4px 6px;
+}
+
+/* bloc tableau */
+#global #list #table {
+    background: #ffffff;
+    border: 1px solid var(--border-mid);
+    border-radius: 4px;
+    box-shadow: var(--shadow-soft);
+    padding: 0;
+    overflow: hidden;
+}
+
+/* ===========================================================
+   STICKY COLONNES TABLEAU SAMPLE (ULTRA COMPACT)
+=========================================================== */
+
+#data-table-samples thead th:nth-child(1),
+#data-table-samples tbody td:nth-child(1) {
+    position: sticky !important;
+    left: 0;
+    z-index: 10;
+    background: #bdbdbd;
+    width: 28px !important;
+    min-width: 28px !important;
+    max-width: 28px !important;
+    padding: 2px !important;
+}
+
+#data-table-samples thead th:nth-child(2),
+#data-table-samples tbody td:nth-child(2) {
+    position: sticky !important;
+    left: 28px;
+    z-index: 11;
+    background: #bdbdbd;
+    width: 55px !important;
+    min-width: 55px !important;
+    max-width: 55px !important;
+    padding: 2px 4px !important;
+}
+
+#data-table-samples thead th:nth-child(3),
+#data-table-samples tbody td:nth-child(3) {
+    position: sticky !important;
+    left: 83px; /* 28 + 55 */
+    z-index: 12;
+    background: #bdbdbd;
+    width: 90px !important;
+    min-width: 90px !important;
+    max-width: 90px !important;
+    padding: 2px 6px !important;
 }
