@@ -321,6 +321,7 @@
                                                 class="sub-cell drugResistanceOnStrain clicable"
                                                 data-info='
                                                     name: {{ item.drugResistance.name is defined ? item.drugResistance.name : "--" }}
+                                                    measurement_type: {{ item.measurementType is defined and item.measurementType ? item.measurementType : "--" }}
                                                     concentration: {{ item.concentration is defined and item.concentration ? item.concentration : "--" }}
                                                     concentration_unit: {{ item.concentrationUnit is defined and item.concentrationUnit ? item.concentrationUnit : "--" }}
                                                     date: {{ item.date is defined and item.date ? item.date|date("Y-m-d") : "--" }}

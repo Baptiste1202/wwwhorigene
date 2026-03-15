@@ -17,6 +17,7 @@
                     <h4>{{ item.drugResistance ? item.drugResistance.name : '--' }}</h4>
 
                     <p><strong>Date :</strong> {{ item.date ? item.date|date('d/m/Y') : '--' }}</p>
+                    <p><strong>Measurement type :</strong> {{ item.measurementType ?: '--' }}</p>
                     <p><strong>Concentration :</strong> {{ item.concentration ?: '--' }}</p>
                     <p><strong>Concentration unit :</strong> {{ item.concentrationUnit ?: '--' }}</p>
                     <p><strong>Resistant :</strong> {{ item.resistant ? 'yes' : 'no' }}</p>
