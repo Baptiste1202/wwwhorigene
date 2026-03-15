@@ -2111,52 +2111,6 @@ ul.plasmyd li.create-plasmid-li {
 
 /* ===========================================================
    TOGGLES GAUCHE : FORM + TOOLS
-=========================================================== */
-
-#left-toggles {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-    align-items: stretch;
-    align-self: stretch;
-    height: 92vh; /* même hauteur que la console */
-    flex-shrink: 0;
-}
-
-#left-toggles button {
-    width: 42px;
-    min-width: 42px;
-    max-width: 42px;
-    height: 100%;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-family: "Roboto", sans-serif;
-    font-size: 18px;
-    border: 1px solid var(--border-light);
-    background: var(--bg-panel);
-    border-radius: 6px;
-    box-shadow: var(--shadow-soft);
-    box-sizing: border-box;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-#left-toggles button:hover {
-    background: #444;
-    color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-#toggleTools {
-    width: 42px;
-    min-width: 42px;
-    max-width: 42px;
-    height: 100%;
-}
-
 #strain-tools.hidden-tools {
     display: none !important;
 }
