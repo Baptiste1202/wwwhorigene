@@ -712,11 +712,13 @@ button.btn-form:hover,
 #global #list #table td.name {
     text-align: center;
     color: black;
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
     font-weight: bold;
     background-color: #bdbdbd;
+
+    width: auto;
+    min-width: 150px;
+    max-width: none;
+
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -2399,7 +2401,7 @@ div.download-error {
 
     thead th:nth-child(2),
     tbody td:nth-child(2) {
-        left: 28px;
+        left: 27px !important;
         width: 48px !important;
         min-width: 48px !important;
         max-width: 48px !important;
@@ -2407,7 +2409,7 @@ div.download-error {
 
     thead th:nth-child(3),
     tbody td:nth-child(3) {
-        left: 76px; /* 28 + 48 */
+        left: 75px !important;
         width: 70px !important;
         min-width: 70px !important;
         max-width: 70px !important;
@@ -2422,7 +2424,7 @@ div.download-error {
 
     thead th:nth-last-child(2),
     tbody td:nth-last-child(2) {
-        right: 28px;
+        right: 27px !important;
         width: 48px !important;
         min-width: 48px !important;
         max-width: 48px !important;
@@ -2430,7 +2432,7 @@ div.download-error {
 
     thead th:nth-last-child(3),
     tbody td:nth-last-child(3) {
-        right: 76px; /* 28 + 48 */
+        right: 75px !important;
         width: 70px !important;
         min-width: 70px !important;
         max-width: 70px !important;
@@ -2445,10 +2447,11 @@ div.download-error {
 
     #left-toggles {
         order: 1;
-        width: 42px;
-        height: 92vh;
+        /* On passe en ligne et on élargit le container (42px * 2 + 8px de gap) */
+        width: 92px; 
+        height: auto; /* Hauteur auto car ils ne sont plus sur toute la colonne */
         display: flex;
-        flex-direction: column;
+        flex-direction: row; 
         gap: 8px;
         flex-shrink: 0;
         align-self: flex-start;
@@ -2457,23 +2460,24 @@ div.download-error {
     #left-toggles button,
     #toggleForm,
     #toggleTools {
-        flex: 1 1 0;
+        flex: 0 0 42px;
         width: 42px;
         min-width: 42px;
         max-width: 42px;
-        min-height: 0;
+        height: 42px; /* Optionnel : pour garder un aspect carré */
     }
 
+    /* Ajustement des autres éléments pour s'aligner sur la nouvelle largeur des toggles */
     #global #form {
         order: 2;
-        width: calc(50% - 8px);
-        max-width: calc(50% - 8px);
+        width: calc(100% - 100px); /* Ajusté pour laisser la place aux boutons à gauche */
+        max-width: calc(100% - 100px);
         max-height: 92vh;
     }
 
     #strain-tools {
         order: 3;
-        width: calc(50% - 8px);
+        width: 100%; /* Passe souvent en dessous si le formulaire prend toute la largeur restante */
         height: 92vh;
     }
 
@@ -2483,6 +2487,7 @@ div.download-error {
         flex: 0 0 100%;
     }
 }
+
 
 /* ===========================================================
    FINITIONS VISUELLES
