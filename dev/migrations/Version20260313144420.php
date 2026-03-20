@@ -19,13 +19,12 @@ final class Version20260313144420 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE drug_resistance_on_strain CHANGE concentration concentration INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE drug_resistance_on_strain ALTER COLUMN concentration DROP NOT NULL');
     }
-
+    
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE drug_resistance_on_strain CHANGE concentration concentration INT NOT NULL');
+        // Attention : assurez-vous qu'il n'y a pas de NULL avant d'exécuter le down
+        $this->addSql('ALTER TABLE drug_resistance_on_strain ALTER COLUMN concentration SET NOT NULL');
     }
 }
