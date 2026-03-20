@@ -11,22 +11,26 @@ final class Version20260313140602 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Move measurement type from DrugResistance to DrugResistanceOnStrain';
+        return 'Move measurement type from DrugResistance to DrugResistanceOnStrain (PostgreSQL compatible)';
     }
 
     public function up(Schema $schema): void
     {
-        // remove old column from drug
-        $this->addSql('ALTER TABLE drug_resistance DROP type');
+        // 1. Suppression de l'ancienne colonne
+        $this->addSql('ALTER TABLE drug_resistance DROP COLUMN type');
 
-        // add measurement type to experiment result
-        $this->addSql('ALTER TABLE drug_resistance_on_strain ADD measurement_type VARCHAR(50) NOT NULL');
+        // 2. Ajout de la nouvelle colonne
+        // Note : Si la table est déjà peuplée, on ajoute une valeur par défaut 
+        // ou on la permet NULL temporairement pour éviter une erreur PGSQL.
+        $this->addSql('ALTER TABLE drug_resistance_on_strain ADD measurement_type VARCHAR(50) DEFAULT \'unknown\' NOT NULL');
+        
+        // Optionnel : Supprimer la valeur par défaut après l'ajout si vous voulez forcer l'applicatif
+        $this->addSql('ALTER TABLE drug_resistance_on_strain ALTER COLUMN measurement_type DROP DEFAULT');
     }
 
     public function down(Schema $schema): void
     {
-        // restore previous structure if rollback
         $this->addSql('ALTER TABLE drug_resistance ADD type VARCHAR(255) NOT NULL');
-        $this->addSql('ALTER TABLE drug_resistance_on_strain DROP measurement_type');
+        $this->addSql('ALTER TABLE drug_resistance_on_strain DROP COLUMN measurement_type');
     }
 }
