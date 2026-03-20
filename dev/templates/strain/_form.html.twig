@@ -618,3 +618,38 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<script>
+
+document.addEventListener('change', function(e) {
+
+    if (!e.target.name.includes('[measurementType]')) return;
+
+    const container = e.target.closest('li');
+    if (!container) return;
+
+    const concentration = container.querySelector('[name*="[concentration]"]');
+    const unit = container.querySelector('[name*="[concentrationUnit]"]');
+
+    if (e.target.value === 'qualitative') {
+
+        if (concentration) {
+            concentration.value = '';
+            concentration.disabled = true;
+        }
+
+        if (unit) {
+            unit.value = '';
+            unit.disabled = true;
+        }
+
+    } else {
+
+        if (concentration) concentration.disabled = false;
+        if (unit) unit.disabled = false;
+
+    }
+
+});
+
+</script>

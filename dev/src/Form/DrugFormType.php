@@ -14,12 +14,6 @@ class DrugFormType extends AbstractType
             ->add('name', options:[
                 'label' => 'Name Drug Resistance'
             ])
-            ->add('type', type: ChoiceType::class, options:[
-                'choices' => [
-                    'Quantitative' => 'quantitative',
-                    'Qualitative' => 'qualitative'
-                ]
-            ])
             ->add('description', options:[
                 'label' => 'Description'
             ])

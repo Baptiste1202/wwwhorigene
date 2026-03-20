@@ -30,7 +30,6 @@
                     <th><input type="checkbox" id="select-all" /></th>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Type</th>
                     <th>Description</th>
                     <th>Comment</th>
                     <th data-column="duplicate" class="no-sort"></th>
@@ -46,7 +45,6 @@
                     </td>
                     <td>{{ drug.id }}</td>
                     <td>{{ drug.name }}</td>
-                    <td>{{ drug.type }}</td>
                     <td data-info="{{ drug.description is not null ? drug.description : '--' }}">
                         {{ drug.description is not null ? drug.description : '--' }}
                     </td>
