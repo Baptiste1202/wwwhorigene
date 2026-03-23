@@ -467,6 +467,8 @@ class StrainController extends AbstractController
                 $newDrug = new DrugResistanceOnStrain();
                 $newDrug->setDrugResistance($drug->getDrugResistance());
                 $newDrug->setConcentration($drug->getConcentration());
+                $newDrug->setConcentrationUnit($drug->getConcentrationUnit());
+                $newDrug->setMeasurementType($drug->getMeasurementType());
                 $newDrug->setDescription($drug->getDescription());
                 $newDrug->setComment($drug->getComment());
                 $newDrug->setResistant($drug->isResistant());
