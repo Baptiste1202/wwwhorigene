@@ -20,8 +20,8 @@ class DrugResistanceOnStrain
     #[ORM\ManyToOne(targetEntity: DrugResistance::class, inversedBy: 'drugResistanceOnStrains')]
     private ?DrugResistance $drugResistance;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $concentration = null;
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $concentration = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
@@ -67,12 +67,12 @@ class DrugResistanceOnStrain
         return $this;
     }
 
-    public function getConcentration(): ?int
+    public function getConcentration(): ?float
     {
         return $this->concentration;
     }
 
-    public function setConcentration(?int $concentration): static
+    public function setConcentration(?float $concentration): static
     {
         $this->concentration = $concentration;
 
