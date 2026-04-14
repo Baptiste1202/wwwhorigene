@@ -31,11 +31,11 @@ class SampleFormType extends AbstractType
             ->add('city', options:[
                 'label' => 'City'
             ])
-            ->add('localisation', options:[
-                'label' => 'Localisation'
+            ->add('location', options:[
+                'label' => 'Location'
             ])
-            ->add('underLocalisation', options:[
-                'label' => 'Minor Localisation'
+            ->add('underLocation', options:[
+                'label' => 'Minor Location'
             ])
             ->add('gps', options:[
                 'label' => 'GPS Coordinate'

@@ -443,7 +443,7 @@ class StrainController extends AbstractController
                 $newPhenotype->setTechnique($phenotype->getTechnique());
                 $newPhenotype->setDate($phenotype->getDate());
                 $newPhenotype->setPhenotypeType($phenotype->getPhenotypeType());
-                $newPhenotype->setMesure($phenotype->getMesure());
+                $newPhenotype->setMeasure($phenotype->getMeasure());
                 $newPhenotype->setDescription($phenotype->getDescription());
                 $newPhenotype->setComment($phenotype->getComment());
                 $newPhenotype->setStrain($clone);

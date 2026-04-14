@@ -35,7 +35,7 @@ class Phenotype
     private ?PhenotypeType $phenotypeType = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $mesure = null;
+    private ?string $measure = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
@@ -64,14 +64,14 @@ class Phenotype
         return $this;
     }
 
-    public function getMesure(): ?string
+    public function getmeasure(): ?string
     {
-        return $this->mesure;
+        return $this->measure;
     }
 
-    public function setMesure(?string $mesure): static
+    public function setmeasure(?string $measure): static
     {
-        $this->mesure = $mesure;
+        $this->measure = $measure;
 
         return $this;
     }

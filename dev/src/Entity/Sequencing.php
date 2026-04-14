@@ -21,6 +21,7 @@ class Sequencing
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: MethodSequencingType::class, cascade: ['persist'])]
+    #[ORM\JoinColumn(name: "method_sequencing_type_id", referencedColumnName: "id", nullable: true)]
     private ?MethodSequencingType $name = null;
     
     private ?string $pendingNameString = null;

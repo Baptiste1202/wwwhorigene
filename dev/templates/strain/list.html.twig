@@ -118,8 +118,8 @@
                                         
                                         country : {{ strain.prelevement ? strain.prelevement.country : "--" }}
                                         city : {{ strain.prelevement ? strain.prelevement.city : "--" }}
-                                        localisation : {{ strain.prelevement ? strain.prelevement.localisation : "--" }}
-                                        under-localisation : {{ strain.prelevement ? strain.prelevement.underLocalisation : "--" }}
+                                        location : {{ strain.prelevement ? strain.prelevement.location : "--" }}
+                                        under-location : {{ strain.prelevement ? strain.prelevement.underLocation : "--" }}
                                         environment : {{ strain.prelevement ? strain.prelevement.environment : "--" }}
                                         bio-sample : {{ strain.prelevement and strain.prelevement.bioSample ? strain.prelevement.bioSample : "--" }}
                                         farm-location : {{ strain.prelevement and strain.prelevement.farmLocation ? strain.prelevement.farmLocation : "--" }}
@@ -390,7 +390,7 @@
                                                 data-info='
                                                     phenotype: {{ item.phenotypeType.type is defined ? item.phenotypeType.type : "--" }}
                                                     technique: {{ item.technique is defined and item.technique ? item.technique : "--" }}
-                                                    mesure: {{ item.mesure is defined and item.mesure ? item.mesure : "--" }}
+                                                    measure: {{ item.measure is defined and item.measure ? item.measure : "--" }}
                                                     date: {{ item.date is defined and item.date ? item.date|date("d/m/Y") : "--" }}
                                                     file: {{ item.fileName is defined and item.fileName ? item.fileName : "--" }}'
                                                 data-file='{{ item.fileName is defined and item.fileName ? item.fileName : "--" }}'>
@@ -401,7 +401,7 @@
                                                 {% endif %}
                                                 <br>
 
-                                                {{ item.mesure }}
+                                                {{ item.measure }}
                                                 <br>
 
                                                 {% if item.fileName is defined and item.fileName %}
@@ -492,12 +492,12 @@
                                             URL: {{ strain.publication|first   ? strain.publication|first.articleURL  : "--" }}
                                             DOI: {{ strain.publication|first  ? strain.publication|first.DOI  : "--" }}
                                             title: {{ strain.publication|first    ? strain.publication|first.title  : "--" }}
-                                            autor: {{ strain.publication|first    ? strain.publication|first.autor : "--" }}
+                                            author: {{ strain.publication|first    ? strain.publication|first.author : "--" }}
                                             year: {{ strain.publication|first  ? strain.publication|first.year  : "--" }}'
                                 >
                                     {% if strain.publication is not empty %}
                                         {{strain.publication[0].title}} <br>
-                                        {{strain.publication[0].autor}} <br>
+                                        {{strain.publication[0].author}} <br>
                                         {{strain.publication[0].year}}
                                     {% else %}
                                         --
@@ -515,12 +515,12 @@
                                             URL: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].articleURL  : "--" }}
                                             DOI: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].DOI  : "--" }}
                                             title: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].title  : "--" }}
-                                            autor: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].autor : "--" }}
+                                            author: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].author : "--" }}
                                             year: {{ strain.publication[i] is defined and strain.publication[i] ? strain.publication[i].year  : "--" }}'
                                             > 
                                                 {% if strain.publication[i] is defined %}
                                                     {{ strain.publication[i].title }} <br>
-                                                    {{ strain.publication[i].autor }} <br>
+                                                    {{ strain.publication[i].author }} <br>
                                                     {{ strain.publication[i].year }}
                                                 {% else %}
                                                     --

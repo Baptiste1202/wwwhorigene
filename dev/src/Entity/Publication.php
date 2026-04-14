@@ -24,10 +24,10 @@ class Publication
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $autor = null;
+    private ?string $author = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $year = null;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $year = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
@@ -73,24 +73,24 @@ class Publication
         return $this;
     }
 
-    public function getAutor(): ?string
+    public function getauthor(): ?string
     {
-        return $this->autor;
+        return $this->author;
     }
 
-    public function setAutor(string $fileName): static
+    public function setauthor(string $fileName): static
     {
-        $this->autor = $fileName;
+        $this->author = $fileName;
 
         return $this;
     }
 
-    public function getYear(): ?string
+    public function getYear(): ?int
     {
         return $this->year;
     }
 
-    public function setYear(string $fileName): static
+    public function setYear(int $fileName): static
     {
         $this->year = $fileName;
 

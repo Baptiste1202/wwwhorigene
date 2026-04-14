@@ -165,8 +165,8 @@ class SampleController extends AbstractController
             $clone->setDate($sample->getDate());
             $clone->setCountry($sample->getCountry());
             $clone->setCity($sample->getCity());
-            $clone->setLocalisation($sample->getLocalisation());
-            $clone->setUnderLocalisation($sample->getUnderLocalisation());
+            $clone->setLocation($sample->getLocation());
+            $clone->setUnderLocation($sample->getUnderLocation());
             $clone->setGps($sample->getGps());
             $clone->setEnvironment($sample->getEnvironment());
 
