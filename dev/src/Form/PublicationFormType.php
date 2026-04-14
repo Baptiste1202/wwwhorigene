@@ -16,8 +16,8 @@ class PublicationFormType extends AbstractType
             ->add('title', options:[
                 'label' => 'Title'
             ])
-            ->add('autor', options:[
-                'label' => 'Autor'
+            ->add('author', options:[
+                'label' => 'Author'
             ])
             ->add('year', options:[
                 'label' => 'Year'
