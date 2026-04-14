@@ -34,6 +34,8 @@ use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Constraints\DateTime as ConstraintsDateTime;
+use Vich\UploaderBundle\Storage\StorageInterface;
+use App\Storage\S3VichStorage;
 
 class StrainController extends AbstractController
 {
@@ -415,12 +417,13 @@ class StrainController extends AbstractController
         EntityManagerInterface $em,
         Security $security,
         StrainIndexer $indexer,
-        S3FileCloner $fileCloner
+        S3FileCloner $fileCloner,
+        StorageInterface $storage
     ): Response {
         try {
-            $user = $security->getUser(); 
+            $user = $security->getUser();
             $clone = new Strain();
-            
+
             // Champs simples
             $clone->setNameStrain($strain->getNameStrain());
             $clone->setSpecie($strain->getSpecie());
@@ -433,11 +436,11 @@ class StrainController extends AbstractController
             $clone->setPrelevement($strain->getPrelevement());
             $clone->setCreatedBy($user);
             $clone->setDate(new \DateTime());
-            
+
             // Relation vers le parent
             $clone->setParentStrain($strain->getParentStrain());
-            
-            // Phenotype (OneToMany) avec duplication des fichiers S3
+
+            // Phenotype (OneToMany)
             foreach ($strain->getPhenotype() as $phenotype) {
                 $newPhenotype = new Phenotype();
                 $newPhenotype->setTechnique($phenotype->getTechnique());
@@ -447,22 +450,35 @@ class StrainController extends AbstractController
                 $newPhenotype->setDescription($phenotype->getDescription());
                 $newPhenotype->setComment($phenotype->getComment());
                 $newPhenotype->setStrain($clone);
-                
-                // Dupliquer le fichier sur S3
+
                 if ($phenotype->getFileName()) {
-                    $newFileName = $fileCloner->cloneFile(
-                        $phenotype->getFileName(),
-                        '/docs/phenotype'
-                    );
+                    $newFileName = null;
+
+                    if ($storage instanceof S3VichStorage) {
+                        $newFileName = $fileCloner->cloneFile(
+                            $phenotype->getFileName(),
+                            '/docs/phenotype'
+                        );
+                    } else {
+                        $oldPath = $this->getParameter('kernel.project_dir') . '/public/docs/phenotype/' . $phenotype->getFileName();
+
+                        if (file_exists($oldPath)) {
+                            $ext = pathinfo($phenotype->getFileName(), PATHINFO_EXTENSION);
+                            $newFileName = uniqid() . ($ext ? '.' . $ext : '');
+                            $newPath = $this->getParameter('kernel.project_dir') . '/public/docs/phenotype/' . $newFileName;
+                            copy($oldPath, $newPath);
+                        }
+                    }
+
                     if ($newFileName) {
                         $newPhenotype->setFileName($newFileName);
                     }
                 }
-                
+
                 $clone->addPhenotype($newPhenotype);
             }
-            
-            // DrugResistanceOnStrain (OneToMany) avec duplication des fichiers S3
+
+            // DrugResistanceOnStrain (OneToMany)
             foreach ($strain->getDrugResistanceOnStrain() as $drug) {
                 $newDrug = new DrugResistanceOnStrain();
                 $newDrug->setDrugResistance($drug->getDrugResistance());
@@ -474,22 +490,35 @@ class StrainController extends AbstractController
                 $newDrug->setResistant($drug->isResistant());
                 $newDrug->setDate($drug->getDate());
                 $newDrug->setStrain($clone);
-                
-                // Dupliquer le fichier sur S3
+
                 if ($drug->getNameFile()) {
-                    $newFileName = $fileCloner->cloneFile(
-                        $drug->getNameFile(),
-                        '/docs/drugs' // URI prefix du mapping
-                    );
+                    $newFileName = null;
+
+                    if ($storage instanceof S3VichStorage) {
+                        $newFileName = $fileCloner->cloneFile(
+                            $drug->getNameFile(),
+                            '/docs/drugs'
+                        );
+                    } else {
+                        $oldPath = $this->getParameter('kernel.project_dir') . '/public/docs/drugs/' . $drug->getNameFile();
+
+                        if (file_exists($oldPath)) {
+                            $ext = pathinfo($drug->getNameFile(), PATHINFO_EXTENSION);
+                            $newFileName = uniqid() . ($ext ? '.' . $ext : '');
+                            $newPath = $this->getParameter('kernel.project_dir') . '/public/docs/drugs/' . $newFileName;
+                            copy($oldPath, $newPath);
+                        }
+                    }
+
                     if ($newFileName) {
                         $newDrug->setNameFile($newFileName);
                     }
                 }
-                
+
                 $clone->addDrugResistanceOnStrain($newDrug);
             }
-            
-            // Sequencing (OneToMany) avec duplication des fichiers S3
+
+            // Sequencing (OneToMany)
             foreach ($strain->getSequencing() as $method) {
                 $newMethod = new Sequencing();
                 $newMethod->setMethodSequencingType($method->getMethodSequencingType());
@@ -498,50 +527,63 @@ class StrainController extends AbstractController
                 $newMethod->setDescription($method->getDescription());
                 $newMethod->setComment($method->getComment());
                 $newMethod->setStrain($clone);
-                
-                // Dupliquer le fichier sur S3
+
                 if ($method->getNameFile()) {
-                    $newFileName = $fileCloner->cloneFile(
-                        $method->getNameFile(),
-                        '/docs/sequencing' // URI prefix du mapping
-                    );
+                    $newFileName = null;
+
+                    if ($storage instanceof S3VichStorage) {
+                        $newFileName = $fileCloner->cloneFile(
+                            $method->getNameFile(),
+                            '/docs/sequencing'
+                        );
+                    } else {
+                        $oldPath = $this->getParameter('kernel.project_dir') . '/public/docs/sequencing/' . $method->getNameFile();
+
+                        if (file_exists($oldPath)) {
+                            $ext = pathinfo($method->getNameFile(), PATHINFO_EXTENSION);
+                            $newFileName = uniqid() . ($ext ? '.' . $ext : '');
+                            $newPath = $this->getParameter('kernel.project_dir') . '/public/docs/sequencing/' . $newFileName;
+                            copy($oldPath, $newPath);
+                        }
+                    }
+
                     if ($newFileName) {
                         $newMethod->setNameFile($newFileName);
                     }
                 }
-                
+
                 $clone->addSequencing($newMethod);
             }
-            
+
             // Plasmyd (ManyToMany)
             foreach ($strain->getPlasmyd() as $plasmyd) {
                 $clone->addPlasmyd($plasmyd);
             }
-            
+
             // Publication (ManyToMany)
             foreach ($strain->getPublication() as $pub) {
                 $clone->addPublication($pub);
             }
-            
+
             // Project (ManyToMany)
             foreach ($strain->getProject() as $proj) {
                 $clone->addProject($proj);
             }
-            
+
             // Collec (ManyToMany)
             foreach ($strain->getCollec() as $collec) {
                 $clone->addCollec($collec);
             }
-            
+
             $em->persist($clone);
             $em->flush();
             $indexer->index($clone);
-            
+
             $this->addFlash('success', 'Strain ' . $clone->getNameStrain() . ' duplicated with success!');
             sleep(1);
-            
+
             return $this->redirectToRoute('page_strains');
-            
+
         } catch (\Throwable $e) {
             if ($this->getParameter('kernel.debug')) {
                 throw $e;
@@ -555,6 +597,7 @@ class StrainController extends AbstractController
             return $this->redirectToRoute('page_strains');
         }
     }
+
     #[Route('/strains/search', name: 'strain_search')]
     public function search(Request $request, EntityManagerInterface $em): Response
     {
@@ -696,11 +739,11 @@ class StrainController extends AbstractController
             // --- Phenotype measure (nested, indépendant de phenotypeType) ---
             if ($data->phenotypeMeasure) {
                 $measure = (string) $data->phenotypeMeasure;
-                $this->logger->info('Add phenotype measure', ['mesure' => $measure]);
+                $this->logger->info('Add phenotype measure', ['measure' => $measure]);
 
                 $nestedBool = new \Elastica\Query\BoolQuery();
-                // champ indexé : phenotype.mesure (keyword)
-                $nestedBool->addFilter(new \Elastica\Query\Term(['phenotype.mesure' => $measure]));
+                // champ indexé : phenotype.measure (keyword)
+                $nestedBool->addFilter(new \Elastica\Query\Term(['phenotype.measure' => $measure]));
 
                 $nested = new \Elastica\Query\Nested();
                 $nested->setPath('phenotype'); // même path que pour phenotypeType

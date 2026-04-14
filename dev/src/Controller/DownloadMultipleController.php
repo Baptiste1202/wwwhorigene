@@ -26,13 +26,8 @@ class DownloadMultipleController extends AbstractController
         \Vich\UploaderBundle\Storage\StorageInterface $storage,
         LoggerInterface $logger
     ) {
-        if (!$storage instanceof S3VichStorage) {
-            throw new \RuntimeException('Le storage Vich doit être S3VichStorage');
-        }
-        
         $this->em = $em;
         $this->storage = $storage;
-        $this->s3Storage = $storage; // ⚠️ AJOUT : Initialiser s3Storage
         $this->logger = $logger;
     }
 
@@ -275,8 +270,8 @@ class DownloadMultipleController extends AbstractController
 
             if (!empty($phenotypeTypeIds)) {
                 $qb->innerJoin('p.phenotypeType', 't')
-                   ->andWhere('t.id IN (:typeIds)')
-                   ->setParameter('typeIds', $phenotypeTypeIds);
+                ->andWhere('t.id IN (:typeIds)')
+                ->setParameter('typeIds', $phenotypeTypeIds);
             }
 
             $phenotypes = $qb->getQuery()->getResult();
@@ -294,9 +289,8 @@ class DownloadMultipleController extends AbstractController
                         'fileName' => $phenotype->getFileName()
                     ]);
 
-                    // Récupérer le nom du fichier
                     $filename = $phenotype->getFileName();
-                    
+
                     if (!$filename) {
                         $this->logger->warning('[DEBUG] No filename for phenotype', [
                             'phenotypeId' => $phenotype->getId()
@@ -304,47 +298,7 @@ class DownloadMultipleController extends AbstractController
                         continue;
                     }
 
-                    // Ajouter l'extension si fournie et si le fichier ne l'a pas déjà
-                    if ($extension && !str_ends_with($filename, $extension)) {
-                        $filename .= $extension;
-                    }
-
-                    // Construire la clé S3 directement
-                    $s3Key = sprintf('docs/phenotype/%s', $phenotype->getFileName());
-                    
-                    $this->logger->info('[DEBUG] Attempting to get S3 phenotype', ['s3Key' => $s3Key]);
-
-                    // Récupérer le stream depuis S3 directement
-                    try {
-                        $result = $this->s3Storage->getS3Client()->getObject([
-                            'Bucket' => $this->s3Storage->getBucket(),
-                            'Key'    => $s3Key,
-                        ]);
-                        
-                        $stream = $result['Body']->detach();
-                        
-                        if (!$stream || !is_resource($stream)) {
-                            $this->logger->error('[DEBUG] Phenotype stream is not valid', [
-                                'stream_is_null' => $stream === null,
-                                'is_resource' => is_resource($stream)
-                            ]);
-                            continue;
-                        }
-
-                        $this->logger->info('[DEBUG] S3 phenotype stream resolved successfully', ['s3Key' => $s3Key]);
-
-                    } catch (\Aws\S3\Exception\S3Exception $e) {
-                        $this->logger->error('[DEBUG] S3 Exception for phenotype', [
-                            's3Key' => $s3Key,
-                            'error' => $e->getMessage(),
-                            'code' => $e->getStatusCode()
-                        ]);
-                        continue;
-                    }
-
-                    $zipPath = $this->buildZipPath('phenotype', $filename);
-
-                    if ($this->addEntityFileToZip($zip, $phenotype, 'phenotype', $addedFiles,$extension)) {
+                    if ($this->addEntityFileToZip($zip, $phenotype, 'phenotype', $addedFiles, $extension)) {
                         $count++;
                     }
 
@@ -403,20 +357,36 @@ class DownloadMultipleController extends AbstractController
                 }
             }
 
-            // 2️⃣ Récupérer le fichier S3
-            $s3Key = sprintf('docs/%s/%s', $type, $originalFilename);
-
             try {
-                $result = $this->s3Storage->getS3Client()->getObject([
-                    'Bucket' => $this->s3Storage->getBucket(),
+            if ($this->storage instanceof S3VichStorage) {
+                // S3
+                $s3Key = sprintf('docs/%s/%s', $type, $originalFilename);
+
+                $result = $this->storage->getS3Client()->getObject([
+                    'Bucket' => $this->storage->getBucket(),
                     'Key'    => $s3Key,
                 ]);
 
                 $stream = $result['Body']->detach();
 
-            } catch (\Exception $e) {
-                return false;
+            } else {
+                // LOCAL
+                $localPath = $this->getParameter('kernel.project_dir') . '/public/docs/' . $type . '/' . $originalFilename;
+
+                if (!is_file($localPath)) {
+                    return false;
+                }
+
+                $stream = fopen($localPath, 'rb');
+
+                if ($stream === false) {
+                    return false;
+                }
             }
+
+        } catch (\Exception $e) {
+            return false;
+        }
 
             // 3️⃣ ID de souche (si dispo)
             $strainId = null;
