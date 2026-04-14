@@ -38,7 +38,7 @@ class PhenotypeFormType extends AbstractType
                     'placeholder' => 'Ex. PCR, MIC, etc.'
                 ],
             ])
-            ->add('mesure', ChoiceType::class, [
+            ->add('measure', ChoiceType::class, [
                 'label' => 'Measure',
                 'choices' => [
                     'Poor' => 'poor',

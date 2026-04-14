@@ -36,10 +36,10 @@ class Sample
     private ?string $city = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $localisation = null;
+    private ?string $location = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $underLocalisation = null;
+    #[ORM\Column(name: 'under_location', length: 255, nullable: true)]
+    private ?string $underLocation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $gps = null;
@@ -146,27 +146,26 @@ class Sample
         return $this;
     }
 
-    public function getLocalisation(): ?string
+    public function getlocation(): ?string
     {
-        return $this->localisation;
+        return $this->location;
     }
 
-    public function setLocalisation(?string $localisation): static
+    public function setlocation(?string $location): static
     {
-        $this->localisation = $localisation;
+        $this->location = $location;
 
         return $this;
     }
 
-    public function getUnderLocalisation(): ?string
+    public function getUnderLocation(): ?string
     {
-        return $this->underLocalisation;
+        return $this->underLocation;
     }
 
-    public function setUnderLocalisation(?string $underLocalisation): static
+    public function setUnderLocation(?string $underLocation): static
     {
-        $this->underLocalisation = $underLocalisation;
-
+        $this->underLocation = $underLocation;
         return $this;
     }
 

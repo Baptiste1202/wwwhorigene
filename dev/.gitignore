@@ -16,3 +16,14 @@
 
 # Miscellaneous
 /.history/
+
+# ========================
+# LOCAL DEV CONFIG (perso)
+# ========================
+
+config/packages/fos_elastica.yaml
+config/packages/vich_uploader.yaml
+config/reference.php
+
+# à activer seulement si local
+# src/Entity/User.php
