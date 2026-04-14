@@ -16,3 +16,20 @@
 
 # Miscellaneous
 /.history/
+
+# ========================
+# LOCAL DEV CONFIG (perso)
+# ========================
+
+dev/config/packages/fos_elastica.yaml
+dev/config/packages/vich_uploader.yaml
+dev/config/reference.php
+
+# ========================
+# DOCKER LOCAL
+# ========================
+
+docker-compose.yml
+docker/php/000-default.conf
+docker/php/Dockerfile
+docker/php/config/php.ini
