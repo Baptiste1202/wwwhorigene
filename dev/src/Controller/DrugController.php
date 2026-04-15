@@ -143,7 +143,6 @@ class DrugController extends AbstractController
 
             // Copier les champs simples (adapte si d'autres champs)
             $clone->setName($drug->getName());
-            $clone->setType($drug->getType());
             $clone->setDescription($drug->getDescription());
             $clone->setComment($drug->getComment());
 
@@ -155,6 +154,7 @@ class DrugController extends AbstractController
 
             return $this->redirectToRoute('page_drugs');
         } catch (\Throwable $e) {
+            dd($e->getMessage());
             $this->addFlash('error', 'An error occurred while duplicating the drug.');
             return $this->redirectToRoute('page_drugs');
         }

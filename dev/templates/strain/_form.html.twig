@@ -15,13 +15,12 @@
             {{ form_row(strainForm.nameStrain) }}
             {{ form_row(strainForm.parentStrain) }}
             {{ form_row(strainForm.specie) }}
-            {{ form_row(strainForm.gender) }}
+            {{ form_row(strainForm.genus) }}
             {{ form_row(strainForm.prelevement) }}  
             {{ form_row(strainForm.genotype) }}
-            <div id="genotypeFields" style="display: none;">
-                {{ form_row(strainForm.descriptionGenotype) }}
-                {{ form_row(strainForm.accessionNumber) }}
-            </div>
+            {{ form_row(strainForm.descriptionGenotype) }}
+            {{ form_row(strainForm.accessionNumber) }}
+            
     {% if is_update %}
         </div>
     {% endif %}
@@ -238,37 +237,42 @@ function selectOptionByValue(selectElementId, value) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const searchButton = document.querySelector('.search-button');
-    const parentStrainIdField = document.getElementById('strain_form_parentStrain');
+    const parentField = document.getElementById('strain_form_parentStrain');
 
-    if (!searchButton || !parentStrainIdField) return;
+    if (!parentField) return;
 
-    searchButton.addEventListener('click', async () => {
-        const strainId = parentStrainIdField.value;
+    parentField.addEventListener('change', async () => {
+        const strainId = parentField.value;
 
-        if (!strainId) {
-            alert('Veuillez entrer un ID de souche.');
-            return;
-        }
+        if (!strainId) return;
 
         try {
             const response = await fetch(`/api/strain/${strainId}`);
-            if (!response.ok) {
-                throw new Error('Strain non trouvée.');
-            }
+            if (!response.ok) throw new Error('Strain non trouvée');
 
             const data = await response.json();
 
-            document.getElementById('strain_form_nameStrain').value = data.name;
-            document.getElementById('strain_form_specie').value = data.specie;
-            document.getElementById('strain_form_gender').value = data.gender;
-            document.getElementById('strain_form_comment').value = data.comment;
-            document.getElementById('strain_form_description').value = data.description;
-            selectOptionByValue('strain_form_genotype', data.genotype);
-            document.getElementById('strain_form_descriptionGenotype').value = data.descGenotype;
-            document.getElementById('strain_form_accessionNumber').value = data.accessionNumber;
+            // remplissage classique
+            document.getElementById('strain_form_nameStrain').value = data.name || '';
+            document.getElementById('strain_form_specie').value = data.specie || '';
+            document.getElementById('strain_form_genus').value = data.genus || '';
+            document.getElementById('strain_form_comment').value = data.comment || '';
+            document.getElementById('strain_form_description').value = data.description || '';
+
+            // genotype (select)
+            if (data.genotype) {
+                selectOptionByValue('strain_form_genotype', data.genotype);
+            }
+
+            // 🔥 TES 2 CHAMPS (corrigé)
+            document.getElementById('strain_form_descriptionGenotype').value =
+                data.descriptionGenotype || data.descGenotype || '';
+
+            document.getElementById('strain_form_accessionNumber').value =
+                data.accessionNumber || '';
+
         } catch (error) {
-            alert('Erreur lors de la recherche de la souche : ' + error.message);
+            console.error('Erreur:', error);
         }
     });
 });
@@ -459,23 +463,6 @@ function ensureCreatePlasmidButton(collectionHolder) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const select = document.getElementById('strain_form_genotype');
-    const genotypeFields = document.getElementById('genotypeFields');
-
-    if (!select || !genotypeFields) return;
-
-    function toggleFields() {
-        if (select.value === '2') {
-            genotypeFields.style.display = 'block';
-        } else {
-            genotypeFields.style.display = 'none';
-        }
-    }
-
-    toggleFields();
-    select.addEventListener('change', toggleFields);
-});
 
 document.addEventListener('DOMContentLoaded', function() {
     const plasmidUl = document.querySelector('ul.plasmyd');

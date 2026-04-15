@@ -427,7 +427,7 @@ class StrainController extends AbstractController
             // Champs simples
             $clone->setNameStrain($strain->getNameStrain());
             $clone->setSpecie($strain->getSpecie());
-            $clone->setGender($strain->getGender());
+            $clone->setGenus($strain->getGenus());
             $clone->setComment($strain->getComment());
             $clone->setDescription($strain->getDescription());
             $clone->setGenotype($strain->getGenotype());
@@ -778,12 +778,12 @@ class StrainController extends AbstractController
                 $boolQuery->addFilter($qs);
             }
 
-            if (!empty($data->gender)) {
-                $term = trim($data->gender);
+            if (!empty($data->genus)) {
+                $term = trim($data->genus);
 
                 $qs = new \Elastica\Query\QueryString();
                 $qs->setQuery('*' . $term . '*');   // contient
-                $qs->setFields(['gender']);         // champ ciblé
+                $qs->setFields(['genus']);         // champ ciblé
                 $qs->setAnalyzeWildcard(true);      // ignore la casse via l'analyzer
                 $boolQuery->addFilter($qs);
             }
@@ -935,7 +935,7 @@ class StrainController extends AbstractController
         return $this->json([
             'name' => $strain->getNameStrain() ?: null,
             'specie' => $strain->getSpecie() ?: null,
-            'gender' => $strain->getGender() ?: null,
+            'genus' => $strain->getGenus() ?: null,
             'comment' => $strain->getComment() ?: null,
             'description' => $strain->getDescription() ?: null,
             'genotype' => $strain->getGenotype() ? $strain->getGenotype()->getId() : null,

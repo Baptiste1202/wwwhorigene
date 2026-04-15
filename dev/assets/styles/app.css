@@ -428,6 +428,17 @@ button.btn-form:hover,
     flex-direction: column !important;
 }
 
+.ts-dropdown {
+    max-height: 200px !important;
+    overflow: hidden !important;
+}
+
+.ts-dropdown-content {
+    max-height: 200px !important;
+    overflow-y: auto !important;
+    display: block !important;
+}
+
 .ts-wrapper.single.plugin-clear_button.plugin-virtual_scroll.has-options {
     flex: 1;
 }
@@ -971,6 +982,10 @@ tbody td {
     justify-self: center;
     display: flex;
     gap: 2px;
+}
+
+.dataTables_filter label {
+    font-size: 0;
 }
 
 #table-header-toolbar .dataTables_filter,
