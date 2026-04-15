@@ -24,7 +24,7 @@ class Strain
     private ?string $specie = null;
 
     #[ORM\Column(length: 100)]
-    private ?string $gender = null;
+    private ?string $genus = null;
 
     #[ORM\ManyToOne(targetEntity: Strain::class, inversedBy: 'childrenStrain')]
     #[ORM\JoinColumn(nullable: true)]
@@ -175,14 +175,14 @@ class Strain
         return $this;
     }
 
-    public function getGender(): ?string
+    public function getGenus(): ?string
     {
-        return $this->gender;
+        return $this->genus;
     }
 
-    public function setGender(?string $gender): static
+    public function setGenus(?string $genus): static
     {
-        $this->gender = $gender;
+        $this->genus = $genus;
 
         return $this;
     }

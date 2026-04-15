@@ -56,8 +56,8 @@ class StrainFormType extends AbstractType
                     'maxlength' => 30, 
                 ]
             ])
-            ->add('gender', options:[
-                'label' => 'Gender',
+            ->add('genus', options:[
+                'label' => 'Genus',
                 'required' => false, 
                 'empty_data' => null,
                  'attr' => [

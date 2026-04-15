@@ -33,7 +33,7 @@
                     <th class="name" data-column="name">Name</th>
                     <th data-column="date">Date</th>
                     <th data-column="specie">Species</th>
-                    <th data-column="gender">Gender</th>
+                    <th data-column="genus">Genus</th>
                     <th data-column="sample">Sample</th>
                     <th data-column="genotype">Genotype</th>
                     <th data-column="plasmyd">Plasmid</th>
@@ -101,9 +101,9 @@
                             {% endif %}
                             </td>
 
-                            <td class="gender">
-                            {% if strain.gender is not null %}
-                                {{strain.gender}}
+                            <td class="genus">
+                            {% if strain.genus is not null %}
+                                {{strain.genus}}
                             {% else %}
                                 --
                             {% endif %}

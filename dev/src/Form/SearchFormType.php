@@ -93,7 +93,7 @@ class SearchFormType extends AbstractType
         ->add('specie', SearchType::class, [ 
             'required' => false,
         ])
-        ->add('gender', SearchType::class, [ 
+        ->add('genus', SearchType::class, [ 
             'required' => false,
         ])
         ->add('sequencing', SearchType::class, [ 

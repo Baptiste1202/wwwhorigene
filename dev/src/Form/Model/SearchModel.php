@@ -26,7 +26,7 @@ class SearchModel
         public ?string $phenotypeMeasure = null,
         public ?string $sequencing = null,
         public ?string $specie = null,
-        public ?string $gender = null,
+        public ?string $genus = null,
         public ?bool $resistant = false
     )
     {

@@ -23,7 +23,7 @@ class StrainAutocompleteField extends AbstractType
                 'id',
                 'nameStrain',
                 'specie',
-                'gender'
+                'genus'
             ],
 
             'choice_label' => function (Strain $strain) {
