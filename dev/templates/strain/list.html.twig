@@ -306,7 +306,7 @@
 
                                     <div class="cell-content">
                                         {% set maxLength = strain.drugResistanceOnStrain|length %}
-                                        {% set start = maxLength > 3 ? maxLength - 3 : 0 %}
+                                        {% set start = maxLength > 2 ? maxLength - 2 : 0 %}
 
                                         {% for i in start..(maxLength - 1) %}
                                             {% set item = strain.drugResistanceOnStrain[i] %}
@@ -356,12 +356,12 @@
                                             </div>
                                         {% endfor %}
 
-                                        {% if maxLength > 3 %}
+                                        {% if maxLength > 2 %}
                                             <div class="sub-cell more-files open-file-modal"
                                                 data-strain-id="{{ strain.id }}"
                                                 data-type="drugResistance"
                                                 style="cursor:pointer;">
-                                                +{{ maxLength - 3 }} more drug resistance
+                                                +{{ maxLength - 2 }} more drug resistance
                                             </div>
                                         {% endif %}
                                     </div>
@@ -411,12 +411,12 @@
                                                 {% endif %}
                                             </div>
                                         {% endfor %}
-                                        {% if maxLength > 3 %}
+                                        {% if maxLength > 2 %}
                                             <div class="sub-cell more-files open-file-modal"
                                                 data-strain-id="{{ strain.id }}"
                                                 data-type="phenotype"
                                                 style="cursor:pointer;">
-                                                +{{ maxLength - 3 }} more phenotype
+                                                +{{ maxLength - 2 }} more phenotype
                                             </div>
                                         {% endif %}
                                     </div>
@@ -464,12 +464,12 @@
                                                 {% endif %}
                                             </div>
                                         {% endfor %}
-                                        {% if maxLength > 3 %}
+                                        {% if maxLength > 2 %}
                                             <div class="sub-cell more-files open-file-modal"
                                                 data-strain-id="{{ strain.id }}"
                                                 data-type="sequencing"
                                                 style="cursor:pointer;">
-                                                +{{ maxLength - 3 }} more sequencing
+                                                +{{ maxLength - 2 }} more sequencing
                                             </div>
                                         {% endif %}
                                     </div>
