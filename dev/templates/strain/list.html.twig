@@ -303,18 +303,12 @@
 
                             <td>
                                 {% if strain.drugResistanceOnStrain is not empty %}
-                                    <div class="cell-header">
-                                        <button class="open-file-modal"
-                                                data-strain-id="{{ strain.id }}"
-                                                data-type="drugResistance"
-                                                title="See all drug resistance files">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </button>
-                                    </div>
 
                                     <div class="cell-content">
-                                         {% set maxLength = strain.drugResistanceOnStrain|length %}
-                                            {% for i in 0..(maxLength - 1) %}
+                                        {% set maxLength = strain.drugResistanceOnStrain|length %}
+                                        {% set start = maxLength > 3 ? maxLength - 3 : 0 %}
+
+                                        {% for i in start..(maxLength - 1) %}
                                             {% set item = strain.drugResistanceOnStrain[i] %}
 
                                             <div id="sub-cell-drugResistanceOnStrain_{{ i }}"
@@ -361,6 +355,15 @@
                                                 {% endif %}
                                             </div>
                                         {% endfor %}
+
+                                        {% if maxLength > 3 %}
+                                            <div class="sub-cell more-files open-file-modal"
+                                                data-strain-id="{{ strain.id }}"
+                                                data-type="drugResistance"
+                                                style="cursor:pointer;">
+                                                +{{ maxLength - 3 }} more drug resistance
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 {% else %}
                                     --
@@ -369,18 +372,10 @@
 
                             <td>
                                 {% if strain.phenotype is not empty %}
-                                    <div class="cell-header">
-                                        <button class="open-file-modal"
-                                                data-strain-id="{{ strain.id }}"
-                                                data-type="phenotype"
-                                                title="See all phenotype files">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </button>
-                                    </div>
 
                                     <div class="cell-content">
                                         {% set maxLength = strain.phenotype|length %}
-                                        {% set start = maxLength > 3 ? maxLength - 3 : 0 %}
+                                        {% set start = maxLength > 2 ? maxLength - 2 : 0 %}
 
                                         {% for i in start..(maxLength - 1) %}
                                             {% set item = strain.phenotype[i] %}
@@ -417,8 +412,11 @@
                                             </div>
                                         {% endfor %}
                                         {% if maxLength > 3 %}
-                                            <div class="sub-cell more-files">
-                                                +{{ maxLength - 3 }} more files
+                                            <div class="sub-cell more-files open-file-modal"
+                                                data-strain-id="{{ strain.id }}"
+                                                data-type="phenotype"
+                                                style="cursor:pointer;">
+                                                +{{ maxLength - 3 }} more phenotype
                                             </div>
                                         {% endif %}
                                     </div>
@@ -430,18 +428,10 @@
 
                             <td>
                                 {% if strain.sequencing is not empty %}
-                                    <div class="cell-header">
-                                        <button class="open-file-modal"
-                                                data-strain-id="{{ strain.id }}"
-                                                data-type="sequencing"
-                                                title="See all sequencing files">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </button>
-                                    </div>
 
                                     <div class="cell-content">
                                         {% set maxLength = strain.sequencing|length %}
-                                        {% set start = maxLength > 3 ? maxLength - 3 : 0 %}
+                                        {% set start = maxLength > 2 ? maxLength - 2 : 0 %}
 
                                         {% for i in start..(maxLength - 1) %}
                                             {% set item = strain.sequencing[i] %}
@@ -474,9 +464,12 @@
                                                 {% endif %}
                                             </div>
                                         {% endfor %}
-                                         {% if maxLength > 3 %}
-                                            <div class="sub-cell more-files">
-                                                +{{ maxLength - 3 }} more files
+                                        {% if maxLength > 3 %}
+                                            <div class="sub-cell more-files open-file-modal"
+                                                data-strain-id="{{ strain.id }}"
+                                                data-type="sequencing"
+                                                style="cursor:pointer;">
+                                                +{{ maxLength - 3 }} more sequencing
                                             </div>
                                         {% endif %}
                                     </div>

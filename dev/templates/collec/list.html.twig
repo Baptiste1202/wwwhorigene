@@ -48,8 +48,8 @@
                             <td>
                                 <input type="checkbox" name="selected_collecs[]" value="{{ collec.id }}" class="select-checkbox" />
                             </td>
-                            <td class="id">{{ collec.id }}</td>
-                            <td class="name">{{ collec.name is not null ? collec.name : '--' }}</td>
+                            <td>{{ collec.id }}</td>
+                            <td>{{ collec.name is not null ? collec.name : '--' }}</td>
                             <td class="description" 
                                 data-info='{{ collec.description ? collec.description : '--'}}'
                             >
