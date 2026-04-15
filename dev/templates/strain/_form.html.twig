@@ -15,7 +15,7 @@
             {{ form_row(strainForm.nameStrain) }}
             {{ form_row(strainForm.parentStrain) }}
             {{ form_row(strainForm.specie) }}
-            {{ form_row(strainForm.gender) }}
+            {{ form_row(strainForm.genus) }}
             {{ form_row(strainForm.prelevement) }}  
             {{ form_row(strainForm.genotype) }}
             {{ form_row(strainForm.descriptionGenotype) }}
@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // remplissage classique
             document.getElementById('strain_form_nameStrain').value = data.name || '';
             document.getElementById('strain_form_specie').value = data.specie || '';
-            document.getElementById('strain_form_gender').value = data.gender || '';
+            document.getElementById('strain_form_genus').value = data.genus || '';
             document.getElementById('strain_form_comment').value = data.comment || '';
             document.getElementById('strain_form_description').value = data.description || '';
 
