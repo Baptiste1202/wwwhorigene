@@ -266,12 +266,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectOptionByValue('strain_form_genotype', data.genotype);
             }
 
-            // 🔥 TES 2 CHAMPS (corrigé)
+            // 🔥 TES NOUVEAUX CHAMPS 
             document.getElementById('strain_form_descriptionGenotype').value =
                 data.descriptionGenotype || data.descGenotype || '';
 
             document.getElementById('strain_form_accessionNumber').value =
                 data.accessionNumber || '';
+
+            document.getElementById('strain_form_cloneName').value =
+                data.cloneName || '';
+
+            document.getElementById('strain_form_duoNumber').value =
+                data.duoNumber || '';
+
+            document.getElementById('strain_form_containmentLevel').value =
+                data.containmentLevel || '';
 
         } catch (error) {
             console.error('Erreur:', error);

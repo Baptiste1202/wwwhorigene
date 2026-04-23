@@ -944,7 +944,11 @@ class StrainController extends AbstractController
             'genotype' => $strain->getGenotype() ? $strain->getGenotype()->getId() : null,
             'descGenotype' => $strain->getDescriptionGenotype() ?: null,
             'accessionNumber' => $strain->getAccessionNumber() ?: null,
+            'cloneName' => $strain->getCloneName() ?: null,
+            'duoNumber' => $strain->getDuoNumber() ?: null,
+            'containmentLevel' => $strain->getContainmentLevel() ?: null,
             'sample' => $strain->getPrelevement() ? $strain->getPrelevement()->getId() : null,
+            'sampleName' => $strain->getPrelevement() ? $strain->getPrelevement()->getName() : null,
         ]);
     }
 
