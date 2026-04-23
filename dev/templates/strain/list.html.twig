@@ -36,6 +36,9 @@
                     <th data-column="genus">Genus</th>
                     <th data-column="sample">Sample</th>
                     <th data-column="genotype">Genotype</th>
+                    <th data-column="clone">Clone</th>
+                    <th data-column="accession">Accession number</th>
+                    <th data-column="biosafety">Biosafety</th>
                     <th data-column="plasmyd">Plasmid</th>
                     <th data-column="storage">Storage</th>
                     <th data-column="parent">Parent</th>
@@ -135,31 +138,57 @@
                             </td>
 
                             <td class="genotype clicable" data-info='
-                                        genotype: {{ strain.genotype ? strain.genotype.type : '--'}}
-                                        description: {{ strain.descriptionGenotype ? strain.descriptionGenotype : "--" }}
-                                        accession number: {{ strain.accessionNumber ? strain.accessionNumber : "--" }}'>
-                            {% if strain.genotype is not null %}
-                                {{strain.genotype.type}} <br>
-                                {% if strain.descriptionGenotype is not empty %}
-                                    {% set desc = strain.descriptionGenotype ?: strain.descriptionGenotype %}
-                                    {% set maxLength = 25 %}
+                                genotype: {{ strain.genotype ? strain.genotype.type : "--" }}
+                                description: {{ strain.descriptionGenotype ? strain.descriptionGenotype : "--" }}'>
 
-                                    {% if desc|length > maxLength %}
-                                        {% set prefix = desc|slice(0, 20) %}
-                                        {{ prefix ~ '...'}}
-                                    {% else %}
-                                        {{ desc }}
-                                    {% endif %} 
-                                {% endif %}<br>
-                                {% if strain.accessionNumber is not empty %}
-                                    ACC : {{ strain.accessionNumber }}
+                                {% if strain.genotype is not null %}
+                                    {{ strain.genotype.type }} <br>
+
+                                    {% if strain.descriptionGenotype is not empty %}
+                                        {% set desc = strain.descriptionGenotype %}
+                                        {% set maxLength = 25 %}
+
+                                        {% if desc|length > maxLength %}
+                                            {{ desc|slice(0, 20) ~ '...' }}
+                                        {% else %}
+                                            {{ desc }}
+                                        {% endif %}
+                                    {% endif %}
+
                                 {% else %}
                                     --
+                                {% endif %}
+                            </td>
+
+                            <td class="cloneName">
+                                {% if strain.cloneName is not empty %}
+                                    {{ strain.cloneName }}
+                                {% else %}
+                                    --
+                                {% endif %}
+                            </td>
+
+                            <td class="accessionNumber">
+                                {% if strain.accessionNumber is not empty %}
+                                    {{ strain.accessionNumber }}
+                                {% else %}
+                                    --
+                                {% endif %}
+                            </td>
+
+                            <td class="biosafty">
+                            {% if strain.containmentLevel or strain.duoNumber %}
+                                {% if strain.containmentLevel %}
+                                    Level: {{ strain.containmentLevel }}
+                                {% endif %}
+
+                                {% if strain.duoNumber %}
+                                    <br>DUO: {{ strain.duoNumber }}
                                 {% endif %}
                             {% else %}
                                 --
                             {% endif %}
-                            </td>
+                        </td>
 
                             <td>
                                 <div class="sub-cell plasmyd clicable" data-info='
