@@ -128,6 +128,18 @@ class Strain
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $isFavorite = false;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $cloneName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $duoNumber = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $containmentLevel = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $creatorName = null;
+
     public function __construct()
     {
         $this->drugResistanceOnStrain = new ArrayCollection();
@@ -615,6 +627,54 @@ class Strain
     public function setIsFavorite(bool $isFavorite): self
     {
         $this->isFavorite = $isFavorite;
+        return $this;
+    }
+
+    public function getCloneName(): ?string
+    {
+        return $this->cloneName;
+    }
+
+    public function setCloneName(?string $cloneName): static
+    {
+        $this->cloneName = $cloneName;
+
+        return $this;
+    }
+
+    public function getDuoNumber(): ?string
+    {
+        return $this->duoNumber;
+    }
+
+    public function setDuoNumber(?string $duoNumber): static
+    {
+        $this->duoNumber = $duoNumber;
+
+        return $this;
+    }
+
+    public function getContainmentLevel(): ?string
+    {
+        return $this->containmentLevel;
+    }
+
+    public function setContainmentLevel(?string $containmentLevel): static
+    {
+        $this->containmentLevel = $containmentLevel;
+
+        return $this;
+    }
+
+    public function getCreatorName(): ?string
+    {
+        return $this->creatorName;
+    }
+
+    public function setCreatorName(?string $creatorName): static
+    {
+        $this->creatorName = $creatorName;
+
         return $this;
     }
 
