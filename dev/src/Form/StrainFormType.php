@@ -104,12 +104,40 @@ class StrainFormType extends AbstractType
                     'placeholder' => 'Description Genotype...'
                 ]
             ])
+            ->add('cloneName', options:[
+                'label' => 'Clone',
+                'required' => false,
+                'empty_data' => null,
+                'attr' => [
+                    'maxlength' => 255,
+                    'placeholder' => 'Clone name...'
+                ]
+            ])
             ->add('accessionNumber', options:[
-                'label' => ' ',
+                'label' => ' Accession number',
                 'required' => false, 
                 'attr' => [
                     'maxlength' => 250, 
                     'placeholder' => 'Accession number, type...'
+                ]
+            ])
+
+            ->add('containmentLevel', options:[
+                'label' => 'Biosafety level',
+                'required' => false,
+                'empty_data' => null,
+                'attr' => [
+                    'maxlength' => 255,
+                    'placeholder' => 'Biosafety level...'
+                ]
+            ])
+            ->add('duoNumber', options:[
+                'label' => 'DUO number',
+                'required' => false,
+                'empty_data' => null,
+                'attr' => [
+                    'maxlength' => 255,
+                    'placeholder' => 'DUO number...'
                 ]
             ])
 

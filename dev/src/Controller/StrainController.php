@@ -433,6 +433,9 @@ class StrainController extends AbstractController
             $clone->setGenotype($strain->getGenotype());
             $clone->setDescriptionGenotype($strain->getDescriptionGenotype());
             $clone->setAccessionNumber($strain->getAccessionNumber());
+            $clone->setCloneName($strain->getCloneName());
+            $clone->setContainmentLevel($strain->getContainmentLevel());
+            $clone->setDuoNumber($strain->getDuoNumber());
             $clone->setPrelevement($strain->getPrelevement());
             $clone->setCreatedBy($user);
             $clone->setDate(new \DateTime());
