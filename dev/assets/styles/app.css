@@ -917,7 +917,7 @@ tbody td:nth-last-child(3) {
     width: 20px !important;
 }
 
-button.button-ghost {
+a.button-ghost {
     opacity: 0;
     pointer-events: none;
 }
