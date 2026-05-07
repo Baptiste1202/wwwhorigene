@@ -3,27 +3,27 @@
 namespace App\Form\Autocomplete;
 
 use App\Entity\Collec;
-use App\Entity\Plasmyd;
+use App\Entity\Plasmid;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
 use Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType;
 
 #[AsEntityAutocompleteField]
-class PlasmydAutocompleteField extends AbstractType
+class PlasmidAutocompleteField extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'class' => Plasmyd::class,
+            'class' => Plasmid::class,
 
             // choose which fields to use in the search
             // if not passed, *all* fields are used
             'searchable_fields' => [
-                'namePlasmyd',
+                'namePlasmid',
             ],
-            'choice_label' => function (Plasmyd $plasmyd) {
-                return $plasmyd->getNamePlasmyd(); 
+            'choice_label' => function (Plasmid $plasmid) {
+                return $plasmid->getNamePlasmid(); 
             }
 
             // if the autocomplete endpoint needs to be secured

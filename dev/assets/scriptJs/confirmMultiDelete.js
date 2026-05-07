@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const id = tableId.toLowerCase();
     if (id.includes('strain'))         return 'strains';
     if (id.includes('project'))        return 'projects';
-    if (id.includes('plasmyd'))        return 'plasmids';
+    if (id.includes('plasmid'))        return 'plasmids';
     if (id.includes('collect'))        return 'collections';
     if (id.includes('drug'))           return 'drugs';
     if (id.includes('publication'))    return 'publications';

@@ -318,7 +318,7 @@ class StrainController extends AbstractController
 
             // Suppression des relations ManyToMany
             $strain->getCollec()->clear();
-            $strain->getPlasmyd()->clear();
+            $strain->getPlasmid()->clear();
             $strain->getPublication()->clear();
             $strain->getProject()->clear();
 
@@ -558,9 +558,9 @@ class StrainController extends AbstractController
                 $clone->addSequencing($newMethod);
             }
 
-            // Plasmyd (ManyToMany)
-            foreach ($strain->getPlasmyd() as $plasmyd) {
-                $clone->addPlasmyd($plasmyd);
+            // Plasmid (ManyToMany)
+            foreach ($strain->getPlasmid() as $plasmid) {
+                $clone->addPlasmid($plasmid);
             }
 
             // Publication (ManyToMany)
@@ -678,9 +678,9 @@ class StrainController extends AbstractController
             }
 
 
-            if ($data->plasmyd){
-                $this->logger->info('Add plasmyd', ['plasmyd_id' => $data->plasmyd->getId()]);
-                $boolQuery->addFilter(new MatchQuery('plasmyd.id', $data->plasmyd->getId()));
+            if ($data->plasmid){
+                $this->logger->info('Add plasmid', ['plasmid_id' => $data->plasmid->getId()]);
+                $boolQuery->addFilter(new MatchQuery('plasmid.id', $data->plasmid->getId()));
             }
 
             if ($data->sequencing) {

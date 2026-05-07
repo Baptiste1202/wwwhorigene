@@ -6,14 +6,14 @@ use App\Entity\Collec;
 use App\Entity\DrugResistance;
 use App\Entity\Genotype;
 use App\Entity\Sequencing;
-use App\Entity\Plasmyd;
+use App\Entity\Plasmid;
 use App\Entity\Project;
 use App\Entity\Publication;
 use App\Entity\Sample;
 use App\Entity\Strain;
 use App\Entity\Phenotype;
 use App\Form\Autocomplete\CollecAutocompleteField;
-use App\Form\Autocomplete\PlasmydAutocompleteField;
+use App\Form\Autocomplete\PlasmidAutocompleteField;
 use App\Form\Autocomplete\ProjectAutocompleteField;
 use App\Form\Autocomplete\PublicationAutocompleteField;
 use App\Form\Autocomplete\SampleAutocompleteField;
@@ -154,8 +154,8 @@ class StrainFormType extends AbstractType
                 'prototype_name' => '__name__',
                 'label' => false,
             ])
-            ->add('plasmyd', type:CollectionType::class, options:[
-                'entry_type' => PlasmydAutocompleteField::class,
+            ->add('plasmid', type:CollectionType::class, options:[
+                'entry_type' => PlasmidAutocompleteField::class,
                 'entry_options' => [
                     'label' => false,
                 ],

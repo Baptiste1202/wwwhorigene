@@ -1,0 +1,13 @@
+
+    {{ form_start(plasmidForm) }}
+
+        {{ form_row(plasmidForm.namePlasmid) }}
+        {{ form_row(plasmidForm.type) }}
+        {{ form_row(plasmidForm.description) }}
+        {{ form_row(plasmidForm.comment) }}
+
+        <button type="submit" class="btn-form">
+            {{ button_label | default('Add plasmid') }}
+        </button>
+
+    {{ form_end(plasmidForm) }}

@@ -4,7 +4,7 @@ namespace App\Form\Model;
 
 use App\Entity\DrugResistance;
 use App\Entity\Genotype;
-use App\Entity\Plasmyd;
+use App\Entity\Plasmid;
 use App\Entity\Project;
 use App\Entity\Sample;
 use App\Entity\User;
@@ -16,7 +16,7 @@ class SearchModel
     public function __construct(
         public ?int $id = null, 
         public ?string $query = null,
-        public ?Plasmyd $plasmyd = new Plasmyd(),
+        public ?Plasmid $plasmid = new Plasmid(),
         public ?DrugResistance $drug = new DrugResistance(),
         public ?Genotype $genotype = new Genotype(),
         public ?Project $project = new Project(),
