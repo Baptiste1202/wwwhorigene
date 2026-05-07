@@ -21,7 +21,7 @@ class SequencingController extends AbstractController
 {
     public function __construct(
         #[Autowire(service: SequencingRepository::class)]
-        private MethodSequencingRepositoryInterface $sequencingRepository,
+        private SequencingRepositoryInterface $sequencingRepository,
     ) {
     }
 
