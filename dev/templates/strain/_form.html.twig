@@ -20,6 +20,7 @@
             {{ form_row(strainForm.genotype) }}
             {{ form_row(strainForm.descriptionGenotype) }}
             {{ form_row(strainForm.cloneName) }}
+            {{ form_row(strainForm.constructionMethod) }}
             {{ form_row(strainForm.accessionNumber) }}
             {{ form_row(strainForm.containmentLevel) }}
             {{ form_row(strainForm.duoNumber) }}           
@@ -275,6 +276,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.getElementById('strain_form_cloneName').value =
                 data.cloneName || '';
+            
+            document.getElementById('strain_form_constructionMethod').value =
+                data.constructionMethod || '';
 
             document.getElementById('strain_form_duoNumber').value =
                 data.duoNumber || '';

@@ -113,6 +113,15 @@ class StrainFormType extends AbstractType
                     'placeholder' => 'Clone name...'
                 ]
             ])
+            ->add('constructionMethod', options:[
+                'label' => 'Construction method',
+                'required' => false,
+                'empty_data' => null,
+                'attr' => [
+                    'maxlength' => 255,
+                    'placeholder' => 'Construction method...'
+                ]
+            ])
             ->add('accessionNumber', options:[
                 'label' => ' Accession number',
                 'required' => false, 

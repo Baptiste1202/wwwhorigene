@@ -140,6 +140,9 @@ class Strain
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $creatorName = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $constructionMethod = null;
+
     public function __construct()
     {
         $this->drugResistanceOnStrain = new ArrayCollection();
@@ -674,6 +677,18 @@ class Strain
     public function setCreatorName(?string $creatorName): static
     {
         $this->creatorName = $creatorName;
+
+        return $this;
+    }
+
+    public function getConstructionMethod(): ?string
+    {
+        return $this->constructionMethod;
+    }
+
+    public function setConstructionMethod(?string $constructionMethod): static
+    {
+        $this->constructionMethod = $constructionMethod;
 
         return $this;
     }
