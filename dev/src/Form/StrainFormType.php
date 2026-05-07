@@ -6,14 +6,14 @@ use App\Entity\Collec;
 use App\Entity\DrugResistance;
 use App\Entity\Genotype;
 use App\Entity\Sequencing;
-use App\Entity\Plasmyd;
+use App\Entity\Plasmid;
 use App\Entity\Project;
 use App\Entity\Publication;
 use App\Entity\Sample;
 use App\Entity\Strain;
 use App\Entity\Phenotype;
 use App\Form\Autocomplete\CollecAutocompleteField;
-use App\Form\Autocomplete\PlasmydAutocompleteField;
+use App\Form\Autocomplete\PlasmidAutocompleteField;
 use App\Form\Autocomplete\ProjectAutocompleteField;
 use App\Form\Autocomplete\PublicationAutocompleteField;
 use App\Form\Autocomplete\SampleAutocompleteField;
@@ -104,12 +104,49 @@ class StrainFormType extends AbstractType
                     'placeholder' => 'Description Genotype...'
                 ]
             ])
+            ->add('cloneName', options:[
+                'label' => 'Clone',
+                'required' => false,
+                'empty_data' => null,
+                'attr' => [
+                    'maxlength' => 255,
+                    'placeholder' => 'Clone name...'
+                ]
+            ])
+            ->add('constructionMethod', options:[
+                'label' => 'Construction method',
+                'required' => false,
+                'empty_data' => null,
+                'attr' => [
+                    'maxlength' => 255,
+                    'placeholder' => 'Construction method...'
+                ]
+            ])
             ->add('accessionNumber', options:[
-                'label' => ' ',
+                'label' => ' Accession number',
                 'required' => false, 
                 'attr' => [
                     'maxlength' => 250, 
                     'placeholder' => 'Accession number, type...'
+                ]
+            ])
+
+            ->add('containmentLevel', options:[
+                'label' => 'Biosafety level',
+                'required' => false,
+                'empty_data' => null,
+                'attr' => [
+                    'maxlength' => 255,
+                    'placeholder' => 'Biosafety level...'
+                ]
+            ])
+            ->add('duoNumber', options:[
+                'label' => 'DUO number',
+                'required' => false,
+                'empty_data' => null,
+                'attr' => [
+                    'maxlength' => 255,
+                    'placeholder' => 'DUO number...'
                 ]
             ])
 
@@ -126,8 +163,8 @@ class StrainFormType extends AbstractType
                 'prototype_name' => '__name__',
                 'label' => false,
             ])
-            ->add('plasmyd', type:CollectionType::class, options:[
-                'entry_type' => PlasmydAutocompleteField::class,
+            ->add('plasmid', type:CollectionType::class, options:[
+                'entry_type' => PlasmidAutocompleteField::class,
                 'entry_options' => [
                     'label' => false,
                 ],

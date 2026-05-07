@@ -24,7 +24,7 @@
 <!-- ✅ Formulaire d'action multiple -->
 <form id="multi-action-form" method="post">
     <div id="data-table-wrapper" class="sticky-wrapper">
-        <table id="data-table-plasmyds" class="display datatableComponent nowrap" style="visibility: hidden;">
+        <table id="data-table-plasmids" class="display datatableComponent nowrap" style="visibility: hidden;">
             <thead>
                 <tr>
                     <th><input type="checkbox" id="select-all" /></th>
@@ -39,24 +39,24 @@
                 </tr>
             </thead>
             <tbody>
-                {% for plasmyd in plasmyds %}
+                {% for plasmid in plasmids %}
                     <tr>
                         <td>
-                            <input type="checkbox" name="selected_plasmyds[]" value="{{ plasmyd.id }}" class="select-checkbox" />
+                            <input type="checkbox" name="selected_plasmids[]" value="{{ plasmid.id }}" class="select-checkbox" />
                         </td>
-                        <td>{{ plasmyd.id }}</td>
-                        <td>{{ plasmyd.namePlasmyd }}</td>
-                        <td>{{ plasmyd.type }}</td>
-                        <td data-info="{{ plasmyd.description is not null ? plasmyd.description : '--' }}">
-                            {{ plasmyd.description is not null ? plasmyd.description : '--' }}
+                        <td>{{ plasmid.id }}</td>
+                        <td>{{ plasmid.namePlasmid }}</td>
+                        <td>{{ plasmid.type }}</td>
+                        <td data-info="{{ plasmid.description is not null ? plasmid.description : '--' }}">
+                            {{ plasmid.description is not null ? plasmid.description : '--' }}
                         </td>
-                        <td data-info="{{ plasmyd.comment is not null ? plasmyd.comment : '--' }}">
-                            {{ plasmyd.comment is not null ? plasmyd.comment : '--' }}
+                        <td data-info="{{ plasmid.comment is not null ? plasmid.comment : '--' }}">
+                            {{ plasmid.comment is not null ? plasmid.comment : '--' }}
                         </td>
-                        <td><a href="{{ path('duplicate_plasmyd', {id: plasmyd.id}) }}" class="button-crud" title="Copy"><i class="fa-solid fa-copy"></i></a></td>
-                            <td><a href="{{ path('edit_plasmyd', {id: plasmyd.id}) }}" class="button-crud" title="Modifie"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                        <td><a href="{{ path('duplicate_plasmid', {id: plasmid.id}) }}" class="button-crud" title="Copy"><i class="fa-solid fa-copy"></i></a></td>
+                            <td><a href="{{ path('edit_plasmid', {id: plasmid.id}) }}" class="button-crud" title="Modifie"><i class="fa-solid fa-pen-to-square"></i></a></td>
                             <td>
-                                <a href="{{ path('delete_plasmyd', {id: plasmyd.id}) }}"
+                                <a href="{{ path('delete_plasmid', {id: plasmid.id}) }}"
                                     class="delete-link button-crud"
                                     title="Delete"
                                     onclick="return confirm('Do you really want to delete ?');"><i class="fa-solid fa-trash"></i></a>
@@ -72,7 +72,7 @@
     <!-- ✅ Bouton suppression multiple -->
     <button id="btn-delete-multiple"
             type="submit"
-            formaction="{{ path('delete_multiple_plasmyds') }}"
+            formaction="{{ path('delete_multiple_plasmids') }}"
             onclick="this.form.action.value='delete'"
             class="btn btn-danger"
             style="margin-top: 10px; display: none;">

@@ -318,7 +318,7 @@ class StrainController extends AbstractController
 
             // Suppression des relations ManyToMany
             $strain->getCollec()->clear();
-            $strain->getPlasmyd()->clear();
+            $strain->getPlasmid()->clear();
             $strain->getPublication()->clear();
             $strain->getProject()->clear();
 
@@ -433,6 +433,9 @@ class StrainController extends AbstractController
             $clone->setGenotype($strain->getGenotype());
             $clone->setDescriptionGenotype($strain->getDescriptionGenotype());
             $clone->setAccessionNumber($strain->getAccessionNumber());
+            $clone->setCloneName($strain->getCloneName());
+            $clone->setContainmentLevel($strain->getContainmentLevel());
+            $clone->setDuoNumber($strain->getDuoNumber());
             $clone->setPrelevement($strain->getPrelevement());
             $clone->setCreatedBy($user);
             $clone->setDate(new \DateTime());
@@ -555,9 +558,9 @@ class StrainController extends AbstractController
                 $clone->addSequencing($newMethod);
             }
 
-            // Plasmyd (ManyToMany)
-            foreach ($strain->getPlasmyd() as $plasmyd) {
-                $clone->addPlasmyd($plasmyd);
+            // Plasmid (ManyToMany)
+            foreach ($strain->getPlasmid() as $plasmid) {
+                $clone->addPlasmid($plasmid);
             }
 
             // Publication (ManyToMany)
@@ -675,9 +678,9 @@ class StrainController extends AbstractController
             }
 
 
-            if ($data->plasmyd){
-                $this->logger->info('Add plasmyd', ['plasmyd_id' => $data->plasmyd->getId()]);
-                $boolQuery->addFilter(new MatchQuery('plasmyd.id', $data->plasmyd->getId()));
+            if ($data->plasmid){
+                $this->logger->info('Add plasmid', ['plasmid_id' => $data->plasmid->getId()]);
+                $boolQuery->addFilter(new MatchQuery('plasmid.id', $data->plasmid->getId()));
             }
 
             if ($data->sequencing) {
@@ -941,7 +944,11 @@ class StrainController extends AbstractController
             'genotype' => $strain->getGenotype() ? $strain->getGenotype()->getId() : null,
             'descGenotype' => $strain->getDescriptionGenotype() ?: null,
             'accessionNumber' => $strain->getAccessionNumber() ?: null,
+            'cloneName' => $strain->getCloneName() ?: null,
+            'duoNumber' => $strain->getDuoNumber() ?: null,
+            'containmentLevel' => $strain->getContainmentLevel() ?: null,
             'sample' => $strain->getPrelevement() ? $strain->getPrelevement()->getId() : null,
+            'sampleName' => $strain->getPrelevement() ? $strain->getPrelevement()->getName() : null,
         ]);
     }
 

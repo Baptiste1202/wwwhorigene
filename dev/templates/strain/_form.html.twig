@@ -19,8 +19,11 @@
             {{ form_row(strainForm.prelevement) }}  
             {{ form_row(strainForm.genotype) }}
             {{ form_row(strainForm.descriptionGenotype) }}
+            {{ form_row(strainForm.cloneName) }}
+            {{ form_row(strainForm.constructionMethod) }}
             {{ form_row(strainForm.accessionNumber) }}
-            
+            {{ form_row(strainForm.containmentLevel) }}
+            {{ form_row(strainForm.duoNumber) }}           
     {% if is_update %}
         </div>
     {% endif %}
@@ -68,21 +71,21 @@
     {% endif %}
 
     {% if is_update %}
-    <div id="plasmyd-add" class="group col-12 col-md-6 col-xl-3">
+    <div id="plasmid-add" class="group col-12 col-md-6 col-xl-3">
     {% endif %}
-        <div id="plasmyd-add-info" class="hidden-tags">
-            <ul class="plasmyd"
-                data-index="{{ strainForm.plasmyd|length > 0 ? strainForm.plasmyd|last.vars.name + 1 : 0 }}"
-                data-prototype="{{ form_row(strainForm.plasmyd.vars.prototype)|e('html_attr') }}">
-                {% for subForm in strainForm.plasmyd %}
+        <div id="plasmid-add-info" class="hidden-tags">
+            <ul class="plasmid"
+                data-index="{{ strainForm.plasmid|length > 0 ? strainForm.plasmid|last.vars.name + 1 : 0 }}"
+                data-prototype="{{ form_row(strainForm.plasmid.vars.prototype)|e('html_attr') }}">
+                {% for subForm in strainForm.plasmid %}
                     <li>{{ form_row(subForm) }}</li>
                 {% endfor %}
             </ul>
         </div>
 
-        <div id="plasmyd-add-btn" class="add-btn">
+        <div id="plasmid-add-btn" class="add-btn">
             <label>Plasmid</label>
-            <button type="button" class="add_item_link" data-collection-holder-class="plasmyd">+</button>
+            <button type="button" class="add_item_link" data-collection-holder-class="plasmid">+</button>
         </div>
     {% if is_update %}
     </div>
@@ -264,12 +267,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectOptionByValue('strain_form_genotype', data.genotype);
             }
 
-            // 🔥 TES 2 CHAMPS (corrigé)
+            // 🔥 TES NOUVEAUX CHAMPS 
             document.getElementById('strain_form_descriptionGenotype').value =
                 data.descriptionGenotype || data.descGenotype || '';
 
             document.getElementById('strain_form_accessionNumber').value =
                 data.accessionNumber || '';
+
+            document.getElementById('strain_form_cloneName').value =
+                data.cloneName || '';
+            
+            document.getElementById('strain_form_constructionMethod').value =
+                data.constructionMethod || '';
+
+            document.getElementById('strain_form_duoNumber').value =
+                data.duoNumber || '';
+
+            document.getElementById('strain_form_containmentLevel').value =
+                data.containmentLevel || '';
 
         } catch (error) {
             console.error('Erreur:', error);
@@ -361,7 +376,7 @@ function addFormToCollection(e) {
 
     collectionHolder.dataset.index++;
 
-    if (collectionHolder.classList.contains('plasmyd')) {
+    if (collectionHolder.classList.contains('plasmid')) {
         ensureCreatePlasmidButton(collectionHolder);
     }
 }
@@ -407,7 +422,7 @@ function addTagFormDeleteLink(tag) {
             <form id="plasmid-create-form">
                 <div class="form-group">
                     <label for="plasmid_name">Name</label>
-                    <input type="text" id="plasmid_name" name="namePlasmyd" required class="form-control">
+                    <input type="text" id="plasmid_name" name="namePlasmid" required class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="plasmid_name">Type</label>
@@ -465,7 +480,7 @@ function ensureCreatePlasmidButton(collectionHolder) {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    const plasmidUl = document.querySelector('ul.plasmyd');
+    const plasmidUl = document.querySelector('ul.plasmid');
     if (plasmidUl && typeof ensureCreatePlasmidButton === 'function') {
         ensureCreatePlasmidButton(plasmidUl);
     }
@@ -508,7 +523,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     async function postPlasmid(formData) {
-        const urls = ['/public/api/plasmyd/create', '/api/plasmyd/create'];
+        const urls = ['/public/api/plasmid/create', '/api/plasmid/create'];
         let lastErr = null;
 
         for (const url of urls) {
@@ -549,13 +564,13 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
 
         const formData = {
-            namePlasmyd: document.getElementById('plasmid_name')?.value?.trim() || '',
+            namePlasmid: document.getElementById('plasmid_name')?.value?.trim() || '',
             type:        document.getElementById('plasmid_type')?.value?.trim() || '',
             description: document.getElementById('plasmid_description')?.value?.trim() || '',
             comment:     document.getElementById('plasmid_comment')?.value?.trim() || ''
         };
 
-        if (!formData.namePlasmyd || !formData.type) {
+        if (!formData.namePlasmid || !formData.type) {
             showMessage('Please fill in at least the plasmid name and type.', 'red');
             return;
         }
@@ -589,7 +604,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function updatePlasmidSelectors(plasmid) {
-        const plasmidSelectors = document.querySelectorAll('select[id$="_plasmyd"]');
+        const plasmidSelectors = document.querySelectorAll('select[id$="_plasmid"]');
         if (!plasmidSelectors.length) return;
 
         plasmidSelectors.forEach(selector => {

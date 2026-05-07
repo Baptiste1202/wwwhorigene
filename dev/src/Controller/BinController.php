@@ -122,7 +122,7 @@ class BinController extends AbstractController
 
                 // 🔥 Suppression définitive (copie ta logique du delete)
                 $strain->getCollec()->clear();
-                $strain->getPlasmyd()->clear();
+                $strain->getPlasmid()->clear();
                 $strain->getPublication()->clear();
                 $strain->getProject()->clear();
 

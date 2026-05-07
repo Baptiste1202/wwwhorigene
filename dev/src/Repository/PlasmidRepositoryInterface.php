@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use Doctrine\Persistence\ObjectRepository;
 
-interface PlasmydRepositoryInterface extends ObjectRepository
+interface PlasmidRepositoryInterface extends ObjectRepository
 {
 
 }

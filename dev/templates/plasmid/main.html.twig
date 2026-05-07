@@ -1,23 +1,23 @@
-{# templates/plasmyd/main.html.twig #}
+{# templates/plasmid/main.html.twig #}
 {% extends 'layout.html.twig' %}
 
 {% block body %}
     <div id="global">
         {% if 'ROLE_SEARCH' in app.user.roles or 'ROLE_ADMIN' in app.user.roles %}
             <div id="form">
-                {% include "plasmyd/create.html.twig" %}
+                {% include "plasmid/create.html.twig" %}
             </div>
         {% endif %}
         <div id="list">
             <div id="filter" class="filterComponent">
-                {% include 'plasmyd/_filter_form_datatable_plasmyd.html.twig' %}
+                {% include 'plasmid/_filter_form_datatable_plasmid.html.twig' %}
             </div>
             <div id="message">
                 {% include './message.html.twig' %}
             </div>
             <div id="table-header-toolbar"></div>
             <div id="table">
-                {% include "plasmyd/list.html.twig" %}
+                {% include "plasmid/list.html.twig" %}
             </div>
             <div id="table-controls-footer"></div>
         </div>

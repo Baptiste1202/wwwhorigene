@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\PlasmydRepository;
+use App\Repository\PlasmidRepository;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-#[ORM\Entity(repositoryClass: PlasmydRepository::class)]
-class Plasmyd
+#[ORM\Entity(repositoryClass: PlasmidRepository::class)]
+class Plasmid
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,7 +18,7 @@ class Plasmyd
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $namePlasmyd = null;
+    private ?string $namePlasmid = null;
 
     #[ORM\Column]
     private ?string $type = null;
@@ -32,7 +32,7 @@ class Plasmyd
     /**
      * @var Collection<int, Strain>
      */
-    #[ORM\ManyToMany(targetEntity: Strain::class, mappedBy: 'plasmyd', orphanRemoval: false)]
+    #[ORM\ManyToMany(targetEntity: Strain::class, mappedBy: 'plasmid', orphanRemoval: false)]
     private Collection $strain;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -43,14 +43,14 @@ class Plasmyd
         return $this->id;
     }
 
-    public function getNamePlasmyd(): ?string
+    public function getNamePlasmid(): ?string
     {
-        return $this->namePlasmyd;
+        return $this->namePlasmid;
     }
 
-    public function setNamePlasmyd(string $namePlasmyd): static
+    public function setNamePlasmid(string $namePlasmid): static
     {
-        $this->namePlasmyd = $namePlasmyd;
+        $this->namePlasmid = $namePlasmid;
 
         return $this;
     }
@@ -120,7 +120,7 @@ class Plasmyd
     {
         if (!$this->strain->contains($strain)) {
             $this->strain->add($strain);
-            $strain->addPlasmyd($this);
+            $strain->addPlasmid($this);
         }
 
         return $this;

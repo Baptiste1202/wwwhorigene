@@ -917,7 +917,7 @@ tbody td:nth-last-child(3) {
     width: 20px !important;
 }
 
-button.button-ghost {
+a.button-ghost {
     opacity: 0;
     pointer-events: none;
 }
@@ -1238,7 +1238,7 @@ tbody td {
 }
 
 #strain_form_phenotype,
-#strain_form_plasmyd,
+#strain_form_plasmid,
 #strain_form_drugResistance,
 #strain_form_publication,
 #strain_form_methodSequencing,
@@ -1406,7 +1406,7 @@ div[id*="strain_form_storage_"] {
 
 .update-form #project-add,
 .update-form #collec-add,
-.update-form #plasmyd-add,
+.update-form #plasmid-add,
 .update-form #publication-add,
 .update-form .prime,
 .update-form .prime2,
@@ -1417,7 +1417,7 @@ div[id*="strain_form_storage_"] {
 .update-form div[id*="strain_form_drugResistanceOnStrain_"],
 .update-form div[id*="strain_form_project_"],
 .update-form div[id*="strain_form_collec_"],
-.update-form div[id*="strain_form_plasmyd_"],
+.update-form div[id*="strain_form_plasmid_"],
 .update-form div[id*="strain_form_publication_"],
 .update-form #sequencing-add,
 .update-form #strain_form_sequencing,
@@ -1471,7 +1471,7 @@ div[id*="strain_form_storage_"] {
     grid-row: 2;
 }
 
-.update-form #plasmyd-add {
+.update-form #plasmid-add {
     grid-column: 2;
     grid-row: 3;
 }
@@ -1537,7 +1537,7 @@ div[id*="strain_form_storage_"] {
     .update-form div[id*="strain_form_drugResistanceOnStrain_"],
     .update-form #project-add,
     .update-form #collec-add,
-    .update-form #plasmyd-add,
+    .update-form #plasmid-add,
     .update-form #publication-add,
     .update-form #sequencing-add,
     .update-form #strain_form_sequencing,
@@ -1671,7 +1671,7 @@ form .g-inp {
     font-weight: 500;
 }
 
-ul.plasmyd li.create-plasmid-li {
+ul.plasmid li.create-plasmid-li {
     list-style-type: none;
     margin-left: 0;
     padding-left: 0;

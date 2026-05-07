@@ -61,11 +61,11 @@ class Strain
     private ?Collection $phenotype;
 
     /**
-     * @var Collection<int, plasmyd>
+     * @var Collection<int, plasmid>
      */
-    #[ORM\ManyToMany(targetEntity: Plasmyd::class, inversedBy: 'strain')]
+    #[ORM\ManyToMany(targetEntity: Plasmid::class, inversedBy: 'strain')]
     #[ORM\JoinColumn(nullable: true)]
-    private ?Collection $plasmyd;
+    private ?Collection $plasmid;
 
     /**
      * @var Collection<int, drugResistanceOnStrain>
@@ -128,12 +128,27 @@ class Strain
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $isFavorite = false;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $cloneName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $duoNumber = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $containmentLevel = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $creatorName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $constructionMethod = null;
+
     public function __construct()
     {
         $this->drugResistanceOnStrain = new ArrayCollection();
         $this->publication = new ArrayCollection();
         $this->phenotype = new ArrayCollection();
-        $this->plasmyd = new ArrayCollection();
+        $this->plasmid = new ArrayCollection();
         $this->sequencing = new ArrayCollection();
         $this->project = new ArrayCollection();
         $this->collec = new ArrayCollection();
@@ -305,30 +320,30 @@ class Strain
         }
     }
 
-    public function getPlasmyd(): Collection
+    public function getPlasmid(): Collection
     {
-        return $this->plasmyd ?? new ArrayCollection();
+        return $this->plasmid ?? new ArrayCollection();
     }
 
-    public function setPlasmyd(?Collection $plasmyd): static
+    public function setPlasmid(?Collection $plasmid): static
     {
-        $this->plasmyd = $plasmyd ?? new ArrayCollection();
+        $this->plasmid = $plasmid ?? new ArrayCollection();
         return $this;
     }
 
-    public function addPlasmyd(?Plasmyd $plasmyd): static
+    public function addPlasmid(?Plasmid $plasmid): static
     {
-        if ($plasmyd && !$this->getPlasmyd()->contains($plasmyd)) {
-            $this->plasmyd->add($plasmyd);
-            $plasmyd->addStrain($this);
+        if ($plasmid && !$this->getPlasmid()->contains($plasmid)) {
+            $this->plasmid->add($plasmid);
+            $plasmid->addStrain($this);
         }
         return $this;
     }
 
-    public function removePlasmyd(?Plasmyd $plasmyd): static
+    public function removePlasmid(?Plasmid $plasmid): static
     {
-        if ($plasmyd && $this->getPlasmyd()->removeElement($plasmyd)) {
-            $plasmyd->removeStrain($this);
+        if ($plasmid && $this->getPlasmid()->removeElement($plasmid)) {
+            $plasmid->removeStrain($this);
         }
         return $this;
     }
@@ -615,6 +630,66 @@ class Strain
     public function setIsFavorite(bool $isFavorite): self
     {
         $this->isFavorite = $isFavorite;
+        return $this;
+    }
+
+    public function getCloneName(): ?string
+    {
+        return $this->cloneName;
+    }
+
+    public function setCloneName(?string $cloneName): static
+    {
+        $this->cloneName = $cloneName;
+
+        return $this;
+    }
+
+    public function getDuoNumber(): ?string
+    {
+        return $this->duoNumber;
+    }
+
+    public function setDuoNumber(?string $duoNumber): static
+    {
+        $this->duoNumber = $duoNumber;
+
+        return $this;
+    }
+
+    public function getContainmentLevel(): ?string
+    {
+        return $this->containmentLevel;
+    }
+
+    public function setContainmentLevel(?string $containmentLevel): static
+    {
+        $this->containmentLevel = $containmentLevel;
+
+        return $this;
+    }
+
+    public function getCreatorName(): ?string
+    {
+        return $this->creatorName;
+    }
+
+    public function setCreatorName(?string $creatorName): static
+    {
+        $this->creatorName = $creatorName;
+
+        return $this;
+    }
+
+    public function getConstructionMethod(): ?string
+    {
+        return $this->constructionMethod;
+    }
+
+    public function setConstructionMethod(?string $constructionMethod): static
+    {
+        $this->constructionMethod = $constructionMethod;
+
         return $this;
     }
 

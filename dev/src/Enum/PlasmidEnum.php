@@ -2,7 +2,7 @@
 
 namespace App\Enum;
 
-enum PlasmydEnum: string
+enum PlasmidEnum: string
 {
     case WT = 'asc';
     case NATUREL = 'desc';  

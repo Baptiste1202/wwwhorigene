@@ -36,7 +36,11 @@
                     <th data-column="genus">Genus</th>
                     <th data-column="sample">Sample</th>
                     <th data-column="genotype">Genotype</th>
-                    <th data-column="plasmyd">Plasmid</th>
+                    <th data-column="clone">Clone</th>
+                    <th data-column="constructionMethod">Construction</th>
+                    <th data-column="accession">Accession</th>
+                    <th data-column="biosafety">Biosafety</th>
+                    <th data-column="plasmid">Plasmid</th>
                     <th data-column="storage">Storage</th>
                     <th data-column="parent">Parent</th>
                     <th data-column="project">Project</th>
@@ -135,58 +139,104 @@
                             </td>
 
                             <td class="genotype clicable" data-info='
-                                        genotype: {{ strain.genotype ? strain.genotype.type : '--'}}
-                                        description: {{ strain.descriptionGenotype ? strain.descriptionGenotype : "--" }}
-                                        accession number: {{ strain.accessionNumber ? strain.accessionNumber : "--" }}'>
-                            {% if strain.genotype is not null %}
-                                {{strain.genotype.type}} <br>
-                                {% if strain.descriptionGenotype is not empty %}
-                                    {% set desc = strain.descriptionGenotype ?: strain.descriptionGenotype %}
-                                    {% set maxLength = 25 %}
+                                genotype: {{ strain.genotype ? strain.genotype.type : "--" }}
+                                description: {{ strain.descriptionGenotype ? strain.descriptionGenotype : "--" }}'>
 
-                                    {% if desc|length > maxLength %}
-                                        {% set prefix = desc|slice(0, 20) %}
-                                        {{ prefix ~ '...'}}
-                                    {% else %}
-                                        {{ desc }}
-                                    {% endif %} 
-                                {% endif %}<br>
-                                {% if strain.accessionNumber is not empty %}
-                                    ACC : {{ strain.accessionNumber }}
+                                {% if strain.genotype is not null %}
+                                    {{ strain.genotype.type }} <br>
+
+                                    {% if strain.descriptionGenotype is not empty %}
+                                        {% set desc = strain.descriptionGenotype %}
+                                        {% set maxLength = 25 %}
+
+                                        {% if desc|length > maxLength %}
+                                            {{ desc|slice(0, 20) ~ '...' }}
+                                        {% else %}
+                                            {{ desc }}
+                                        {% endif %}
+                                    {% endif %}
+
                                 {% else %}
                                     --
+                                {% endif %}
+                            </td>
+
+                            <td class="cloneName">
+                                {% if strain.cloneName is not empty %}
+                                    {{ strain.cloneName }}
+                                {% else %}
+                                    --
+                                {% endif %}
+                            </td>
+
+                            <td class="constructionMethod clicable"
+                                data-info='{{ strain.constructionMethod ?: "--" }}'>
+
+                                {% if strain.constructionMethod is not empty %}
+
+                                    {% set constructionMethod = strain.constructionMethod %}
+                                    {% set maxLength = 50 %}
+
+                                    {% if constructionMethod|length > maxLength %}
+                                        {{ constructionMethod|slice(0, 25) ~ '...' }}
+                                    {% else %}
+                                        {{ constructionMethod }}
+                                    {% endif %}
+
+                                {% else %}
+                                    --
+                                {% endif %}
+
+                            </td>
+
+                            <td class="accessionNumber">
+                                {% if strain.accessionNumber is not empty %}
+                                    {{ strain.accessionNumber }}
+                                {% else %}
+                                    --
+                                {% endif %}
+                            </td>
+
+                            <td class="biosafty">
+                            {% if strain.containmentLevel or strain.duoNumber %}
+                                {% if strain.containmentLevel %}
+                                    Level: {{ strain.containmentLevel }}
+                                {% endif %}
+
+                                {% if strain.duoNumber %}
+                                    <br>DUO: {{ strain.duoNumber }}
                                 {% endif %}
                             {% else %}
                                 --
                             {% endif %}
-                            </td>
+                        </td>
 
                             <td>
-                                <div class="sub-cell plasmyd clicable" data-info='
-                                        name: {{ strain.plasmyd|first ? strain.plasmyd|first.namePlasmyd : '--'}}
-                                        type: {{ strain.plasmyd|first ? strain.plasmyd|first.type : "--" }}
-                                        description: {{ strain.plasmyd|first ? strain.plasmyd|first.description : "--" }}
-                                        comment: {{ strain.plasmyd|first ? strain.plasmyd|first.comment : "--" }}'>
-                                    {% if strain.plasmyd is not empty %}
-                                        {{strain.plasmyd[0].namePlasmyd}}
+                                <div class="sub-cell plasmid clicable" data-info='
+                                        name: {{ strain.plasmid|first ? strain.plasmid|first.namePlasmid : '--'}}
+                                        type: {{ strain.plasmid|first ? strain.plasmid|first.type : "--" }}
+                                        description: {{ strain.plasmid|first ? strain.plasmid|first.description : "--" }}
+                                        comment: {{ strain.plasmid|first ? strain.plasmid|first.comment : "--" }}'>
+                                    {% if strain.plasmid is not empty %}
+                                        {{strain.plasmid[0].namePlasmid}}
                                     {% else %}
                                         --
                                     {% endif %}
                                 </div>
 
-                                {% if (strain.plasmyd is not empty)%}
-                                    {% set maxLength = strain.plasmyd|length %}
+                                {% if (strain.plasmid is not empty)%}
+                                    {% set maxLength = strain.plasmid|length %}
                                     {% if maxLength > 1 %} 
                                         {% for i in 1..(maxLength - 1) %}
                                             <div id="sub-cell-plasmy_{{i}}"
-                                                class="sub-cell plasmyd clicable"
+                                                class="sub-cell plasmid clicable"
                                                 data-info='
-                                                    name: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.plasmyd[i].namePlasmyd : '--'}}
-                                                    type: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.plasmyd[i].type : "--" }}
-                                                    description: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.plasmyd[i].description : "--" }}
-                                                    comment: {{ strain.plasmyd[i] is defined and strain.plasmyd[i] ? strain.plasmyd[i].comment : "--" }}'
+                                                    name: {{ strain.plasmid[i] is defined and strain.plasmid[i] ? strain.plasmid[i].namePlasmid : '--'}}
+                                                    type: {{ strain.plasmid[i] is defined and strain.plasmid[i] ? strain.plasmid[i].type : "--" }}
+                                                    description: {{ strain.plasmid[i] is defined and strain.plasmid[i] ? strain.plasmid[i].description : "--" }}
+                                                    comment: {{ strain.plasmid[i] is defined and strain.plasmid[i] ? strain.plasmid[i].comment : "--" }}'
                                             >
-                                            {{ strain.plasmyd[i] is defined ? strain.plasmyd[i].namePlasmyd : '--' }}
+                                            {{ strain.plasmid[i] is defined ? strain.plasmid[i].namePlasmid : '--' }}
                                             </div>
                                         {% endfor %}
                                     {% endif %}

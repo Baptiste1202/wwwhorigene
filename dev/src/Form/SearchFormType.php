@@ -5,12 +5,12 @@ namespace App\Form;
 use App\Entity\DrugResistance;
 use App\Entity\Genotype;
 use App\Entity\Sequencing;
-use App\Entity\Plasmyd;
+use App\Entity\Plasmid;
 use App\Entity\Project;
 use App\Entity\Sample;
 use App\Entity\User;
 use App\Entity\PhenotypeType;
-use App\Form\Autocomplete\PlasmydAutocompleteField;
+use App\Form\Autocomplete\PlasmidAutocompleteField;
 use App\Form\Autocomplete\DrugAutocompleteField;
 use App\Form\Autocomplete\ProjectAutocompleteField;
 use App\Form\Autocomplete\SampleAutocompleteField;
@@ -38,11 +38,11 @@ class SearchFormType extends AbstractType
             'required' => false,
             'label' => 'Name'
         ])
-        ->add('plasmyd', PlasmydAutocompleteField::class, [
+        ->add('plasmid', PlasmidAutocompleteField::class, [
             'required' => false,
         ])
-        // ->add('plasmyd', type:CollectionType::class, options:[
-        //         'entry_type' => PlasmydAutocompleteField::class,
+        // ->add('plasmid', type:CollectionType::class, options:[
+        //         'entry_type' => PlasmidAutocompleteField::class,
         //         'allow_add' => true,   // Permet d'ajouter des entrées dynamiquement
         //         'allow_delete' => true, // Permet de supprimer des entrées
         //         'by_reference' => false, // Nécessaire pour éviter les problèmes avec les relations bidirectionnelles

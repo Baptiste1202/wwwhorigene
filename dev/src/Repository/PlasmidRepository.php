@@ -2,27 +2,27 @@
 
 namespace App\Repository;
 
-use App\Entity\Plasmyd;
+use App\Entity\Plasmid;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Plasmyd>
+ * @extends ServiceEntityRepository<Plasmid>
  *
- * @method Plasmyd|null find($id, $lockMode = null, $lockVersion = null)
- * @method Plasmyd|null findOneBy(array $criteria, array $orderBy = null)
- * @method Plasmyd[]    findAll()
- * @method Plasmyd[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Plasmid|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Plasmid|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Plasmid[]    findAll()
+ * @method Plasmid[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class PlasmydRepository extends ServiceEntityRepository implements PlasmydRepositoryInterface
+class PlasmidRepository extends ServiceEntityRepository implements PlasmidRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Plasmyd::class);
+        parent::__construct($registry, Plasmid::class);
     }
 
 //    /**
-//     * @return Plasmyd[] Returns an array of Plasmyd objects
+//     * @return Plasmid[] Returns an array of Plasmid objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -36,7 +36,7 @@ class PlasmydRepository extends ServiceEntityRepository implements PlasmydReposi
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Plasmyd
+//    public function findOneBySomeField($value): ?Plasmid
 //    {
 //        return $this->createQueryBuilder('p')
 //            ->andWhere('p.exampleField = :val')
